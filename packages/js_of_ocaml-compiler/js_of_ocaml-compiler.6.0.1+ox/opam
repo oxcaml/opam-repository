@@ -53,7 +53,6 @@ patches: [
   "js_of_ocaml-add-unboxed-and-float-block.patch"
   "js_of_ocaml-ident-is_global.patch"
   "js_of_ocaml-remove-float-externals.patch"
-  "js_of_ocaml-ocaml_version-ppx.patch"
   "js_of_ocaml-test-diffs-caused-by-build-differences.patch"
   "js_of_ocaml-fix-build_fs.patch"
   "js_of_ocaml-iarray-primitives.patch"
@@ -73,6 +72,7 @@ patches: [
   "js_of_ocaml-jane-street-5.2-compatibility.patch"
   "js_of_ocaml-migrate-labeled-tuples-shims.patch"
   "js_of_ocaml-floatarray_create_local.patch"
+  "wasm_of_ocaml-sourcemap-contents.patch"
   "js_of_ocaml-jane-street-const_null-support.patch"
   "js_of_ocaml-float32.patch"
   "js_of_ocaml-caml_array_append.patch"
@@ -84,6 +84,8 @@ patches: [
   "js_of_ocaml-obj_stubs.patch"
   "js_of_ocaml-float32-2.patch"
   "dune.patch"
+  "js_of_ocaml-top-effects.patch"
+  "js_of_ocaml-toplevel.patch"
 ]
 extra-files: [
   [
@@ -113,10 +115,6 @@ extra-files: [
   [
     "js_of_ocaml-remove-float-externals.patch"
     "sha256=a3aa95ee08210377c1470e5bf0f832bc27ad98299bca22c7a88eb9fd6c32e655"
-  ]
-  [
-    "js_of_ocaml-ocaml_version-ppx.patch"
-    "sha256=df6bcb6da8aa3dfd6bd0a178679987d41c400ec1803f4a66659cfc822d1b280f"
   ]
   [
     "js_of_ocaml-test-diffs-caused-by-build-differences.patch"
@@ -195,6 +193,10 @@ extra-files: [
     "sha256=f17e392acc941dde475cb7be0654037df9b8d550aeae0d96b65394e4c4a1d4ca"
   ]
   [
+    "wasm_of_ocaml-sourcemap-contents.patch"
+    "sha256=93b7dddf6313836ce02fbe762c40380e20daefdd8b87ec885ee0f4ef779ad76b"
+  ]
+  [
     "js_of_ocaml-jane-street-const_null-support.patch"
     "sha256=e708cdc01c0cef3fce1cb9f31b33324977dcca1c166601905fcac1ef10262c3a"
   ]
@@ -237,5 +239,13 @@ extra-files: [
   [
     "dune.patch"
     "sha256=f76da998ab76de56309bd0da3e4db1fb496d6d235d7a0ac2f78e3bafe098714e"
+  ]
+  [
+   "js_of_ocaml-top-effects.patch"
+   "sha256=638247bd3f7bacb99612353b29c0afdcc48598c5771a52602a96baabbc141370"
+  ]
+  [
+   "js_of_ocaml-toplevel.patch"
+   "sha256=56c305aa9ed8cb35e9a3bee9fb17aaae244522bacb54a78115b03182a746b7b2"
   ]
 ]
