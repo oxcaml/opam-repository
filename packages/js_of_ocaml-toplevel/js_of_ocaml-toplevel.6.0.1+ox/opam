@@ -76,6 +76,8 @@ patches: [
   "js_of_ocaml-obj_stubs.patch"
   "js_of_ocaml-float32-2.patch"
   "dune.patch"
+  "js_of_ocaml-top-effects.patch"
+  "js_of_ocaml-toplevel.patch"
 ]
 extra-files: [
   [
@@ -229,5 +231,13 @@ extra-files: [
   [
     "dune.patch"
     "sha256=f76da998ab76de56309bd0da3e4db1fb496d6d235d7a0ac2f78e3bafe098714e"
+  ]
+  [
+   "js_of_ocaml-top-effects.patch"
+   "sha256=638247bd3f7bacb99612353b29c0afdcc48598c5771a52602a96baabbc141370"
+  ]
+  [
+   "js_of_ocaml-toplevel.patch"
+   "sha256=56c305aa9ed8cb35e9a3bee9fb17aaae244522bacb54a78115b03182a746b7b2"
   ]
 ]
