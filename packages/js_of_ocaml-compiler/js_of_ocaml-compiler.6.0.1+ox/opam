@@ -73,6 +73,7 @@ patches: [
   "js_of_ocaml-jane-street-5.2-compatibility.patch"
   "js_of_ocaml-migrate-labeled-tuples-shims.patch"
   "js_of_ocaml-floatarray_create_local.patch"
+  "wasm_of_ocaml-sourcemap-contents.patch"
   "js_of_ocaml-jane-street-const_null-support.patch"
   "js_of_ocaml-float32.patch"
   "js_of_ocaml-caml_array_append.patch"
@@ -193,6 +194,10 @@ extra-files: [
   [
     "js_of_ocaml-floatarray_create_local.patch"
     "sha256=f17e392acc941dde475cb7be0654037df9b8d550aeae0d96b65394e4c4a1d4ca"
+  ]
+  [
+    "wasm_of_ocaml-sourcemap-contents.patch"
+    "sha256=93b7dddf6313836ce02fbe762c40380e20daefdd8b87ec885ee0f4ef779ad76b"
   ]
   [
     "js_of_ocaml-jane-street-const_null-support.patch"
