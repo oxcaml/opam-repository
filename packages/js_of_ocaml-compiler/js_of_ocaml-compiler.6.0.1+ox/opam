@@ -53,7 +53,6 @@ patches: [
   "js_of_ocaml-add-unboxed-and-float-block.patch"
   "js_of_ocaml-ident-is_global.patch"
   "js_of_ocaml-remove-float-externals.patch"
-  "js_of_ocaml-ocaml_version-ppx.patch"
   "js_of_ocaml-test-diffs-caused-by-build-differences.patch"
   "js_of_ocaml-fix-build_fs.patch"
   "js_of_ocaml-iarray-primitives.patch"
@@ -114,10 +113,6 @@ extra-files: [
   [
     "js_of_ocaml-remove-float-externals.patch"
     "sha256=a3aa95ee08210377c1470e5bf0f832bc27ad98299bca22c7a88eb9fd6c32e655"
-  ]
-  [
-    "js_of_ocaml-ocaml_version-ppx.patch"
-    "sha256=df6bcb6da8aa3dfd6bd0a178679987d41c400ec1803f4a66659cfc822d1b280f"
   ]
   [
     "js_of_ocaml-test-diffs-caused-by-build-differences.patch"
