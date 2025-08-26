@@ -1,0 +1,56 @@
+opam-version: "2.0"
+homepage: "https://github.com/ocaml/odoc"
+doc: "https://ocaml.github.io/odoc/"
+bug-reports: "https://github.com/ocaml/odoc/issues"
+license: "ISC"
+
+maintainer: [
+  "Jon Ludlam <jon@recoil.org>"
+  "Jules Aguillon <juloo.dsi@gmail.com>"
+  "Paul-Elliot Anglès d'Auriac <paul-elliot@tarides.com>"
+]
+authors: [
+  "Daniel Bünzli <daniel.buenzli@erratique.ch>"
+  "Paul-Elliot Anglès d'Auriac <paul-elliot@tarides.com>"
+  "Jon Ludlam <jon@recoil.org>"
+]
+dev-repo: "git+https://github.com/ocaml/odoc.git"
+
+synopsis: "OCaml Documentation Generator - Markdown support"
+description: """
+Odoc-md is part of the odoc suite of tools for generating documentation for OCaml packages.
+
+This package provides support for generating documentation from Markdown files.
+"""
+
+depends: [
+  "ocaml" {>= "4.14.0"}
+  "odoc" {= version}
+  "dune" {>= "3.18.0"}
+  "cmdliner" {>= "1.3.0"}
+  "cmarkit"
+]
+
+build: [
+  ["dune" "subst"] {dev}
+  [
+    "dune"
+    "build"
+    "-p"
+    name
+    "-j"
+    jobs
+    "@install"
+    "@doc" {with-doc}
+  ]
+]
+
+x-maintenance-intent: ["(latest)"]
+url {
+  src: "https://github.com/oxcaml/odoc/archive/0e57a5b831877693dad02b5ac102c7154306d116.tar.gz"
+  checksum: [
+    "sha256=1cd0339b20dc5e13d07fdde61e4b31e53db6e3be833d0dcd00ef6700720be626"
+    "sha512=525f876c3d119d56a5f6ae36f0d54f36fa6e3e86bf0eeebaa1f5d2b9c814781173aedbd25c9a7e5a20010ad9f710608a6c9daa587497bee4dc0a11861d2914a0"
+  ]
+}
+x-commit-hash: "0e57a5b831877693dad02b5ac102c7154306d116"
