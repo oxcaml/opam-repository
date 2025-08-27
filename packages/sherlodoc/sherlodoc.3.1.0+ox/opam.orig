@@ -45,6 +45,6 @@ build: [
 dev-repo: "git+https://github.com/ocaml/odoc.git"
 x-maintenance-intent: ["(latest)"]
 url {
-  src: "git+https://github.com/jonludlam/odoc.git#97e1daecb432d33a7137d525f7a554f203073a95"
+  src: "git+https://github.com/oxcaml/odoc.git#0e57a5b831877693dad02b5ac102c7154306d116"
 }
 
