@@ -47,10 +47,5 @@ build: [
 
 x-maintenance-intent: ["(latest)"]
 url {
-  src: "https://github.com/oxcaml/odoc/archive/0e57a5b831877693dad02b5ac102c7154306d116.tar.gz"
-  checksum: [
-    "sha256=1cd0339b20dc5e13d07fdde61e4b31e53db6e3be833d0dcd00ef6700720be626"
-    "sha512=525f876c3d119d56a5f6ae36f0d54f36fa6e3e86bf0eeebaa1f5d2b9c814781173aedbd25c9a7e5a20010ad9f710608a6c9daa587497bee4dc0a11861d2914a0"
-  ]
+  src: "git+https://github.com/oxcaml/odoc.git#0e57a5b831877693dad02b5ac102c7154306d116"
 }
-x-commit-hash: "0e57a5b831877693dad02b5ac102c7154306d116"
