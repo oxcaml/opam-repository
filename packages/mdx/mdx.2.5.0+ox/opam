@@ -63,10 +63,14 @@ url {
   ]
 }
 x-commit-hash: "1f83f73e06233ea8745cd0c9473613d40e6999bc"
-patches: ["ast.patch"]
+patches: ["ast.patch" "unit-info.patch"]
 extra-files: [
   [
     "ast.patch"
     "sha256=c96ebc9dca741eded8f9ee2b5c15e075795c1be5ee741730d8096f825a20499f"
+  ]
+  [
+    "unit-info.patch"
+    "sha256=ec145ec86db853d986468e86e6a27b46d14f6acc309a36d546c9e475854b4a6a"
   ]
 ]
