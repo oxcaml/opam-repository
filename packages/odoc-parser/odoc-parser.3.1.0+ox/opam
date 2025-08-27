@@ -16,6 +16,7 @@ depends: [
   "ocaml" {>= "4.08.0" & < "5.5"}
   "astring"
   "camlp-streams"
+  "result"
   "ppx_expect" {with-test}
   "sexplib0" {with-test}
 ]
