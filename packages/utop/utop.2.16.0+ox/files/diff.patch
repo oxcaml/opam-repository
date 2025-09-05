@@ -1,6 +1,6 @@
 --- a/src/lib/uTop.ml
 +++ b/src/lib/uTop.ml
-@@ -290,6 +290,10 @@ let parse_default parse str eos_is_error =
+@@ -293,6 +293,10 @@ let parse_default parse str eos_is_error =
                   Printf.sprintf "Error: broken invariant in parsetree: %s" s)
        | Syntaxerr.Invalid_package_type (loc, err) ->
            Error ([mkloc loc], UTop_compat.invalid_package_error_to_string err)
@@ -11,10 +11,12 @@
  #if OCAML_VERSION >= (5, 0, 0)
        | Syntaxerr.Removed_string_set loc ->
            Error ([mkloc loc],
+diff --git a/src/lib/uTop_compat.ml b/src/lib/uTop_compat.ml
+index e4879f0..45a33b6 100644
 --- a/src/lib/uTop_compat.ml
 +++ b/src/lib/uTop_compat.ml
-@@ -59,7 +59,7 @@ let toploop_load_file ppf fn =
-
+@@ -94,7 +94,7 @@ let toploop_load_file ppf fn =
+ 
  (** Returns whether the given path is persistent. *)
  let rec is_persistent_path = function
 -  | Path.Pident id -> Ident.persistent id
@@ -22,7 +24,7 @@
    | Path.Pdot (p, _) -> is_persistent_path p
    | Path.Papply (_, p) -> is_persistent_path p
  #if OCAML_VERSION >= (5, 1, 0)
-@@ -92,6 +92,8 @@ let invalid_package_error_to_string err =
+@@ -127,6 +127,8 @@ let invalid_package_error_to_string err =
          Format.fprintf ppf
            "only module type identifier and %a constraints are supported"
            inline_code "with type"
@@ -31,7 +33,7 @@
    in
    let buf = Buffer.create 128 in
    let fmt = Format.formatter_of_buffer buf in
-@@ -110,7 +112,12 @@ module Exp = struct
+@@ -145,7 +147,12 @@ module Exp = struct
       pparam_loc=loc;
       pparam_desc=Pparam_val (Nolabel, None, p);
     }] in
@@ -45,14 +47,11 @@
  #else
    let fun_ ~loc p e = Exp.fun_ ~loc Nolabel None p e
  #endif
-@@ -150,4 +157,3 @@ let add_cmi_hook f =
-     res
-   in
-   Persistent_env.Persistent_signature.load := load
--
+diff --git a/src/lib/uTop_complete.ml b/src/lib/uTop_complete.ml
+index b34db3a..b46a36e 100644
 --- a/src/lib/uTop_complete.ml
 +++ b/src/lib/uTop_complete.ml
-@@ -404,7 +404,8 @@ let add_fields_of_type decl acc =
+@@ -386,7 +386,8 @@ let add_fields_of_type decl acc =
    match decl.type_kind with
      | Type_variant _ ->
          acc
@@ -62,7 +61,7 @@
          List.fold_left (fun acc field -> add (field_name field) acc) acc fields
  #if OCAML_VERSION >= (5, 2, 0)
      | Type_abstract _ ->
-@@ -418,12 +419,13 @@ let add_fields_of_type decl acc =
+@@ -400,12 +401,13 @@ let add_fields_of_type decl acc =
  let add_names_of_type decl acc =
    match decl.type_kind with
  #if OCAML_VERSION >= (4, 13, 0)
@@ -78,7 +77,7 @@
          List.fold_left (fun acc field -> add (field_name field) acc) acc fields
  #if OCAML_VERSION >= (5, 2, 0)
      | Type_abstract _ ->
-@@ -531,7 +533,7 @@ let list_global_names () =
+@@ -513,7 +515,7 @@ let list_global_names () =
      | Env.Env_empty -> acc
      | Env.Env_value_unbound _-> acc
      | Env.Env_module_unbound _-> acc
@@ -87,7 +86,7 @@
          loop (add (Ident.name id) acc) summary
      | Env.Env_type(summary, id, decl) ->
          loop (add_names_of_type decl (add (Ident.name id) acc)) summary
-@@ -585,7 +587,7 @@ let list_global_fields () =
+@@ -567,7 +569,7 @@ let list_global_fields () =
      | Env.Env_empty -> acc
      | Env.Env_value_unbound _-> acc
      | Env.Env_module_unbound _-> acc
@@ -96,7 +95,7 @@
          loop (add (Ident.name id) acc) summary
      | Env.Env_type(summary, id, decl) ->
          loop (add_fields_of_type decl (add (Ident.name id) acc)) summary
-@@ -709,11 +711,11 @@ let rec labels_of_type acc type_expr =
+@@ -691,11 +693,11 @@ let rec labels_of_type acc type_expr =
          labels_of_type acc te
      | Tpoly (te, _) ->
          labels_of_type acc te
@@ -110,9 +109,11 @@
          labels_of_type (String_map.add label Optional acc) te
        | Labelled label ->
          labels_of_type (String_map.add label Required acc) te)
+diff --git a/src/lib/uTop_main.ml b/src/lib/uTop_main.ml
+index 37946fd..17cd70c 100644
 --- a/src/lib/uTop_main.ml
 +++ b/src/lib/uTop_main.ml
-@@ -337,8 +337,10 @@ end = struct
+@@ -340,8 +340,10 @@ end = struct
      let new_cmis = ref [] in
      UTop_compat.add_cmi_hook (fun cmi -> new_cmis := cmi :: !new_cmis );
      fun pp ->
@@ -124,8 +125,8 @@
 +        walk_sig pp ~path:(Longident.Lident cmi_name) cmi_sign
        ) !new_cmis;
        new_cmis := []
-
-@@ -353,12 +355,16 @@ end = struct
+ 
+@@ -356,12 +358,16 @@ end = struct
          if path = Path.Pident id then
            walk_mty pp name md_type
        in
@@ -143,7 +144,7 @@
        in
        let rec scan_summary last = function
          | Env.Env_empty -> ()
-@@ -370,7 +376,7 @@ end = struct
+@@ -373,7 +379,7 @@ end = struct
          | Env.Env_value_unbound (s, _, _)
          | Env.Env_module_unbound (s, _, _)
          | Env.Env_persistent (s, _)
@@ -152,7 +153,7 @@
          | Env.Env_type (s, _, _)
          | Env.Env_extension (s, _, _)
          | Env.Env_modtype (s, _, _)
-@@ -627,7 +633,7 @@ let rewrite_str_item pstr_item tstr_item =
+@@ -630,7 +636,7 @@ let rewrite_str_item pstr_item tstr_item =
    match pstr_item, tstr_item.Typedtree.str_desc with
      | ({ Parsetree.pstr_desc = Parsetree.Pstr_eval (e, _);
           Parsetree.pstr_loc = loc },
@@ -161,34 +162,34 @@
        match rule_of_type typ with
          | Some rule ->
            { Parsetree.pstr_desc = Parsetree.Pstr_eval (rule.rewrite loc e, []);
-@@ -1193,7 +1199,13 @@ let typeof sid =
+@@ -1217,7 +1223,13 @@ let typeof sid =
        Some (Printtyp.tree_of_value_description id val_descr)
      with Not_found ->
      try
 -      let lbl_desc = Env.find_label_by_name id env in
 +      let lbl_desc = Env.find_label_by_name Legacy id env in
-+      let (path, ty_decl) = from_type_desc (get_desc lbl_desc.Types.lbl_res) in
++      let (path, ty_decl) = from_type_desc (lbl_res lbl_desc) in
 +      let id = Ident.create_local (Path.name path) in
 +      Some (Printtyp.tree_of_type_declaration id ty_decl Types.Trec_not)
 +    with Not_found ->
 +    try
 +      let lbl_desc = Env.find_label_by_name Unboxed_product id env in
-       let (path, ty_decl) = from_type_desc (get_desc lbl_desc.Types.lbl_res) in
+       let (path, ty_decl) = from_type_desc (lbl_res lbl_desc) in
        let id = Ident.create_local (Path.name path) in
        Some (Printtyp.tree_of_type_declaration id ty_decl Types.Trec_not)
-@@ -1521,8 +1533,9 @@ type value = V : string * _ -> value
+@@ -1546,8 +1558,9 @@ type value = V : string * _ -> value
  exception Found of Env.t
-
+ 
  let get_required_label name args =
 -  match List.find (fun (lab, _) -> lab = Asttypes.Labelled name) args with
--  | _, x -> x
+-  | _, x -> present_arg x
 +  match List.find (fun (lab, _) -> lab = Typedtree.Labelled name) args with
 +  | _, Typedtree.Omitted _ -> None
 +  | _, Typedtree.Arg (x, _) -> Some x
    | exception Not_found -> None
-
+ 
  let walk dir ~init ~f =
-@@ -1557,7 +1570,7 @@ let interact ?(search_path=[]) ?(build_dir="_build") ~unit ~loc:(fname, lnum, cn
+@@ -1582,7 +1595,7 @@ let interact ?(search_path=[]) ?(build_dir="_build") ~unit ~loc:(fname, lnum, cn
    let cmt_infos = Cmt_format.read_cmt cmt_fname in
    let expr next (e : Typedtree.expression) =
      match e.exp_desc with

@@ -44,16 +44,17 @@ build: [
 dev-repo: "git+https://github.com/ocaml-community/utop.git"
 url {
   src:
-    "https://github.com/ocaml-community/utop/releases/download/2.15.0/utop-2.15.0.tar.gz"
+    "https://github.com/ocaml-community/utop/releases/download/2.16.0/utop-2.16.0.tbz"
   checksum: [
-    "sha256=7659dea0a7f7a5b16e30024ee681445179f8c0f87630e5cdae554280dacd6fac"
-    "sha512=f05aa85fbec3a4ecda6068b1ed350f61a0b3626969641c37508fde0fdeeffa80abd50b406c36884a81bc965d91d97d797490da1fe4edea0daa3936d47bbb1c70"
+    "sha256=0b9f79135d2132fb211cbe889941cfd0d54cc7bb8062b8a0443e38c540b8c763"
+    "sha512=073d67d898ac1b579aac050e8c88a229d67a13e9c85f1d835023a46750cdf4b2f2180d1ea70005e9e0366721503d0ba2b9c326deddfb43426d87481e461cd45e"
   ]
 }
+x-commit-hash: "bd6a1546e5c73c7a626e456fac5e81027106e4d6"
 patches: ["diff.patch"]
 extra-files: [
   [
     "diff.patch"
-    "sha256=40e5036598eaff65299a7bf34780f08b2928431eb2328c1c5ffe72efbbb2b783"
+    "sha256=06f1c6775f57ad96ed0812fd5a46977dffbb1c216389ab824e5f964dccc18df8"
   ]
 ]
