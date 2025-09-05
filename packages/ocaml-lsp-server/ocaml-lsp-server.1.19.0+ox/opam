@@ -54,7 +54,7 @@ depends: [
   "cmarkit"
   "expectree"
   "re2"
-  "odoc-parser"         {= "2.0.0"}
+  "odoc-parser"         {= "3.1.0+ox"}
 ]
 build: [
   ["dune" "subst"] {dev}
@@ -68,4 +68,12 @@ url {
   checksum:
     "sha256=7d38472fa68c6aa283941f15fe4155d04164904db2a9740904b67b62ff44a282"
 }
-
+patches: [
+  "odoc-parser.patch"
+]
+extra-files: [
+  [
+    "odoc-parser.patch"
+    "sha256=e27b2c24d6f548746f171dd5b0489190ed4e0b76d58bfd509d48a819bab0c066"
+  ]
+]
