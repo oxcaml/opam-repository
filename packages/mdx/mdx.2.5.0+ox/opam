@@ -56,6 +56,6 @@ build: [
 dev-repo: "git+https://github.com/realworldocaml/mdx.git"
 url {
   src:
-    "git+https://github.com/jonludlam/mdx.git#aae25c16a7f093a7c23bb966951e4c73daf8b54c"
+    "git+https://github.com/oxcaml/mdx.git#aae25c16a7f093a7c23bb966951e4c73daf8b54c"
 }
 
