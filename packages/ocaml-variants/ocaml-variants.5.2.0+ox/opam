@@ -133,5 +133,8 @@ conflicts: [
   "uTop" {!= "2.15.0+ox"}
   "uutf" {!= "1.0.3+ox"}
   "wasm_of_ocaml-compiler" {!= "6.0.1+ox"}
-  "zarith" {!= "1.12+ox"}
+  "zarith" {<"1.12"}
+  "zarith" {="1.12"}
+  "zarith" {="1.13"}
+  "zarith" {="1.14"}
 ]
