@@ -33,7 +33,7 @@ depends: [
 ]
 depopts: ["cmdliner"]
 conflicts: [
-  "cmdliner" {< "0.9.8"}
+  "cmdliner" {< "0.9.8" | >= "2.0.0"}
 ]
 build: [
   "ocaml"
