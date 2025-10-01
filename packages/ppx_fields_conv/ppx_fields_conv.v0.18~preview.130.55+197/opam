@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_fields_conv"
+bug-reports: "https://github.com/janestreet/ppx_fields_conv/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_fields_conv.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_fields_conv/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"       {>= "5.1.0"}
+  "base"        {= "v0.18~preview.130.55+197"}
+  "fieldslib"   {= "v0.18~preview.130.55+197"}
+  "ppx_helpers" {= "v0.18~preview.130.55+197"}
+  "ppxlib_jane" {= "v0.18~preview.130.55+197"}
+  "dune"        {>= "3.17.0"}
+  "ppxlib"      {= "0.33.0+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Generation of accessor and iteration functions for ocaml records"
+description: """
+Part of the Jane Street's PPX rewriters collection.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_fields_conv/archive/5052a1019d415b003a34621b2628ed546d6c9934.tar.gz"
+  checksum:
+    "sha256=bb97efbff9eacbf02b2a33f1c551222d74091ad9bc123fe6a116fcb60b9e8957"
+}

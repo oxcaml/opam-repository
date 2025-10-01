@@ -1,0 +1,48 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/await"
+bug-reports: "https://github.com/janestreet/await/issues"
+dev-repo: "git+https://github.com/janestreet/await.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/await/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                    {>= "5.2.0"}
+  "async"                    {= "v0.18~preview.130.55+197"}
+  "base"                     {= "v0.18~preview.130.55+197"}
+  "basement"                 {= "v0.18~preview.130.55+197"}
+  "concurrent"               {= "v0.18~preview.130.55+197"}
+  "core"                     {= "v0.18~preview.130.55+197"}
+  "core_kernel"              {= "v0.18~preview.130.55+197"}
+  "core_unix"                {= "v0.18~preview.130.55+197"}
+  "expect_test_helpers_core" {= "v0.18~preview.130.55+197"}
+  "oxcaml_effect"            {= "v0.18~preview.130.55+197"}
+  "parallel"                 {= "v0.18~preview.130.55+197"}
+  "portable"                 {= "v0.18~preview.130.55+197"}
+  "ppx_debug_assert"         {= "v0.18~preview.130.55+197"}
+  "ppx_fuelproof"            {= "v0.18~preview.130.55+197"}
+  "ppx_jane"                 {= "v0.18~preview.130.55+197"}
+  "ppx_quick_test"           {= "v0.18~preview.130.55+197"}
+  "ppx_sexp_conv"            {= "v0.18~preview.130.55+197"}
+  "ppx_sexp_value"           {= "v0.18~preview.130.55+197"}
+  "ppx_shorthand"            {= "v0.18~preview.130.55+197"}
+  "ppx_template"             {= "v0.18~preview.130.55+197"}
+  "ppx_with"                 {= "v0.18~preview.130.55+197"}
+  "base-threads"
+  "dune"                     {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis:
+  "Implementations of awaiting and synchronization primitives for OxCaml"
+description: """
+[Await] provides implementations of awaiting and synchronization primitives for OxCaml.
+"""
+url {
+  src:
+    "https://github.com/janestreet/await/archive/cfec2474f04634b5c358faa18265d244bf88cb6a.tar.gz"
+  checksum:
+    "sha256=c408b43365cdcb1c740bbbdc1d51ac819f187ed55b32e91df943c44f62b983b8"
+}

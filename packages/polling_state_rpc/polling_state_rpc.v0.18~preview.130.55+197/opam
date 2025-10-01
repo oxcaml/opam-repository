@@ -1,0 +1,35 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/polling_state_rpc"
+bug-reports: "https://github.com/janestreet/polling_state_rpc/issues"
+dev-repo: "git+https://github.com/janestreet/polling_state_rpc.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/polling_state_rpc/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"            {>= "5.1.0"}
+  "async_kernel"     {= "v0.18~preview.130.55+197"}
+  "async_rpc_kernel" {= "v0.18~preview.130.55+197"}
+  "babel"            {= "v0.18~preview.130.55+197"}
+  "core"             {= "v0.18~preview.130.55+197"}
+  "core_kernel"      {= "v0.18~preview.130.55+197"}
+  "ppx_diff"         {= "v0.18~preview.130.55+197"}
+  "ppx_jane"         {= "v0.18~preview.130.55+197"}
+  "dune"             {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis:
+  "An RPC which tracks state on the client and server so it only needs to send diffs across the wire."
+description: """
+An RPC which tracks state on the client and server so it only needs to send diffs across the wire.
+"""
+url {
+  src:
+    "https://github.com/janestreet/polling_state_rpc/archive/93eeeaac0e2d93eacf3e56c476ddf1857b65de0c.tar.gz"
+  checksum:
+    "sha256=c89f62c8af3425f611a18da3870dd120b87ab25b1eb9c34ccf39af3ecd1cbc4d"
+}
