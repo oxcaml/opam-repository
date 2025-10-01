@@ -1,0 +1,43 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/concurrent"
+bug-reports: "https://github.com/janestreet/concurrent/issues"
+dev-repo: "git+https://github.com/janestreet/concurrent.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/concurrent/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                    {>= "5.2.0"}
+  "async"                    {= "v0.18~preview.130.55+197"}
+  "await"                    {= "v0.18~preview.130.55+197"}
+  "base"                     {= "v0.18~preview.130.55+197"}
+  "core"                     {= "v0.18~preview.130.55+197"}
+  "core_unix"                {= "v0.18~preview.130.55+197"}
+  "expect_test_helpers_core" {= "v0.18~preview.130.55+197"}
+  "portable"                 {= "v0.18~preview.130.55+197"}
+  "portable_async"           {= "v0.18~preview.130.55+197"}
+  "ppx_debug_assert"         {= "v0.18~preview.130.55+197"}
+  "ppx_jane"                 {= "v0.18~preview.130.55+197"}
+  "ppx_quick_test"           {= "v0.18~preview.130.55+197"}
+  "ppx_with"                 {= "v0.18~preview.130.55+197"}
+  "stdio"                    {= "v0.18~preview.130.55+197"}
+  "unique"                   {= "v0.18~preview.130.55+197"}
+  "base-threads"
+  "dune"                     {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Abstract interface to concurrency in OxCaml"
+description: """
+[Concurrent] is a library that provides an abstract interface to concurrency in
+    OxCaml, with multiple implementations for different concurrent schedulers.
+"""
+url {
+  src:
+    "https://github.com/janestreet/concurrent/archive/4138f29173e9c4cca93614d5d1dae9b7cff38502.tar.gz"
+  checksum:
+    "sha256=e81a900551e6102ca660e7a58fb202ea4ce744a7cc58ac4ac9062c706c70d3e4"
+}
