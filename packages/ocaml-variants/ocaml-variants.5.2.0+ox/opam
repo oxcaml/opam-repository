@@ -1,9 +1,10 @@
 opam-version: "2.0"
 version: "5.2.0+ox"
-synopsis: "flambda2"
+synopsis: "OxCaml"
 license: "LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception"
 authors: "Xavier Leroy and many contributors"
-homepage: "https://ocaml.org"
+maintainer: "Jane Street <opensource-contacts@janestreet.com>"
+homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/oxcaml/issues"
 dev-repo: "git+https://github.com/oxcaml/oxcaml/flambda-backend#main"
 depends: [
@@ -65,7 +66,7 @@ build: [
   [
     "sh"
     "-exc"
-    "PATH=%{build}%/init_deps/bin/:$PATH ./configure --enable-middle-end=flambda2 --enable-runtime5 --enable-stack-checks --enable-poll-insertion --enable-multidomain --disable-warn-error' --prefix=%{prefix}%' '--with-dune=%{build}%/init_deps/bin/dune'"
+    "PATH=%{build}%/init_deps/bin/:$PATH ./configure --enable-middle-end=flambda2 --enable-runtime5 --enable-stack-checks --enable-poll-insertion --enable-multidomain --disable-warn-error '--prefix=%{prefix}%' '--with-dune=%{build}%/init_deps/bin/dune'"
   ]
   ["sh" "-exc" "PATH=%{build}%/init_deps/bin/:$PATH make -j%{jobs}%"]
 ]
@@ -99,7 +100,7 @@ patches: ["ignore-opam.patch"]
 extra-files: [
   [
     "ignore-opam.patch"
-    "sha256=ae78f4b19b09b7a3011368118c2141869ea25f1e3a3a5ef10da4c07754557320"
+    "sha256=6ece96cd3f06c3ed90f768bf63659266a670e5be0b2302354a2d0e87629ba049"
   ]
 ]
 conflicts: [
