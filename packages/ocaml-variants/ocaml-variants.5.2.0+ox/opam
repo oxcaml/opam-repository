@@ -92,9 +92,9 @@ extra-source "init-menhir.tar.gz" {
 }
 url {
   src:
-    "https://github.com/oxcaml/oxcaml/archive/refs/tags/5.2.0minus-21.tar.gz"
+    "https://github.com/oxcaml/oxcaml/archive/refs/tags/5.2.0minus-19.tar.gz"
   checksum:
-    "sha256=1d21d75b129648dfe5cd3a397aed32416fb856c18f462fe4f15d7dca13c5e5aa"
+    "sha256=025d23499a4f152693ea64deda097b69dc72a8185bb58f463536daa3ebcaf3c1"
 }
 patches: ["ignore-opam.patch"]
 extra-files: [
@@ -109,6 +109,7 @@ conflicts: [
   "backoff" {!= "0.1.1+ox"}
   "dot-merlin-reader" {!= "5.2.1-502+ox"}
   "dune" {!= "3.20.2+ox"}
+  "dune-rpc" {!= "3.20.2+ox"}
   "gen_js_api" {!= "1.1.2+ox"}
   "js_of_ocaml" {!= "6.0.1+ox"}
   "js_of_ocaml-compiler" {!= "6.0.1+ox"}
