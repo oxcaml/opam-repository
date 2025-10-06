@@ -39,17 +39,17 @@ build: [
   [
     "sh"
     "-exc"
-    "cd dune-3.9.3; PATH=%{build}%/init_deps/bin/:$PATH ocaml boot/bootstrap.ml -j %{jobs}%"
+    "cd dune-3.20.2; PATH=%{build}%/init_deps/bin/:$PATH ocaml boot/bootstrap.ml -j %{jobs}%"
   ]
   [
     "sh"
     "-exc"
-    "cd dune-3.9.3; PATH=%{build}%/init_deps/bin/:$PATH ./_boot/dune.exe build dune.install --release --profile dune-bootstrap -j %{jobs}%"
+    "cd dune-3.20.2; PATH=%{build}%/init_deps/bin/:$PATH ./_boot/dune.exe build dune.install --release --profile dune-bootstrap -j %{jobs}%"
   ]
   [
     "sh"
     "-exc"
-    "cd dune-3.9.3; PATH=%{build}%/init_deps/bin/:$PATH ./_boot/dune.exe install --root %{build}%/dune-3.9.3 --prefix %{build}%/init_deps/ dune"
+    "cd dune-3.20.2; PATH=%{build}%/init_deps/bin/:$PATH ./_boot/dune.exe install --root %{build}%/dune-3.20.2 --prefix %{build}%/init_deps/ dune"
   ]
   [
     "sh"
@@ -65,7 +65,7 @@ build: [
   [
     "sh"
     "-exc"
-    "PATH=%{build}%/init_deps/bin/:$PATH ./configure --enable-runtime5 --enable-middle-end=flambda2 --enable-poll-insertion --enable-multidomain --enable-stack-checks --disable-naked-pointers '--prefix=%{prefix}%' '--with-dune=%{build}%/init_deps/bin/dune'"
+    "PATH=%{build}%/init_deps/bin/:$PATH ./configure --enable-middle-end=flambda2 --enable-runtime5 --enable-stack-checks --enable-poll-insertion --enable-multidomain --disable-warn-error' --prefix=%{prefix}%' '--with-dune=%{build}%/init_deps/bin/dune'"
   ]
   ["sh" "-exc" "PATH=%{build}%/init_deps/bin/:$PATH make -j%{jobs}%"]
 ]
@@ -76,10 +76,9 @@ extra-source "init-compiler.tar.gz" {
     "sha256=c2d706432f93ba85bd3383fa451d74543c32a4e84a1afaf3e8ace18f7f097b43"
 }
 extra-source "init-dune.tbz" {
-  src: "https://github.com/ocaml/dune/releases/download/3.9.3/dune-3.9.3.tbz"
+  src: "https://github.com/ocaml/dune/releases/download/3.20.2/dune-3.20.2.tbz"
   checksum: [
-    "sha256=96bf755da267fb46e4af2dda0db56d5863761589618089c429ff85e0f7f65783"
-    "sha512=ce05560a2cff0beb805a259df449b5dbd15420e353cc686a482904b837969bce6f91eedec608ecef4be0ebc232fa013652745a7cc831af1a7f8fe06a391e5488"
+    "sha256=b1a86b2d60bdb4a8b9bb6861bdf2f9f28a6e7cb5d833ce81afecceb9ef9ca549"
   ]
 }
 extra-source "init-menhir.tar.gz" {
