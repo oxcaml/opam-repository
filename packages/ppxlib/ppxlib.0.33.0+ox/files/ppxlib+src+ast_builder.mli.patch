@@ -9,6 +9,15 @@
    module Latest : sig
      (** This module contains updated versions of node constructors that were
          kept stable when the node changed. For every function in this module,
+@@ -32,7 +34,7 @@ module Default : sig
+     val ppat_construct :
+       loc:location ->
+       longident loc ->
+-      (label loc list * pattern) option ->
++      ((label loc * jkind_annotation option) list * pattern) option ->
+       pattern
+ 
+     val constructor_declaration :
 @@ -43,6 +45,17 @@ module Default : sig
        res:core_type option ->
        unit ->
@@ -27,6 +36,15 @@
    end
  
    val ppat_construct :
+@@ -75,7 +88,7 @@ module type S = sig
+         missing a feature you need. *)
+ 
+     val ppat_construct :
+-      longident loc -> (label loc list * pattern) option -> pattern
++      longident loc -> ((label loc * jkind_annotation option) list * pattern) option -> pattern
+ 
+     val constructor_declaration :
+       name:label loc ->
 @@ -84,6 +97,16 @@ module type S = sig
        res:core_type option ->
        unit ->

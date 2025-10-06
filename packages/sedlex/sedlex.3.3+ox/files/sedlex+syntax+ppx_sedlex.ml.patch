@@ -41,9 +41,9 @@
                  } ) ) -> begin
            match (i1, i2) with
              | Pconst_integer (i1, _), Pconst_integer (i2, _) ->
-@@ -515,14 +518,23 @@ let post_handler cookies =
-     Driver.Cookies.set cookies "sedlex.regexps"
-       (pexp_extension ~loc ({ loc; txt = "regexps" }, PStr !regexps)))
+@@ -420,6 +423,13 @@ let previous = ref []
+ let regexps = ref []
+ let should_set_cookies = ref false
  
 +let loc_ghoster =
 +  object
@@ -51,6 +51,40 @@
 +    method! location location = super#location { location with loc_ghost = true }
 +  end
 +;;
++
+ let mapper =
+   object (this)
+     inherit Ast_traverse.map as super
+@@ -458,13 +468,13 @@ let mapper =
+                       err e.pexp_loc "'when' guards are not supported")
+                 cases
+             in
+-            gen_definition lexbuf cases error
++            loc_ghoster#expression @@ gen_definition lexbuf cases error
+         | [%expr
+             let [%p? { ppat_desc = Ppat_var { txt = name } }] =
+               [%sedlex.regexp? [%p? p]]
+             in
+             [%e? body]] ->
+-            (this#define_regexp name p)#expression body
++            loc_ghoster#expression @@ (this#define_regexp name p)#expression body
+         | [%expr [%sedlex [%e? _]]] ->
+             err e.pexp_loc
+               "the %sedlex extension is only recognized on match expressions"
+@@ -498,7 +508,7 @@ let mapper =
+         let tables = List.map table (get_tables ()) in
+         regexps := regexps';
+         should_set_cookies := true;
+-        tables @ parts @ l)
++        loc_ghoster#structure (tables @ parts) @ l)
+       else fst (this#structure_with_regexps l)
+   end
+ 
+@@ -515,11 +525,15 @@ let post_handler cookies =
+     Driver.Cookies.set cookies "sedlex.regexps"
+       (pexp_extension ~loc ({ loc; txt = "regexps" }, PStr !regexps)))
+ 
++
 +
  let extensions =
    [
@@ -63,7 +97,3 @@
    ]
  
  let () =
-   Driver.Cookies.add_handler pre_handler;
-   Driver.Cookies.add_post_handler post_handler;
--  Driver.register_transformation "sedlex" ~impl:mapper#structure
-+  Driver.register_transformation "sedlex" ~impl:(fun s -> s |> mapper#structure |> loc_ghoster#structure)

@@ -11,7 +11,7 @@
    val pstr_value_list :
      loc:Location.t ->
      Asttypes.rec_flag ->
-@@ -110,6 +114,72 @@ module type Additional_helpers = sig
+@@ -110,6 +114,73 @@ module type Additional_helpers = sig
  
    val eta_reduce_if_possible_and_nonrec :
      expression -> rec_flag:rec_flag -> expression
@@ -35,6 +35,7 @@
 +    : (arg_label -> core_type -> core_type -> core_type) with_loc
 +  val ptyp_tuple : (core_type list -> core_type) with_loc
 +
++  val pexp_let : (rec_flag -> value_binding list -> expression -> expression) with_loc
 +  val pexp_constraint : (expression -> core_type -> expression) with_loc
 +  val pexp_tuple : (expression list -> expression) with_loc
 +
@@ -84,7 +85,7 @@
  end
  
  module type Located = sig
-@@ -133,5 +203,7 @@ module type S = sig
+@@ -133,5 +204,7 @@ module type S = sig
      let loc = Location.none
    end)
  

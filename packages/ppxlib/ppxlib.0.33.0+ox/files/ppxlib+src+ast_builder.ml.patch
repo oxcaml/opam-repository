@@ -1,6 +1,6 @@
 --- a/src/ast_builder.ml
 +++ b/src/ast_builder.ml
-@@ -1,5 +1,68 @@
+@@ -1,5 +1,70 @@
  open! Import
  
 +(* Internally to Jane Street, shadow the auto-generated [pexp_fun] and [pexp_function]
@@ -20,6 +20,7 @@
 +  let ptyp_arrow = `Shadowed
 +  let ppat_constraint = `Shadowed
 +  let pexp_constraint = `Shadowed
++  let pexp_let = `Shadowed
 +  let value_binding = `Shadowed
 +  let include_infos = `Shadowed
 +  let psig_include = `Shadowed
@@ -41,6 +42,7 @@
 +    ptyp_arrow,
 +    ppat_constraint,
 +    pexp_constraint,
++    pexp_let,
 +    value_binding,
 +    include_infos,
 +    psig_include,
@@ -69,8 +71,18 @@
  module Default = struct
    module Located = struct
      type 'a t = 'a Loc.t
-@@ -17,7 +80,15 @@ module Default = struct
-     let ppat_construct = ppat_construct
+@@ -14,10 +79,24 @@ module Default = struct
+   include Ast_builder_generated.M
+ 
+   module Latest = struct
+-    let ppat_construct = ppat_construct
++    let ppat_construct ~loc lid p =
++      {
++        ppat_loc_stack = [];
++        ppat_attributes = [];
++        ppat_loc = loc;
++        ppat_desc = Ppat_construct (lid, p);
++      }
  
      let constructor_declaration ~loc ~name ~vars ~args ~res () =
 +      let vars = List.map vars ~f:(fun var -> var, None) in
@@ -85,7 +97,7 @@
    end
  
    (*------ stable layer above Ast_builder_generated.M -----*)
-@@ -41,6 +112,45 @@ module Default = struct
+@@ -41,6 +120,48 @@ module Default = struct
  
    (*-------------------------------------------------------*)
  
@@ -103,6 +115,9 @@
 +    Ppxlib_jane.Ast_builder.Default.ptyp_arrow ~loc
 +      { arg_label; arg_type; arg_modes = [] }
 +      { result_type; result_modes = [] }
++
++  let pexp_let ~loc a b c =
++    Ppxlib_jane.Ast_builder.Default.pexp_let ~loc Immutable a b c
 +
 +  let pexp_constraint ~loc a b =
 +    Ppxlib_jane.Ast_builder.Default.pexp_constraint ~loc a (Some b) []
@@ -131,7 +146,7 @@
    let pstr_value_list ~loc rec_flag = function
      | [] -> []
      | vbs -> [ pstr_value ~loc rec_flag vbs ]
-@@ -88,9 +198,9 @@ module Default = struct
+@@ -88,9 +209,9 @@ module Default = struct
    let pvar ~loc v = ppat_var ~loc (Located.mk ~loc v)
    let eunit ~loc = pexp_construct ~loc (Located.lident ~loc "()") None
    let punit ~loc = ppat_construct ~loc (Located.lident ~loc "()") None
@@ -144,7 +159,7 @@
  
    let pexp_tuple_opt ~loc l =
      match l with [] -> None | _ :: _ -> Some (pexp_tuple ~loc l)
-@@ -98,8 +208,11 @@ module Default = struct
+@@ -98,8 +219,11 @@ module Default = struct
    let ppat_tuple_opt ~loc l =
      match l with [] -> None | _ :: _ -> Some (ppat_tuple ~loc l)
  
@@ -157,7 +172,7 @@
  
    let pexp_apply ~loc e el =
      match (e, el) with
-@@ -111,9 +224,23 @@ module Default = struct
+@@ -111,9 +235,23 @@ module Default = struct
    let eapply ~loc e el =
      pexp_apply ~loc e (List.map el ~f:(fun e -> (Asttypes.Nolabel, e)))
  
@@ -184,7 +199,7 @@
  
    let esequence ~loc el =
      match List.rev el with
-@@ -180,52 +307,62 @@ module Default = struct
+@@ -180,52 +318,62 @@ module Default = struct
      type_constr_conv longident ~loc ~f []
  
    let eta_reduce =
@@ -284,7 +299,7 @@
          in
          pexp_constraint ~loc expr ty
        else expr
-@@ -248,13 +385,13 @@ module Default = struct
+@@ -248,13 +396,13 @@ module Default = struct
          | _ -> None
      in
      fun expr ->
@@ -300,7 +315,16 @@
                  Poly.( = ) (arg_label : arg_label) param_label
                  &&
                  match arg with
-@@ -295,6 +432,16 @@ module type S = sig
+@@ -286,7 +434,7 @@ module type S = sig
+ 
+   module Latest : sig
+     val ppat_construct :
+-      longident loc -> (label loc list * pattern) option -> pattern
++      longident loc -> ((label loc * jkind_annotation option) list * pattern) option -> pattern
+ 
+     val constructor_declaration :
+       name:label loc ->
+@@ -295,6 +443,16 @@ module type S = sig
        res:core_type option ->
        unit ->
        constructor_declaration
@@ -317,7 +341,7 @@
    end
  
    val ppat_construct : longident loc -> pattern option -> pattern
-@@ -315,7 +462,13 @@ end) : S = struct
+@@ -315,7 +473,13 @@ end) : S = struct
      let ppat_construct = ppat_construct
  
      let constructor_declaration ~name ~vars ~args ~res () =
@@ -331,7 +355,7 @@
    end
  
    (*----- stable layer above Ast_builder_generated.Make (Loc) -----*)
-@@ -340,6 +493,32 @@ end) : S = struct
+@@ -340,6 +504,33 @@ end) : S = struct
  
    (*---------------------------------------------------------------*)
  
@@ -343,6 +367,7 @@
 +    Default.value_description ~loc ~name ~type_ ~prim
 +
 +  let ptyp_arrow a b c = Default.ptyp_arrow ~loc a b c
++  let pexp_let a b c = Default.pexp_let ~loc a b c
 +  let pexp_constraint a b = Default.pexp_constraint ~loc a b
 +  let ppat_constraint a b = Default.ppat_constraint ~loc a b
 +
@@ -364,7 +389,7 @@
    let pstr_value_list = Default.pstr_value_list
  
    let nonrec_type_declaration ~name ~params ~cstrs ~kind ~private_ ~manifest =
-@@ -359,6 +538,8 @@ end) : S = struct
+@@ -359,6 +550,8 @@ end) : S = struct
    let ptyp_tuple l = Default.ptyp_tuple ~loc l
    let pexp_tuple_opt l = Default.pexp_tuple_opt ~loc l
    let ppat_tuple_opt l = Default.ppat_tuple_opt ~loc l
@@ -373,7 +398,7 @@
    let ptyp_poly vars ty = Default.ptyp_poly ~loc vars ty
    let pexp_apply e el = Default.pexp_apply ~loc e el
    let eint t = Default.eint ~loc t
-@@ -389,17 +570,30 @@ end) : S = struct
+@@ -389,17 +582,30 @@ end) : S = struct
    let elist l = Default.elist ~loc l
    let plist l = Default.plist ~loc l
  

@@ -94,11 +94,11 @@ extra-files: [
   ]
   [
     "ppxlib+ast+ast.ml.patch"
-    "sha256=2c12102816bf5599dae10039fb4973ca97cd3a4b294a964cf8b1225e681f81da"
+    "sha256=1370418b4381e03d814ee4f379e517778ecce877272b0c6bcf39a036fc494a7a"
   ]
   [
     "ppxlib+ast+ast_helper_lite.ml.patch"
-    "sha256=b20584b83318532d9bf05b695175a322ef556783beb9ac9cd6150a769041621c"
+    "sha256=fcb837e075692245ec576e6a336f20de55020b128bfe5df5d3c543407b823e20"
   ]
   [
     "ppxlib+ast+ast_helper_lite.mli.patch"
@@ -126,7 +126,7 @@ extra-files: [
   ]
   [
     "ppxlib+astlib+ast_414.ml.patch"
-    "sha256=6daec29f25537dae70c440cc02dd5b49164040c94ce91bc167b72c0eb73f223e"
+    "sha256=b5feecd4103b31e66342cb6ae70cfd72b0bccf26c9ecea414bc0b6a136eaf19e"
   ]
   [
     "ppxlib+astlib+ast_500.ml.patch"
@@ -134,7 +134,7 @@ extra-files: [
   ]
   [
     "ppxlib+astlib+ast_999.ml.patch"
-    "sha256=77386466602a452e2fca0b30efe57c800986f2cbcf9c16916c867e67be96d8bf"
+    "sha256=c7ccba33220660b099d80a528d391655284bc4867c5a3aaed093dbd271afb656"
   ]
   [
     "ppxlib+astlib+ast_metadata.mli.patch"
@@ -154,11 +154,11 @@ extra-files: [
   ]
   [
     "ppxlib+astlib+migrate_500_999.ml.patch"
-    "sha256=d9068afe43d4d59af4bb4b5c1bd3ab7162d3ce12bd069fcc3c1b6878438606b0"
+    "sha256=36947ec4fb25f6fb39ea0787cb89b5ea032ae90134540c851493ef612cb28acd"
   ]
   [
     "ppxlib+astlib+migrate_999_500.ml.patch"
-    "sha256=eb3d0ac8a07586ed4f7d7e2c56bf86d2cbbe41f51e992267a3bb2ef35712cc29"
+    "sha256=49ebeb191f409e642d1ff366e83518594560161d26129494cb2c63d561dc72a4"
   ]
   [
     "ppxlib+astlib+parse.mli.patch"

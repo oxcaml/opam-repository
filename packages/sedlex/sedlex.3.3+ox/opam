@@ -51,6 +51,6 @@ patches: ["sedlex+syntax+ppx_sedlex.ml.patch"]
 extra-files: [
   [
     "sedlex+syntax+ppx_sedlex.ml.patch"
-    "sha256=8167f55a342833208d830c17a50619925fcc02c1c22b4d8c8aff0d1a7efe132b"
+    "sha256=67fd4616d46d1c98cc6658620de963bb1ceabb6a0168faaa465626d87381bc74"
   ]
 ]

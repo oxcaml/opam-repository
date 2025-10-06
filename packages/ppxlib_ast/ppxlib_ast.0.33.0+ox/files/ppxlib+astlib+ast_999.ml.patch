@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/astlib/ast_999.ml
-@@ -0,0 +1,1347 @@
+@@ -0,0 +1,1385 @@
 +module Asttypes = struct
 +  type constant (*IF_CURRENT = Asttypes.constant *) =
 +      Const_int of int
@@ -46,6 +46,14 @@
 +  type injectivity (*IF_CURRENT = Asttypes.injectivity *) =
 +    | Injective
 +    | NoInjectivity
++
++  type index_kind (*IF_CURRENT = Asttypes.index_kind *) =
++    | Index_int
++    | Index_unboxed_int64
++    | Index_unboxed_int32
++    | Index_unboxed_int16
++    | Index_unboxed_int8
++    | Index_unboxed_nativeint
 +end
 +
 +module Parsetree = struct
@@ -65,6 +73,7 @@
 +        Suffixes except ['l'], ['L'] and ['n'] are rejected by the typechecker
 +    *)
 +    | Pconst_char of char  (** Character such as ['c']. *)
++    | Pconst_untagged_char of char (** Untagged character such as [#'c']. *)
 +    | Pconst_string of string * Location.t * string option
 +        (** Constant string such as ["constant"] or
 +            [{delim|other constant|delim}].
@@ -317,13 +326,16 @@
 +            - If Closed, [n >= 2]
 +            - If Open, [n >= 1]
 +          *)
-+    | Ppat_construct of Longident.t loc * ((string loc * jkind_annotation option) list * pattern) option
++    | Ppat_construct of
++        Longident.t loc * ((string loc * jkind_annotation option) list * pattern) option
 +        (** [Ppat_construct(C, args)] represents:
 +              - [C]               when [args] is [None],
 +              - [C P]             when [args] is [Some ([], P)]
 +              - [C (P1, ..., Pn)] when [args] is
 +                                             [Some ([], Ppat_tuple [P1; ...; Pn])]
-+              - [C (type a b) P]  when [args] is [Some ([a; b], P)]
++              - [C (type a b) P]  when [args] is [Some ([a, None; b, None], P)]
++              - [C (type (a : k) b) P]
++                                  when [args] is [Some ([a, Some k; b, None], P)]
 +           *)
 +    | Ppat_variant of label * pattern option
 +        (** [Ppat_variant(`A, pat)] represents:
@@ -387,13 +399,18 @@
 +    | Pexp_constant of constant
 +        (** Expressions constant such as [1], ['a'], ["true"], [1.0], [1l],
 +              [1L], [1n] *)
-+    | Pexp_let of rec_flag * value_binding list * expression
-+        (** [Pexp_let(flag, [(P1,E1) ; ... ; (Pn,En)], E)] represents:
-+              - [let P1 = E1 and ... and Pn = EN in E]
-+                 when [flag] is {{!Asttypes.rec_flag.Nonrecursive}[Nonrecursive]},
-+              - [let rec P1 = E1 and ... and Pn = EN in E]
-+                 when [flag] is {{!Asttypes.rec_flag.Recursive}[Recursive]}.
-+           *)
++    | Pexp_let of mutable_flag * rec_flag * value_binding list * expression
++      (** [Pexp_let(mut, rec, [(P1,E1) ; ... ; (Pn,En)], E)] represents:
++            - [let P1 = E1 and ... and Pn = EN in E]
++               when [rec] is {{!Asttypes.rec_flag.Nonrecursive}[Nonrecursive]}
++               and [mut] = {{!Asttypes.mutable_flag.Immutable}[Immutable]}.
++            - [let rec P1 = E1 and ... and Pn = EN in E]
++               when [rec] is {{!Asttypes.rec_flag.Recursive}[Recursive]}
++               and [mut] = {{!Asttypes.mutable_flag.Immutable}[Immutable]}.
++            - [let mutable P1 = E1 in E]
++               when [rec] is {{!Asttypes.rec_flag.Nonrecursive}[Nonrecursive]}
++               and [mut] = {{!Asttypes.mutable_flag.Mutable}[Mutable]}.
++          Invariant: If [mut = Mutable] then [n = 1] and [rec = Nonrecursive] *)
 +    | Pexp_function of
 +        function_param list * function_constraint * function_body
 +    (** [Pexp_function ([P1; ...; Pn], C, body)] represents any construct
@@ -473,6 +490,9 @@
 +        (** [E1.l <- E2] *)
 +    | Pexp_array of mutable_flag * expression list
 +        (** [[| E1; ...; En |]] or [[: E1; ...; En :]] *)
++    | Pexp_idx of block_access * unboxed_access list
++        (** [(BA1 UA1 UA2 ...)] e.g. [(.foo.#bar.#baz)]
++            Above, BA1=.foo, UA1=.#bar, and UA2=#.baz *)
 +    | Pexp_ifthenelse of expression * expression * expression option
 +        (** [if E1 then E2 else E3] *)
 +    | Pexp_sequence of expression * expression  (** [E1; E2] *)
@@ -492,7 +512,7 @@
 +           *)
 +    | Pexp_send of expression * label loc  (** [E # m] *)
 +    | Pexp_new of Longident.t loc  (** [new M.c] *)
-+    | Pexp_setinstvar of label loc * expression  (** [x <- 2] *)
++    | Pexp_setvar of label loc * expression  (** [x <- 2] *)
 +    | Pexp_override of (label loc * expression) list
 +        (** [{< x1 = E1; ...; xn = En >}] *)
 +    | Pexp_letmodule of string option loc * module_expr * expression
@@ -640,6 +660,24 @@
 +    (** The type constraint placed on a function's body. *)
 +    }
 +  (** See the comment on {{!expression_desc.Pexp_function}[Pexp_function]}. *)
++
++  and block_access (*IF_CURRENT = Parsetree.block_access *) =
++    | Baccess_field of Longident.t loc
++        (** [.foo] *)
++    | Baccess_array of mutable_flag * index_kind * expression
++        (** Mutable array accesses: [.(E)], [.L(E)], [.l(E)], [.n(E)]
++            Immutable array accesses: [.:(E)], [.:L(E)], [.:l(E)], [.:n(E)]
++
++            Indexed by [int], [int64#], [int32#], or [nativeint#], respectively.
++        *)
++    | Baccess_block of mutable_flag * expression
++        (** Access using another block index: [.idx_imm(E)], [.idx_mut(E)]
++            (usually followed by unboxed accesses, to deepen the index).
++        *)
++
++  and unboxed_access (*IF_CURRENT = Parsetree.unboxed_access *) =
++    | Uaccess_unboxed_field of Longident.t loc
++        (** [.#foo] *)
 +
 +  and comprehension_iterator (*IF_CURRENT = Parsetree.comprehension_iterator *) =
 +    | Pcomp_range of
@@ -1345,6 +1383,6 @@
 +end
 +
 +module Config = struct
-+  let ast_impl_magic_number = "Caml1999M561"
-+  let ast_intf_magic_number = "Caml1999N561"
++  let ast_impl_magic_number = "Caml1999M568"
++  let ast_intf_magic_number = "Caml1999N568"
 +end

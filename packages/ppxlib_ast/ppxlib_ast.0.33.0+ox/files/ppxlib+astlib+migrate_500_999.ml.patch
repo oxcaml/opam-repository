@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/astlib/migrate_500_999.ml
-@@ -0,0 +1,1650 @@
+@@ -0,0 +1,1686 @@
 +open Stdlib0
 +module From = Ast_500
 +module To = Ast_999
@@ -84,9 +84,12 @@
 +      Ast_999.Parsetree.Pexp_ident (copy_loc copy_Longident_t x0)
 +  | Ast_500.Parsetree.Pexp_constant x0 ->
 +      Ast_999.Parsetree.Pexp_constant (copy_constant x0)
-+  | Ast_500.Parsetree.Pexp_let (x0, x1, x2) ->
++  | Ast_500.Parsetree.Pexp_let (x0, x1, x2, x3) ->
 +      Ast_999.Parsetree.Pexp_let
-+        (copy_rec_flag x0, List.map copy_value_binding x1, copy_expression x2)
++        ( copy_mutable_flag x0
++        , copy_rec_flag x1
++        , List.map copy_value_binding x2
++        , copy_expression x3 )
 +  | Ast_500.Parsetree.Pexp_function (x0, x1, x2) ->
 +      Ast_999.Parsetree.Pexp_function
 +        ( List.map copy_function_param x0
@@ -142,6 +145,9 @@
 +        (copy_expression x0, copy_loc copy_Longident_t x1, copy_expression x2)
 +  | Ast_500.Parsetree.Pexp_array (x0, x1) ->
 +      Ast_999.Parsetree.Pexp_array (copy_mutable_flag x0, List.map copy_expression x1)
++
++  | Ast_500.Parsetree.Pexp_idx (x0, x1) ->
++      Ast_999.Parsetree.Pexp_idx (copy_block_access x0, List.map copy_unboxed_access x1)
 +  | Ast_500.Parsetree.Pexp_ifthenelse (x0, x1, x2) ->
 +      Ast_999.Parsetree.Pexp_ifthenelse
 +        (copy_expression x0, copy_expression x1, Option.map copy_expression x2)
@@ -168,8 +174,8 @@
 +      Ast_999.Parsetree.Pexp_send (copy_expression x0, copy_loc copy_label x1)
 +  | Ast_500.Parsetree.Pexp_new x0 ->
 +      Ast_999.Parsetree.Pexp_new (copy_loc copy_Longident_t x0)
-+  | Ast_500.Parsetree.Pexp_setinstvar (x0, x1) ->
-+      Ast_999.Parsetree.Pexp_setinstvar
++  | Ast_500.Parsetree.Pexp_setvar (x0, x1) ->
++      Ast_999.Parsetree.Pexp_setvar
 +        (copy_loc copy_label x0, copy_expression x1)
 +  | Ast_500.Parsetree.Pexp_override x0 ->
 +      Ast_999.Parsetree.Pexp_override
@@ -215,6 +221,22 @@
 +      Ast_999.Parsetree.Pexp_overwrite (copy_expression x0, copy_expression x1)
 +  | Ast_500.Parsetree.Pexp_hole ->
 +      Ast_999.Parsetree.Pexp_hole
++
++and copy_block_access :
++    Ast_500.Parsetree.block_access -> Ast_999.Parsetree.block_access
++  = function
++    | Baccess_field lid ->
++      Baccess_field (copy_loc copy_Longident_t lid)
++    | Baccess_array (mut, ik, e) ->
++      Baccess_array (copy_mutable_flag mut, copy_index_kind ik, copy_expression e)
++    | Baccess_block (mut, e) ->
++      Baccess_block (copy_mutable_flag mut, copy_expression e)
++
++and copy_unboxed_access :
++    Ast_500.Parsetree.unboxed_access -> Ast_999.Parsetree.unboxed_access
++  = function
++    | Uaccess_unboxed_field lid ->
++      Uaccess_unboxed_field (copy_loc copy_Longident_t lid)
 +
 +and copy_comprehension_iterator :
 +    Ast_500.Parsetree.comprehension_iterator -> Ast_999.Parsetree.comprehension_iterator
@@ -556,7 +578,10 @@
 +          Option.map
 +            (fun x ->
 +              let x0, x1 = x in
-+              (List.map (fun x -> copy_loc (fun x -> x) x, None) x0, copy_pattern x1))
++              (List.map
++                 (fun (x0, x1) ->
++                    copy_loc (fun x -> x) x0,
++                    Option.map copy_jkind_annotation x1) x0, copy_pattern x1))
 +            x1 )
 +  | Ast_500.Parsetree.Ppat_variant (x0, x1) ->
 +      Ast_999.Parsetree.Ppat_variant (copy_label x0, Option.map copy_pattern x1)
@@ -1538,6 +1563,15 @@
 +  | Ast_500.Asttypes.Contravariant -> Ast_999.Asttypes.Contravariant
 +  | Ast_500.Asttypes.NoVariance -> Ast_999.Asttypes.NoVariance
 +
++and copy_index_kind : Ast_500.Asttypes.index_kind -> Ast_999.Asttypes.index_kind =
++  function
++  | Ast_500.Asttypes.Index_int -> Ast_999.Asttypes.Index_int
++  | Ast_500.Asttypes.Index_unboxed_int64 -> Ast_999.Asttypes.Index_unboxed_int64
++  | Ast_500.Asttypes.Index_unboxed_int32 -> Ast_999.Asttypes.Index_unboxed_int32
++  | Ast_500.Asttypes.Index_unboxed_int16 -> Ast_999.Asttypes.Index_unboxed_int16
++  | Ast_500.Asttypes.Index_unboxed_int8 -> Ast_999.Asttypes.Index_unboxed_int8
++  | Ast_500.Asttypes.Index_unboxed_nativeint -> Ast_999.Asttypes.Index_unboxed_nativeint
++
 +and copy_value_description :
 +    Ast_500.Parsetree.value_description -> Ast_999.Parsetree.value_description =
 + fun {
@@ -1618,6 +1652,8 @@
 +  | Ast_500.Parsetree.Pconst_integer (x0, x1) ->
 +      Ast_999.Parsetree.Pconst_integer (x0, Option.map (fun x -> x) x1)
 +  | Ast_500.Parsetree.Pconst_char x0 -> Ast_999.Parsetree.Pconst_char x0
++  | Ast_500.Parsetree.Pconst_untagged_char x0 ->
++      Ast_999.Parsetree.Pconst_untagged_char x0
 +  | Ast_500.Parsetree.Pconst_string (x0, x1, x2) ->
 +      Ast_999.Parsetree.Pconst_string
 +        (x0, copy_location x1, Option.map (fun x -> x) x2)

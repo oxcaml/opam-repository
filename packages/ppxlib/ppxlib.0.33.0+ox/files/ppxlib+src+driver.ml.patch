@@ -1,14 +1,15 @@
 --- a/src/driver.ml
 +++ b/src/driver.ml
-@@ -24,6 +24,7 @@ let pretty = ref false
+@@ -24,6 +24,8 @@ let pretty = ref false
  let styler = ref None
  let output_metadata_filename = ref None
  let corrected_suffix = ref ".ppx-corrected"
 +let raise_embedded_errors_flag = ref false
++let as_merlin = ref false
  
  let ghost =
    object
-@@ -31,6 +32,15 @@ let ghost =
+@@ -31,6 +33,15 @@ let ghost =
      method! location loc = { loc with loc_ghost = true }
    end
  
@@ -24,7 +25,7 @@
  let chop_prefix ~prefix x =
    if String.is_prefix ~prefix x then
      Some (String.drop_prefix x (String.length prefix))
-@@ -46,7 +56,7 @@ let get_default_path_str : structure -> 
+@@ -46,7 +57,7 @@ let get_default_path_str : structure -> 
    | [] -> ""
    | { pstr_loc = loc; _ } :: _ -> get_default_path loc
  
@@ -33,7 +34,7 @@
    | [] -> ""
    | { psig_loc = loc; _ } :: _ -> get_default_path loc
  
-@@ -151,7 +161,7 @@ module Transform = struct
+@@ -151,7 +162,7 @@ module Transform = struct
      enclose_intf :
        (Expansion_context.Base.t ->
        Location.t option ->
@@ -42,7 +43,7 @@
        option;
      instrument : Instrument.t option;
      rules : Context_free.Rule.t list;
-@@ -280,13 +290,13 @@ module Transform = struct
+@@ -280,13 +291,13 @@ module Transform = struct
        map#structure base_ctxt (List.concat [ attrs; header; st; footer ])
        >>= fun st -> match impl with None -> return st | Some f -> f ctxt st
      in
@@ -60,7 +61,7 @@
        let base_ctxt =
          Expansion_context.Base.top_level ~tool_name ~file_path ~input_name
        in
-@@ -295,12 +305,14 @@ module Transform = struct
+@@ -295,12 +306,14 @@ module Transform = struct
          | None -> ([], [])
          | Some f ->
              let whole_loc =
@@ -78,7 +79,7 @@
      in
      { t with impl = Some map_impl; intf = Some map_intf }
  
-@@ -526,12 +538,12 @@ let get_whole_ast_passes ~hook ~expect_m
+@@ -526,12 +539,12 @@ let get_whole_ast_passes ~hook ~expect_m
    in
    linters @ preprocess @ before_instrs @ make_generic cts @ after_instrs
  
@@ -94,7 +95,7 @@
        * label loc list
        * (location * label) list
        * exn
-@@ -587,7 +599,7 @@ let apply_transforms (type t) ~tool_name
+@@ -587,7 +600,7 @@ let apply_transforms (type t) ~tool_name
      in
      Ok (finish acc)
    with Wrapper (x, dropped, lint_errors, exn, errors) ->
@@ -103,7 +104,7 @@
  
  (*$*)
  
-@@ -617,7 +629,12 @@ let exn_to_sig_extension exn =
+@@ -617,7 +630,12 @@ let exn_to_sig_extension exn =
  
  let error_to_extension error ~(kind : Kind.t) =
    match kind with
@@ -117,7 +118,7 @@
    | Impl -> Intf_or_impl.Impl [ error_to_str_extension error ]
  
  let exn_to_extension exn ~(kind : Kind.t) =
-@@ -703,6 +720,7 @@ let map_structure_gen st ~tool_name ~hoo
+@@ -703,6 +721,7 @@ let map_structure_gen st ~tool_name ~hoo
    let file_path = get_default_path_str st in
    match
      apply_transforms st ~tool_name ~file_path
@@ -125,7 +126,7 @@
        ~field:(fun (ct : Transform.t) -> ct.impl)
        ~lint_field:(fun (ct : Transform.t) -> ct.lint_impl)
        ~dropped_so_far:Attribute.dropped_so_far_structure ~hook
-@@ -711,9 +729,15 @@ let map_structure_gen st ~tool_name ~hoo
+@@ -711,9 +730,15 @@ let map_structure_gen st ~tool_name ~hoo
        ~embed_errors
    with
    | Error (st, lint_errors, errors) ->
@@ -143,7 +144,7 @@
  
  let map_structure st =
    match
-@@ -725,64 +749,67 @@ let map_structure st =
+@@ -725,64 +750,67 @@ let map_structure st =
    with
    | Ok ast | Error ast -> ast
  
@@ -235,7 +236,7 @@
        ~field:(fun (ct : Transform.t) -> ct.intf)
        ~lint_field:(fun (ct : Transform.t) -> ct.lint_intf)
        ~dropped_so_far:Attribute.dropped_so_far_signature ~hook
-@@ -790,10 +817,23 @@ let map_signature_gen sg ~tool_name ~hoo
+@@ -790,10 +818,23 @@ let map_signature_gen sg ~tool_name ~hoo
        ~f_exception:(fun exn -> exn_to_sig_extension exn)
        ~embed_errors
    with
@@ -263,7 +264,7 @@
  
  let map_signature sg =
    match
-@@ -970,46 +1010,45 @@ let add_cookies_str st =
+@@ -970,46 +1011,45 @@ let add_cookies_str st =
    in
    prefix @ st
  
@@ -323,7 +324,7 @@
    | Impl x -> Impl (add_cookies_str x)
  
  let corrections = ref []
-@@ -1162,7 +1201,7 @@ let process_file (kind : Kind.t) fn ~inp
+@@ -1162,7 +1202,7 @@ let process_file (kind : Kind.t) fn ~inp
            | Intf ast -> Pprintast.signature ppf ast
            | Impl ast -> Pprintast.structure ppf ast);
            let null_ast =
@@ -332,7 +333,7 @@
            in
            if not null_ast then Stdlib.Format.pp_print_newline ppf ())
    | Dump_ast ->
-@@ -1337,6 +1376,10 @@ let shared_args =
+@@ -1337,6 +1377,10 @@ let shared_args =
         applied before all impl and intf." );
      ("-cookie", Arg.String set_cookie, "NAME=EXPR Set the cookie NAME to EXPR");
      ("--cookie", Arg.String set_cookie, " Same as -cookie");
@@ -343,7 +344,29 @@
    ]
  
  let () =
-@@ -1565,3 +1608,24 @@ let enable_checks () =
+@@ -1430,6 +1474,12 @@ let standalone_args =
+     ( "-corrected-suffix",
+       Arg.Set_string corrected_suffix,
+       "SUFFIX Suffix to append to corrected files" );
++    ( "-as-merlin",
++      Arg.Set as_merlin,
++      " Merlin should pass this flag to indicate that the PPX is being run by Merlin. \
++       This allows PPXes to modify their behavior when run by Merlin rather than the \
++       compiler. Merlin override attributes will only be generated when this flag is \
++       included." );
+   ]
+ 
+ let get_args ?(standalone_args = standalone_args) () =
+@@ -1556,6 +1606,8 @@ let run_as_ppx_rewriter () =
+ 
+ let pretty () = !pretty
+ 
++let as_merlin () = !as_merlin
++
+ let enable_checks () =
+   (* We do not enable the locations check here, we currently require that one
+      to be specifically enabled. *)
+@@ -1565,3 +1617,24 @@ let enable_checks () =
  let enable_location_check () = perform_locations_check := true
  let disable_location_check () = perform_locations_check := false
  let map_structure st = map_structure st

@@ -22,7 +22,7 @@
  
        method! pattern p =
          match p.ppat_desc with
-@@ -217,6 +223,39 @@ module Expr = Make (struct
+@@ -217,6 +223,45 @@ module Expr = Make (struct
          pexp_extension ~loc:(loc_of_extension ext)
            (Location.error_extensionf ~loc:(loc_of_extension ext)
               "expression expected")
@@ -39,6 +39,12 @@
 +       Ppxlib_jane.Ast_builder.Default.coalesce_fun_arity [%expr fun P -> [%e y]]
 +     ]}
 +
++     and similarly with newtypes:
++
++     {[
++       [%expr fun (type a) -> [%e y]]
++     ]}
++
 +     In this example, this makes the arity of the resulting expression equal to
 +     [1 + arity(y)] instead of [1].
 +
@@ -47,22 +53,22 @@
 +  *)
 +  let on_expression (input_expression : expression) (lifted : result) =
 +    match input_expression.pexp_desc with
-+    | Pexp_function _ ->
-+        let loc = input_expression.pexp_loc in
-+        let fun_binding =
-+          Ldot
-+            ( Ldot (Ldot (Lident "Ppxlib_jane", "Ast_builder") ,"Default")
-+            , "coalesce_fun_arity" )
-+        in
-+        pexp_apply
-+          ~loc
-+          (pexp_ident ~loc { txt = fun_binding; loc })
-+          [ Nolabel, lifted ]
++    | Pexp_function _ | Pexp_newtype _ ->
++      let loc = input_expression.pexp_loc in
++      let fun_binding =
++        Ldot
++          ( Ldot (Ldot (Lident "Ppxlib_jane", "Ast_builder") ,"Default")
++          , "coalesce_fun_arity" )
++      in
++      pexp_apply
++        ~loc
++        (pexp_ident ~loc { txt = fun_binding; loc })
++        [ Nolabel, lifted ]
 +    | _ -> lifted
  end)
  
  module Patt = Make (struct
-@@ -250,6 +289,9 @@ module Patt = Make (struct
+@@ -250,6 +295,9 @@ module Patt = Make (struct
            ppat_extension ~loc:(loc_of_extension ext)
              (Location.error_extensionf ~loc:(loc_of_extension ext)
                 "pattern expected"))
@@ -72,7 +78,7 @@
  end)
  
  let () =
-@@ -281,10 +323,15 @@ let () =
+@@ -281,10 +329,15 @@ let () =
            let lift = lifter loc in
            lift#typed (lift#signature s) "signature");
        E.declare "metaquot.sigi" ctx

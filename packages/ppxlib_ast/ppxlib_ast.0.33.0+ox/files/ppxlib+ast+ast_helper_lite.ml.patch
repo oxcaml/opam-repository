@@ -113,12 +113,14 @@
    let type_ ?loc ?attrs a = mk ?loc ?attrs (Ppat_type a)
    let lazy_ ?loc ?attrs a = mk ?loc ?attrs (Ppat_lazy a)
    let unpack ?loc ?attrs a = mk ?loc ?attrs (Ppat_unpack a)
-@@ -201,23 +220,34 @@ module Exp = struct
+@@ -200,28 +219,39 @@ module Exp = struct
+   let attr d a = { d with pexp_attributes = d.pexp_attributes @ [ a ] }
    let ident ?loc ?attrs a = mk ?loc ?attrs (Pexp_ident a)
    let constant ?loc ?attrs a = mk ?loc ?attrs (Pexp_constant a)
-   let let_ ?loc ?attrs a b c = mk ?loc ?attrs (Pexp_let (a, b, c))
+-  let let_ ?loc ?attrs a b c = mk ?loc ?attrs (Pexp_let (a, b, c))
 -  let fun_ ?loc ?attrs a b c d = mk ?loc ?attrs (Pexp_fun (a, b, c, d))
 -  let function_ ?loc ?attrs a = mk ?loc ?attrs (Pexp_function a)
++  let let_ ?loc ?attrs a b c = mk ?loc ?attrs (Pexp_let (Immutable, a, b, c))
 +  let fun_ ?(loc = !default_loc) ?attrs a b c d =
 +    mk ~loc ?attrs
 +      (Pexp_function
@@ -153,6 +155,11 @@
    let coerce ?loc ?attrs a b c = mk ?loc ?attrs (Pexp_coerce (a, b, c))
    let send ?loc ?attrs a b = mk ?loc ?attrs (Pexp_send (a, b))
    let new_ ?loc ?attrs a = mk ?loc ?attrs (Pexp_new a)
+-  let setinstvar ?loc ?attrs a b = mk ?loc ?attrs (Pexp_setinstvar (a, b))
++  let setinstvar ?loc ?attrs a b = mk ?loc ?attrs (Pexp_setvar (a, b))
+   let override ?loc ?attrs a = mk ?loc ?attrs (Pexp_override a)
+   let letmodule ?loc ?attrs a b c = mk ?loc ?attrs (Pexp_letmodule (a, b, c))
+   let letexception ?loc ?attrs a b = mk ?loc ?attrs (Pexp_letexception (a, b))
 @@ -229,7 +259,7 @@ module Exp = struct
    let lazy_ ?loc ?attrs a = mk ?loc ?attrs (Pexp_lazy a)
    let poly ?loc ?attrs a b = mk ?loc ?attrs (Pexp_poly (a, b))

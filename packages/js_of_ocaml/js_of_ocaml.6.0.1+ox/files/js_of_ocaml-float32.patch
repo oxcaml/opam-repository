@@ -6,8 +6,8 @@
      ; ieee_754
 +    ; float32
      ; int64
-     ; internalMod
      ; ints
+     ; io
 --- a/compiler/lib-runtime-files/tests/all.ml
 +++ b/compiler/lib-runtime-files/tests/all.ml
 @@ -21,6 +21,7 @@
@@ -18,17 +18,7 @@
      +format.js
      +fs.js
      +fs_fake.js
-@@ -52,7 +53,8 @@
-     +toplevel.js
-     +unix.js
-     +weak.js
--    +zstd.js |}];
-+    +zstd.js
-+    |}];
-   printl runtime;
-   [%expect
-     {|
-@@ -65,6 +67,7 @@
+@@ -64,6 +65,7 @@
      +domain.js
      +effect.js
      +fail.js
@@ -36,244 +26,6 @@
      +format.js
      +fs.js
      +fs_fake.js
-@@ -94,7 +97,8 @@
-     +sys.js
-     +unix.js
-     +weak.js
--    +zstd.js |}];
-+    +zstd.js
-+    |}];
-   printl extra;
-   [%expect {|
-     +dynlink.js
---- a/compiler/lib/code.ml
-+++ b/compiler/lib/code.ml
-@@ -326,6 +326,7 @@
-   | String of string
-   | NativeString of Native_string.t
-   | Float of float
-+  | Float32 of float
-   | Float_array of float array
-   | Int of Targetint.t
-   | Int32 of Int32.t
-@@ -358,8 +359,10 @@
-     | NativeInt a, NativeInt b -> Some (Int32.equal a b)
-     | Float_array a, Float_array b -> Some (Array.equal Float.ieee_equal a b)
-     | Float a, Float b -> Some (Float.ieee_equal a b)
-+    | Float32 a, Float32 b -> Some (Float.ieee_equal a b)
-     | String _, NativeString _ | NativeString _, String _ -> None
-     | Int _, Float _ | Float _, Int _ -> None
-+    | Int _, Float32 _ | Float32 _, Int _ -> None
-     | Tuple ((0 | 254), _, _), Float_array _ -> None
-     | Float_array _, Tuple ((0 | 254), _, _) -> None
-     | ( Tuple _
-@@ -369,7 +372,7 @@
-         | Int _
-         | Int32 _
-         | NativeInt _
--        | Float _
-+        | Float _ | Float32 _
-         | Float_array _ ) ) -> Some false
-     | ( Float_array _
-       , ( String _
-@@ -378,13 +381,13 @@
-         | Int _
-         | Int32 _
-         | NativeInt _
--        | Float _
-+        | Float _ | Float32 _
-         | Tuple _ ) ) -> Some false
-     | ( String _
--      , (Int64 _ | Int _ | Int32 _ | NativeInt _ | Float _ | Tuple _ | Float_array _) ) ->
-+      , (Int64 _ | Int _ | Int32 _ | NativeInt _ | Float _ | Float32 _ | Tuple _ | Float_array _) ) ->
-         Some false
-     | ( NativeString _
--      , (Int64 _ | Int _ | Int32 _ | NativeInt _ | Float _ | Tuple _ | Float_array _) ) ->
-+      , (Int64 _ | Int _ | Int32 _ | NativeInt _ | Float _ | Float32 _ | Tuple _ | Float_array _) ) ->
-         Some false
-     | ( Int64 _
-       , ( String _
-@@ -392,10 +395,12 @@
-         | Int _
-         | Int32 _
-         | NativeInt _
--        | Float _
-+        | Float _ | Float32 _
-         | Tuple _
-         | Float_array _ ) ) -> Some false
--    | Float _, (String _ | NativeString _ | Float_array _ | Int64 _ | Tuple (_, _, _)) ->
-+    | Float _, (Float32 _ | String _ | NativeString _ | Float_array _ | Int64 _ | Tuple (_, _, _)) ->
-+        Some false
-+    | Float32 _, (Float _ | String _ | NativeString _ | Float_array _ | Int64 _ | Tuple (_, _, _)) ->
-         Some false
-     | ( (Int _ | Int32 _ | NativeInt _)
-       , (String _ | NativeString _ | Float_array _ | Int64 _ | Tuple (_, _, _)) ) ->
-@@ -404,8 +409,8 @@
-     | Int _, (Int32 _ | NativeInt _)
-     | Int32 _, (Int _ | NativeInt _)
-     | NativeInt _, (Int _ | Int32 _)
--    | (Int32 _ | NativeInt _), Float _
--    | Float _, (Int32 _ | NativeInt _) -> None
-+    | (Int32 _ | NativeInt _), (Float _ | Float32 _)
-+    | (Float _ | Float32 _), (Int32 _ | NativeInt _) -> None
- end
-
- type loc =
-@@ -491,6 +496,7 @@
-     | NativeString (Byte s) -> Format.fprintf f "%Sj" s
-     | NativeString (Utf (Utf8 s)) -> Format.fprintf f "%Sj" s
-     | Float fl -> Format.fprintf f "%.12g" fl
-+    | Float32 fl -> Format.fprintf f "%.9g" fl
-     | Float_array a ->
-         Format.fprintf f "[|";
-         for i = 0 to Array.length a - 1 do
-@@ -878,7 +884,7 @@
-             match target with
-             | `Wasm -> true
-             | _ -> false)
--      | String _ | NativeString _ | Float _ | Float_array _ | Int _ | Int64 _
-+      | String _ | NativeString _ | Float _ | Float32 _ | Float_array _ | Int _ | Int64 _
-       | Tuple (_, _, _) -> ()
-     in
-     let check_prim_arg = function
---- a/compiler/lib/code.mli
-+++ b/compiler/lib/code.mli
-@@ -172,6 +172,7 @@
-   | String of string
-   | NativeString of Native_string.t
-   | Float of float
-+  | Float32 of float
-   | Float_array of float array
-   | Int of Targetint.t
-   | Int32 of Int32.t  (** Only produced when compiling to WebAssembly. *)
---- a/compiler/lib/eval.ml
-+++ b/compiler/lib/eval.ml
-@@ -251,9 +251,11 @@
-   match a, b with
-   | Int i, Int j -> Some (Targetint.equal i j)
-   | Float a, Float b -> Some (Float.ieee_equal a b)
-+  | Float32 a, Float32 b -> Some (Float.ieee_equal a b)
-+  | Float32 _, Float _ | Float _, Float32 _ -> None
-   | NativeString a, NativeString b -> Some (Native_string.equal a b)
-   | String a, String b when Config.Flag.use_js_string () -> Some (String.equal a b)
--  | Int _, Float _ | Float _, Int _ -> None
-+  | Int _, (Float _ | Float32 _) | (Float _ | Float32 _), Int _ -> None
-   (* All other values may be distinct objects and thus different by [caml_js_equals]. *)
-   | String _, _
-   | _, String _
-@@ -413,6 +415,7 @@
-              ( Int32 _
-              | NativeInt _
-              | Float _
-+             | Float32 _
-              | Tuple _
-              | String _
-              | NativeString _
---- a/compiler/lib/flow.ml
-+++ b/compiler/lib/flow.ml
-@@ -354,7 +354,9 @@
-   match a, b, target with
-   | Int i, Int j, _ -> Targetint.equal i j
-   | Float a, Float b, `JavaScript -> Float.bitwise_equal a b
-+  | Float32 a, Float32 b, `JavaScript -> Float.bitwise_equal a b
-   | Float _, Float _, `Wasm -> false
-+  | Float32 _, Float32 _, `Wasm -> false
-   | NativeString a, NativeString b, `JavaScript -> Native_string.equal a b
-   | NativeString _, NativeString _, `Wasm ->
-       false
-@@ -373,7 +375,7 @@
-   | Int64 _, Int64 _, _ -> false
-   | Tuple _, Tuple _, _ -> false
-   | Float_array _, Float_array _, _ -> false
--  | (Int _ | Float _ | Int64 _ | Int32 _ | NativeInt _), _, _ -> false
-+  | (Int _ | Float _ | Float32 _ | Int64 _ | Int32 _ | NativeInt _), _, _ -> false
-   | (String _ | NativeString _), _, _ -> false
-   | (Float_array _ | Tuple _), _, _ -> false
-
---- a/compiler/lib/generate.ml
-+++ b/compiler/lib/generate.ml
-@@ -438,6 +438,7 @@
-       | Byte x -> Share.get_byte_string str_js_byte x ctx.Ctx.share, instrs
-       | Utf (Utf8 x) -> Share.get_utf_string str_js_utf8 x ctx.Ctx.share, instrs)
-   | Float f -> float_const f, instrs
-+  | Float32 f -> float_const f, instrs
-   | Float_array a ->
-       ( Mlvalue.Array.make
-           ~tag:Obj.double_array_tag
-@@ -964,6 +965,13 @@
-   register_bin_prim "caml_le_float" `Pure (fun cx cy _ -> bool (J.EBin (J.Le, cx, cy)));
-   register_bin_prim "caml_gt_float" `Pure (fun cx cy _ -> bool (J.EBin (J.Lt, cy, cx)));
-   register_bin_prim "caml_lt_float" `Pure (fun cx cy _ -> bool (J.EBin (J.Lt, cx, cy)));
-+  register_bin_prim "caml_eq_float32" `Pure (fun cx cy _ -> bool (J.EBin (J.EqEq, cx, cy)));
-+  register_bin_prim "caml_neq_float32" `Pure (fun cx cy _ ->
-+      bool (J.EBin (J.NotEq, cx, cy)));
-+  register_bin_prim "caml_ge_float32" `Pure (fun cx cy _ -> bool (J.EBin (J.Le, cy, cx)));
-+  register_bin_prim "caml_le_float32" `Pure (fun cx cy _ -> bool (J.EBin (J.Le, cx, cy)));
-+  register_bin_prim "caml_gt_float32" `Pure (fun cx cy _ -> bool (J.EBin (J.Lt, cy, cx)));
-+  register_bin_prim "caml_lt_float32" `Pure (fun cx cy _ -> bool (J.EBin (J.Lt, cx, cy)));
-   register_bin_prim "caml_add_float" `Pure (fun cx cy _ -> J.EBin (J.Plus, cx, cy));
-   register_bin_prim "caml_sub_float" `Pure (fun cx cy _ -> J.EBin (J.Minus, cx, cy));
-   register_bin_prim "caml_mul_float" `Pure (fun cx cy _ -> J.EBin (J.Mul, cx, cy));
---- a/compiler/lib/ocaml_compiler.ml
-+++ b/compiler/lib/ocaml_compiler.ml
-@@ -25,7 +25,8 @@
-   | Const_base (Const_char c) -> Int (Targetint.of_int_exn (Char.code c))
-   | ((Const_base (Const_string (s, _))) [@if ocaml_version < (4, 11, 0)])
-   | ((Const_base (Const_string (s, _, _))) [@if ocaml_version >= (4, 11, 0)]) -> String s
--  | Const_base (Const_float32 s | Const_unboxed_float32 s | Const_float s | Const_unboxed_float s) -> Float (float_of_string s)
-+  | Const_base (Const_float32 s | Const_unboxed_float32 s) -> Float32 Float32.(of_string s |> to_float)
-+  | Const_base (Const_float s | Const_unboxed_float s) -> Float (float_of_string s)
-   | Const_base (Const_int32 i | Const_unboxed_int32 i) -> (
-       match Config.target () with
-       | `JavaScript -> Int (Targetint.of_int32_warning_on_overflow i)
---- a/compiler/lib/parse_bytecode.ml
-+++ b/compiler/lib/parse_bytecode.ml
-@@ -477,6 +477,8 @@
-
-   let ident_native = ident_of_custom (Obj.repr 0n)
-
-+  let ident_f32 = ident_of_custom (Obj.repr 0.s)
-+
-   let rec parse x =
-     if Obj.is_block x
-     then
-@@ -490,6 +492,8 @@
-       else if tag = Obj.custom_tag
-       then
-         match ident_of_custom x with
-+        | Some name when same_ident name ident_f32 ->
-+          Float32 ((Obj.magic x : float32) |> Float32.to_float)
-         | Some name when same_ident name ident_32 -> (
-             let i : int32 = Obj.magic x in
-             match Config.target () with
-@@ -518,6 +522,7 @@
-   let inlined = function
-     | String _ | NativeString _ -> false
-     | Float _ -> true
-+    | Float32 _ -> true
-     | Float_array _ -> false
-     | Int64 _ -> false
-     | Tuple _ -> false
---- a/compiler/lib/stdlib.ml
-+++ b/compiler/lib/stdlib.ml
-@@ -417,6 +417,17 @@
-   external ( >= ) : t -> t -> bool = "%greaterequal"
- end
-
-+module Float32 = struct
-+  type t = float32
-+
-+  external of_float : float -> t = "%float32offloat"
-+  external to_float : t -> float = "%floatoffloat32"
-+
-+  (* In javascript/wasm, we define float32 parsing as rounding the 64-bit result.
-+     This is not equivalent to native code, which parses to 32 bits directly. *)
-+  let of_string s = float_of_string s |> of_float
-+end
-+
- module Bool = struct
-   external ( <> ) : bool -> bool -> bool = "%notequal"
-
 --- a/compiler/lib-wasm/gc_target.ml
 +++ b/compiler/lib-wasm/gc_target.ml
 @@ -170,6 +170,22 @@
@@ -299,7 +51,7 @@
    let int32_type =
      register_type "int32" (fun () ->
          let* custom_operations = custom_operations_type in
-@@ -853,6 +869,18 @@
+@@ -855,6 +871,18 @@
      in
      if_mismatch
 
@@ -318,16 +70,193 @@
    let make_int32 ~kind e =
      let* custom_operations = Type.custom_operations_type in
      let* int32_ops =
-@@ -1023,6 +1051,9 @@
+@@ -1026,6 +1054,9 @@
      | Float f ->
          let* ty = Type.float_type in
-         return (Const, W.StructNew (ty, [ Const (F64 f) ]))
+         return (Const, W.StructNew (ty, [ Const (F64 (Int64.float_of_bits f)) ]))
 +    | Float32 f ->
-+        let* e = Memory.make_float32 (return (W.Const (F32 f))) in
++        let* e = Memory.make_float32 (return (W.Const (F32 (Int64.float_of_bits f)))) in
 +        return (Const, e)
      | Float_array l ->
          let l = Array.to_list l in
          let* ty = Type.float_array_type in
+--- a/compiler/lib/code.ml
++++ b/compiler/lib/code.ml
+@@ -260,6 +260,7 @@
+   | String of string
+   | NativeString of Native_string.t
+   | Float of Int64.t
++  | Float32 of Int64.t
+   | Float_array of Int64.t array
+   | Int of Targetint.t
+   | Int32 of Int32.t
+@@ -300,6 +301,7 @@
+         Some (Float.ieee_equal (Int64.float_of_bits a) (Int64.float_of_bits b))
+     | String _, NativeString _ | NativeString _, String _ -> None
+     | Int _, Float _ | Float _, Int _ -> None
++    | Int _, Float32 _ | Float32 _, Int _ -> None
+     | Tuple ((0 | 254), _, _), Float_array _ -> None
+     | Float_array _, Tuple ((0 | 254), _, _) -> None
+     | ( Tuple _
+@@ -310,6 +312,7 @@
+         | Int32 _
+         | NativeInt _
+         | Float _
++        | Float32 _
+         | Float_array _ ) ) -> Some false
+     | ( Float_array _
+       , ( String _
+@@ -319,12 +322,13 @@
+         | Int32 _
+         | NativeInt _
+         | Float _
++        | Float32 _
+         | Tuple _ ) ) -> Some false
+     | ( String _
+-      , (Int64 _ | Int _ | Int32 _ | NativeInt _ | Float _ | Tuple _ | Float_array _) ) ->
++      , (Int64 _ | Int _ | Int32 _ | NativeInt _ | Float _ | Float32 _ | Tuple _ | Float_array _) ) ->
+         Some false
+     | ( NativeString _
+-      , (Int64 _ | Int _ | Int32 _ | NativeInt _ | Float _ | Tuple _ | Float_array _) ) ->
++      , (Int64 _ | Int _ | Int32 _ | NativeInt _ | Float _ | Float32 _ | Tuple _ | Float_array _) ) ->
+         Some false
+     | ( Int64 _
+       , ( String _
+@@ -333,9 +337,12 @@
+         | Int32 _
+         | NativeInt _
+         | Float _
++        | Float32 _
+         | Tuple _
+         | Float_array _ ) ) -> Some false
+-    | Float _, (String _ | NativeString _ | Float_array _ | Int64 _ | Tuple (_, _, _)) ->
++    | Float _, (Float32 _ | String _ | NativeString _ | Float_array _ | Int64 _ | Tuple (_, _, _)) ->
++        Some false
++    | Float32 _, (Float _ | String _ | NativeString _ | Float_array _ | Int64 _ | Tuple (_, _, _)) ->
+         Some false
+     | ( (Int _ | Int32 _ | NativeInt _)
+       , (String _ | NativeString _ | Float_array _ | Int64 _ | Tuple (_, _, _)) ) ->
+@@ -344,8 +351,8 @@
+     | Int _, (Int32 _ | NativeInt _)
+     | Int32 _, (Int _ | NativeInt _)
+     | NativeInt _, (Int _ | Int32 _)
+-    | (Int32 _ | NativeInt _), Float _
+-    | Float _, (Int32 _ | NativeInt _) -> None
++    | (Int32 _ | NativeInt _), (Float _ | Float32 _)
++    | (Float _ | Float32 _), (Int32 _ | NativeInt _) -> None
+ end
+
+ type loc =
+@@ -432,6 +439,7 @@
+     | NativeString (Byte s) -> Format.fprintf f "%Sj" s
+     | NativeString (Utf (Utf8 s)) -> Format.fprintf f "%Sj" s
+     | Float fl -> Format.fprintf f "%.12g" (Int64.float_of_bits fl)
++    | Float32 fl -> Format.fprintf f "%.9g" (Int64.float_of_bits fl)
+     | Float_array a ->
+         Format.fprintf f "[|";
+         for i = 0 to Array.length a - 1 do
+--- a/compiler/lib/code.mli
++++ b/compiler/lib/code.mli
+@@ -148,6 +148,7 @@
+   | String of string
+   | NativeString of Native_string.t
+   | Float of Int64.t
++  | Float32 of Int64.t
+   | Float_array of Int64.t array
+   | Int of Targetint.t
+   | Int32 of Int32.t  (** Only produced when compiling to WebAssembly. *)
+--- a/compiler/lib/eval.ml
++++ b/compiler/lib/eval.ml
+@@ -452,6 +452,9 @@
+   | Int i, Int j -> Some (Targetint.equal i j)
+   | Float a, Float b ->
+       Some (Float.ieee_equal (Int64.float_of_bits a) (Int64.float_of_bits b))
++  | Float32 a, Float32 b ->
++      Some (Float.ieee_equal (Int64.float_of_bits a) (Int64.float_of_bits b))
++  | Float32 _, Float _ | Float _, Float32 _ -> None
+   | NativeString a, NativeString b -> Some (Native_string.equal a b)
+   | String a, String b when Config.Flag.use_js_string () -> Some (String.equal a b)
+   | Int _, Float _ | Float _, Int _ -> None
+@@ -476,6 +479,7 @@
+   match a, b with
+   | Int i, Int j -> Targetint.equal i j
+   | Float a, Float b -> Int64.equal a b
++  | Float32 a, Float32 b -> Int64.equal a b
+   | NativeString a, NativeString b -> Native_string.equal a b
+   | String a, String b -> String.equal a b
+   | Int32 a, Int32 b -> Int32.equal a b
+@@ -484,7 +488,7 @@
+   (* We don't need to compare other constants, so let's just return false. *)
+   | Tuple _, Tuple _ -> false
+   | Float_array _, Float_array _ -> false
+-  | (Int _ | Float _ | Int64 _ | Int32 _ | NativeInt _), _ -> false
++  | (Int _ | Float _ | Float32 _ | Int64 _ | Int32 _ | NativeInt _), _ -> false
+   | (String _ | NativeString _), _ -> false
+   | (Float_array _ | Tuple _), _ -> false
+
+@@ -689,6 +693,7 @@
+              ( Int32 _
+              | NativeInt _
+              | Float _
++             | Float32 _
+              | Tuple _
+              | String _
+              | NativeString _
+--- a/compiler/lib/generate.ml
++++ b/compiler/lib/generate.ml
+@@ -466,6 +466,7 @@
+       | Byte x -> Share.get_byte_string str_js_byte x ctx.Ctx.share, instrs
+       | Utf (Utf8 x) -> Share.get_utf_string str_js_utf8 x ctx.Ctx.share, instrs)
+   | Float f -> float_const f, instrs
++  | Float32 f -> float_const f, instrs
+   | Float_array a ->
+       ( Mlvalue.Array.make
+           ~tag:Obj.double_array_tag
+@@ -1215,6 +1216,13 @@
+   register_bin_prim "caml_le_float" `Pure (fun cx cy _ -> bool (J.EBin (J.Le, cx, cy)));
+   register_bin_prim "caml_gt_float" `Pure (fun cx cy _ -> bool (J.EBin (J.Lt, cy, cx)));
+   register_bin_prim "caml_lt_float" `Pure (fun cx cy _ -> bool (J.EBin (J.Lt, cx, cy)));
++  register_bin_prim "caml_eq_float32" `Pure (fun cx cy _ -> bool (J.EBin (J.EqEq, cx, cy)));
++  register_bin_prim "caml_neq_float32" `Pure (fun cx cy _ ->
++      bool (J.EBin (J.NotEq, cx, cy)));
++  register_bin_prim "caml_ge_float32" `Pure (fun cx cy _ -> bool (J.EBin (J.Le, cy, cx)));
++  register_bin_prim "caml_le_float32" `Pure (fun cx cy _ -> bool (J.EBin (J.Le, cx, cy)));
++  register_bin_prim "caml_gt_float32" `Pure (fun cx cy _ -> bool (J.EBin (J.Lt, cy, cx)));
++  register_bin_prim "caml_lt_float32" `Pure (fun cx cy _ -> bool (J.EBin (J.Lt, cx, cy)));
+   register_bin_prim "caml_add_float" `Pure (fun cx cy _ -> J.EBin (J.Plus, cx, cy));
+   register_bin_prim "caml_sub_float" `Pure (fun cx cy _ -> J.EBin (J.Minus, cx, cy));
+   register_bin_prim "caml_mul_float" `Pure (fun cx cy _ -> J.EBin (J.Mul, cx, cy));
+--- a/compiler/lib/ocaml_compiler.ml
++++ b/compiler/lib/ocaml_compiler.ml
+@@ -24,7 +24,8 @@
+   | Const_base (Const_int i) -> Int (Targetint.of_int_warning_on_overflow i)
+   | Const_base (Const_char c) -> Int (Targetint.of_int_exn (Char.code c))
+   | Const_base (Const_string (s, _, _)) -> String s
+-  | Const_base (Const_float32 s | Const_unboxed_float32 s | Const_float s | Const_unboxed_float s) -> Float (Int64.bits_of_float (float_of_string s))
++  | Const_base (Const_float s | Const_unboxed_float s) -> Float (Int64.bits_of_float (float_of_string s))
++  | Const_base (Const_float32 s | Const_unboxed_float32 s) -> Float32 (Int64.bits_of_float (float_of_string s))
+   | Const_base (Const_int32 i | Const_unboxed_int32 i) -> Int32 i
+   | Const_base (Const_int64 i | Const_unboxed_int64 i) -> Int64 i
+   | Const_base (Const_nativeint i | Const_unboxed_nativeint i) -> NativeInt (Int32.of_nativeint_warning_on_overflow i)
+--- a/compiler/lib/parse_bytecode.ml
++++ b/compiler/lib/parse_bytecode.ml
+@@ -481,6 +481,8 @@
+       else if tag = Obj.custom_tag
+       then
+         match ident_of_custom x with
++        | Some name when same_ident name ident_f32 ->
++          Float32 (Int64.bits_of_float (Obj.magic x : float))
+         | Some name when same_ident name ident_32 ->
+             let i : int32 = Obj.magic x in
+             Int32 i
+@@ -506,6 +508,7 @@
+     match c with
+     | String _ | NativeString _ -> false
+     | Float _ -> true
++    | Float32 _ -> true
+     | Float_array _ -> false
+     | Int64 _ -> false
+     | Tuple _ -> false
 --- /dev/null
 +++ b/compiler/tests-jsoo/test_marshal_float32.ml
 @@ -0,0 +1,47 @@
@@ -380,7 +309,7 @@
 +  [%expect {| 123.000000 456.000000 |}]
 --- /dev/null
 +++ b/runtime/js/float32.js
-@@ -0,0 +1,361 @@
+@@ -0,0 +1,419 @@
 +
 +/*
 +    32-bit floats are represented as javascript numbers, i.e. 64-bit floats.
@@ -729,19 +658,77 @@
 +    return Math.fround(Math.trunc(x));
 +}
 +
-+//Provides: caml_simd_float32_round_neg_inf_bytecode const
-+function caml_simd_float32_round_neg_inf_bytecode(x) {
-+    return Math.fround(Math.floor(x));
++//Provides: caml_make_unboxed_float32_vect_bytecode const (const)
++//Requires: caml_make_float_vect
++let caml_make_unboxed_float32_vect_bytecode = caml_make_float_vect
++
++//Provides: caml_ba_float32_get_1
++//Requires: caml_ba_get_1
++let caml_ba_float32_get_1 = caml_ba_get_1
++
++//Provides: caml_ba_float32_get_2
++//Requires: caml_ba_get_2
++let caml_ba_float32_get_2 = caml_ba_get_2
++
++//Provides: caml_ba_float32_get_3
++//Requires: caml_ba_get_3
++let caml_ba_float32_get_3 = caml_ba_get_3
++
++//Provides: caml_ba_float32_set_1
++//Requires: caml_ba_set_1
++let caml_ba_float32_set_1 = caml_ba_set_1
++
++//Provides: caml_ba_float32_set_2
++//Requires: caml_ba_set_2
++let caml_ba_float32_set_2 = caml_ba_set_2
++
++//Provides: caml_ba_float32_set_3
++//Requires: caml_ba_set_3
++let caml_ba_float32_set_3 = caml_ba_set_3
++
++//Provides: caml_ba_uint8_getf32
++//Requires: caml_ba_uint8_get32, caml_int32_float_of_bits
++function caml_ba_uint8_getf32(ba, i0) {
++    return caml_int32_float_of_bits(caml_ba_uint8_get32(ba, i0));
 +}
 +
-+//Provides: caml_simd_float32_round_pos_inf_bytecode const
-+function caml_simd_float32_round_pos_inf_bytecode(x) {
-+    return Math.fround(Math.ceil(x));
++//Provides: caml_ba_uint8_setf32
++//Requires: caml_ba_uint8_set32, caml_int32_bits_of_float
++function caml_ba_uint8_setf32(ba, i0, v) {
++    return caml_ba_uint8_set32(ba, i0, caml_int32_bits_of_float(v));
 +}
 +
-+//Provides: caml_simd_float32_round_towards_zero_bytecode const
-+function caml_simd_float32_round_towards_zero_bytecode(x) {
-+    return Math.fround(Math.trunc(x));
++//Provides: caml_string_getf32
++//Requires: caml_string_get32, caml_int32_float_of_bits
++function caml_string_getf32(s, i) {
++    return caml_int32_float_of_bits(caml_string_get32(s, i));
++}
++
++//Provides: caml_bytes_getf32
++//Requires: caml_bytes_get32, caml_int32_float_of_bits
++function caml_bytes_getf32(s, i) {
++    return caml_int32_float_of_bits(caml_bytes_get32(s, i));
++}
++
++//Provides: caml_bytes_setf32
++//Requires: caml_bytes_set32, caml_int32_bits_of_float
++function caml_bytes_setf32(s, i, f32) {
++    return caml_bytes_set32(s, i, caml_int32_bits_of_float(f32));
++}
++
++//Provides: caml_string_setf32
++//Requires: caml_failwith
++//If: js-string
++function caml_string_setf32(s, i, f32) {
++    caml_failwith("caml_string_setf32");
++}
++
++//Provides: caml_string_setf32
++//Requires: caml_bytes_setf32
++//If: !js-string
++function caml_string_setf32(s, i, f32) {
++    return caml_bytes_setf32(s, i, f32);
++}
 --- a/runtime/wasm/custom.wat
 +++ b/runtime/wasm/custom.wat
 @@ -16,6 +16,7 @@
@@ -1471,3 +1458,58 @@
 +        (call $caml_bytes_set32 (local.get 0) (local.get 1)
 +            (i32.reinterpret_f32 (call $unbox_float32 (local.get 2)))))
 +)
+--- a/compiler/lib/parse_bytecode.ml
++++ b/compiler/lib/parse_bytecode.ml
+@@ -496,7 +496,7 @@
+       then
+         match ident_of_custom x with
+         | Some name when same_ident name ident_f32 ->
+-          Float32 (Int64.bits_of_float (Obj.magic x : float))
++          Float32 (Int64.bits_of_float ((Obj.magic x : float32) |> Float32.to_float))
+         | Some name when same_ident name ident_32 ->
+             let i : int32 = Obj.magic x in
+             Int32 i
+--- a/compiler/lib/stdlib.ml
++++ b/compiler/lib/stdlib.ml
+@@ -369,6 +369,17 @@
+   external ( >= ) : t -> t -> bool = "%greaterequal"
+ end
+
++module Float32 = struct
++  type t = float32
++
++  external of_float : float -> t = "%float32offloat"
++  external to_float : t -> float = "%floatoffloat32"
++
++  (* In javascript/wasm, we define float32 parsing as rounding the 64-bit result.
++     This is not equivalent to native code, which parses to 32 bits directly. *)
++  let of_string s = float_of_string s |> of_float
++end
++
+ module Bool = struct
+   include Bool
+
+--- a/compiler/tests-jsoo/jsoo_runtime_stubs.c
++++ b/compiler/tests-jsoo/jsoo_runtime_stubs.c
+@@ -1,7 +1,10 @@
+
+ #include <caml/mlvalues.h>
+
++#define UNUSED(x) (void)(x)
++
+ CAMLprim value caml_jsoo_flags_use_js_string(value v_unit)
+ {
++  UNUSED(v_unit);
+   return Val_false;
+ }
+--- a/compiler/lib/ocaml_compiler.ml
++++ b/compiler/lib/ocaml_compiler.ml
+@@ -25,7 +25,7 @@
+   | Const_base (Const_char c) -> Int (Targetint.of_int_exn (Char.code c))
+   | Const_base (Const_string (s, _, _)) -> String s
+   | Const_base (Const_float s | Const_unboxed_float s) -> Float (Int64.bits_of_float (float_of_string s))
+-  | Const_base (Const_float32 s | Const_unboxed_float32 s) -> Float32 (Int64.bits_of_float (float_of_string s))
++  | Const_base (Const_float32 s | Const_unboxed_float32 s) -> Float32 (Int64.bits_of_float (Float32.of_string s |> Float32.to_float))
+   | Const_base (Const_int32 i | Const_unboxed_int32 i) -> Int32 i
+   | Const_base (Const_int64 i | Const_unboxed_int64 i) -> Int64 i
+   | Const_base (Const_nativeint i | Const_unboxed_nativeint i) -> NativeInt (Int32.of_nativeint_warning_on_overflow i)
