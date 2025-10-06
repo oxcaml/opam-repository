@@ -60,7 +60,7 @@ build: [
   [
     "sh"
     "-exc"
-    "cd menhir-20231231-d3d815e4f554da68b8c247241c8f8678926eecaa; PATH=%{build}%/init_deps/bin/:$PATH %{build}%/init_deps/bin/dune install --prefix %{build}%/init_deps/ -p menhirLib -j %{jobs}%"
+    "cd menhir-20231231-d3d815e4f554da68b8c247241c8f8678926eecaa; PATH=%{build}%/init_deps/bin/:$PATH %{build}%/init_deps/bin/dune install --prefix %{build}%/init_deps/ -p menhirLib,menhir -j %{jobs}%"
   ]
   ["sh" "-exc" "autoconf || autoconf27"]
   [
