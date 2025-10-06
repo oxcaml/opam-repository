@@ -19,3 +19,21 @@ index 6a5fbb493..fb3db35a9 100644
  let fold t ~f ~init = fold f init t
 +let transfer t1 t2 = transfer t1 t2
  let to_list t = List.rev (fold t ~f:(fun acc a -> a :: acc) ~init:[])
+diff --git a/src/csexp_rpc/csexp_rpc.ml b/src/csexp_rpc/csexp_rpc.ml
+index 0a5d308c1..e7a0b2d83 100644
+--- a/src/csexp_rpc/csexp_rpc.ml
++++ b/src/csexp_rpc/csexp_rpc.ml
+@@ -236,10 +236,10 @@ module Session = struct
+ 
+   external send : Unix.file_descr -> Bytes.t -> int -> int -> int = "dune_send"
+ 
+-  let write =
++  let write t =
+     match Platform.OS.value with
+-    | Linux -> send
+-    | _ -> Unix.single_write
++    | Linux -> send t
++    | _ -> Unix.single_write t
+   ;;
+ 
+   let rec csexp_write_loop fd out_buf token =
