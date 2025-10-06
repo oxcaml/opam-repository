@@ -1,5 +1,5 @@
 diff --git a/src/unix/lwt_unix.cppo.ml b/src/unix/lwt_unix.cppo.ml
-index 6fb9f8044..a2b7a132b 100644
+index 6fb9f8044..fe4039997 100644
 --- a/src/unix/lwt_unix.cppo.ml
 +++ b/src/unix/lwt_unix.cppo.ml
 @@ -1584,7 +1584,7 @@ let send ch buf pos len flags =
@@ -11,3 +11,12 @@ index 6fb9f8044..a2b7a132b 100644
      wrap_syscall Write ch (fun () -> do_send ch.fd buf pos len flags)
  
  external stub_recvfrom : Unix.file_descr -> Bytes.t -> int -> int -> Unix.msg_flag list -> int * Unix.sockaddr = "lwt_unix_recvfrom"
+@@ -1602,7 +1602,7 @@ let sendto ch buf pos len flags addr =
+   if pos < 0 || len < 0 || pos > Bytes.length buf - len then
+     invalid_arg "Lwt_unix.sendto"
+   else
+-    let do_sendto = if Sys.win32 then Unix.sendto else stub_sendto in
++    let do_sendto fd buf = if Sys.win32 then Unix.sendto fd buf else stub_sendto fd buf in
+     wrap_syscall Write ch (fun () -> do_sendto ch.fd buf pos len flags addr)
+ 
+ external stub_recv_msg :
