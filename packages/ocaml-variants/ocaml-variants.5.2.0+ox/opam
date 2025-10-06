@@ -108,6 +108,7 @@ conflicts: [
   "alcotest" {!= "1.9.0+ox"}
   "backoff" {!= "0.1.1+ox"}
   "dot-merlin-reader" {!= "5.2.1-502+ox"}
+  "dune" {!= "3.20.2+ox"}
   "gen_js_api" {!= "1.1.2+ox"}
   "js_of_ocaml" {!= "6.0.1+ox"}
   "js_of_ocaml-compiler" {!= "6.0.1+ox"}
@@ -115,6 +116,7 @@ conflicts: [
   "js_of_ocaml-toplevel" {!= "6.0.1+ox"}
   "jsonrpc" {!= "1.19.0+ox"}
   "lsp" {!= "1.19.0+ox"}
+  "lwt" {!= "5.9.2+ox"}
   "lwt_ppx" {!= "5.9.1+ox"}
   "mdx" {!= "2.5.0+ox"}
   "merlin" {!= "5.2.1-502+ox"}
@@ -129,6 +131,7 @@ conflicts: [
   "ppxlib" {!= "0.33.0+ox"}
   "ppxlib_ast" {!= "0.33.0+ox"}
   "sedlex" {!= "3.3+ox"}
+  "stdune" {!= "3.20.2+ox"}
   "topkg" {!= "1.0.8+ox"}
   "uTop" {!= "2.15.0+ox"}
   "uutf" {!= "1.0.3+ox"}
