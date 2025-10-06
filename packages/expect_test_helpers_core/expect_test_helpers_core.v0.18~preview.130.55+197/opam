@@ -20,7 +20,7 @@ depends: [
   "sexp_pretty"     {= "v0.18~preview.130.55+197"}
   "stdio"           {= "v0.18~preview.130.55+197"}
   "dune"            {>= "3.17.0"}
-  "re"              {>= "1.8.0"}
+  "re"              {= "1.14.0+ox"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Helpers for writing expectation tests"
@@ -32,7 +32,7 @@ look at expect_test_helpers_async.
 """
 url {
   src:
-    "https://github.com/janestreet/expect_test_helpers_core/archive/1afdb41f31c3c9187fe86232c1689d5fe6c4135c.tar.gz"
+    "https://github.com/janestreet/expect_test_helpers_core/archive/822e3f0435cb14e7778e568026ee3c207f6e55d7.tar.gz"
   checksum:
-    "sha256=410ffb1e19f8b9a8d24f76cbaaf608e0c2bb27b395c3ae77fc9053e7cfc5d842"
+    "sha256=4cdba4e84808a1e43b87ea776198ff91259573d752a845f89c49f68ff3aeab82"
 }

@@ -53,7 +53,7 @@ This is the system-independent part of Core. Unix-specific parts were moved to [
 """
 url {
   src:
-    "https://github.com/janestreet/core/archive/f9f2ae66e220d2a13d61882e95b6a0280b48d2c7.tar.gz"
+    "https://github.com/janestreet/core/archive/0d918109981299d167951c410b00706b8e6f9824.tar.gz"
   checksum:
-    "sha256=fc78f7cf4c3876cbab95b1e755c5ea7f00a9f5e0b2d95ec8a01fab55641a5f83"
+    "sha256=0198c0f4235e21b2b041ec779b481cbd5ce1ae64fee2bc2b080cf9a98953db60"
 }

@@ -15,7 +15,7 @@ depends: [
   "base"              {= "v0.18~preview.130.55+197"}
   "regex_parser_intf" {= "v0.18~preview.130.55+197"}
   "dune"              {>= "3.17.0"}
-  "re"                {>= "1.8.0"}
+  "re"                {= "1.14.0+ox"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Typed parsing using regular expressions."
@@ -26,7 +26,7 @@ Shares its interface with `Re2.Parser`.
 """
 url {
   src:
-    "https://github.com/janestreet/re_parser/archive/d1456360e6fd1a4f329445c434bfd1d1ba7ea4b5.tar.gz"
+    "https://github.com/janestreet/re_parser/archive/84e39dd8cdf0ce8901636b5adfc910bb1d308059.tar.gz"
   checksum:
-    "sha256=f8c1f14934ed7102ae88b3fd3eeb8423f4613014f4d8e97f430d57be7a9b21f1"
+    "sha256=8a6f7387e5061a765089571ab7a5d94060a9b82b3e0e4c4528c428c06803fdd2"
 }

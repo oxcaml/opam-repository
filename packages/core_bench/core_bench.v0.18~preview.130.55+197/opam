@@ -28,7 +28,7 @@ depends: [
   "time_now"          {= "v0.18~preview.130.55+197"}
   "dune"              {>= "3.17.0"}
   "js_of_ocaml-ppx"   {= "6.0.1+ox"}
-  "re"                {>= "1.8.0"}
+  "re"                {= "1.14.0+ox"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Benchmarking library"
@@ -36,7 +36,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/core_bench/archive/9600952d32f1c9d353cc25f64dc0374e2b861d3a.tar.gz"
+    "https://github.com/janestreet/core_bench/archive/2b9c211d299869300d5aab150d20933038723d18.tar.gz"
   checksum:
-    "sha256=0b64f70b5fb6ee93e381a85d0a8dc73d8b11729a80a4e79c0b2bc738a76ce367"
+    "sha256=0f0a0f5a0928240994a6b6d9db25d6250630bf9bf01713098018b8b32e06a92b"
 }

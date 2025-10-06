@@ -19,7 +19,7 @@ depends: [
   "base64"           {>= "3.4.0"}
   "dune"             {>= "3.17.0"}
   "js_of_ocaml-ppx"  {= "6.0.1+ox"}
-  "re"               {>= "1.8.0"}
+  "re"               {= "1.14.0+ox"}
   "uri"              {>= "3.0.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
@@ -30,7 +30,7 @@ A library for building composable URI parsers using ppx_typed_fields.
 """
 url {
   src:
-    "https://github.com/janestreet/uri_parsing/archive/8ee38230188b3ccf8af5eefa30c395dfc942da6c.tar.gz"
+    "https://github.com/janestreet/uri_parsing/archive/fd46eaee3640d116b3fc41b94cfcb9f9b0ab89a1.tar.gz"
   checksum:
-    "sha256=4d8b6f171d43cb40e92dff4c7a524a62b3d7fd5dfad13b7f34295b90314ca6aa"
+    "sha256=272bba8750dd21380e8cdc7c78a73f3aaf9252a6979f53df508a42f422592601"
 }

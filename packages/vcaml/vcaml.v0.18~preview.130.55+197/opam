@@ -34,7 +34,7 @@ depends: [
   "bigstringaf"
   "dune"                       {>= "3.17.0"}
   "faraday"                    {>= "0.8.1"}
-  "re"                         {>= "1.8.0"}
+  "re"                         {= "1.14.0+ox"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "OCaml bindings for the Neovim API"
@@ -56,7 +56,7 @@ for your plugin.
 """
 url {
   src:
-    "https://github.com/janestreet/vcaml/archive/f54b8e21caf22bae2c3df41174f289dda2437023.tar.gz"
+    "https://github.com/janestreet/vcaml/archive/6aada8c33e09e6f93bc6b88ef87810789e3d006b.tar.gz"
   checksum:
-    "sha256=cfdbec6d74c1dacaa7a250e4c6b488bc410f7bb09d02c9052a9a8f0321879caf"
+    "sha256=f00c4ed6ad35577152eae59397237ce04e45bd7596f6ec81e574cb38fc997fa3"
 }

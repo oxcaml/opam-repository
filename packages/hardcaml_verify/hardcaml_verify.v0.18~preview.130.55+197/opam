@@ -21,7 +21,7 @@ depends: [
   "ppx_rope"          {= "v0.18~preview.130.55+197"}
   "stdio"             {= "v0.18~preview.130.55+197"}
   "dune"              {>= "3.17.0"}
-  "re"                {>= "1.8.0"}
+  "re"                {= "1.14.0+ox"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Hardcaml Verification Tools"
@@ -37,7 +37,7 @@ checking tasks.
 """
 url {
   src:
-    "https://github.com/janestreet/hardcaml_verify/archive/616abc2010fd733c8189f63bf09d725f6b91d8ca.tar.gz"
+    "https://github.com/janestreet/hardcaml_verify/archive/5e75b541bc7b58fd4343d51ee2a6779a223e2689.tar.gz"
   checksum:
-    "sha256=3d1e82917b27c293dee87251959a671b0184f3cdc272e7d2087e08b77e821352"
+    "sha256=f287e339e585f24b9e8cea9e50120291539ec659e7597ee7efe116fa28d55da0"
 }

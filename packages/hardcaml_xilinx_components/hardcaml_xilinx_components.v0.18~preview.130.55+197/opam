@@ -20,7 +20,7 @@ depends: [
   "ppx_jane"  {= "v0.18~preview.130.55+197"}
   "stdio"     {= "v0.18~preview.130.55+197"}
   "dune"      {>= "3.17.0"}
-  "re"        {>= "1.8.0"}
+  "re"        {= "1.14.0+ox"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Hardcaml Xilinx component definitions"
@@ -30,7 +30,7 @@ installation and generating Hardcaml interfaces automatically.
 """
 url {
   src:
-    "https://github.com/janestreet/hardcaml_xilinx_components/archive/da1b32da9e1bbc4d54f089fab2dedd05892cb2b6.tar.gz"
+    "https://github.com/janestreet/hardcaml_xilinx_components/archive/d41a3d6e9538e525f259cee12dbb61c39fc61c09.tar.gz"
   checksum:
-    "sha256=5d4f784d2e14879ccab60b3e3a32b275d7c574a60c577bbf8dfe3e1c9d7e39e3"
+    "sha256=d6956a6219fdefdd7540e182a02083b5f2b334f86634546ab9cac1c852fb91ea"
 }

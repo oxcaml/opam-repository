@@ -25,7 +25,7 @@ depends: [
   "cryptokit"    {>= "1.16" & < "1.17"}
   "dune"         {>= "3.17.0"}
   "notty"        {>= "0.2.1"}
-  "re"           {>= "1.8.0"}
+  "re"           {= "1.14.0+ox"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "A terminal based digital waveform viewer for Hardcaml"
@@ -40,7 +40,7 @@ to simulations.
 conflicts: ["hardcaml-waveterm"]
 url {
   src:
-    "https://github.com/janestreet/hardcaml_waveterm/archive/3abefdadb89ac7a7ddf134fd1b555bca5afe6eea.tar.gz"
+    "https://github.com/janestreet/hardcaml_waveterm/archive/43f11c3a0d60f623bd43e36ea485901bc4b6aeb7.tar.gz"
   checksum:
-    "sha256=5fd50bf418f6ad65ce0e080f7ac24fa78197ee78b2aa32dc2c8d13670142fcd0"
+    "sha256=27e342711f3cb5ac1049f27b2c90e76e1f8f760edcf67da94f6f279a795cd9ea"
 }

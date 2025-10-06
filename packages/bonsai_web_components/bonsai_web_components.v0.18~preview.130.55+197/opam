@@ -49,7 +49,7 @@ depends: [
   "gen_js_api"               {= "1.1.2+ox"}
   "js_of_ocaml"              {= "6.0.1+ox"}
   "js_of_ocaml-ppx"          {= "6.0.1+ox"}
-  "re"                       {>= "1.8.0"}
+  "re"                       {= "1.14.0+ox"}
   "uri"                      {>= "3.0.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
@@ -62,7 +62,7 @@ A collection of bonsai_web examples. Bonsai is a library for building
 """
 url {
   src:
-    "https://github.com/janestreet/bonsai_web_components/archive/4575e48d84623dd24746cec5941763066e0fe4db.tar.gz"
+    "https://github.com/janestreet/bonsai_web_components/archive/f3e4283cd77f8025190cfaf9ba1cb17760be7459.tar.gz"
   checksum:
-    "sha256=ab79936b3620514c9437a46de6f751d66ca62539b9ba7e5e7cba7b0e409c0d00"
+    "sha256=bed31911d828a046078af3de336b3f7492f126c48b1fc33b7f737b992a431d86"
 }

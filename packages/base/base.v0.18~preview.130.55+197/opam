@@ -41,7 +41,7 @@ provided by companion libraries such as stdio:
 """
 url {
   src:
-    "https://github.com/janestreet/base/archive/84ee6cec845a1a8e2bd0646fea068212085cc735.tar.gz"
+    "https://github.com/janestreet/base/archive/33d6c93370cfa7a474aa669e57fd4f0f359251ff.tar.gz"
   checksum:
-    "sha256=fa6034138946252bf7bfe742c28c9e79ade183b87f2f098e8b6325031e0c5b6c"
+    "sha256=56f8a97080007faae5c08891734b022add8a140affe42a543fca9b87e41b5650"
 }

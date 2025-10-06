@@ -15,7 +15,7 @@ depends: [
   "core"     {= "v0.18~preview.130.55+197"}
   "ppx_jane" {= "v0.18~preview.130.55+197"}
   "dune"     {>= "3.17.0"}
-  "re"       {>= "1.8.0"}
+  "re"       {= "1.14.0+ox"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Semantic versioning"
@@ -24,7 +24,7 @@ A library for representing semantic versions (https://semver.org)
 """
 url {
   src:
-    "https://github.com/janestreet/semantic_version/archive/cd138954b374ff4938a763a8ceeea804cd3f4f5c.tar.gz"
+    "https://github.com/janestreet/semantic_version/archive/ce90915fdccf1c1b0f9936b69e3c3fab75494c7e.tar.gz"
   checksum:
-    "sha256=ad7b3cae2d2e9edf6b9fa59b8b5bd0b6b27e49f6619d6b925688da15f26b7192"
+    "sha256=f4ddaf7c219b11b128bb34486c60361174adbecf335a17b4291b024b2c5a7902"
 }

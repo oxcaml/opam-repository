@@ -17,7 +17,7 @@ depends: [
   "ppx_base" {= "v0.18~preview.130.55+197"}
   "sexplib"  {= "v0.18~preview.130.55+197"}
   "dune"     {>= "3.17.0"}
-  "re"       {>= "1.8.0"}
+  "re"       {= "1.14.0+ox"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "S-expression pretty-printer"
@@ -27,7 +27,7 @@ the default pretty printer in Sexplib.
 """
 url {
   src:
-    "https://github.com/janestreet/sexp_pretty/archive/457040a95e8d9f218928fa0d53fac8383373e962.tar.gz"
+    "https://github.com/janestreet/sexp_pretty/archive/982907b83e0d2a91d38c14a68aaafd1d760719a7.tar.gz"
   checksum:
-    "sha256=4fcd5dfb6f8da944f67d3b78e752f0dabd4a8063cb39a69c03d2ceb339110f2e"
+    "sha256=c337006b3cd60b7797ea397520f86ce8ccd393cd26427512afaca50ec1e82624"
 }

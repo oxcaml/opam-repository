@@ -31,7 +31,7 @@ depends: [
   "ppx_quick_test"           {= "v0.18~preview.130.55+197"}
   "virtual_dom"              {= "v0.18~preview.130.55+197"}
   "dune"                     {>= "3.17.0"}
-  "re"                       {>= "1.8.0"}
+  "re"                       {= "1.14.0+ox"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "A library for testing Bonsai state machines."
@@ -41,7 +41,7 @@ Bonsai is a library for building composable state machines. This libary
 """
 url {
   src:
-    "https://github.com/janestreet/bonsai_test/archive/f2a4a2f9006b5d55da319b7d29ea2bd80defdcaa.tar.gz"
+    "https://github.com/janestreet/bonsai_test/archive/8fb524e900595ff4cd3a3e57aaf71a6b97be6057.tar.gz"
   checksum:
-    "sha256=31f7c60c57d55828dd20e9ac332fa506ede9cba52e3211a73bb2a2e51b1487bb"
+    "sha256=63bd30eeda93ed26d0f971f5225648595c4212718c307b02c1f50ddfe0dc5c39"
 }

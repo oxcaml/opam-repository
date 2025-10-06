@@ -47,7 +47,7 @@ depends: [
   "js_of_ocaml"                 {= "6.0.1+ox"}
   "js_of_ocaml-ppx"             {= "6.0.1+ox"}
   "lambdasoup"                  {>= "0.6.3"}
-  "re"                          {>= "1.8.0"}
+  "re"                          {= "1.14.0+ox"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "A library for testing dynamic bonsai webapps, using Js_of_ocaml"
@@ -58,7 +58,7 @@ Bonsai is a library for building reusable UI components inside an
 """
 url {
   src:
-    "https://github.com/janestreet/bonsai_web_test/archive/5d3eb7a708f13b360b77cfe3ce4db9b64fe63d83.tar.gz"
+    "https://github.com/janestreet/bonsai_web_test/archive/0068dcd2d62336736f374e452a7ee8c316516649.tar.gz"
   checksum:
-    "sha256=d687efdf50fd234c097a9726bf6f1942129505b920a0449f185af51bbf94048c"
+    "sha256=c7104ae4d82231ab6167c358dd95daf3f40f2aeecc9f77cd612925d8b497e8d7"
 }
