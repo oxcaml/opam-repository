@@ -14,7 +14,6 @@ depends: [
   "async"            {= "v0.18~preview.130.55+197"}
   "base"             {= "v0.18~preview.130.55+197"}
   "basement"         {= "v0.18~preview.130.55+197"}
-  "concurrent"       {= "v0.18~preview.130.55+197"}
   "core"             {= "v0.18~preview.130.55+197"}
   "oxcaml_effect"    {= "v0.18~preview.130.55+197"}
   "portable"         {= "v0.18~preview.130.55+197"}
@@ -25,8 +24,6 @@ depends: [
   "ppx_sexp_value"   {= "v0.18~preview.130.55+197"}
   "ppx_shorthand"    {= "v0.18~preview.130.55+197"}
   "ppx_template"     {= "v0.18~preview.130.55+197"}
-  "ppx_with"         {= "v0.18~preview.130.55+197"}
-  "base-threads"
   "dune"             {>= "3.17.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
@@ -37,7 +34,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/await/archive/8c8613eee742660118dce1e6266584bb514b4ee6.tar.gz"
+    "https://github.com/janestreet/await/archive/f096cb698f882342efd9d4baaa8638dabf8cdf49.tar.gz"
   checksum:
-    "sha256=9d6fcaf426c4b4e4218781c154ad8c700563c2432adeb8099a2e1f7fa0069181"
+    "sha256=29fb955634cad22853964094b480a73561f6f55595f4d36625efec27fb3398c2"
 }
