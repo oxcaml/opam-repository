@@ -30,7 +30,7 @@ depends: [
   "ppxlib_ast"
   "ppxlib_jane"
   "ocamlfind"           {with-test}
-  "re"                  {with-test & >= "1.9.0"}
+  "re"                  {with-test & >= "1.9.0" & = "1.14.0+ox"}
   "cinaps"              {with-test & >= "v0.12.1"}
   "odoc"                {with-doc}
 ]

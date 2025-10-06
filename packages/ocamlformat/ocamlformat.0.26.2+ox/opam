@@ -30,7 +30,7 @@ depends: [
   "dune"                {>= "2.8"}
   "ocamlformat-lib"     {= version & = "0.26.2+ox"}
   "ocamlformat-rpc-lib" {with-test & = version}
-  "re"                  {>= "1.10.3"}
+  "re"                  {= "1.14.0+ox"}
   "odoc"                {with-doc}
 ]
 build: [

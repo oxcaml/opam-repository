@@ -18,7 +18,7 @@ depends: [
   "num"        {with-test}
   "ppx_expect" {>= "v0.16.1" & with-test}
   "ppxlib"     {= "0.33.0+ox"}
-  "re"         {with-test}
+  "re"         {with-test & = "1.14.0+ox"}
   "cmdliner"   {>= "1.1.0"}
   "sedlex"     {= "3.3+ox"}
   "qcheck"     {with-test}
@@ -38,7 +38,6 @@ build: [
   ["dune" "build" "-p" name "-j" jobs "@install" "@doc" {with-doc}]
 ]
 dev-repo: "git+https://github.com/ocsigen/js_of_ocaml.git"
-x-commit-hash: "b6d60e4f8ff35e7c7b3bb52b97ffedc3eb8e3d08"
 url {
   src:
     "https://github.com/ocsigen/js_of_ocaml/archive/246df644334aa97103d1051aec128337ea1868f9.tar.gz"

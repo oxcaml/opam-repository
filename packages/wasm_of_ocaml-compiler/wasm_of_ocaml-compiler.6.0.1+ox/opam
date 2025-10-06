@@ -19,7 +19,7 @@ depends: [
   "num"          {with-test}
   "ppx_expect"   {>= "v0.14.2" & with-test}
   "ppxlib"       {= "0.33.0+ox"}
-  "re"           {with-test}
+  "re"           {with-test & = "1.14.0+ox"}
   "cmdliner"     {>= "1.1.0"}
   "opam-format"  {with-test}
   "sedlex"       {= "3.3+ox"}

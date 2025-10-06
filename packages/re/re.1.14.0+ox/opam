@@ -1,0 +1,70 @@
+opam-version: "2.0"
+version: "1.14.0+ox"
+name: "re"
+synopsis: "RE is a regular expression library for OCaml"
+description: """\
+Pure OCaml regular expressions with:
+* Perl-style regular expressions (module Re.Perl)
+* Posix extended regular expressions (module Re.Posix)
+* Emacs-style regular expressions (module Re.Emacs)
+* Shell-style file globbing (module Re.Glob)
+* Compatibility layer for OCaml's built-in Str module (module Re.Str)"""
+maintainer: "Rudi Grinberg <me@rgrinberg.com>"
+authors: [
+  "Jerome Vouillon"
+  "Thomas Gazagnaire"
+  "Anil Madhavapeddy"
+  "Rudi Grinberg"
+  "Gabriel Radanne"
+]
+license: "LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception"
+homepage: "https://github.com/ocaml/ocaml-re"
+bug-reports: "https://github.com/ocaml/ocaml-re/issues"
+depends: [
+  "dune"        {>= "3.17"}
+  "ocaml"       {>= "4.13.0"}
+  "seq"
+  "ppx_expect"  {with-test}
+  "ounit2"      {with-test}
+  "js_of_ocaml" {with-test & = "6.0.1+ox"}
+  "conf-npm"    {with-test}
+  "odoc"        {with-doc}
+]
+build: [
+  ["dune" "subst"] {dev}
+  [
+    "dune"
+    "build"
+    "-p"
+    name
+    "-j"
+    jobs
+    "@install"
+    "@runtest" {with-test}
+    "@doc" {with-doc}
+  ]
+]
+dev-repo: "git+https://github.com/ocaml/ocaml-re.git"
+url {
+  src:
+    "https://github.com/ocaml/ocaml-re/archive/cb63cdf6d355d7eff97c88c0cf90dd567a0faf06.tar.gz"
+  checksum:
+    "sha256=9c2312f58a941393a40b389d07bb82ea51d2464c1ca76d65b36fceff222bf364"
+}
+patches: [
+  "re+fix-pcre-split.patch" "re+fix-runtime4.patch" "re+portablize.patch"
+]
+extra-files: [
+  [
+    "re+fix-pcre-split.patch"
+    "sha256=be48ac3fe4b29f57011464a0acd385ac154a6d95cd08e1de5a15206257d5d737"
+  ]
+  [
+    "re+fix-runtime4.patch"
+    "sha256=3befa727de9082f040781b5e3fe97bc9ca6719b18b7abf72f84c455175641d7e"
+  ]
+  [
+    "re+portablize.patch"
+    "sha256=6ebd17ca7f5359e5244412ec7736b73f40fc0b5e7d1c51b1a56ffa6bd3f68b9a"
+  ]
+]

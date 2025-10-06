@@ -13,12 +13,12 @@ homepage: "https://github.com/ocaml/merlin"
 bug-reports: "https://github.com/ocaml/merlin/issues"
 depends: [
   "ocaml"     {>= "5.2" & < "5.3"}
-  "dune"      {>= "3.0.0"}
-  "csexp"     {>= "1.5.1"}
-  "alcotest"  {with-test & = "1.9.0+ox"}
-  "menhir"    {dev & >= "20201216"}
-  "menhirLib" {dev & >= "20201216"}
-  "menhirSdk" {dev & >= "20201216"}
+  "dune"      {>= "3.0.0" & <= "3.19.1"}
+  "csexp"     {>= "1.5.1" & <= "1.5.2"}
+  "alcotest"  {with-test & <= "1.9.0" & = "1.9.0+ox"}
+  "menhir"    {dev & >= "20201216" & <= "20240715"}
+  "menhirLib" {dev & >= "20201216" & <= "20240715"}
+  "menhirSdk" {dev & >= "20201216" & <= "20240715"}
 ]
 build: [
   ["dune" "subst"] {dev}
@@ -26,6 +26,9 @@ build: [
 ]
 dev-repo: "git+https://github.com/ocaml/merlin.git"
 x-commit-hash: "0eaccc1b8520d605b1e00685e1c3f8acb5da534c"
+x-opam-repository-commit-hash-at-time-of-archiving:
+  "08d8c16c16dc6b23a5278b06dff0ac6c7a217356"
+x-reason-for-archiving: ["maintenance-intent"]
 url {
   src:
     "https://github.com/oxcaml/merlin/archive/ea30d975583ede2946f0cc4950489a4f6fa33872.tar.gz"
