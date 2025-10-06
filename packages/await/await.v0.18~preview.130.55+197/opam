@@ -10,29 +10,24 @@ build: [
   ["dune" "build" "-p" name "-j" jobs]
 ]
 depends: [
-  "ocaml"                    {>= "5.2.0"}
-  "async"                    {= "v0.18~preview.130.55+197"}
-  "base"                     {= "v0.18~preview.130.55+197"}
-  "basement"                 {= "v0.18~preview.130.55+197"}
-  "concurrent"               {= "v0.18~preview.130.55+197"}
-  "core"                     {= "v0.18~preview.130.55+197"}
-  "core_kernel"              {= "v0.18~preview.130.55+197"}
-  "core_unix"                {= "v0.18~preview.130.55+197"}
-  "expect_test_helpers_core" {= "v0.18~preview.130.55+197"}
-  "oxcaml_effect"            {= "v0.18~preview.130.55+197"}
-  "parallel"                 {= "v0.18~preview.130.55+197"}
-  "portable"                 {= "v0.18~preview.130.55+197"}
-  "ppx_debug_assert"         {= "v0.18~preview.130.55+197"}
-  "ppx_fuelproof"            {= "v0.18~preview.130.55+197"}
-  "ppx_jane"                 {= "v0.18~preview.130.55+197"}
-  "ppx_quick_test"           {= "v0.18~preview.130.55+197"}
-  "ppx_sexp_conv"            {= "v0.18~preview.130.55+197"}
-  "ppx_sexp_value"           {= "v0.18~preview.130.55+197"}
-  "ppx_shorthand"            {= "v0.18~preview.130.55+197"}
-  "ppx_template"             {= "v0.18~preview.130.55+197"}
-  "ppx_with"                 {= "v0.18~preview.130.55+197"}
+  "ocaml"            {>= "5.2.0"}
+  "async"            {= "v0.18~preview.130.55+197"}
+  "base"             {= "v0.18~preview.130.55+197"}
+  "basement"         {= "v0.18~preview.130.55+197"}
+  "concurrent"       {= "v0.18~preview.130.55+197"}
+  "core"             {= "v0.18~preview.130.55+197"}
+  "oxcaml_effect"    {= "v0.18~preview.130.55+197"}
+  "portable"         {= "v0.18~preview.130.55+197"}
+  "ppx_debug_assert" {= "v0.18~preview.130.55+197"}
+  "ppx_fuelproof"    {= "v0.18~preview.130.55+197"}
+  "ppx_jane"         {= "v0.18~preview.130.55+197"}
+  "ppx_sexp_conv"    {= "v0.18~preview.130.55+197"}
+  "ppx_sexp_value"   {= "v0.18~preview.130.55+197"}
+  "ppx_shorthand"    {= "v0.18~preview.130.55+197"}
+  "ppx_template"     {= "v0.18~preview.130.55+197"}
+  "ppx_with"         {= "v0.18~preview.130.55+197"}
   "base-threads"
-  "dune"                     {>= "3.17.0"}
+  "dune"             {>= "3.17.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis:
@@ -42,7 +37,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/await/archive/cfec2474f04634b5c358faa18265d244bf88cb6a.tar.gz"
+    "https://github.com/janestreet/await/archive/8c8613eee742660118dce1e6266584bb514b4ee6.tar.gz"
   checksum:
-    "sha256=c408b43365cdcb1c740bbbdc1d51ac819f187ed55b32e91df943c44f62b983b8"
+    "sha256=9d6fcaf426c4b4e4218781c154ad8c700563c2432adeb8099a2e1f7fa0069181"
 }
