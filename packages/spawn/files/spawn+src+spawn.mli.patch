@@ -1,0 +1,14 @@
+--- a/src/spawn.mli
++++ b/src/spawn.mli
+@@ -1,8 +1,8 @@
++@@ portable
++
+ (** Mini spawn library *)
+ 
+-(** Note: on Unix, spawn uses vfork by default. It has been tested, but if you
+-    believe this is causing a problem in your application, you can change this
+-    default at runtime by setting the environment variable [SPAWN_USE_FORK]. *)
++(** Note: on Unix, spawn uses vfork by default. It has been tested, but if you believe this is causing a problem in your application, you can change this default at runtime by setting the environment variable [SPAWN_USE_FORK]. *)
+ 
+ module Working_dir : sig
+   type t =

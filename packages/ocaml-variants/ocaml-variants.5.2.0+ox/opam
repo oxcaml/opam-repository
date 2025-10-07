@@ -92,9 +92,9 @@ extra-source "init-menhir.tar.gz" {
 }
 url {
   src:
-    "https://github.com/oxcaml/oxcaml/archive/refs/tags/5.2.0minus-19.tar.gz"
+    "https://github.com/oxcaml/oxcaml/archive/refs/tags/5.2.0minus-19-opam.tar.gz"
   checksum:
-    "sha256=025d23499a4f152693ea64deda097b69dc72a8185bb58f463536daa3ebcaf3c1"
+    "sha256=30c9030e82cc282058bece5759dcf5b208dd5f1423e9a2c013933d6226c344b6"
 }
 patches: ["ignore-opam.patch"]
 extra-files: [
@@ -132,6 +132,7 @@ conflicts: [
   "ppxlib" {!= "0.33.0+ox"}
   "ppxlib_ast" {!= "0.33.0+ox"}
   "sedlex" {!= "3.3+ox"}
+  "spawn" {!= "v0.15.1+ox"}
   "stdune" {!= "3.20.2+ox"}
   "topkg" {!= "1.0.8+ox"}
   "uTop" {!= "2.15.0+ox"}

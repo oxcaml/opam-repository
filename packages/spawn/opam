@@ -1,0 +1,74 @@
+opam-version: "2.0"
+version: "v0.15.1+ox"
+name: "spawn"
+synopsis: "Spawning sub-processes"
+description: """\
+Spawn is a small library exposing only one functionality: spawning sub-process.
+
+It has three main goals:
+
+1. provide missing features of Unix.create_process such as providing a
+working directory
+
+2. provide better errors when a system call fails in the
+sub-process. For instance if a command is not found, you get a proper
+[Unix.Unix_error] exception
+
+3. improve performance by using vfork when available. It is often
+claimed that nowadays fork is as fast as vfork, however in practice
+fork takes time proportional to the process memory while vfork is
+constant time. In application using a lot of memory, vfork can be
+thousands of times faster than fork."""
+maintainer: "Jane Street developers"
+authors: "Jane Street Group, LLC"
+license: "MIT"
+homepage: "https://github.com/janestreet/spawn"
+doc: "https://janestreet.github.io/spawn/"
+bug-reports: "https://github.com/janestreet/spawn/issues"
+depends: [
+  "dune"       {>= "2.8"}
+  "ppx_expect" {with-test}
+  "ocaml"      {>= "4.05"}
+  "odoc"       {with-doc}
+]
+build: [
+  ["dune" "subst"] {dev}
+  [
+    "dune"
+    "build"
+    "-p"
+    name
+    "-j"
+    jobs
+    "@install"
+    "@runtest" {with-test}
+    "@doc" {with-doc}
+  ]
+]
+dev-repo: "git+https://github.com/janestreet/spawn.git"
+x-commit-hash: "13d279ebfa8c40d4bafe18cddfdff0de54b4eaff"
+url {
+  src:
+    "https://github.com/janestreet/spawn/archive/e24c5102490d51c50f5e77798250d95eb680a5d2.tar.gz"
+  checksum:
+    "sha256=62211a654c7885f49886422c884070a6be6b4f5d54cfc592126e7296c505ff8b"
+}
+patches: [
+  "spawn+src+spawn.ml.patch"
+  "spawn+src+spawn.mli.patch"
+  "spawn+src+spawn_stubs.c.patch"
+]
+extra-files: [
+  [
+    "spawn+src+spawn.ml.patch"
+    "sha256=babfc849dc15cdfbd7622f3b2d7d5edf0e519a163b682fa3fe2bc63bbac5933f"
+  ]
+  [
+    "spawn+src+spawn.mli.patch"
+    "sha256=58b66053584bd01bb433437a92aaecde83899d8f1be4343273fa80593581a485"
+  ]
+  [
+    "spawn+src+spawn_stubs.c.patch"
+    "sha256=3429fd13b77648ffaa92ef808d72bbabbd82a119222deda7ddef85e4aa6d3567"
+  ]
+]
