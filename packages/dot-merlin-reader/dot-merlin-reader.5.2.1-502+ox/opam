@@ -24,8 +24,8 @@ dev-repo: "git+https://github.com/ocaml/merlin.git"
 x-commit-hash: "0eaccc1b8520d605b1e00685e1c3f8acb5da534c"
 url {
   src:
-    "https://github.com/oxcaml/merlin/archive/ea30d975583ede2946f0cc4950489a4f6fa33872.tar.gz"
+    "https://github.com/oxcaml/merlin/archive/b55ad32ea2e3367e5b78e0177bff5324a9c55517.tar.gz"
   checksum:
-    "sha256=aca9f110b46c51d71c440d87e3d0ffbfa6d71fccbc7f826ccbbcc896e84e8ffc"
+    "sha256=627bb415a97e93f8efe89156525f2283b24468b17b1d5268186c9eb888a89df5"
 }
 
