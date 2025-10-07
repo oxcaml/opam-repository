@@ -31,7 +31,7 @@ This is similar to [Univ] in spirit.
 """
 url {
   src:
-    "https://github.com/janestreet/univ_map/archive/6871957faf88067a1b7a349ec9898d02d2beea44.tar.gz"
+    "https://github.com/janestreet/univ_map/archive/f8d4b3f1348cd10b3d8560549097b368a9b9dbed.tar.gz"
   checksum:
-    "sha256=343ef12bf9b67aa4e86e99b45d6682016b06db8543ea999b8c6115b60cdf4bad"
+    "sha256=d967c13a6e2261f95ca12847db58d75cafafced1c6cdb4a01a0f472d0cffbe8e"
 }

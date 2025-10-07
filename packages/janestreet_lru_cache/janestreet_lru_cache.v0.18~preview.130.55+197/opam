@@ -23,7 +23,7 @@ Implementation of a Least Recently Used Cache.
 """
 url {
   src:
-    "https://github.com/janestreet/janestreet_lru_cache/archive/906f3e5e934698d35832039297bbd521621cb088.tar.gz"
+    "https://github.com/janestreet/janestreet_lru_cache/archive/4c73ecd3291d51558d681a1ec7c1116f69a1d576.tar.gz"
   checksum:
-    "sha256=bb38db450cd4888f012a44a50a8d8180115f04872a075149e3c33c027df268c6"
+    "sha256=7b0c974019bbd906d9c4dd2b5a3cba83a6430bb87612e0feae0c6d4bae463de3"
 }

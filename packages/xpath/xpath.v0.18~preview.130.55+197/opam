@@ -26,7 +26,7 @@ This library contains a type definition for XPATHs, as well as way to
 """
 url {
   src:
-    "https://github.com/janestreet/xpath/archive/3e287ec8b45a256b5885070e6ac20dc6d6b73f2a.tar.gz"
+    "https://github.com/janestreet/xpath/archive/802b47c3cf220a755af9f982c9d7b4b25e09dde0.tar.gz"
   checksum:
-    "sha256=d6c678cd5e6fe0572092610c3badbcd4782d10e65d59bfb89629606fc5afed6a"
+    "sha256=3ad19f3b1f8769cae77772e4957fe58550117487586b288ea482914bc16b2d82"
 }

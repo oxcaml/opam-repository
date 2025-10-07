@@ -28,7 +28,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/unboxed/archive/fa21c37e8153e82d58310230b233981c83993441.tar.gz"
+    "https://github.com/janestreet/unboxed/archive/eaff15eaa447a8dd6bfd0adb3889d36acb9a9515.tar.gz"
   checksum:
-    "sha256=21eb02a5d0d9e2ad07630c337d93f9945927afa1d6e7ac2bf264820511957aa7"
+    "sha256=77e0ece3c342d9b409412ff37414dc485667cce0ffc8b0a9e214f87d82e7e28f"
 }

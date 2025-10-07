@@ -22,7 +22,7 @@ Integers of various widths.
 """
 url {
   src:
-    "https://github.com/janestreet/int_repr/archive/60219295b049fbe5b69dcc3c23d15b9bb4610eb5.tar.gz"
+    "https://github.com/janestreet/int_repr/archive/dfd133ac6f87cb6f705d021e7920834ceda90b69.tar.gz"
   checksum:
-    "sha256=244576037e92db0c4a9e13cf283350300a645cef7a49d4aad7a038d56bf32cd7"
+    "sha256=4b522689dde52dd6794a148797a4bffd78874e95d122590f8429406673a60a8d"
 }

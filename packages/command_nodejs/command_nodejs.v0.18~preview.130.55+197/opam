@@ -27,7 +27,7 @@ A library for running [Command.t]s in JS/Wasm executables running on Node.
 """
 url {
   src:
-    "https://github.com/janestreet/command_nodejs/archive/aadb8e3b11fccbfc4b1769ccccc2109dd43e5e26.tar.gz"
+    "https://github.com/janestreet/command_nodejs/archive/738f4ee2501498be66e4e6cfbd92cba6b1cdaf9b.tar.gz"
   checksum:
-    "sha256=05466cd7624d7056cd57f37ad89759b96f579910710fa7a05af09258550e6b8b"
+    "sha256=d6a3676f293911928e5d56d2fe36fde5b59ba85057d1c669622d6fa7373b1257"
 }

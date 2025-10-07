@@ -24,7 +24,7 @@ depexts: ["linux-headers"] {os-family = "alpine"}
 available: (arch = "x86_64" | arch = "arm64") & os = "linux"
 url {
   src:
-    "https://github.com/janestreet/ocaml-probes/archive/a4083179f8c297d4d103fbf4b43fa3312bcfaab2.tar.gz"
+    "https://github.com/janestreet/ocaml-probes/archive/6f4f0de23397e29fcda5b5f2811e882051c92fec.tar.gz"
   checksum:
-    "sha256=012aab295c41d9132c6e105f98a15a518ce88510187a429b773568e1275e582a"
+    "sha256=389e7364eb280ca0d7b7d208c87e66430ac967ff50eda3c71bc5d55e88f385d7"
 }

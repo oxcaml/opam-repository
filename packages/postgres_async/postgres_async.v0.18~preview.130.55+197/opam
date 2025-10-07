@@ -33,7 +33,7 @@ for now, though in the future a layer on top may add convenience functions.
 """
 url {
   src:
-    "https://github.com/janestreet/postgres_async/archive/b4526d4bf6e065b7200870d22347b7bed946e29f.tar.gz"
+    "https://github.com/janestreet/postgres_async/archive/07d38313cd9ab9d6cfad498ecdac482de5f2e836.tar.gz"
   checksum:
-    "sha256=11f53238f0a5d24ccc83bb1a6efb0535d6a102095c22b6acff3a89bdfdf424a0"
+    "sha256=dd90e777993fa87d6f70942fcb4b1bae6f8de00339a340146e35a8ac67370efb"
 }

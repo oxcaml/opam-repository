@@ -29,7 +29,7 @@ enforce some coding conventions across all Jane Street packages.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_js_style/archive/31bed05bb8538c083cdaf04c804b840d361fbacf.tar.gz"
+    "https://github.com/janestreet/ppx_js_style/archive/064914d7e339951b4754befbbd3edeb17e84c962.tar.gz"
   checksum:
-    "sha256=a29604176bbe302b07b4dc8a3468789012d54c9b2cf96507be4655ae9db09bf9"
+    "sha256=1215065d382f82b77131d151abda90234f94e7d9826539c125dd46aab095fa1c"
 }

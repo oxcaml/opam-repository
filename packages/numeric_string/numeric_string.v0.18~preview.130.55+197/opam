@@ -37,7 +37,7 @@ or punctuation, etc.)
 """
 url {
   src:
-    "https://github.com/janestreet/numeric_string/archive/180eb0828544f1cd48c487163d78d8a7ffe80ee7.tar.gz"
+    "https://github.com/janestreet/numeric_string/archive/1bfbe630c04d7db16b37e392a70f277bd7c6b01b.tar.gz"
   checksum:
-    "sha256=93092daf6b9f42818350d19db7dd157609cea7a426a22fee037178b9133bd247"
+    "sha256=d5f65bd8efd806a1b156bf803aa8714aae011ae7b452c020a687e0896e1aa468"
 }

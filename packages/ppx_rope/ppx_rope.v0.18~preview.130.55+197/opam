@@ -25,7 +25,7 @@ Construct ropes using using a PPX extension based on ppx_string
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_rope/archive/1d021d2b3b997cf3b4c6da60f3766e62af4b148b.tar.gz"
+    "https://github.com/janestreet/ppx_rope/archive/5ec507b94d0a828dbefb1aa6863931d6153869ef.tar.gz"
   checksum:
-    "sha256=27f17a52507ea6df485c28bdb51158ee15697e13c911995198ebc8f587925369"
+    "sha256=68605adc6c0e8ce16c5848c37201e6ce5cdf28fbf2a20a0e973e72e3d745acc7"
 }

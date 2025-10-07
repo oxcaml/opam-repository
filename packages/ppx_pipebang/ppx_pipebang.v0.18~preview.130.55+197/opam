@@ -23,7 +23,7 @@ Part of the Jane Street's PPX rewriters collection.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_pipebang/archive/7dd83854a219c94cf694cc571f4b5e6302be6429.tar.gz"
+    "https://github.com/janestreet/ppx_pipebang/archive/782c0a6be69ba7933664ebd3b880232fbf942d44.tar.gz"
   checksum:
-    "sha256=8bc750839cb1e8fac44ae5724ab4ed9bb14757b0eca24f5bf13c54c4f405abce"
+    "sha256=bf6fe929a731fe7dab6f6e6ce18a5a6b5767550a1554597e1c68e46e3cfc6e7b"
 }

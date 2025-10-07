@@ -30,7 +30,7 @@ A collection of types suitable for incremental serialization.
 """
 url {
   src:
-    "https://github.com/janestreet/streamable/archive/7a46b729a604d5a6d64dc2977b51da07c0314c33.tar.gz"
+    "https://github.com/janestreet/streamable/archive/f32eaa08d6ed284e89d61bc5690a84ab8dc151fa.tar.gz"
   checksum:
-    "sha256=07ad2491e85bb273474f18f3e0503203f82ab4cc16976fc23b5da1832731f23a"
+    "sha256=491477c2db4b2234d1c20dce490500b58ad9ee8ba75ead8af5ed67fa890e8bca"
 }

@@ -23,7 +23,7 @@ Provides functions to invoke amd64 instructions (such as cmov, min/maxsd, popcnt
 """
 url {
   src:
-    "https://github.com/janestreet/ocaml_intrinsics_kernel/archive/9b6d0a6fc959c7ec04a8487378782868a3c71dde.tar.gz"
+    "https://github.com/janestreet/ocaml_intrinsics_kernel/archive/b0dde41b810832b894c725fcab9f992a55d1f230.tar.gz"
   checksum:
-    "sha256=376e3e642f5003e48c3c5cea0ca4d661cb21a1ce9ec833088306df71ffd09a56"
+    "sha256=1888cae1e68f8f03a4cdfbea93d3ae81a9a067022c49447510856347e8da7c12"
 }

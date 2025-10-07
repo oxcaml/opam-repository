@@ -26,7 +26,7 @@ and return subtrees that match the given program.
 """
 url {
   src:
-    "https://github.com/janestreet/sexp_select/archive/3c809d9676724ba72dd7ba90d6c0456141af9b98.tar.gz"
+    "https://github.com/janestreet/sexp_select/archive/ed9c9526d049f586758981c7ba1b15caee78a814.tar.gz"
   checksum:
-    "sha256=78a39ecadbd23c921994233c82baad10ea4511ba44d51acd7ef8eb8f5aaacedf"
+    "sha256=6e50f23dbd2632d090b3569aae19ab5e759f9d0e136e6c004afa510a69531799"
 }

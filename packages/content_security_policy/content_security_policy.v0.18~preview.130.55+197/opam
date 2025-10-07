@@ -25,7 +25,7 @@ https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
 """
 url {
   src:
-    "https://github.com/janestreet/content_security_policy/archive/d92bd8d366588b2ae3cf07f75a6db8457d2b7410.tar.gz"
+    "https://github.com/janestreet/content_security_policy/archive/0831359d3a1680319f57abefc5221178e877b125.tar.gz"
   checksum:
-    "sha256=f587731ccf6a5a49dd0c6c135b929f0d01abebfb89862c2190cf08941c1daa13"
+    "sha256=85fa8577a5aae3edeb282e683fc9e83ce23805c8136f2459ff2cd57233a34c20"
 }

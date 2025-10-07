@@ -34,7 +34,7 @@ any other cyclesim simulation.
 """
 url {
   src:
-    "https://github.com/janestreet/hardcaml_c/archive/5f146369b758e798b0b140a8ec357a629ac263b8.tar.gz"
+    "https://github.com/janestreet/hardcaml_c/archive/77d07f3cdc56c381c694c9fc494b2628be50e876.tar.gz"
   checksum:
-    "sha256=11d90a524e04d8e5d938be41ee962ab0dd33e6a681ec3c9ab598954099e02103"
+    "sha256=22319f492a2e27941a9117b099ff60ffe43352f057a1e5a39b27eaaa47216f17"
 }

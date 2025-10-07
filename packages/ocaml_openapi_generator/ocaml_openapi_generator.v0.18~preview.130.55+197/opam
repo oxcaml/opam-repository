@@ -32,7 +32,7 @@ An OpenAPI 3 to OCaml client generator.
 """
 url {
   src:
-    "https://github.com/janestreet/ocaml_openapi_generator/archive/7888ba297fdba4eabeae39793cfb20222ab2d680.tar.gz"
+    "https://github.com/janestreet/ocaml_openapi_generator/archive/85ac63241ebff41e70cc1f05a4844d8fdd046b60.tar.gz"
   checksum:
-    "sha256=42c24bf3576f8c5d0e318d345f24b76106f301392d9520591be08444a7e1cdc0"
+    "sha256=c63546623a2060454b761177dd311255311e622d733593cd4b8ff9508ba82b0d"
 }

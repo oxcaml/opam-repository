@@ -27,7 +27,7 @@ record_builder and the =ppx_fields= syntax extension.
 """
 url {
   src:
-    "https://github.com/janestreet/profunctor/archive/0c38a853b1e96b05b8d26674a37a045b2a1c103f.tar.gz"
+    "https://github.com/janestreet/profunctor/archive/dd11a667bc0f7357df00a38b61db39f99b8bfe56.tar.gz"
   checksum:
-    "sha256=e7fc1d1f93ce8e8f02ef72c1c564e0b8a863986d9bbe8a85d5b86a50a1249377"
+    "sha256=6b425af17c5316e0d1ebc57f58bb26d48c1e6f0d909528a8bb778a3f411c5021"
 }

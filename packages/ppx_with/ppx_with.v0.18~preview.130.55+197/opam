@@ -24,7 +24,7 @@ A ppx rewriter for building scoped operations, which must do cleanup or similar 
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_with/archive/dd2ac3bf73da26d3ef090500afa4a01968254cd9.tar.gz"
+    "https://github.com/janestreet/ppx_with/archive/f64531ab18f3f42f2de7243e37c9df63d908f264.tar.gz"
   checksum:
-    "sha256=261115d22587975317cb327ed5cc9589eebe30fc1a09cf1617191f6dcb02f921"
+    "sha256=adbf2988d8040663806818e4b151d384dd7341913b76669d9b1429ed459e91f0"
 }

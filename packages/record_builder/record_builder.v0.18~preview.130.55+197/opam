@@ -27,7 +27,7 @@ needed to build the record from a single applicative term for each field.
 """
 url {
   src:
-    "https://github.com/janestreet/record_builder/archive/9bef3d47509f1ebafb3d754a88229370d08d5b25.tar.gz"
+    "https://github.com/janestreet/record_builder/archive/ca68f39901b5fb8176e313be00655ed46299cddb.tar.gz"
   checksum:
-    "sha256=dac688a1850e5b37d3d729d9f018f20f3795813055f799f6765e5ed8294d7d61"
+    "sha256=07bd8f084706a8034483b0e72b96c1337574f868c3fd8be7685ba5dca7422908"
 }

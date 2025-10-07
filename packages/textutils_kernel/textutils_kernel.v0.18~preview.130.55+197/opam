@@ -23,7 +23,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/textutils_kernel/archive/77030c9671f2a08bc723c51652cef9e2abe830ca.tar.gz"
+    "https://github.com/janestreet/textutils_kernel/archive/9014d0228aed6e627b7e47711be308044e011268.tar.gz"
   checksum:
-    "sha256=a0f51f21859f58a4035563a2ab04a0be2f1cec495046270b64e50fa3a22b9578"
+    "sha256=30e50687df53b6012a71fa37838a93d7f3c84e78b2f1bcc5c4c6370ce50be713"
 }

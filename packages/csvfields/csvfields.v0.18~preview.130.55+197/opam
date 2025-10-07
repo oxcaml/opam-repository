@@ -24,7 +24,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/csvfields/archive/343838df0105a8a849abf37f147b355f51d62911.tar.gz"
+    "https://github.com/janestreet/csvfields/archive/0bb6894faa0999c4072085ba16796d018377bca5.tar.gz"
   checksum:
-    "sha256=2ca9ed5e99ebe31be97fbdffd8db440f022cc715ceb74fed26a12856fc50c7fd"
+    "sha256=e233502a378f0be257011fdf5bfeb310c10b7ebd5d3ce44e58c519538ea80bba"
 }

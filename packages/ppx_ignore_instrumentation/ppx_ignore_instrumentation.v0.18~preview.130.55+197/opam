@@ -24,7 +24,7 @@ Ignore Jane Street specific instrumentation extensions from internal PPXs or com
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_ignore_instrumentation/archive/342ee3bb4873eb3afb9ca444d305fa9c732e0a4a.tar.gz"
+    "https://github.com/janestreet/ppx_ignore_instrumentation/archive/b460cf50594ce91f70c962f9c7ff393499ab79cf.tar.gz"
   checksum:
-    "sha256=2ea3992b530ff175f496a1caa5d615840ba66ef1caa15fae6ce3175d3d3d8721"
+    "sha256=492b06578131f87c40d0454793e80c96322adc010b138bdce3c4e67349453594"
 }

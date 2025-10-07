@@ -30,7 +30,7 @@ A library for building composable URI parsers using ppx_typed_fields.
 """
 url {
   src:
-    "https://github.com/janestreet/uri_parsing/archive/fd46eaee3640d116b3fc41b94cfcb9f9b0ab89a1.tar.gz"
+    "https://github.com/janestreet/uri_parsing/archive/651acd0e6732647a1425d945329c62eb7258bc36.tar.gz"
   checksum:
-    "sha256=272bba8750dd21380e8cdc7c78a73f3aaf9252a6979f53df508a42f422592601"
+    "sha256=ad1e6c5d9a67c06f2bf137b0a0f35840e07c6d4689abde1839cc08cef7d91ce4"
 }

@@ -32,7 +32,7 @@ implemented for N from 2 to 16, inclusive.
 """
 url {
   src:
-    "https://github.com/janestreet/n_ary/archive/b93a519ef17fdf40378c2e47f1f9809928983dd0.tar.gz"
+    "https://github.com/janestreet/n_ary/archive/1bd48b563f4d166c3415415fe5fba40c690ee0ae.tar.gz"
   checksum:
-    "sha256=ca707b0f752de2d4aeabb5175c373473cc7b5b7288ac1d96c2ee3025e4bfda3d"
+    "sha256=da614b9ab82aa57db3b4ba9ccf14c504aafa60cad970530ad0907917653f5b7a"
 }

@@ -29,7 +29,7 @@ mutually recursive values using Portable_lazy.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_portable/archive/d54384f8119134b2fb53effc3ee5e1aac7fd9d79.tar.gz"
+    "https://github.com/janestreet/ppx_portable/archive/921c21424489a19dd28767cda12c8f65e4374d6f.tar.gz"
   checksum:
-    "sha256=4d2e625c3c103479e358820eb09b98e86439f0c3c78adcdc6a0412bcdd0ab4a3"
+    "sha256=6f23bc1c95b8072218028c02641302622b82d67c50cdc59069392ed0e95276cc"
 }

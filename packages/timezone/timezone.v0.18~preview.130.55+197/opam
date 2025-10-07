@@ -27,7 +27,7 @@ can later be used to manipulate time in core_kernel or core.
 """
 url {
   src:
-    "https://github.com/janestreet/timezone/archive/6e5d3e8b98a660d7240cfa92c2d4b5954514d441.tar.gz"
+    "https://github.com/janestreet/timezone/archive/3f524e4389e9ab0f50158fffbfabc53e42359e22.tar.gz"
   checksum:
-    "sha256=06ada966ef1a626533ada79f29774ca03af1d154c8a79dc9d8a15cb6a38bd82c"
+    "sha256=983e71d86204554b96e30ebf6d20839d7cb3c5f0c392995134ff458a7890a942"
 }

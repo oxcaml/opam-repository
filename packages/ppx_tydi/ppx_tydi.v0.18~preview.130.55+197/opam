@@ -22,7 +22,7 @@ Provides a ppx for [let%tydi]: type-directed [let] bindings. In [let%tydi a = b 
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_tydi/archive/ddfda2a0915ac1d94c8b174e20d3bbe36269dae1.tar.gz"
+    "https://github.com/janestreet/ppx_tydi/archive/085142941df7de438a86db44ebebc0351136afeb.tar.gz"
   checksum:
-    "sha256=02e209af848a9be44c2a933a3e29369f94150a4f690ea26450286366947abb42"
+    "sha256=86222f4134743e8140e34675329c6f5e45174d6d8a724cf90cf48f183f804e4e"
 }

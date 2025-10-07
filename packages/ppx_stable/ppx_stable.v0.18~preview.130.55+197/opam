@@ -25,7 +25,7 @@ identical types.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_stable/archive/509a8b94c8bd5368044ae11f479484847d5a03ff.tar.gz"
+    "https://github.com/janestreet/ppx_stable/archive/112cae78805104b1fcdb47ef0ab4051a296db819.tar.gz"
   checksum:
-    "sha256=6210f5b1dd5a8f78871fb82d887769b87f16925838d7c203af1fd7d2d3e33129"
+    "sha256=510d2d2c22b114b6dedc2302b0b30f047b8d3abdba08702df3f566635945ee79"
 }

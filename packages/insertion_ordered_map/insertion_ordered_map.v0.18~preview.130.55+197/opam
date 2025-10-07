@@ -24,7 +24,7 @@ A Core.Map where any operation that iterates through keys (e.g. fold, iter_keys)
 """
 url {
   src:
-    "https://github.com/janestreet/insertion_ordered_map/archive/2bf608e321f573a0c1c67b031a3cb156916e381c.tar.gz"
+    "https://github.com/janestreet/insertion_ordered_map/archive/0a9acdc397f7c580ae9fed6a7a023137e4b4de58.tar.gz"
   checksum:
-    "sha256=c50549a1dc8be4583f7c74c774d6e583cdd9ec86ef45d2968c0a12d496363e57"
+    "sha256=a462aa23739e7032af1235a0437938acb924f60f5e3013d179f80a80b552c3e7"
 }

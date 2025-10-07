@@ -37,7 +37,7 @@ checking tasks.
 """
 url {
   src:
-    "https://github.com/janestreet/hardcaml_verify/archive/5e75b541bc7b58fd4343d51ee2a6779a223e2689.tar.gz"
+    "https://github.com/janestreet/hardcaml_verify/archive/286c89e044e0aa09e68b634399d333753f26201a.tar.gz"
   checksum:
-    "sha256=f287e339e585f24b9e8cea9e50120291539ec659e7597ee7efe116fa28d55da0"
+    "sha256=36e3336b36bbe7032daff1dfa88a8a50916dcba72572c8c3b6fcbb53f773f6a0"
 }

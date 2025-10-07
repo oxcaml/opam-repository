@@ -27,7 +27,7 @@ the default pretty printer in Sexplib.
 """
 url {
   src:
-    "https://github.com/janestreet/sexp_pretty/archive/982907b83e0d2a91d38c14a68aaafd1d760719a7.tar.gz"
+    "https://github.com/janestreet/sexp_pretty/archive/7f0dc7c82be2b89065f11ea804a02a9ad0ae870d.tar.gz"
   checksum:
-    "sha256=c337006b3cd60b7797ea397520f86ce8ccd393cd26427512afaca50ec1e82624"
+    "sha256=bffe9ec1ce269c94959bc46f198f7584f5c272e5d8bb42f16fcd3f9ef4615b71"
 }

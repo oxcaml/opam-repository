@@ -26,7 +26,7 @@ A library for parsing, manipulating, and serializing data structured as JSON.
 """
 url {
   src:
-    "https://github.com/janestreet/jsonaf/archive/84d70ad038942ba49a044d257bf9ca54c9344084.tar.gz"
+    "https://github.com/janestreet/jsonaf/archive/c4c9054b7ba0800baa2095c188f0541e88b0ee76.tar.gz"
   checksum:
-    "sha256=f169cbcd15832fbb5e563ecfe5044d7cec3096b727e7a760f5a6c0931ac841aa"
+    "sha256=e96f7cd3b156cc71f95579951610e23b40c2825e81ffef11b2e21fd319e4dd65"
 }

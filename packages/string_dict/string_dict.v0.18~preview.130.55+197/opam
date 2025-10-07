@@ -30,7 +30,7 @@ on strings.
 """
 url {
   src:
-    "https://github.com/janestreet/string_dict/archive/b1da30675532e990d5fca94ab6673c1f1530f45f.tar.gz"
+    "https://github.com/janestreet/string_dict/archive/31d6ffe84bff1ac68f4ead07166201102b474eb6.tar.gz"
   checksum:
-    "sha256=6e39ae2cba0e6541f6c5730090363eb79454b3aa5bd6651ecb2e3ed25bf1ccee"
+    "sha256=b856769070fbc54c0196420aef7b8aa814228193ced120cc8a09eb772a899485"
 }

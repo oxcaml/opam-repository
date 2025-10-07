@@ -27,7 +27,7 @@ records.
 """
 url {
   src:
-    "https://github.com/janestreet/delimited_parsing/archive/3de29bbd066983a8019be95af3801bcd7b8980d2.tar.gz"
+    "https://github.com/janestreet/delimited_parsing/archive/52cf99befed0a310138c3e5d09da374237a45438.tar.gz"
   checksum:
-    "sha256=26111eb19a9b5cb3764f20e950bf8bad72e0a793a681f3b895816f058ef10413"
+    "sha256=77c31d99d657809e3220610329c4d1a4acc71b113246f409a0a027bab104a44f"
 }

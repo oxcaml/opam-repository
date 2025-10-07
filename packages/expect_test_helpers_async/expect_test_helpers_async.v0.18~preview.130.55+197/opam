@@ -30,7 +30,7 @@ look at expect_test_helpers_core.
 """
 url {
   src:
-    "https://github.com/janestreet/expect_test_helpers_async/archive/236a7ca1d833f0ea9947b49a436f043c85f76e0d.tar.gz"
+    "https://github.com/janestreet/expect_test_helpers_async/archive/d09bcfe15c0d06f8d290c5ebfcb4ff967b4edfa3.tar.gz"
   checksum:
-    "sha256=e794dd712ad16c5f0a12e5eaaca11cad5e4f8e658c681596c0488d2244d7143e"
+    "sha256=4c3bac7fa3574f9d2dc5d6e06a5a9d389e813e0f17ae97bf4f50bf4281bd6e56"
 }

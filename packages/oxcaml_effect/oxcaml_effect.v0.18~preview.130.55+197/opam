@@ -24,7 +24,7 @@ Effect provides a type-safe wrapper for algebraic effects
 """
 url {
   src:
-    "https://github.com/janestreet/oxcaml_effect/archive/86d219d068a71571297694043405f2bac85f81a6.tar.gz"
+    "https://github.com/janestreet/oxcaml_effect/archive/d926132f7c5be96987f397126451e811787d4bb0.tar.gz"
   checksum:
-    "sha256=b2755cf68f5da8c5cd5efd7783eabbcea4d44f16a0f6793a8245e314873888b7"
+    "sha256=48010e4807dcd211efa887359936f946b2e7b1bc5d56271dc902219c2cdc3651"
 }

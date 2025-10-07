@@ -26,7 +26,7 @@ include one sexp file in another.
 """
 url {
   src:
-    "https://github.com/janestreet/sexp_macro/archive/1acc822e6ab0f566436079d611fea0891a9e3d07.tar.gz"
+    "https://github.com/janestreet/sexp_macro/archive/cd600e82c554a86e95d7178a7145482b7c24d744.tar.gz"
   checksum:
-    "sha256=d5799cef6dafcf63d7dda163fd7b3bbc778a7e09f068171229ce293a9c03489c"
+    "sha256=c264f8ba6d7149213f1e9c5bf5b023bc769d3a4167b0b07be1d2650012eb3680"
 }

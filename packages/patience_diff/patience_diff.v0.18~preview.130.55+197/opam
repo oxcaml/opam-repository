@@ -23,7 +23,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/patience_diff/archive/8a57eac5fdc186b92ca7e3eaffa32d397ec891db.tar.gz"
+    "https://github.com/janestreet/patience_diff/archive/acb160732f4f4ba3cc0298cb589c970a9677abec.tar.gz"
   checksum:
-    "sha256=7fca4dbbe2f88943fbfde377a9e279c9bc37cdd7452a3a215bbef5a40d9be54c"
+    "sha256=e1ffffee48d7d93c52ec70a83a4b8f14f3c8a1c2721dd9cd2eb592dc556473f1"
 }

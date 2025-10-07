@@ -32,7 +32,7 @@ OCaml-LSP project; this library provides an Async RPC layer on top of them.
 """
 url {
   src:
-    "https://github.com/janestreet/lsp_rpc/archive/01bb20ad445a08a37425193ba0bb95e544170434.tar.gz"
+    "https://github.com/janestreet/lsp_rpc/archive/329e72efb0fb1b5bc5484fbac9d63cf816ce4257.tar.gz"
   checksum:
-    "sha256=25602451c4dfcbe61dd24f4056c82ca10893cc9b5c64a78b773527f7aa3ef356"
+    "sha256=0bb161ed499e701a452658bda691132177c3b8925dbfe626eae9dc2fb391337c"
 }

@@ -25,7 +25,7 @@ Portable lock-free chase-lev work-stealing deque for OxCaml
 """
 url {
   src:
-    "https://github.com/janestreet/portable_ws_deque/archive/b6c45800153bb75de66335f573c8f4612ceb7473.tar.gz"
+    "https://github.com/janestreet/portable_ws_deque/archive/b01e8d359cc6fa16a9034749725480e5edff6489.tar.gz"
   checksum:
-    "sha256=4611d5ac5a65c14536523d85b0206aa4e816c2a2aa0da33d05b8a8528d4c230a"
+    "sha256=f4ccbca5e9e41391c9dc7b374eca5fa8d1438553f576250232120443ecbd4071"
 }

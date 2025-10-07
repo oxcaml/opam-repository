@@ -26,7 +26,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/command_rpc/archive/fb39ce5fc592b930169166f3d200c9a9efa6ce04.tar.gz"
+    "https://github.com/janestreet/command_rpc/archive/04239488e80982d1730b5de8d3c3ec7e6d9af149.tar.gz"
   checksum:
-    "sha256=00784d8c988453724722ab1f21fd27b3f0622a8121959fc1f5fb6e08d4a6bb0e"
+    "sha256=7c4299f16f78c3308e4610793074d8e84e73dd51602b0d328b1f7f556af94eea"
 }

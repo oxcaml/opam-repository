@@ -38,7 +38,7 @@ ways can provide better insight into the design.
 """
 url {
   src:
-    "https://github.com/janestreet/hardcaml_xilinx_reports/archive/d98f8e357e23364fec1b6acbb1cd85597adb3f81.tar.gz"
+    "https://github.com/janestreet/hardcaml_xilinx_reports/archive/22b6605859df49c078cacd9ab2a7a7b0395ae354.tar.gz"
   checksum:
-    "sha256=6bcf1ac35eee93185f9c58d8c096af2423ad2aac676ea200a625e970fdf78f4f"
+    "sha256=e2e5864a3d59f47ea141afaa8970c58992133f9ba14ec6a84677402dfccf4969"
 }

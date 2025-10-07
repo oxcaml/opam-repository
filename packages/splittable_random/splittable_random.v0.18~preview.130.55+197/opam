@@ -33,7 +33,7 @@ cryptographic-quality randomness in favor of performance.
 """
 url {
   src:
-    "https://github.com/janestreet/splittable_random/archive/f75736f34c6ef2550b6d9f3f68d4d1985283c3ac.tar.gz"
+    "https://github.com/janestreet/splittable_random/archive/f40f4b000a7f2868a7868d567bf9f22a236cf186.tar.gz"
   checksum:
-    "sha256=b7dbd95dc389e2443e7a9f3223784c3b727dd10fe304316cb97ec26ad1bc9388"
+    "sha256=184c777fe1d2cfed5a54592f50c4a30cca79ba0b9cecc45cd664a28a6cb1fae3"
 }

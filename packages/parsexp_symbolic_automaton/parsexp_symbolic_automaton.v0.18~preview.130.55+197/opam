@@ -25,7 +25,7 @@ This library is an abstract verion of the parsing automaton. It is used to defin
 """
 url {
   src:
-    "https://github.com/janestreet/parsexp_symbolic_automaton/archive/3cba5b1f9f17af4bbefeb403a2111b90bf2c7727.tar.gz"
+    "https://github.com/janestreet/parsexp_symbolic_automaton/archive/f152223c486d456ac7f4d2da47079956887ce054.tar.gz"
   checksum:
-    "sha256=75ade9478726e6ab3f2725c0e395fc6120566da9682dae9e90dd52396ab3fe0d"
+    "sha256=20dd8653f58deee1128af55ec5c10d8db638be61b70e15f1ad5b1403813b9b8d"
 }

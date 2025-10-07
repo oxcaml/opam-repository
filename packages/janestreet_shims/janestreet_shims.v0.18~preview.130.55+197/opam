@@ -23,7 +23,7 @@ Janestreet_shims provides shims for Jane Street compiler extensions
 """
 url {
   src:
-    "https://github.com/janestreet/janestreet_shims/archive/b415d13eba4fbe03742b42b645518c3757d239eb.tar.gz"
+    "https://github.com/janestreet/janestreet_shims/archive/f2aca1157750491b1a43312aab1a48f0ea4ee414.tar.gz"
   checksum:
-    "sha256=20967d213d0240caf1794a76b423622bf9738550510bbf51f1488614f27578dc"
+    "sha256=8836acb80ace3d78fd4825477545b2ddda3f59c8efff413f14c79ac312795d68"
 }

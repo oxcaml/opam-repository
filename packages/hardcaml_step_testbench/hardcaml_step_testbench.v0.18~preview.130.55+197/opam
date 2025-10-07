@@ -31,7 +31,7 @@ synchronised to the system clock.
 """
 url {
   src:
-    "https://github.com/janestreet/hardcaml_step_testbench/archive/9a7511e0cdc312e8cdb042bd9d25ed67b22488f3.tar.gz"
+    "https://github.com/janestreet/hardcaml_step_testbench/archive/422a05bca83c73179d40b292f1f8486f449ad4e4.tar.gz"
   checksum:
-    "sha256=6814bf66564d5dedf466c41bce3a082a67265d4a24f39099e7fa19f319041c9b"
+    "sha256=75613d9ffc477b597b4653b52ad4e9f74869d0dee6379f1ae02b34b4d4f1943a"
 }

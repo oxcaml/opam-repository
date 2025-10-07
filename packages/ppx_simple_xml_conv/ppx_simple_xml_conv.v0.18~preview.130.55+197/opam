@@ -33,7 +33,7 @@ Part of the Jane Street's PPX rewriters collection.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_simple_xml_conv/archive/a3fb0d5f5269caea3adbad3052a555eadbe93359.tar.gz"
+    "https://github.com/janestreet/ppx_simple_xml_conv/archive/f30238bf939d9e9e19b8d25dde416f4755266583.tar.gz"
   checksum:
-    "sha256=9eee7df5474de3ba2a2c1c5b908d87ac972f1d4981797d03a38b9cf3aece0079"
+    "sha256=9b681028fd175706a742df9003ad1d2822c622d93fd4733395a3b48fc6d22ef6"
 }

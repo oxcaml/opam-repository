@@ -28,7 +28,7 @@ A PPX rewriter that generates the implementation of [Ldiffable.S]. Generates dif
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_diff/archive/2658100937e48c54601b67092a6494998f792477.tar.gz"
+    "https://github.com/janestreet/ppx_diff/archive/b0e4b0ba8cab6fdfacc327f9b73619f51d47267c.tar.gz"
   checksum:
-    "sha256=407cc44c93065be5c090e781b3c7608bcdc19b6424b544ececbe8e57f87388cc"
+    "sha256=23fdeb4ca373c08b1464b03519fec46c25216ea6dd44f51a8fd70a6261883a6d"
 }

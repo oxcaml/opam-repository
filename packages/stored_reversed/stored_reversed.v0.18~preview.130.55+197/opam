@@ -24,7 +24,7 @@ A ['a list t] represents a list temporarily stored in the reverse of its logical
 """
 url {
   src:
-    "https://github.com/janestreet/stored_reversed/archive/2cd8b8941a5715f775452eadb7f492da8a4099c9.tar.gz"
+    "https://github.com/janestreet/stored_reversed/archive/86e7ac6cf8f6fd3cd97b80295ad3bd8f5b358f58.tar.gz"
   checksum:
-    "sha256=0822fa6b06b4c74998a0b3b9a5e823b740ed37d045e9b82052b38b057ecd0ce0"
+    "sha256=8a05a197123e11c2f24fa7a042071b8bf4f5209f0543678357c7e8c01ee551e3"
 }

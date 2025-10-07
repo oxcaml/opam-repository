@@ -25,7 +25,7 @@ topological-sort algorithm.
 """
 url {
   src:
-    "https://github.com/janestreet/topological_sort/archive/8db419ea78a1fb83b7a5d564142827662e89a12d.tar.gz"
+    "https://github.com/janestreet/topological_sort/archive/8a8e7359f31931509281d94905ef2bec19ab5de8.tar.gz"
   checksum:
-    "sha256=9ffdaf11b8b8614d2ecf058a3e677c0118af6ed06c9ee1dc88369da0d244a645"
+    "sha256=b16bcfff1aff91afa8b32f977603360087a517d00d8afd28eeea05368bc06d98"
 }

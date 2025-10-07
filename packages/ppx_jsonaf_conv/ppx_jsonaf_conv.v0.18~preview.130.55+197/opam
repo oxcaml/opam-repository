@@ -27,7 +27,7 @@ Part of the Jane Street's PPX rewriters collection.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_jsonaf_conv/archive/77deea56d4f7ef5550896c216cdbbccbc8c58c6b.tar.gz"
+    "https://github.com/janestreet/ppx_jsonaf_conv/archive/ac829a5e3c7e8fe0710d8736cb41845c6d1ed771.tar.gz"
   checksum:
-    "sha256=9b3eb5bf6e72a392f96e52863dec5a84e16571fcae4c256b62be1a659618781c"
+    "sha256=a7aedd039cfded41a5f6c5b5ec5597fa2ee93d982ecc32d4e314e152f1c37971"
 }

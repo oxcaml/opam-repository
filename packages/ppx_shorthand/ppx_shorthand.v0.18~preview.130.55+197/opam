@@ -23,7 +23,7 @@ This ppx is a collection of small AST transformations that might not otherwise w
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_shorthand/archive/f19378cb488856e512604d0881d33c15252765a3.tar.gz"
+    "https://github.com/janestreet/ppx_shorthand/archive/a67dac3b7656dc5d0ad03d83a094df430c502f47.tar.gz"
   checksum:
-    "sha256=0d031936625de3346d093e8a04cad77cc3a5b1aff6371e4844f4a0c325919b69"
+    "sha256=9a0b06eb8a9f9e7c9052dfaf576454cb5a1c6bdfcaa7164112dbe470688523c7"
 }

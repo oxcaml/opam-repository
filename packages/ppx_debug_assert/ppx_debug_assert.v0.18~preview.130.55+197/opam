@@ -22,7 +22,7 @@ A ppx rewriter for debug assertions.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_debug_assert/archive/c606a5a9fae80d6e354a630af76efbba657b6e23.tar.gz"
+    "https://github.com/janestreet/ppx_debug_assert/archive/99db83036000ae4386f745aa4f64823f172a2697.tar.gz"
   checksum:
-    "sha256=d8510a2d4863d4300b1ec91a3f909cc8480613009c155db33d0e1f911298da43"
+    "sha256=8394cccfd7305455f6a6eb03397afc5b402f8b247a1125a1589a2fd3776c7707"
 }

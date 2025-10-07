@@ -33,7 +33,7 @@ It relies on the fact that the type of the value being edited can be serialized 
 """
 url {
   src:
-    "https://github.com/janestreet/incr_dom_sexp_form/archive/8e5e27c507baf4b5c5175c8cad036eff7d1e70d5.tar.gz"
+    "https://github.com/janestreet/incr_dom_sexp_form/archive/74ba51d53e0dd1947d5c9cd0cc81b6136cc70e64.tar.gz"
   checksum:
-    "sha256=de9a8a70fd6e16f5328c0a63ff430749ba2e5d9ffa14c00db7de2692790ea0a5"
+    "sha256=46a4783670517af61af7d88170e8c185e7cb9fa1d0110627075463f81b4b902f"
 }

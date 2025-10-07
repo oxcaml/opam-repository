@@ -29,7 +29,7 @@ yield to the scheduler.
 """
 url {
   src:
-    "https://github.com/janestreet/maybe_pushback/archive/cb6b5b704565ebef64d61845bbe36f1568ca0947.tar.gz"
+    "https://github.com/janestreet/maybe_pushback/archive/abdd30154625565a32f0bfbf9e360f74ddfb80f1.tar.gz"
   checksum:
-    "sha256=5bfee32bc833f536601fbf3b35a6a9332fef40601041a1b796222472ea0a4c7e"
+    "sha256=0b7303fae46e4501aea07f8601153a94b52403e5faf0feaafd52f6f64adf656a"
 }

@@ -29,7 +29,7 @@ hierarchical designs.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_hardcaml/archive/81b20c4e2f9854d8356c8ca3e2e9806708f61a21.tar.gz"
+    "https://github.com/janestreet/ppx_hardcaml/archive/dca24b319ba17c23d3666f7e7c136f7855fbf6b4.tar.gz"
   checksum:
-    "sha256=58b6f0799ae7beb384dac42727a40a36eaf160e9254913a3a13686dd4313d2ca"
+    "sha256=e405ac926990862490d4a259b6534abc7addbe410b0bf669b49df4f70a9fbd9b"
 }

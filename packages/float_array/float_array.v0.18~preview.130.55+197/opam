@@ -24,7 +24,7 @@ Mutable vector of floats with O(1) get and set operations.
 """
 url {
   src:
-    "https://github.com/janestreet/float_array/archive/170cd1948e0b5ab2a47c8cd9b111ee7b5bf0b810.tar.gz"
+    "https://github.com/janestreet/float_array/archive/d25cd8417532711be1b5400452501725eb4ea20d.tar.gz"
   checksum:
-    "sha256=b732b626ac89c2001fedd0fced431e9c2a95cc13df45821a2f91508afd829440"
+    "sha256=ea38401bac2992fd3acbbcb2664f0c455c25c96bfabab6d6fdfde14502155eed"
 }

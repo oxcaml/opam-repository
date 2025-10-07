@@ -30,7 +30,7 @@ It comes as a binary and an emacs mode.
 """
 url {
   src:
-    "https://github.com/janestreet/line-up-words/archive/5c121c704abe797d7503968d07c3bf0db4e7cab8.tar.gz"
+    "https://github.com/janestreet/line-up-words/archive/5f3e02b4f903e22f62a1fb10c0f2c49dcf1e9197.tar.gz"
   checksum:
-    "sha256=acff305e8372b823492fef051932d3587345411df5bc57aee5d73ab42a391e9e"
+    "sha256=b5a28d5c2034ba067b89324be4ca496750e6db92cb2b58d6027205ac6cc68bd0"
 }

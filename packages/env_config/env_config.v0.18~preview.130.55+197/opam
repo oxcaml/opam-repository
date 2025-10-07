@@ -31,7 +31,7 @@ in a library.
 """
 url {
   src:
-    "https://github.com/janestreet/env_config/archive/4d00df8e4190e1988ff972829ce06b4c09ddac46.tar.gz"
+    "https://github.com/janestreet/env_config/archive/48d17bd6a0bd5256be69b4efc6ad37a2abe813a5.tar.gz"
   checksum:
-    "sha256=731e847989e7e43b8a437252611ad1477ecf351281f66213951aa518bbe53704"
+    "sha256=7bb5e27d6c2cc8a162b20c50bf324e2dd029aad6834618a7aade1e9f3e9a63f0"
 }

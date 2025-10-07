@@ -28,7 +28,7 @@ This deriving PPX rewriter is used internally at Jane Street to allow unboxed ty
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_array/archive/ebc3c9e7ceeee7ec27957a2c8176f73e989ffcb8.tar.gz"
+    "https://github.com/janestreet/ppx_array/archive/64b88c3ef7665a03bdc789526147b94d1757caca.tar.gz"
   checksum:
-    "sha256=bff224c89965f5f9afc0314fbc614d10c5c989a3f36d819150412370e12cb37d"
+    "sha256=fa100441348373e3e9f9d838dda4d8b01c5dbbcce00df7f6b188b6d7f4714e9b"
 }

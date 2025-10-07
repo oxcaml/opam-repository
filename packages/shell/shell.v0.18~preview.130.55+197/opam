@@ -27,7 +27,7 @@ This library is a relatively featureful and flexible implementation of fork&exec
 depexts: ["linux-headers"] {os-family = "alpine"}
 url {
   src:
-    "https://github.com/janestreet/shell/archive/9e0f928e439cac2340d9f2e89836e8de7c93e4e5.tar.gz"
+    "https://github.com/janestreet/shell/archive/859abf6f4f61f709bca94e402da0def375bdbc7c.tar.gz"
   checksum:
-    "sha256=2c93e85722883db92975dac6f10cc8d17ba1aa1b647100cd1e1b2388553ee1ee"
+    "sha256=abbc783263f9972d6b95704c900097a06b897751c9a9cc95d8970cc471e1ce11"
 }

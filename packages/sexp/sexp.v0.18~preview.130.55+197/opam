@@ -40,7 +40,7 @@ sexps, as well as some conversions to and from other formats.
 """
 url {
   src:
-    "https://github.com/janestreet/sexp/archive/e0357117d4f4fc13b541d335723c3007e31a16f6.tar.gz"
+    "https://github.com/janestreet/sexp/archive/c98d3a53dc4711126031cb66d4f5370a906b762b.tar.gz"
   checksum:
-    "sha256=23955c4f7e64acc3b839ac5bbc7cba2c00e2ecb92aab1d95045c2ff119e330aa"
+    "sha256=eb5d193ae4abc36302728d64da6df861269f07b2b7d43107f8be89d67fcaa986"
 }

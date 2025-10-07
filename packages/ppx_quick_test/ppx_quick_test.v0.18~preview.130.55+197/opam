@@ -38,7 +38,7 @@ Part of the Jane Street's PPX rewriters collection.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_quick_test/archive/b4914f4f049e1330bfeb5d441c31660cfd4d5e78.tar.gz"
+    "https://github.com/janestreet/ppx_quick_test/archive/015c83ec6ceea417d3a672e2144011d7e9469bd4.tar.gz"
   checksum:
-    "sha256=a62aa24a24906ff37f80a08f325a10439ed6fbfca5ed054457e5969dfa565f9c"
+    "sha256=fdd09bfda8d311104655633fec927871ac22fe0d86f4697722270f4cd0ffa45f"
 }

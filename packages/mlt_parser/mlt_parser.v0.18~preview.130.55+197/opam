@@ -27,7 +27,7 @@ sessions) both to power toplevel expect tests and to support a tool that convert
 """
 url {
   src:
-    "https://github.com/janestreet/mlt_parser/archive/2c1ef4b5a88958c7cb7479ea22e6742df7cd070d.tar.gz"
+    "https://github.com/janestreet/mlt_parser/archive/bb2e3e7b56de8190d535d5f85a3daec62005b2e3.tar.gz"
   checksum:
-    "sha256=b2041870f33d556d5acdd34a6274f50d78a122d5ed00b29480d99bc932354d57"
+    "sha256=87ecbd4d41d5d920b29f1946b43a5a8062c0ccfeb6fd62c85bbbaf2dfd5b1956"
 }

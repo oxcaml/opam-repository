@@ -28,7 +28,7 @@ protocol by capturing the traffic that passes between them.
 """
 url {
   src:
-    "https://github.com/janestreet/man_in_the_middle_debugger/archive/b2f18a09670ad136b9815b056e48d35b793858b4.tar.gz"
+    "https://github.com/janestreet/man_in_the_middle_debugger/archive/7cdc3af2c1687e06f2e91b89eb19b31497d82238.tar.gz"
   checksum:
-    "sha256=20e7239c5e38fc7fdc2e264d88f11aaa67637a1d6e1ba863bf52c8a6c319c8db"
+    "sha256=340dc41284561a94274abd7792cec052b4e7c00316de3c69023a6779575aec14"
 }

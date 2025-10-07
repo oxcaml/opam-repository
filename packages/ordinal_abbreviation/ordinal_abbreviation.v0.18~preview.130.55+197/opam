@@ -23,7 +23,7 @@ A minimal library for generating ordinal names of integers.
 """
 url {
   src:
-    "https://github.com/janestreet/ordinal_abbreviation/archive/6f588bf114c9f3f38c7cf3e25488e78ac1c5c7ea.tar.gz"
+    "https://github.com/janestreet/ordinal_abbreviation/archive/e84c434ea17fd07b94e85f32778201c7c1d53890.tar.gz"
   checksum:
-    "sha256=3f56d7f4e8cb55d5fcc4a214eae0400e81371ccdc30793cea6b0a9cbe6d350f0"
+    "sha256=f54454a822d80214b5be36cfd3992a116c2f4b7591f8e1b4e383f9ee06c4a297"
 }

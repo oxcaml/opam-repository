@@ -24,7 +24,7 @@ Part of the Jane Street's PPX rewriters collection.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_disable_unused_warnings/archive/208df638edb6be493e22e7d98a5bac5080973011.tar.gz"
+    "https://github.com/janestreet/ppx_disable_unused_warnings/archive/1159e3d1e624b4b1f2912080e50657d3520e1ff7.tar.gz"
   checksum:
-    "sha256=3ec1b87e5474bf40928775eee4c9f5ea251211a3246873fef1fcfe05c8d01c05"
+    "sha256=3ca05f9c4713db1e982e5567d9a521ee3731add6b239060f2b36657465207d8d"
 }

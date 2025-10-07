@@ -29,7 +29,7 @@ Module for setting up dependencies (like printers and liblinks) for toplevels.
 """
 url {
   src:
-    "https://github.com/janestreet/toplevel_backend/archive/9acb48c88dd574158bf3ada28c6c3519c737fdba.tar.gz"
+    "https://github.com/janestreet/toplevel_backend/archive/ee92612a106374e30f1416a3b80ead10c968c894.tar.gz"
   checksum:
-    "sha256=b2242dfe6f44fc05168a9b9d685b9afd277610f92455f02c4f764d1b171c3775"
+    "sha256=1606e3ccc6d9e05d36ee474f00909711b4040ce7b65a39e64de47d169107fdf7"
 }

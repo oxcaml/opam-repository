@@ -27,7 +27,7 @@ obeying various limits.
 """
 url {
   src:
-    "https://github.com/janestreet/resource_cache/archive/8a2faa8d8c638ac04187095a03ff5833e3efef66.tar.gz"
+    "https://github.com/janestreet/resource_cache/archive/9213f7471ee2267964244d6302be211eda7bc922.tar.gz"
   checksum:
-    "sha256=ce650b6344c15250c3755e2ddec9cc6d982d44f1b6656718009a9ea02d9369cb"
+    "sha256=5a6059417c7cac0efdae75b37343e91a6b4e30a5c2ee7d1ac9b329ee4435a738"
 }

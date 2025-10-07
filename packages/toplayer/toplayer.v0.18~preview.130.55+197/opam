@@ -32,7 +32,7 @@ The floating positioning library itself may be found at https://floating-ui.com/
 """
 url {
   src:
-    "https://github.com/janestreet/toplayer/archive/541ccd7273720f0bf8b9b33c54109ffa86d76bae.tar.gz"
+    "https://github.com/janestreet/toplayer/archive/c9cf1468460ab1bec32c737189ef66eb462088a6.tar.gz"
   checksum:
-    "sha256=02dad13d23632907dfea3fb4d9e601462be063fa4d45b537db0bf32a83c78703"
+    "sha256=fe1bf3160becc98af4607a127064c759bafad3f66a4970527062bf5c2d4619f7"
 }

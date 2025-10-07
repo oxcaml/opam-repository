@@ -43,7 +43,7 @@ parsexp_io.
 """
 url {
   src:
-    "https://github.com/janestreet/parsexp/archive/508996ca0eda1045a9758802fc7cd0090faf845c.tar.gz"
+    "https://github.com/janestreet/parsexp/archive/d3fca09d82ab3fd3572de5e5f8849a6bd6f86878.tar.gz"
   checksum:
-    "sha256=d536deeea9a32ff185958db4101097d1dd5949b143c5b3db961d648864cd2951"
+    "sha256=ea1cebc7d001fe884b31b989b8a517774f23c52f57dd3d1d08731f93fdaf17a0"
 }

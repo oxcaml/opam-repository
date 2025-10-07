@@ -25,7 +25,7 @@ overflow functionality.
 """
 url {
   src:
-    "https://github.com/janestreet/hardcaml_fixed_point/archive/b60a419f0dc43297ba41dd45413fe2c7f0888f0b.tar.gz"
+    "https://github.com/janestreet/hardcaml_fixed_point/archive/b30dd5dbc691e3a527e07626df3b27c4d0251c09.tar.gz"
   checksum:
-    "sha256=eb5ae55750a65a83cd8943e34859d92b3b6feccbf337a2e3af61520bebe3a75e"
+    "sha256=662d6c19ea7881fbc60cdd78f37070126f0b96d622a677e273b76fc12433fae1"
 }

@@ -33,7 +33,7 @@ which can then be searched by efficiently.
 """
 url {
   src:
-    "https://github.com/janestreet/splay_tree/archive/6ab289f9579f04d39d85be137c6d7987f5f1b814.tar.gz"
+    "https://github.com/janestreet/splay_tree/archive/ecaa5f643c05aa60ab7ea5435018cc15d90f4f7f.tar.gz"
   checksum:
-    "sha256=e0397a659946fd1117641baef5f5ea594356ae0c46443991c452f6f11410851c"
+    "sha256=7137e478f6071ea54f943054dc16776c94bdf16ec0846c63239a87c3aecb007c"
 }

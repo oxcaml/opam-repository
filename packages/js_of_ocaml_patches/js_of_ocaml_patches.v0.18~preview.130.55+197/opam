@@ -24,7 +24,7 @@ Additions to js_of_ocaml's standard library that are required by Jane Street lib
 """
 url {
   src:
-    "https://github.com/janestreet/js_of_ocaml_patches/archive/2e1817a80d97f720291cc72248fc48b78ad23d96.tar.gz"
+    "https://github.com/janestreet/js_of_ocaml_patches/archive/789194e43fb8692779638078c603d34f86ff29cd.tar.gz"
   checksum:
-    "sha256=724263b3fbafee16394570063ef49ddf7b0c3d5300ce36301e6e4389c371689a"
+    "sha256=68efd90e1a95f3db6030a33aabec39658ea7da630a8540625d10c6becb3f8af8"
 }

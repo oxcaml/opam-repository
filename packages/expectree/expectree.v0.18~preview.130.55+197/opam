@@ -26,7 +26,7 @@ Inspired by the unix `tree` utility, expectree is a a general purpose tree print
 """
 url {
   src:
-    "https://github.com/janestreet/expectree/archive/8f713fbc214d2ccafce07731a5fd9a1df4aa85f4.tar.gz"
+    "https://github.com/janestreet/expectree/archive/ad6c03794d9988e59fa1f6c04fc1e2f6f7942c4d.tar.gz"
   checksum:
-    "sha256=dd6cc8fa3c4e04defea17b5149aa2326a8c3a96ba617bfab00f8ea8d3619fd89"
+    "sha256=54c8b876ba9a7e011e63bcee57d807b38014734d11b029f3ebcdbe8bc3cf2145"
 }

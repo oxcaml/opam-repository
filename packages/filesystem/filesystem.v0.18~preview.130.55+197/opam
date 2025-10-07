@@ -28,7 +28,7 @@ A library for filesystem operations with the file_path library.
 """
 url {
   src:
-    "https://github.com/janestreet/filesystem/archive/d30c5f188213203dbf40ccb79c2ce6f1752c1e4d.tar.gz"
+    "https://github.com/janestreet/filesystem/archive/b41367601f40b1ac848f68e6a0fbf2af9700678d.tar.gz"
   checksum:
-    "sha256=4e4af20d2ea1aa64bcf5fbd0b8128ea4fa346c8dd31d6f96be32b8274a81aa21"
+    "sha256=75c00de33e070ed119501c2132c75cedfefed94f3767a276fdb590a3a203b82d"
 }

@@ -38,7 +38,7 @@ Using flexible_sexp one can achieve the following:
 """
 url {
   src:
-    "https://github.com/janestreet/flexible_sexp/archive/019b8252661a0983189688c8abe189f1ae2597aa.tar.gz"
+    "https://github.com/janestreet/flexible_sexp/archive/cc080de6a380ffa09e5e41bd4c9a97e1b8ae756d.tar.gz"
   checksum:
-    "sha256=53365f6c67bd9d8595c56517da0285d0c9cd9ce40e0464af5e6592002207c9de"
+    "sha256=21d942775c9476affda708cc266a48f9efe33fe12964709a8a78f781c2070d58"
 }

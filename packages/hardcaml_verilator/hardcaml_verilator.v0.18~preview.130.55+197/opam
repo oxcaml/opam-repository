@@ -34,7 +34,7 @@ to the running executable to be used as a Cyclesim simulation.
 """
 url {
   src:
-    "https://github.com/janestreet/hardcaml_verilator/archive/7ec03858f5cca48039ae44b377da729fe03229db.tar.gz"
+    "https://github.com/janestreet/hardcaml_verilator/archive/f6c2a1915d912fe43345e88b4ad5e92bbe5536f1.tar.gz"
   checksum:
-    "sha256=df302e1eb2c00f263fa3d066a88cd2a2217faebc63e17ecc7ad7b02b895039a3"
+    "sha256=3787233ef79fd05fb68e4b90d30a6d2290d92b97544e342d9f1fc746815918e2"
 }

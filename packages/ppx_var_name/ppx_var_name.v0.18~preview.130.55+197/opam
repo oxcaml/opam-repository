@@ -24,7 +24,7 @@ Allows you to reference the OCaml variable name in RHS expressions.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_var_name/archive/c7429ee0851938a9af4b3869d09b0fecfbb97a82.tar.gz"
+    "https://github.com/janestreet/ppx_var_name/archive/0da8fefda39226b7e2fcdd4ec5671dd56b406b6f.tar.gz"
   checksum:
-    "sha256=638e407c1bb561cd1484c3a7a7f348b356bb61059ebd45a8c9cb35b2ab2e9ad4"
+    "sha256=5c9bc9529cd5c8ef34999b855a4ff34370540032cb4810140c739b8a5ea853f3"
 }

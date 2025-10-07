@@ -26,7 +26,7 @@ This PPX rewriter is used internally at Jane Street to simulate polymorphism ove
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_template/archive/1ea98cbdb53c99840d216e3dc117274405e12ada.tar.gz"
+    "https://github.com/janestreet/ppx_template/archive/45c878db6a591436207fe7fbcbf5781ff956a669.tar.gz"
   checksum:
-    "sha256=ccc637e580978b2e6c2a955515412f093be8f700507247fa5bd233560ac4082a"
+    "sha256=64596c9a6cc1f358e7c8bb496579054b2a4a22cdb744e5c6aa06f2ba35356f7a"
 }

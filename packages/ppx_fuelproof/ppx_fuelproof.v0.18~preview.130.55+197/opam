@@ -33,7 +33,7 @@ type mode-cross in the way you want:
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_fuelproof/archive/ffd62b5af54dcd9fa27793226d4597c959bf4427.tar.gz"
+    "https://github.com/janestreet/ppx_fuelproof/archive/2f8f27509658813a0711e49a343066ba47f61ce9.tar.gz"
   checksum:
-    "sha256=4de82f18b5b23f9375fc0e7268642db443857ef4b9b7fe3a711d733c0c0ab15b"
+    "sha256=407e412eb81575fbb64eb0903a9f53968c9aad37f2e3e3ec6a31dded5fe92702"
 }

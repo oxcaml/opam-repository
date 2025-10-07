@@ -21,7 +21,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/typerep/archive/db9015ed636c18cfdda4306b112948ab5ac00ca1.tar.gz"
+    "https://github.com/janestreet/typerep/archive/256c009b920d7ebb683cce13a559f901a310e718.tar.gz"
   checksum:
-    "sha256=adf465ee67cfeda8006d97675adf76eb32a19ed178b6273dacd9f57556f5e21b"
+    "sha256=6835bdbebe30298bb4517b8b443807a77329432523f5da22104c9c61a0dbfecc"
 }

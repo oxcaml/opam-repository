@@ -31,7 +31,7 @@ simulation model and write testbenches against it.
 """
 url {
   src:
-    "https://github.com/janestreet/hardcaml_event_driven_sim/archive/5e49324a320363a68d9b6c29011e5704186818c6.tar.gz"
+    "https://github.com/janestreet/hardcaml_event_driven_sim/archive/67b51e77c3c82928e408ec0cee5386f68f5312ef.tar.gz"
   checksum:
-    "sha256=277c16d0384ea1815faa7a6dac3660d7de5a9f9e7af79346be0bb86b417d3ff4"
+    "sha256=38971cf03131d5bbdecad8a203e26bc6d9ecf03a4fa5771fb9bc5c137cef3ed0"
 }

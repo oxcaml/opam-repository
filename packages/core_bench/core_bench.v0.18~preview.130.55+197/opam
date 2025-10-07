@@ -36,7 +36,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/core_bench/archive/2b9c211d299869300d5aab150d20933038723d18.tar.gz"
+    "https://github.com/janestreet/core_bench/archive/188b102a81bfee9d2f2109ef40fcaca24fd19b16.tar.gz"
   checksum:
-    "sha256=0f0a0f5a0928240994a6b6d9db25d6250630bf9bf01713098018b8b32e06a92b"
+    "sha256=f5beac5203dc8ea0f8636be5d980df4f0b57435491a3a0baabf3395746c5dcf3"
 }

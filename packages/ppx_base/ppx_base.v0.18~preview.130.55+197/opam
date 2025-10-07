@@ -32,7 +32,7 @@ verification tool.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_base/archive/fe02cffaf891ffe32b511fe2fdac9a79eeebf377.tar.gz"
+    "https://github.com/janestreet/ppx_base/archive/37790aa19a1b35c1c9f7bcc2aaeca585032b71b6.tar.gz"
   checksum:
-    "sha256=581a096748276109f89f621ff367431beba9f970d5b05608c470cc73b860f3e2"
+    "sha256=75873c9d4ddb5abde050f9bb444207614f0c5ace6e0b5e7ea6e1885694810d66"
 }

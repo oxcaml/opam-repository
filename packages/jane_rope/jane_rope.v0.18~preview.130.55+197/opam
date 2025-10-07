@@ -22,7 +22,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/jane_rope/archive/cd94decf7f424941690cd9355a6bda09985acf5b.tar.gz"
+    "https://github.com/janestreet/jane_rope/archive/bec1c15784dd3faea20ad5411f0ae34dcab4bba2.tar.gz"
   checksum:
-    "sha256=1a8b2f658306c2b6a43be2f3f7c79a5999df93db60f33e5f7db8f5bdaa92d9f8"
+    "sha256=ef119aeb51147e3c55d2c46e740f694776c3d1a3a32db9627b8e38cf4882ae03"
 }

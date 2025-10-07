@@ -25,7 +25,7 @@ Library for constructing circuits with a pair of valid and ready handshake signa
 """
 url {
   src:
-    "https://github.com/janestreet/hardcaml_handshake/archive/9c8dc5a66f504cf0650de9a7f8117b5cfb4b43b5.tar.gz"
+    "https://github.com/janestreet/hardcaml_handshake/archive/015457c7d45acbea49d730fb4119c8aa1ef1a1e5.tar.gz"
   checksum:
-    "sha256=45778b34c65f80aa9d072584d10be5befe13b78193cef3fcd063bd67c85c4814"
+    "sha256=c1ed997fab37cd9ed9f9b0f25d73839d1e9018989603d2b519dcec25de0969c7"
 }

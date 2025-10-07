@@ -27,7 +27,7 @@ to a service while using the wrong protocol.
 """
 url {
   src:
-    "https://github.com/janestreet/protocol_version_header/archive/bbdca3bc4d7d5e63b74b1ce104d7477bcade4282.tar.gz"
+    "https://github.com/janestreet/protocol_version_header/archive/616032123173f6dc8be27e9c4fc3d0920b69aa21.tar.gz"
   checksum:
-    "sha256=83b612317c42ab028f12bd25e11ab1dc28ea20c602299ad9c899f0903bb978a0"
+    "sha256=318ceec08139b1c3492fb98432cb5ba5451ae4f24b4ab5980df176c2ae4f8783"
 }

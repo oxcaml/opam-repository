@@ -38,7 +38,7 @@ https://github.com/Matt-Esch/virtual-dom.
 """
 url {
   src:
-    "https://github.com/janestreet/virtual_dom/archive/67b0abefe60b3dd386ecdda85ca5bb63596ce797.tar.gz"
+    "https://github.com/janestreet/virtual_dom/archive/cf26faae62cd34ea0bd8eaebb63e2a61a86de653.tar.gz"
   checksum:
-    "sha256=832d1e6e2494b91a4dcdb76c7127383584dd2afdcb4756fbfc1b3c176092ad03"
+    "sha256=5369b5deb663076605c78f03406613ccda9b8bcc194cc8839999a396d5ca9bda"
 }

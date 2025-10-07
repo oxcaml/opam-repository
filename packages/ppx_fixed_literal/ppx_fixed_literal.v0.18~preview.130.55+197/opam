@@ -24,7 +24,7 @@ form 1.0v to conversion functions currently in scope.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_fixed_literal/archive/92de132b657901651533b4d284dc73753234dc0c.tar.gz"
+    "https://github.com/janestreet/ppx_fixed_literal/archive/181131270fb1e20fbe0f59695b84cf6919bd161e.tar.gz"
   checksum:
-    "sha256=a06b64838b513948a9ed21eda754ac5f22306f00869c9dd57caff723479d9a6a"
+    "sha256=8bdaa2f9b07caefae41838a88f2a9204e21244fafc8f3e1f84d52bce025ad6c9"
 }

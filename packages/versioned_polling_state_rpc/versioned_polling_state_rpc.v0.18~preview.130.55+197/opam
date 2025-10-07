@@ -28,7 +28,7 @@ Helper functions for creating stable/versioned `Polling_state_rpc.t`s with babel
 """
 url {
   src:
-    "https://github.com/janestreet/versioned_polling_state_rpc/archive/c48b70e947691e43b934a24da019e07376017e5c.tar.gz"
+    "https://github.com/janestreet/versioned_polling_state_rpc/archive/9fabbf3ec42936b9044e15e5a7e8070800674d2a.tar.gz"
   checksum:
-    "sha256=9065e396ff8f57ae8687120f0d879385eb49ea683b244615ed865fe1a75b926e"
+    "sha256=1bd508ff4a80690b0e96cc78d9b39e9eced201b2aa796be8052bb402f3bae511"
 }

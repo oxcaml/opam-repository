@@ -29,7 +29,7 @@ programming using OCaml and OxCaml
 """
 url {
   src:
-    "https://github.com/janestreet/portable/archive/209967c2e9eddf4e89ea531d6dca777e175036cb.tar.gz"
+    "https://github.com/janestreet/portable/archive/bbd0db99999565564cc39c7ffee5959fcba8b316.tar.gz"
   checksum:
-    "sha256=4a4e0854ab99acbc630cb8a9d749423a3647edd9467563dd8250c27ebe72da68"
+    "sha256=69437dc6aaae3545f405a917a10729e222d36eff185b1faf81e07cdf1d54abe1"
 }

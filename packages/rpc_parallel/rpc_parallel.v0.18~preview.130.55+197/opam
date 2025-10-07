@@ -30,7 +30,7 @@ Async Rpc.
 """
 url {
   src:
-    "https://github.com/janestreet/rpc_parallel/archive/b91664663aa1debd495f4cd60ae84040dcf13d9f.tar.gz"
+    "https://github.com/janestreet/rpc_parallel/archive/174365cb976dd4708d3234f355c19b00817d7925.tar.gz"
   checksum:
-    "sha256=bc58fabfc4fd318d947a2115855f1e6c7994641e895df5abd52bbf94f5abd4be"
+    "sha256=8f3c28526ab0cb2cf85685996fb409056975ad5491ac2c6a8ebe59633e8a455e"
 }

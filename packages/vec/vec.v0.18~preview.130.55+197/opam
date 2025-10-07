@@ -25,7 +25,7 @@ Growable array.
 """
 url {
   src:
-    "https://github.com/janestreet/vec/archive/a3721d956aeadac6a795c48ae7b682b52d2eb3f7.tar.gz"
+    "https://github.com/janestreet/vec/archive/38e38c0322b71d564d361ddbcd29cbceb3bbc454.tar.gz"
   checksum:
-    "sha256=450e13b4a172f3988f60f8956415475f83207b729bd3d3e9ae0f648c1f2bd452"
+    "sha256=03815f2986e84d794b88f33ee04b64f17cf1cb26b814492c874a6831b5396580"
 }

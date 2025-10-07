@@ -33,7 +33,7 @@ PPX_HTML is a way of constructing Vdom.Node.t's using HTML syntax.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_html/archive/881764d89fc75b4055c3bdf652c3bcebaa94802f.tar.gz"
+    "https://github.com/janestreet/ppx_html/archive/1e78ea9cd732d6c0cb6914a56a11114352f3f7bc.tar.gz"
   checksum:
-    "sha256=a75bd0e86f13e476dbe75ad51db3a499245d75378a0a64946e1798c28086f729"
+    "sha256=1b7a13f86c5b8f1be62c7a6238d12d6ba73c0eb52dc50c210c29af31cdfa6494"
 }

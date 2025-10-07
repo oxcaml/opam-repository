@@ -26,7 +26,7 @@ An API like the browser's setTimeout, but driven by an overridable async time so
 """
 url {
   src:
-    "https://github.com/janestreet/testable_timeout/archive/0a9b53dd6e761e446dc4f1735ba4502239e786ff.tar.gz"
+    "https://github.com/janestreet/testable_timeout/archive/bbec9b8987648967e768aac7fa67fd8060a38fc2.tar.gz"
   checksum:
-    "sha256=d7b52053d0a1de68ab84c4c45f80a7d06927016ddd3da94d10353d4472e5d744"
+    "sha256=48d0048a0f33f9fcffae334b55db5c124cf2ed1f4f86a3dd2067567b3e1f5701"
 }

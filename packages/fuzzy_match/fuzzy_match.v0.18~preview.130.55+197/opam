@@ -23,7 +23,7 @@ Libraries for fuzzy string matching
 """
 url {
   src:
-    "https://github.com/janestreet/fuzzy_match/archive/880a9710c127acb5da87574de288d3b65877ccb6.tar.gz"
+    "https://github.com/janestreet/fuzzy_match/archive/cf26c9a408a90a7fd0fee45a5278495296798f8a.tar.gz"
   checksum:
-    "sha256=0d1e7f4372591bea10b9a88a8c3ace210f71f9a09bee64e7b01201c0fa870e4a"
+    "sha256=9281660f400580561bbb2f768f6efbfdf0bd4a8b2bbe6a4f043732a2f44e8ee3"
 }

@@ -29,7 +29,7 @@ outputs that exist.
 """
 url {
   src:
-    "https://github.com/janestreet/incr_select/archive/b9048e89107408e02e2318b1d821da56616d2b19.tar.gz"
+    "https://github.com/janestreet/incr_select/archive/dd2f3e8ad0320a2dd03ce5e1b301de134b74514d.tar.gz"
   checksum:
-    "sha256=611c18d4c5a864d226d2423ea960a8576e3ac9dbfbf1db13180cfe0215b245e9"
+    "sha256=c9ea3f3114245564dcc54818fc3b9fec6a7f3bea05c525539fdc082f35322786"
 }

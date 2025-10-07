@@ -25,7 +25,7 @@ An interval with an extra layer of safety and more convenient accessors that ret
 """
 url {
   src:
-    "https://github.com/janestreet/nonempty_interval_lib/archive/fb5cbb933b20d1227110ac814c6d368e22d58ee7.tar.gz"
+    "https://github.com/janestreet/nonempty_interval_lib/archive/a15089ff4844e7bc5f6716635d325c05dd6046d3.tar.gz"
   checksum:
-    "sha256=d23e05fc5def22103c1e59db03d79b2fb6ced8a580d21970c90066ca021df54d"
+    "sha256=5ee546a17dba8a637142acb0d059affafc9c9c8f14fc97bd2645e2204e85d2bd"
 }

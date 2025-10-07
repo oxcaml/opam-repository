@@ -56,7 +56,7 @@ for your plugin.
 """
 url {
   src:
-    "https://github.com/janestreet/vcaml/archive/6aada8c33e09e6f93bc6b88ef87810789e3d006b.tar.gz"
+    "https://github.com/janestreet/vcaml/archive/760ae1aa0879a9a1a08da6c4b432bc4f0de592e0.tar.gz"
   checksum:
-    "sha256=f00c4ed6ad35577152eae59397237ce04e45bd7596f6ec81e574cb38fc997fa3"
+    "sha256=c1ab7a42dfa35d1f2597951dfdc8e38a1b9261fbbfccf8b45860aaf5d946e739"
 }

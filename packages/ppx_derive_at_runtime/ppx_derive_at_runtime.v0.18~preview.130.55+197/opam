@@ -31,7 +31,7 @@ specify a module path such as `My_library.Foo`.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_derive_at_runtime/archive/4c766c5015329708cd54545a69777f45fc1f5043.tar.gz"
+    "https://github.com/janestreet/ppx_derive_at_runtime/archive/909456f2be9cd75ddc2e3ae91ca8cbca7bf9b93c.tar.gz"
   checksum:
-    "sha256=898d58e8d9bced48c63f4ba65c70b5225070802f45bd0f6a5c030ec5c7fada0c"
+    "sha256=e361554cffe2cb8ad04b22623213d704dc42d2de2c3ad9e3ae8a3d09e95dc38a"
 }

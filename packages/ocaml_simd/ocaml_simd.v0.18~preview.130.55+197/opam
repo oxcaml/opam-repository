@@ -30,7 +30,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/ocaml_simd/archive/c06b9666e56f1c8fe48b76a8e199e12904c79790.tar.gz"
+    "https://github.com/janestreet/ocaml_simd/archive/97a46879ef79427d97596ced718ae693f4cf046f.tar.gz"
   checksum:
-    "sha256=7517ca6ab1de218606c829c2f8728f5d7f247df305a1a70015ac9409e2544b8e"
+    "sha256=6ef92bba933d324091d6795992f58427f5c6710eb30aad71f9578d5d13e8e04b"
 }

@@ -24,7 +24,7 @@ This deriving PPX rewriter provides functions that convert product types (record
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_box/archive/d77854b3b2fd1fd72ad44eef6a9ef75f15706dff.tar.gz"
+    "https://github.com/janestreet/ppx_box/archive/fefdc8f6a1c46df9407c34124eb4f2f40666e736.tar.gz"
   checksum:
-    "sha256=35c1a5103b6c320c401afa7357d9e7ea5df372e1d7f567c8419f108b757c7e73"
+    "sha256=b972e141c2994a0475cbdeedbbde39bfcc415c1b43c884002ebbc3430e597f6c"
 }

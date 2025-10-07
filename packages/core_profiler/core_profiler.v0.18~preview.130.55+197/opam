@@ -30,7 +30,7 @@ estimate various costs.
 """
 url {
   src:
-    "https://github.com/janestreet/core_profiler/archive/253d14652ee09edfc103973e94175998f67bbb45.tar.gz"
+    "https://github.com/janestreet/core_profiler/archive/ea9ac4143598e5e17ae3bb14e50ac795f17b0688.tar.gz"
   checksum:
-    "sha256=511a6505e2fee88f0194860ace69a5ea085cbc3a4fafb38c1a2093d449bae76a"
+    "sha256=1e292a11abb5b8f62419b123d23932b8c8e2f4fd4cd63204f109b74c4bcc82b3"
 }

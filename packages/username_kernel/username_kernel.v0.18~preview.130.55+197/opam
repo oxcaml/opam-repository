@@ -23,7 +23,7 @@ A string representation for a user, typically a UNIX username
 """
 url {
   src:
-    "https://github.com/janestreet/username_kernel/archive/48a3ea37a30bb3e1d327072f4f4fb36a3f3776b6.tar.gz"
+    "https://github.com/janestreet/username_kernel/archive/20671c8d5b83a90bdce30602edc42ccf55ca673d.tar.gz"
   checksum:
-    "sha256=067a3ca99694944b80f0927937ff698001e135f91d91c234f023c79ca15cbbd2"
+    "sha256=b2b2dd95eccb66dd1a9247413f176228c924db17bc7ce67aa48c223b72c527d3"
 }

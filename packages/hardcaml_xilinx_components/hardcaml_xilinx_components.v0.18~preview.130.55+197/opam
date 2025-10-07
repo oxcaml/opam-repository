@@ -30,7 +30,7 @@ installation and generating Hardcaml interfaces automatically.
 """
 url {
   src:
-    "https://github.com/janestreet/hardcaml_xilinx_components/archive/d41a3d6e9538e525f259cee12dbb61c39fc61c09.tar.gz"
+    "https://github.com/janestreet/hardcaml_xilinx_components/archive/9c06e8147153836a262d3f86a79861fdcf656c15.tar.gz"
   checksum:
-    "sha256=d6956a6219fdefdd7540e182a02083b5f2b334f86634546ab9cac1c852fb91ea"
+    "sha256=1b930fb70ab64590ac78793586149decdcc4f78b1b48dde84b8f6b8a207b11ce"
 }

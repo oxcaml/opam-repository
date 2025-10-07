@@ -23,7 +23,7 @@ A library for building strings with indentation
 """
 url {
   src:
-    "https://github.com/janestreet/indentation_buffer/archive/587f164416fd8fc38a6367d4c46d7278f42ee4c5.tar.gz"
+    "https://github.com/janestreet/indentation_buffer/archive/5ba994d505513599301c61618812e01c29697703.tar.gz"
   checksum:
-    "sha256=a29f627c415dfb9927653ae043fb4f5104ed150084de4cf751ef31e941f7fff2"
+    "sha256=7a8b90d1b20059647be1cb70390209c4e151860d39b17913f49b53f5145dafc7"
 }

@@ -53,7 +53,7 @@ including all standard Jane Street ppx rewriters.
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_jane/archive/8316f617e71e8cdb4afe1e79167de1a41acb8e3a.tar.gz"
+    "https://github.com/janestreet/ppx_jane/archive/20654d9f0590a264519e5895320d6a02945b9c67.tar.gz"
   checksum:
-    "sha256=83de432781bda70e5302f4ef09a631a115292482598c299647506a01860a43d7"
+    "sha256=157269bc4eb78e14be22949de0df0bd4ba8d0a1965eb5f0b8aaf5cfe6164166f"
 }

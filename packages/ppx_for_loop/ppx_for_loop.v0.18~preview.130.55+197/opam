@@ -25,7 +25,7 @@ ppx_for_loop is a ppx rewriter that allows one to write `for` loops indexed by u
 """
 url {
   src:
-    "https://github.com/janestreet/ppx_for_loop/archive/63a381c6715b1e44db213ee369a032538e5aa921.tar.gz"
+    "https://github.com/janestreet/ppx_for_loop/archive/17a186ba71f555cda09c0fdd80050ce0f7f9d4b7.tar.gz"
   checksum:
-    "sha256=10bd390131d5710952f0c72158ea4802bd2fdd255678d0b08d022b44f0a62db8"
+    "sha256=4cc2f1bd97d726e2714c57666e20285daadec8d54b297570c32a532648aff7af"
 }

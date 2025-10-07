@@ -23,7 +23,7 @@ Uopt_base provides an unboxed option type, for use in high-performance systems w
 """
 url {
   src:
-    "https://github.com/janestreet/uopt/archive/652540703bb5de16bb4c03bfe11eeb27a5193f31.tar.gz"
+    "https://github.com/janestreet/uopt/archive/b441a55870c4a86140501e85da20dca92f740e59.tar.gz"
   checksum:
-    "sha256=14044b7858fe2ec8d8b120083e7d5488a39c7e793a9249e61ab023ff23a39a9a"
+    "sha256=04b24f0376a3a5d12a7fef1c008309487df48d9a05a0c1dbc0b07e9439a9a9f4"
 }

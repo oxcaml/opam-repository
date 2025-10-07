@@ -26,7 +26,7 @@ since the start of the Unix epoch.
 """
 url {
   src:
-    "https://github.com/janestreet/time_now/archive/33e3c315bc98ce1f17ebf36847240622dfc731e9.tar.gz"
+    "https://github.com/janestreet/time_now/archive/54bc5e246deee6853bbba8aa80157dac1b108fb4.tar.gz"
   checksum:
-    "sha256=ac8f0ca6d995ee0d46b57d1fe1f47125da6b339ab7aa0fdc2d3ccf961ab0f574"
+    "sha256=6aac87d3e862af096e4b37509e9c1f5017f0436b6fcc212693842eb940305dfa"
 }

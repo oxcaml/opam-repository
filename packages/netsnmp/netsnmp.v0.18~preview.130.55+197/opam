@@ -29,7 +29,7 @@ depexts: [
 ]
 url {
   src:
-    "https://github.com/janestreet/netsnmp/archive/46f7dcf6b26489e98d38e10245453fc0959f9c3b.tar.gz"
+    "https://github.com/janestreet/netsnmp/archive/e68f3a00c91d9ceec36c5c69037e0b75f0b9d779.tar.gz"
   checksum:
-    "sha256=d43973242ce15f5127fa67de6538ebf3f31e71452662822286132f1142369785"
+    "sha256=6572a96c2002613a40412319bd6170e1f7a6eac907dd662f76331fa9c77cab6e"
 }

@@ -21,7 +21,7 @@ C header files shared between the various Jane Street packages
 """
 url {
   src:
-    "https://github.com/janestreet/jane-street-headers/archive/ad7dd6d911f64fe206466630f1b1be7b2379b785.tar.gz"
+    "https://github.com/janestreet/jane-street-headers/archive/f1704e9e4a75e87942fa74fe46d86b71953e0bf8.tar.gz"
   checksum:
-    "sha256=322b4510b1898a82e8ec2087f92419998b1ac74ed041dbef524a98a48808daee"
+    "sha256=e3738c59eae1c3ba74eeb3b2fbb59eb5bcc2e0b5c03eb396012d1ef8201c3fab"
 }

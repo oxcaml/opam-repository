@@ -29,7 +29,7 @@ do not recommend using this package directly.
 """
 url {
   src:
-    "https://github.com/janestreet/jst-config/archive/35ca5aba910e77390714f11e0d763e74bd3e4247.tar.gz"
+    "https://github.com/janestreet/jst-config/archive/5d519710f74f3c3ed9f9e5f8ffb7d918b66ee7e3.tar.gz"
   checksum:
-    "sha256=6755ec03a663b7c0f6d1ac3226d54d799fcfca6878bea644f6099e3156f2b75b"
+    "sha256=885c0e87818008dbf62a22225cebf14fb177f977eb8e90ea4a938b653eff7e0e"
 }

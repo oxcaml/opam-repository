@@ -26,7 +26,7 @@ including escape sequences and comments.
 """
 url {
   src:
-    "https://github.com/janestreet/sexp_string_quickcheck/archive/cfbf83c3066b4f46575ec8e50ea51fac9bbcb4cc.tar.gz"
+    "https://github.com/janestreet/sexp_string_quickcheck/archive/d12df0bd7238962c7aae6cd1641aa61a9f170785.tar.gz"
   checksum:
-    "sha256=3332b23672f05d9f048000a68ac246fd70bdd2e7b0bcac3dd5dfae028687a46d"
+    "sha256=dcf82361be0dffb2fec363c71144740819bd319cd1742f550bbc1d271d973e55"
 }

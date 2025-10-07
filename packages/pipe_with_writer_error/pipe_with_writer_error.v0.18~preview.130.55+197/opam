@@ -36,7 +36,7 @@ variety of write functions (namely, `write`, `write_when_ready`,
 """
 url {
   src:
-    "https://github.com/janestreet/pipe_with_writer_error/archive/77de811fb6f949af85d974f53c03eef93647145c.tar.gz"
+    "https://github.com/janestreet/pipe_with_writer_error/archive/9f07304156cf14ac3a7db8dda24e06bffcc424e9.tar.gz"
   checksum:
-    "sha256=6a6d0c0583fad32c82c301e358b8b58a1bda5200e54cbeebbbf619b95f638ffc"
+    "sha256=1833e2ee2902e20413c89184b14985076b213962bb124b6e08e8ced91b269e11"
 }

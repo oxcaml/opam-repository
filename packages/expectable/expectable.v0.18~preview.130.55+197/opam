@@ -26,7 +26,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/expectable/archive/8f8f7bb1dfb76046868825bbf3922c2a1245c75a.tar.gz"
+    "https://github.com/janestreet/expectable/archive/a3324954705a7a7d2227205031ba34455b3b4ac6.tar.gz"
   checksum:
-    "sha256=8339cf74cb5730f658b79f5ad4f5219fbb873f1b8e784c362b0d291c43f765d4"
+    "sha256=3697fdcab57a663e1adf311c3f0d573e9cbc49d24829b622f9cbf95b46fb1510"
 }

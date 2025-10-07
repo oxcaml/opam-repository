@@ -25,7 +25,7 @@ Diffable interface.
 """
 url {
   src:
-    "https://github.com/janestreet/legacy_diffable/archive/df30ccf2df4d698b1078a9e6b2a8c822f177d50d.tar.gz"
+    "https://github.com/janestreet/legacy_diffable/archive/2dccea9447e49d539425c20c78c7efad7d3929da.tar.gz"
   checksum:
-    "sha256=1d1929deedd3fab0e9b43b2dceacc7431db2ddb9aadf0e0efb445f64006c1136"
+    "sha256=04fefe48c14ba1ed7aa79a66e28325dc4a0f69fe3dd92b34c8f46dd9b9f3d902"
 }

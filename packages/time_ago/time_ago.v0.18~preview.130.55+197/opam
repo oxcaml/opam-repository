@@ -27,7 +27,7 @@ A library for turning elapsed or future times into human-readable strings.
 """
 url {
   src:
-    "https://github.com/janestreet/time_ago/archive/8b7d5950d37a264314842d9042990b479be5dd62.tar.gz"
+    "https://github.com/janestreet/time_ago/archive/76b2d81d59b9365919cefe927e285618cde6b2c6.tar.gz"
   checksum:
-    "sha256=45883ccafbf3bbb3de3ec92b551915c8e6715b780d80d124659ae42902cdbbac"
+    "sha256=b303a0b5891948165de1eb73773825803f76aee13c06b50023a91fba2d3cd6e5"
 }
