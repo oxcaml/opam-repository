@@ -20,7 +20,7 @@ license: "ISC"
 homepage: "https://github.com/ocaml/ocaml-lsp"
 bug-reports: "https://github.com/ocaml/ocaml-lsp/issues"
 depends: [
-  "dune"  {>= "3.0" & <= "3.19.1"}
+  "dune"  {>= "3.0"}
   "ocaml" {>= "4.08"}
   "odoc"  {with-doc & <= "3.0.0"}
   "yojson" {>= "2.0.0" & < "3.0.0"}
@@ -40,4 +40,3 @@ url {
   checksum:
     "sha256=7d38472fa68c6aa283941f15fe4155d04164904db2a9740904b67b62ff44a282"
 }
-
