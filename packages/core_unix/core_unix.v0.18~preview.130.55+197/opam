@@ -26,7 +26,7 @@ depends: [
   "uopt"                     {= "v0.18~preview.130.55+197"}
   "base-threads"
   "dune"                     {>= "3.17.0"}
-  "spawn"                    {>= "v0.15"}
+  "spawn"                    {= "v0.15.1+ox"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Unix-specific portions of Core"
@@ -36,7 +36,7 @@ Unix-specific extensions to some of the modules defined in [core] and [core_kern
 depexts: ["linux-headers"] {os-family = "alpine"}
 url {
   src:
-    "https://github.com/janestreet/core_unix/archive/ef8f1d6d685e81f835814fd155869b5ef7fd6b03.tar.gz"
+    "https://github.com/janestreet/core_unix/archive/662c189d24fa99df0cdbb73f01b3baea58ab9330.tar.gz"
   checksum:
-    "sha256=641277395e91261ec2e4ba70f270a0447ede491cecb54c94f00774b322662a11"
+    "sha256=db5651bb83cc2f56d1405eb2b105a0233640c128aba1666914eb746ecf09a774"
 }

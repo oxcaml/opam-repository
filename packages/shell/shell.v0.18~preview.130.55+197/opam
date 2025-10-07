@@ -17,7 +17,7 @@ depends: [
   "ppx_jane"   {= "v0.18~preview.130.55+197"}
   "textutils"  {= "v0.18~preview.130.55+197"}
   "dune"       {>= "3.17.0"}
-  "spawn"      {>= "v0.15"}
+  "spawn"      {= "v0.15.1+ox"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Yet another implementation of fork&exec and related functionality"
@@ -27,7 +27,7 @@ This library is a relatively featureful and flexible implementation of fork&exec
 depexts: ["linux-headers"] {os-family = "alpine"}
 url {
   src:
-    "https://github.com/janestreet/shell/archive/859abf6f4f61f709bca94e402da0def375bdbc7c.tar.gz"
+    "https://github.com/janestreet/shell/archive/0b2c4c7d0e2491e116783c9ed9bb578ed5deea8d.tar.gz"
   checksum:
-    "sha256=abbc783263f9972d6b95704c900097a06b897751c9a9cc95d8970cc471e1ce11"
+    "sha256=5694d1af21d40a26ab4184cf8fcea07ae1567a6d05d433f0059e80e29b6b8722"
 }
