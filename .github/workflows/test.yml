@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu:24.04, debian:bookworm]
-        os: [ubuntu-latest, ubuntu-24.04-arm]
+        os: [ubuntu_x64_8_cores, ubuntu_arm64_8_core]
         include:
           - image: archlinux:latest
             os: ubuntu-latest
