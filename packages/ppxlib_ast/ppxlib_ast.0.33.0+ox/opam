@@ -28,7 +28,7 @@ depends: [
   "sexplib0"            {with-test & >= "v0.15"}
   "stdlib-shims"
   "ocamlfind"           {with-test}
-  "re"                  {with-test & >= "1.9.0"}
+  "re"                  {with-test & >= "1.9.0" & = "1.14.0+ox"}
   "cinaps"              {with-test & >= "v0.12.1"}
   "odoc"                {with-doc}
   "conf-bash"           {build}
@@ -90,7 +90,7 @@ patches: [
 extra-files: [
   [
     "cleanup.sh"
-    "sha256=29db7be4fd7860181a36b8c052d1ef944f32918a7c8d6c74fc9b3e7539916d8c"
+    "sha256=32d1c0b93c6031afa8e27bb309fb00fc5eab10f2f88b16ee424a1c1c420275f2"
   ]
   [
     "ppxlib+ast+ast.ml.patch"

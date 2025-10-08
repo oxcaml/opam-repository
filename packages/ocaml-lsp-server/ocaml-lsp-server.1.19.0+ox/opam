@@ -40,8 +40,8 @@ depends: [
   "astring"
   "camlp-streams"
   "ppx_expect"          {>= "v0.15.0" & < "0.17.0" & with-test}
-  "ocamlformat"         {with-test & = "0.26.2" & = "0.26.2+ox"}
-  "ocamlc-loc"          {= "3.20.2+ox"}
+  "ocamlformat"         {with-test & = "0.26.2+ox" & = "0.26.2+ox"}
+  "ocamlc-loc"          {>= "3.7.0"}
   "pp"                  {>= "1.1.2"}
   "csexp"               {>= "1.5"}
   "ocamlformat-rpc-lib" {>= "0.21.0"}

@@ -20,7 +20,7 @@ homepage: "https://github.com/realworldocaml/mdx"
 bug-reports: "https://github.com/realworldocaml/mdx/issues"
 depends: [
   "dune"          {>= "3.5"}
-  "ocaml"         {>= "4.08.0"}
+  "ocaml"         {>= "4.08.0" & < "5.4"}
   "ocamlfind"
   "fmt"           {>= "0.8.7"}
   "cppo"          {build & >= "1.1.0"}
@@ -28,7 +28,7 @@ depends: [
   "astring"
   "logs"          {>= "0.7.0"}
   "cmdliner"      {>= "1.1.0" & < "2.0.0"}
-  "re"            {>= "1.7.2"}
+  "re"            {= "1.14.0+ox"}
   "ocaml-version" {>= "2.3.0"}
   "lwt"           {with-test}
   "camlp-streams"
@@ -56,6 +56,21 @@ build: [
 dev-repo: "git+https://github.com/realworldocaml/mdx.git"
 url {
   src:
-    "git+https://github.com/oxcaml/mdx.git#aae25c16a7f093a7c23bb966951e4c73daf8b54c"
+    "https://github.com/realworldocaml/mdx/releases/download/2.5.0/mdx-2.5.0.tbz"
+  checksum: [
+    "sha256=c2da58d7d5182f15c046fb320bb02c16602d2ee7cb99f349e3f4841c26365029"
+    "sha512=d16d9ec2ac444880c7f6d08181fe055697f25fb405358acee396cd7ecba8011881f1de8b49bfa208d4adcd4904b600f4122d1a47d98bf26a8cb533770dd9350d"
+  ]
 }
-
+x-commit-hash: "1f83f73e06233ea8745cd0c9473613d40e6999bc"
+patches: ["ast.patch" "unit-info.patch"]
+extra-files: [
+  [
+    "ast.patch"
+    "sha256=c96ebc9dca741eded8f9ee2b5c15e075795c1be5ee741730d8096f825a20499f"
+  ]
+  [
+    "unit-info.patch"
+    "sha256=ec145ec86db853d986468e86e6a27b46d14f6acc309a36d546c9e475854b4a6a"
+  ]
+]

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 rm -rf bench dev doc examples metaquot metaquot_lifters old_rtd_doc print-diff runner runner_as_ppx src test traverse ppxlib*.opam
 
 asts_to_remove="402 403 404 405 406 407 408 409 410 411 412 413"

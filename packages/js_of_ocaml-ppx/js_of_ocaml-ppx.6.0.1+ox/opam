@@ -55,7 +55,6 @@ patches: [
   "js_of_ocaml-mixed-block-bytecode-op.patch"
   "js_of_ocaml-mixed-block-bytecode-op-regression-test.patch"
   "js_of_ocaml-int_u-array-primitives.patch"
-  "js_of_ocaml-n-ary-functions.patch"
   "js_of_ocaml-symtable-5.2-api.patch"
   "js_of_ocaml-jane-street-5.2-compatibility.patch"
   "js_of_ocaml-migrate-labeled-tuples-shims.patch"
@@ -67,9 +66,18 @@ patches: [
   "js_of_ocaml-5.3-tests-runtime.patch"
   "js_of_ocaml-caml_bigstring_strncmp.patch"
   "wasm_of_ocaml-stub-caml_ml_set_channel_refill.patch"
+  "js_of_ocaml-no-compression-module-5.2.patch"
   "js_of_ocaml-obj_stubs.patch"
+  "js_of_ocaml-global_deadcode-fix.patch"
+  "js_of_ocaml-local-bytes.patch"
+  "js_of_ocaml-n-ary-functions.patch"
+  "js_of_ocaml-optcomp_lite_fixes.patch"
+  "js_of_ocaml-revert_9c15703872_behavior_changing_rewrite_of_float_to_bits.patch"
+  "js_of_ocaml-stop_evaluating_caml_int64_bits_of_float_to_avoid_breaking_float_u.patch"
+  "js_of_ocaml-gh2034.patch"
   "js_of_ocaml-unboxed-indexing.patch"
   "js_of_ocaml-atomics.patch"
+  "js_of_ocaml-flipped-conditions-in-test.patch"
   "js_of_ocaml-atomic-cmpxchg.patch"
   "js_of_ocaml-small-int-literals.patch"
   "dune.patch"
@@ -156,10 +164,6 @@ extra-files: [
     "sha256=99eba4301613d03e0305017a687c768bd24a22cef0db25ab62cbc3d304f647ba"
   ]
   [
-    "js_of_ocaml-n-ary-functions.patch"
-    "sha256=b9b078c1f227624cc5fc9dd574c19785354267c19299dcf2f9b9642d0114eddf"
-  ]
-  [
     "js_of_ocaml-symtable-5.2-api.patch"
     "sha256=9a999950e8984cc582e3830f447111e1082dc720609334de66a011347d26da9b"
   ]
@@ -204,8 +208,40 @@ extra-files: [
     "sha256=005bce63009b9539b65036b22a7b7cc531755c7caa3cf1ed8d8697698090e136"
   ]
   [
+    "js_of_ocaml-no-compression-module-5.2.patch"
+    "sha256=bd08a6f9dd6e28a068a96f8889120c10bb183252a1f00b173bd72b1387aaefd4"
+  ]
+  [
     "js_of_ocaml-obj_stubs.patch"
     "sha256=9e9064f255c065a3152f665bd5b464040f3cfbbd2580aa4bb6e17be9c2b7fcc8"
+  ]
+  [
+    "js_of_ocaml-global_deadcode-fix.patch"
+    "sha256=5b49d6ee62ae87c77d88ea8022b022830f906367dc9b9ea2e582f037a739292f"
+  ]
+  [
+    "js_of_ocaml-local-bytes.patch"
+    "sha256=1c6170fec57089f515ec71bd9873d48bd5ae9c4a85f14b80f33039cce9f232ae"
+  ]
+  [
+    "js_of_ocaml-n-ary-functions.patch"
+    "sha256=b9b078c1f227624cc5fc9dd574c19785354267c19299dcf2f9b9642d0114eddf"
+  ]
+  [
+    "js_of_ocaml-optcomp_lite_fixes.patch"
+    "sha256=b98305f8885c0377714677b2ca6d0d561c18bee6a8fc0d2f9d0abf52694968e0"
+  ]
+  [
+    "js_of_ocaml-revert_9c15703872_behavior_changing_rewrite_of_float_to_bits.patch"
+    "sha256=899ec90b4c1f5f1251d2c77fdb842f11b5a07d01430da4e5c75610d4bf541faa"
+  ]
+  [
+    "js_of_ocaml-stop_evaluating_caml_int64_bits_of_float_to_avoid_breaking_float_u.patch"
+    "sha256=483e848b0dfe54b75c31cd990191730c0070ad8a21912b1beca97111e01a718e"
+  ]
+  [
+    "js_of_ocaml-gh2034.patch"
+    "sha256=5e2c74d922435b791c616348ccb972d8911217aaf614dbca159afaa9b940b828"
   ]
   [
     "js_of_ocaml-unboxed-indexing.patch"
@@ -214,6 +250,10 @@ extra-files: [
   [
     "js_of_ocaml-atomics.patch"
     "sha256=cfe956bb047c252faa2397ff2badca80972d74e1dca0cb633202313dfb8f5da4"
+  ]
+  [
+    "js_of_ocaml-flipped-conditions-in-test.patch"
+    "sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   ]
   [
     "js_of_ocaml-atomic-cmpxchg.patch"
