@@ -21,7 +21,7 @@ jobs:
         os: [ubuntu_x64_8_cores, ubuntu_arm64_8_core]
         include:
           - image: archlinux:latest
-            os: ubuntu-latest
+            os: ubuntu_x64_8_cores
     runs-on: ${{ matrix.os }}
     container:
       image: ${{ matrix.image }}
