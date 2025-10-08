@@ -112,7 +112,7 @@ extra-files: [
   ]
   [
     "js_of_ocaml-remove-float-externals.patch"
-    "sha256=a3aa95ee08210377c1470e5bf0f832bc27ad98299bca22c7a88eb9fd6c32e655"
+    "sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   ]
   [
     "js_of_ocaml-ocaml_version-ppx.patch"
@@ -120,11 +120,11 @@ extra-files: [
   ]
   [
     "js_of_ocaml-test-diffs-caused-by-build-differences.patch"
-    "sha256=00d38ead67c67220351605d72c2b3a4e3faa8053087ef8ab47b7067b42900ba9"
+    "sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   ]
   [
     "js_of_ocaml-fix-build_fs.patch"
-    "sha256=6373ba10c70f77a2c5999bfec2484657a32450e44a3dfb04ce6bcaa05464d890"
+    "sha256=abaa404bf23a77cf1badfe30ab9fcc13c6fb0446a81fa10b0962ed1ba9005d6a"
   ]
   [
     "js_of_ocaml-iarray-primitives.patch"
@@ -188,7 +188,7 @@ extra-files: [
   ]
   [
     "js_of_ocaml-float32.patch"
-    "sha256=99d9d86a44d8cf5942d853a16d0e4cfc62119e09dcefd2e4b57cbb40778e0298"
+    "sha256=8d6ebad1481711f57c5ed6dd36187b96ce8fcc51cdf3b0e9d5c277687601c625"
   ]
   [
     "js_of_ocaml-caml_array_append.patch"
@@ -196,11 +196,11 @@ extra-files: [
   ]
   [
     "js_of_ocaml-5.2.0-compiler-changes.patch"
-    "sha256=ca5e39b361fe5c34fde2244cc3d784b4387c754ca90d785afcfc2228956df17b"
+    "sha256=12626322e63a8eaf68d4c8a1a1d3f428832869fae7020588e0fe40bbd8fd8cf8"
   ]
   [
     "js_of_ocaml-5.3-tests-runtime.patch"
-    "sha256=bb46bb5c80ace0140edd40c5858c7117f27dc2d0edd869a8b3b4e90aab7199f0"
+    "sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   ]
   [
     "js_of_ocaml-caml_bigstring_strncmp.patch"
@@ -212,7 +212,7 @@ extra-files: [
   ]
   [
     "js_of_ocaml-no-compression-module-5.2.patch"
-    "sha256=bd08a6f9dd6e28a068a96f8889120c10bb183252a1f00b173bd72b1387aaefd4"
+    "sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   ]
   [
     "js_of_ocaml-obj_stubs.patch"
@@ -244,7 +244,7 @@ extra-files: [
   ]
   [
     "js_of_ocaml-gh2034.patch"
-    "sha256=5e2c74d922435b791c616348ccb972d8911217aaf614dbca159afaa9b940b828"
+    "sha256=ec01ea15a9d21c22790ad3c93e9d68154e364462de6a2ce1dbbb62e8af25fc2d"
   ]
   [
     "js_of_ocaml-unboxed-indexing.patch"

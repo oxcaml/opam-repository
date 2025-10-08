@@ -1,12 +1,3 @@
---- a/compiler/tests-wasm_of_ocaml/dune
-+++ b/compiler/tests-wasm_of_ocaml/dune
-@@ -1,5 +1,5 @@
- (tests
-- (names gh38 gh46 gh107 gh112 gh1904)
-+ (names gh38 gh46 gh107 gh112 gh1904 gh2034)
-  (modes js wasm)
-  (js_of_ocaml
-   (flags :standard --disable optcall --no-inline))
 --- a/runtime/wasm/obj.wat
 +++ b/runtime/wasm/obj.wat
 @@ -387,14 +387,18 @@
