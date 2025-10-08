@@ -77,7 +77,8 @@ extra-source "init-compiler.tar.gz" {
     "sha256=c2d706432f93ba85bd3383fa451d74543c32a4e84a1afaf3e8ace18f7f097b43"
 }
 extra-source "init-dune.tbz" {
-  src: "https://github.com/ocaml/dune/releases/download/3.20.2/dune-3.20.2.tbz"
+  src:
+    "https://github.com/ocaml/dune/releases/download/3.20.2/dune-3.20.2.tbz"
   checksum: [
     "sha256=b1a86b2d60bdb4a8b9bb6861bdf2f9f28a6e7cb5d833ce81afecceb9ef9ca549"
   ]
@@ -107,9 +108,9 @@ conflicts: [
   "base" {< "v0.18~"}
   "alcotest" {!= "1.9.0+ox"}
   "backoff" {!= "0.1.1+ox"}
+  "ctypes" {!= "0.23.0+ox"}
+  "ctypes-foreign" {!= "0.23.0+ox"}
   "dot-merlin-reader" {!= "5.2.1-502+ox"}
-  "dune" {!= "3.20.2+ox"}
-  "dune-rpc" {!= "3.20.2+ox"}
   "gen_js_api" {!= "1.1.2+ox"}
   "js_of_ocaml" {!= "6.0.1+ox"}
   "js_of_ocaml-compiler" {!= "6.0.1+ox"}
@@ -117,7 +118,6 @@ conflicts: [
   "js_of_ocaml-toplevel" {!= "6.0.1+ox"}
   "jsonrpc" {!= "1.19.0+ox"}
   "lsp" {!= "1.19.0+ox"}
-  "lwt" {!= "5.9.2+ox"}
   "lwt_ppx" {!= "5.9.1+ox"}
   "mdx" {!= "2.5.0+ox"}
   "merlin" {!= "5.2.1-502+ox"}
@@ -131,11 +131,11 @@ conflicts: [
   "ojs" {!= "1.1.2+ox"}
   "ppxlib" {!= "0.33.0+ox"}
   "ppxlib_ast" {!= "0.33.0+ox"}
+  "re" {!= "1.14.0+ox"}
   "sedlex" {!= "3.3+ox"}
   "spawn" {!= "v0.15.1+ox"}
-  "stdune" {!= "3.20.2+ox"}
   "topkg" {!= "1.0.8+ox"}
-  "uTop" {!= "2.15.0+ox"}
+  "uTop" {!= "2.16.0+ox"}
   "uutf" {!= "1.0.3+ox"}
   "wasm_of_ocaml-compiler" {!= "6.0.1+ox"}
   "zarith" {<"1.12"}

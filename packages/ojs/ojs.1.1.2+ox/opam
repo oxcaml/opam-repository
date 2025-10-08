@@ -34,6 +34,7 @@ patches: [
   "gen-js-api+ppx-driver+gen_js_api_ppx_driver.ml.patch"
   "gen-js-api+ppx-lib+gen_js_api_ppx.ml.patch"
   "gen-js-api+unsafe_multidomain_alert.patch"
+  "gen-js-api-ast.patch"
   "dune.patch"
 ]
 extra-files: [
@@ -52,6 +53,10 @@ extra-files: [
   [
     "gen-js-api+unsafe_multidomain_alert.patch"
     "sha256=41fd51a6dd20b44bc07451e4635623554c4aa80e5e5f9472faf4161c7a7b0a7a"
+  ]
+  [
+    "gen-js-api-ast.patch"
+    "sha256=969f7ae0ac3a269f5fecffc659a875d7ba458364aa85da2e9bfa8cd3a214ae2f"
   ]
   [
     "dune.patch"
