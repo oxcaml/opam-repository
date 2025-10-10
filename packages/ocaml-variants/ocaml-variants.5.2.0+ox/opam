@@ -142,4 +142,4 @@ conflicts: [
   "zarith" {="1.12"}
   "zarith" {="1.13"}
   "zarith" {="1.14"}
-]
+ ]
