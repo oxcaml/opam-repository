@@ -125,7 +125,7 @@ extra-files: [
   ]
   [
     "js_of_ocaml-iarray-primitives.patch"
-    "sha256=037ad55684c9ac3801ff284839d8bb1290d2e750cd4bcb03b75e5f4ab69559c9"
+    "sha256=8c320fb413daad0393347bf6a22ca31fe6f1d3dd34f58e313aa44cd060fc56f8"
   ]
   [
     "js_of_ocaml-important-config-changes.patch"
