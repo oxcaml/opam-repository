@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/sexp_select"
+bug-reports: "https://github.com/janestreet/sexp_select/issues"
+dev-repo: "git+https://github.com/janestreet/sexp_select.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/sexp_select/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"       {>= "5.1.0"}
+  "base"        {= "v0.18~preview.130.74+175"}
+  "core_kernel" {= "v0.18~preview.130.74+175"}
+  "parsexp"     {= "v0.18~preview.130.74+175"}
+  "ppx_jane"    {= "v0.18~preview.130.74+175"}
+  "dune"        {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "A library to use CSS-style selectors to traverse sexp trees"
+description: """
+This library provides a convenient method to traverse sexp trees
+and return subtrees that match the given program.
+"""
+url {
+  src:
+    "https://github.com/janestreet/sexp_select/archive/9a489a5f6f7bee2b3e12eb427143a8128a9ee72b.tar.gz"
+  checksum:
+    "sha256=94aa54288cd472c2633fdde4357588b74e80a5903d189939b96a4a6245d0d839"
+}

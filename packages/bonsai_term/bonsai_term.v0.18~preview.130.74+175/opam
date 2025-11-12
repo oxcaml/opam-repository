@@ -1,0 +1,38 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/bonsai_term"
+bug-reports: "https://github.com/janestreet/bonsai_term/issues"
+dev-repo: "git+https://github.com/janestreet/bonsai_term.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/bonsai_term/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"           {>= "5.1.0"}
+  "async"           {= "v0.18~preview.130.74+175"}
+  "bonsai"          {= "v0.18~preview.130.74+175"}
+  "core"            {= "v0.18~preview.130.74+175"}
+  "core_unix"       {= "v0.18~preview.130.74+175"}
+  "notty_async"     {= "v0.18~preview.130.74+175"}
+  "parallel"        {= "v0.18~preview.130.74+175"}
+  "ppx_jane"        {= "v0.18~preview.130.74+175"}
+  "uopt"            {= "v0.18~preview.130.74+175"}
+  "virtual_dom"     {= "v0.18~preview.130.74+175"}
+  "dune"            {>= "3.17.0"}
+  "notty-community" {= "0.2.4+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "A library for building dynamic terminal apps, using bonsai"
+description: """
+Bonsai_term is a library for building reusable TUI componetns and apps inside an
+    Incremental-style UI framework such as Bonsai_web, Incr_dom or React.
+"""
+url {
+  src:
+    "https://github.com/janestreet/bonsai_term/archive/8ed9ea9d05f60f4a32e0dfad9b097c2e1d7fb04c.tar.gz"
+  checksum:
+    "sha256=0270179db1f617c36b037ccbe1ee2666843c3130dfc0087b3eb0679353bef5ce"
+}

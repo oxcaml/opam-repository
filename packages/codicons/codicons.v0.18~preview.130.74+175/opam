@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/codicons"
+bug-reports: "https://github.com/janestreet/codicons/issues"
+dev-repo: "git+https://github.com/janestreet/codicons.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/codicons/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                 {>= "5.1.0"}
+  "bonsai_web_components" {= "v0.18~preview.130.74+175"}
+  "core"                  {= "v0.18~preview.130.74+175"}
+  "ppx_jane"              {= "v0.18~preview.130.74+175"}
+  "virtual_dom"           {= "v0.18~preview.130.74+175"}
+  "dune"                  {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Icons from VS code"
+description: """
+Icons from VS code
+"""
+url {
+  src:
+    "https://github.com/janestreet/codicons/archive/37540c022e3e3eb0f584a1cbba9f06b3a6b66bdf.tar.gz"
+  checksum:
+    "sha256=1990af6b954ceb20315e8ef4223c5f0b6646a92bfd3d255028efce73c3403263"
+}

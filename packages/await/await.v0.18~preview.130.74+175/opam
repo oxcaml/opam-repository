@@ -1,0 +1,40 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/await"
+bug-reports: "https://github.com/janestreet/await/issues"
+dev-repo: "git+https://github.com/janestreet/await.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/await/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"            {>= "5.2.0"}
+  "async"            {= "v0.18~preview.130.74+175"}
+  "base"             {= "v0.18~preview.130.74+175"}
+  "basement"         {= "v0.18~preview.130.74+175"}
+  "core"             {= "v0.18~preview.130.74+175"}
+  "oxcaml_effect"    {= "v0.18~preview.130.74+175"}
+  "portable"         {= "v0.18~preview.130.74+175"}
+  "ppx_debug_assert" {= "v0.18~preview.130.74+175"}
+  "ppx_fuelproof"    {= "v0.18~preview.130.74+175"}
+  "ppx_jane"         {= "v0.18~preview.130.74+175"}
+  "ppx_sexp_conv"    {= "v0.18~preview.130.74+175"}
+  "ppx_sexp_value"   {= "v0.18~preview.130.74+175"}
+  "ppx_shorthand"    {= "v0.18~preview.130.74+175"}
+  "ppx_template"     {= "v0.18~preview.130.74+175"}
+  "dune"             {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis:
+  "Implementations of awaiting and synchronization primitives for OxCaml"
+description: """
+[Await] provides implementations of awaiting and synchronization primitives for OxCaml.
+"""
+url {
+  src:
+    "https://github.com/janestreet/await/archive/e7bd12cfd9ad2543f19c8b4ffe577c9859ab0d36.tar.gz"
+  checksum:
+    "sha256=7d0967bf6e107bd3fe28d5d33c3a563bc7a452121c9c72aa6aa7f65e1c07e267"
+}

@@ -1,0 +1,38 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_derive_at_runtime"
+bug-reports: "https://github.com/janestreet/ppx_derive_at_runtime/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_derive_at_runtime.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_derive_at_runtime/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                    {>= "5.1.0"}
+  "base"                     {= "v0.18~preview.130.74+175"}
+  "expect_test_helpers_core" {= "v0.18~preview.130.74+175"}
+  "ppx_helpers"              {= "v0.18~preview.130.74+175"}
+  "ppx_jane"                 {= "v0.18~preview.130.74+175"}
+  "ppx_template"             {= "v0.18~preview.130.74+175"}
+  "ppxlib_jane"              {= "v0.18~preview.130.74+175"}
+  "dune"                     {>= "3.17.0"}
+  "ocaml-compiler-libs"      {= "v0.17.0+ox"}
+  "ppxlib"                   {= "0.33.0+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Define a new ppx deriver by naming a runtime module."
+description: """
+
+Allows specifying new ppx derivers much more easily than writing
+a ppx by hand. For example, to get `[@@deriving foo]`, you only have to
+specify a module path such as `My_library.Foo`.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_derive_at_runtime/archive/c7e123f92d16d6f5b7fd28006b7fba0417c8f5f0.tar.gz"
+  checksum:
+    "sha256=ebb3686965ab10d4802cbf747fc37beca0ddfa1b38f8884f7827e009bcfc751b"
+}

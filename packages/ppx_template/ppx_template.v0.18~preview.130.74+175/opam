@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_template"
+bug-reports: "https://github.com/janestreet/ppx_template/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_template.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_template/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"       {>= "5.1.0"}
+  "ppx_helpers" {= "v0.18~preview.130.74+175"}
+  "ppxlib_jane" {= "v0.18~preview.130.74+175"}
+  "sexplib0"    {= "v0.18~preview.130.74+175"}
+  "dune"        {>= "3.17.0"}
+  "ppxlib"      {= "0.33.0+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis:
+  "C++-style templates for kind, mode, modality, and allocator polymorphism"
+description: """
+This PPX rewriter is used internally at Jane Street to simulate polymorphism over various extensions to OCaml's type system, in cases where there is not yet built-in compiler support. The long-term goal is thus to delete it entirely.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_template/archive/8d864d58fb68f983a060842861dc0058058e442a.tar.gz"
+  checksum:
+    "sha256=6f8f6568848b14f1c373d6459c318a58c0ced61a8472c5064977a735e9dadbf0"
+}
