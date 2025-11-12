@@ -53,7 +53,7 @@
    val setfield :
      ?loc:loc -> ?attrs:attrs -> expression -> lid -> expression -> expression
  
-@@ -264,8 +285,13 @@ module Exp : sig
+@@ -264,8 +285,15 @@ module Exp : sig
  
    val extension : ?loc:loc -> ?attrs:attrs -> extension -> expression
    val unreachable : ?loc:loc -> ?attrs:attrs -> unit -> expression
@@ -63,11 +63,13 @@
    val binding_op : str -> pattern -> expression -> loc -> binding_op
 +
 +  val overwrite : ?loc:loc -> ?attrs:attrs -> expression -> expression -> expression
++  val quote : ?loc:loc -> ?attrs:attrs -> expression -> expression
++  val splice : ?loc:loc -> ?attrs:attrs -> expression -> expression
 +  val hole : ?loc:loc -> ?attrs:attrs -> unit -> expression
  end
  
  (** Value declarations *)
-@@ -351,10 +377,10 @@ module Mty : sig
+@@ -351,10 +379,10 @@ module Mty : sig
    val attr : module_type -> attribute -> module_type
    val ident : ?loc:loc -> ?attrs:attrs -> lid -> module_type
    val alias : ?loc:loc -> ?attrs:attrs -> lid -> module_type

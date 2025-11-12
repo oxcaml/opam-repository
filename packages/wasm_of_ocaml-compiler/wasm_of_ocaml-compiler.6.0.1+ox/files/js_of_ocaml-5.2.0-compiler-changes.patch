@@ -335,7 +335,7 @@
 +
 +//Provides: caml_is_null
 +function caml_is_null(o) {
-+  return o === null;
++  return o === null ? 1 : 0;
 +}
 --- a/runtime/wasm/compare.wat
 +++ b/runtime/wasm/compare.wat

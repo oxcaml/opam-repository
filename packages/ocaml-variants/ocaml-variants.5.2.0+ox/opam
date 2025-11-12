@@ -93,9 +93,9 @@ extra-source "init-menhir.tar.gz" {
 }
 url {
   src:
-    "https://github.com/oxcaml/oxcaml/archive/refs/tags/5.2.0minus-19-opam.tar.gz"
+    "https://github.com/oxcaml/oxcaml/archive/refs/tags/5.2.0minus-23-opam.tar.gz"
   checksum:
-    "sha256=30c9030e82cc282058bece5759dcf5b208dd5f1423e9a2c013933d6226c344b6"
+    "sha256=2409416446ca9cc72bb9583e73c1e60cd5105b85b8c73ed75a711df38a77ce41"
 }
 patches: ["ignore-opam.patch"]
 extra-files: [
@@ -123,6 +123,7 @@ conflicts: [
   "mdx" {!= "2.5.0+ox"}
   "merlin" {!= "5.2.1-502+ox"}
   "merlin-lib" {!= "5.2.1-502+ox"}
+  "notty-community" {!= "0.2.4+ox"}
   "ocaml-compiler-libs" {!= "v0.17.0+ox"}
   "ocaml-index" {!= "1.1+ox"}
   "ocaml-lsp-server" {!= "1.19.0+ox"}
@@ -133,7 +134,7 @@ conflicts: [
   "ppxlib" {!= "0.33.0+ox"}
   "ppxlib_ast" {!= "0.33.0+ox"}
   "re" {!= "1.14.0+ox"}
-  "sedlex" {!= "3.3+ox"}
+  "sedlex" {!= "3.6+ox"}
   "spawn" {!= "v0.15.1+ox"}
   "topkg" {!= "1.0.8+ox"}
   "uTop" {!= "2.16.0+ox"}

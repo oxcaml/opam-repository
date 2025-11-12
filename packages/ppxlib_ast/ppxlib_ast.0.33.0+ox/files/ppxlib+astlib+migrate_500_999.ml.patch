@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/astlib/migrate_500_999.ml
-@@ -0,0 +1,1686 @@
+@@ -0,0 +1,1696 @@
 +open Stdlib0
 +module From = Ast_500
 +module To = Ast_999
@@ -219,6 +219,10 @@
 +      Ast_999.Parsetree.Pexp_comprehension (copy_comprehension_expression x0)
 +  | Ast_500.Parsetree.Pexp_overwrite (x0, x1) ->
 +      Ast_999.Parsetree.Pexp_overwrite (copy_expression x0, copy_expression x1)
++  | Ast_500.Parsetree.Pexp_quote x0 ->
++      Ast_999.Parsetree.Pexp_quote (copy_expression x0)
++  | Ast_500.Parsetree.Pexp_splice x0 ->
++      Ast_999.Parsetree.Pexp_splice (copy_expression x0)
 +  | Ast_500.Parsetree.Pexp_hole ->
 +      Ast_999.Parsetree.Pexp_hole
 +
@@ -346,12 +350,12 @@
 +and copy_jkind_annotation_desc :
 +  Ast_500.Parsetree.jkind_annotation_desc -> Ast_999.Parsetree.jkind_annotation_desc =
 +  function
-+  | Default -> Default
-+  | Abbreviation x0 -> Abbreviation x0
-+  | Mod (x0, x1) -> Mod (copy_jkind_annotation x0, copy_modes x1)
-+  | With (x0, x1, x2) -> With (copy_jkind_annotation x0, copy_core_type x1, copy_modalities x2)
-+  | Kind_of x0 -> Kind_of (copy_core_type x0)
-+  | Product x0 -> Product (List.map copy_jkind_annotation x0)
++  | Pjk_default -> Pjk_default
++  | Pjk_abbreviation x0 -> Pjk_abbreviation x0
++  | Pjk_mod (x0, x1) -> Pjk_mod (copy_jkind_annotation x0, copy_modes x1)
++  | Pjk_with (x0, x1, x2) -> Pjk_with (copy_jkind_annotation x0, copy_core_type x1, copy_modalities x2)
++  | Pjk_kind_of x0 -> Pjk_kind_of (copy_core_type x0)
++  | Pjk_product x0 -> Pjk_product (List.map copy_jkind_annotation x0)
 +
 +and copy_bound_var (var, jkind) =
 +    copy_loc (fun x -> x) var, Option.map copy_jkind_annotation jkind
@@ -420,6 +424,8 @@
 +        | Ptyp_package (longident, lst) ->
 +            Ptyp_package
 +              (longident, List.map (fun (n, typ) -> (n, loop typ)) lst)
++        | Ptyp_quote core_type -> Ptyp_quote (loop core_type)
++        | Ptyp_splice core_type -> Ptyp_splice (loop core_type)
 +        | Ptyp_of_kind x1 -> Ptyp_of_kind x1
 +        | Ptyp_extension (s, arg) -> Ptyp_extension (s, arg)
 +      in
@@ -684,6 +690,10 @@
 +        (List.map copy_bound_var x0, copy_core_type x1)
 +  | Ast_500.Parsetree.Ptyp_package x0 ->
 +      Ast_999.Parsetree.Ptyp_package (copy_package_type x0)
++  | Ast_500.Parsetree.Ptyp_quote x0 ->
++      Ast_999.Parsetree.Ptyp_quote (copy_core_type x0)
++  | Ast_500.Parsetree.Ptyp_splice x0 ->
++      Ast_999.Parsetree.Ptyp_splice (copy_core_type x0)
 +  | Ast_500.Parsetree.Ptyp_of_kind x0 ->
 +      Ast_999.Parsetree.Ptyp_of_kind (copy_jkind_annotation x0)
 +  | Ast_500.Parsetree.Ptyp_extension x0 ->
