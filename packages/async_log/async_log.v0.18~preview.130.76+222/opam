@@ -1,0 +1,36 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/async_log"
+bug-reports: "https://github.com/janestreet/async_log/issues"
+dev-repo: "git+https://github.com/janestreet/async_log.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/async_log/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"        {>= "5.1.0"}
+  "async_kernel" {= "v0.18~preview.130.76+222"}
+  "async_unix"   {= "v0.18~preview.130.76+222"}
+  "core"         {= "v0.18~preview.130.76+222"}
+  "core_kernel"  {= "v0.18~preview.130.76+222"}
+  "core_unix"    {= "v0.18~preview.130.76+222"}
+  "ppx_jane"     {= "v0.18~preview.130.76+222"}
+  "dune"         {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Logging library built on top of Async_unix"
+description: """
+Part of Jane Street's Core library
+The Core suite of libraries is an industrial strength alternative to
+OCaml's standard library that was developed by Jane Street, the
+largest industrial user of OCaml.
+"""
+url {
+  src:
+    "https://github.com/janestreet/async_log/archive/9eb7b7894ffe8efb4065d73a2d403440fcef878f.tar.gz"
+  checksum:
+    "sha256=654f5ea6fdacb941924996e2afff2083873097a7b9593c9dfd3dbaba51575c1f"
+}

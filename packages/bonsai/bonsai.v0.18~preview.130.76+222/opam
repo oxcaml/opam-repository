@@ -1,0 +1,44 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/bonsai"
+bug-reports: "https://github.com/janestreet/bonsai/issues"
+dev-repo: "git+https://github.com/janestreet/bonsai.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/bonsai/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"            {>= "5.1.0"}
+  "abstract_algebra" {= "v0.18~preview.130.76+222"}
+  "async_rpc_kernel" {= "v0.18~preview.130.76+222"}
+  "bonsai_concrete"  {= "v0.18~preview.130.76+222"}
+  "core"             {= "v0.18~preview.130.76+222"}
+  "core_kernel"      {= "v0.18~preview.130.76+222"}
+  "incr_map"         {= "v0.18~preview.130.76+222"}
+  "incremental"      {= "v0.18~preview.130.76+222"}
+  "ocaml-embed-file" {= "v0.18~preview.130.76+222"}
+  "ppx_here"         {= "v0.18~preview.130.76+222"}
+  "ppx_jane"         {= "v0.18~preview.130.76+222"}
+  "ppx_let"          {= "v0.18~preview.130.76+222"}
+  "ppx_pattern_bind" {= "v0.18~preview.130.76+222"}
+  "ppxlib_jane"      {= "v0.18~preview.130.76+222"}
+  "uopt"             {= "v0.18~preview.130.76+222"}
+  "virtual_dom"      {= "v0.18~preview.130.76+222"}
+  "dune"             {>= "3.17.0"}
+  "js_of_ocaml-ppx"  {= "6.0.1+ox"}
+  "ppxlib"           {= "0.33.0+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "A library for building dynamic webapps, using Js_of_ocaml"
+description: """
+Bonsai is a library for building reusable UI components inside an
+     Incremental-style UI framework such as Incr_dom or React.
+"""
+url {
+  src:
+    "https://github.com/janestreet/bonsai/archive/9a409b5ce807a7b8b863473aff90801a70fc9cf6.tar.gz"
+  checksum:
+    "sha256=6a124e0a5d82f779af4ba865b56730c3d492885efb70269da971d7de7a9c19b4"
+}

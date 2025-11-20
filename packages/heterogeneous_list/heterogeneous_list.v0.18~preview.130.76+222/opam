@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/heterogeneous_list"
+bug-reports: "https://github.com/janestreet/heterogeneous_list/issues"
+dev-repo: "git+https://github.com/janestreet/heterogeneous_list.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/heterogeneous_list/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.2.0"}
+  "base"     {= "v0.18~preview.130.76+222"}
+  "ppx_jane" {= "v0.18~preview.130.76+222"}
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis:
+  "[Heterogeneous_list] is a list that can contain arbitrary, mixed types as elements. A bit like a Python list."
+description: """
+[Heterogeneous_list] is a list that can contain arbitrary, mixed types as elements. A bit like a Python list.
+"""
+url {
+  src:
+    "https://github.com/janestreet/heterogeneous_list/archive/4d35796c09e849eefb37d74bf6ee125d4e385482.tar.gz"
+  checksum:
+    "sha256=8381c840ab6e0b58922c444e53f8a2a1b1702892811faa55288a800f6b4c6f12"
+}

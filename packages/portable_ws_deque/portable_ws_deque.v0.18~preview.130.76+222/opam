@@ -1,0 +1,31 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/portable_ws_deque"
+bug-reports: "https://github.com/janestreet/portable_ws_deque/issues"
+dev-repo: "git+https://github.com/janestreet/portable_ws_deque.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/portable_ws_deque/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.1.0"}
+  "base"     {= "v0.18~preview.130.76+222"}
+  "basement" {= "v0.18~preview.130.76+222"}
+  "portable" {= "v0.18~preview.130.76+222"}
+  "uopt"     {= "v0.18~preview.130.76+222"}
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Portable work-stealing deque for OxCaml"
+description: """
+Portable lock-free chase-lev work-stealing deque for OxCaml
+"""
+url {
+  src:
+    "https://github.com/janestreet/portable_ws_deque/archive/3da2d35f0bd16d661ae4821d4ae4cbbbbc50669b.tar.gz"
+  checksum:
+    "sha256=fb4485578f927ef4b9ce52ca6c8b2beeb14927fb91a1abd6a9132e91e7b62709"
+}
