@@ -20,7 +20,6 @@ depends: [
   "concurrent"               {= "v0.18~preview.130.76+222"}
   "core"                     {= "v0.18~preview.130.76+222"}
   "expect_test_helpers_core" {= "v0.18~preview.130.76+222"}
-  "ocaml_simd"               {= "v0.18~preview.130.76+222"}
   "oxcaml_effect"            {= "v0.18~preview.130.76+222"}
   "portable"                 {= "v0.18~preview.130.76+222"}
   "portable_ws_deque"        {= "v0.18~preview.130.76+222"}
@@ -40,7 +39,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/parallel/archive/b16e67da27f7e6abca170d6a7995f01beaca136e.tar.gz"
+    "https://github.com/janestreet/parallel/archive/24aa0bf259a2b5d76ec0fe541d96a1701ae1f683.tar.gz"
   checksum:
-    "sha256=5be68b3165f90dea6e04394f2a431ae97ca49315b7ca7e7ee2fb5080175cc163"
+    "sha256=01b2b47b0932f12b6f822570cfe06b72bfa9fd13c413eb17f5423b9bc51683c7"
 }
