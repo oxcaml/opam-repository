@@ -40,7 +40,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/parallel/archive/c8e5412547f5c06e55931171140a70ae47a1f62e.tar.gz"
+    "https://github.com/janestreet/parallel/archive/b16e67da27f7e6abca170d6a7995f01beaca136e.tar.gz"
   checksum:
-    "sha256=23ca62fd9c68ed536a6c41694c8b3776287d1a52c8b147ee977f9a468c6192b4"
+    "sha256=5be68b3165f90dea6e04394f2a431ae97ca49315b7ca7e7ee2fb5080175cc163"
 }
