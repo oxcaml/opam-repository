@@ -182,6 +182,6 @@ extra-files: [
   ]
   [
     "dune.patch"
-    "sha256=e1ccb1e74d85bc4630d3950558b81c6bf00ec0224523e5a9a0ca6493f98337b25dbed86cbd9caa9b33d029840b5dec1dbcaddb739100643c351e8b29b9965643"
+    "sha256=5dbed86cbd9caa9b33d029840b5dec1dbcaddb739100643c351e8b29b9965643"
   ]
 ]
