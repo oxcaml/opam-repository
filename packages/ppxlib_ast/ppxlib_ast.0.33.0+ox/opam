@@ -178,7 +178,7 @@ extra-files: [
   ]
   [
     "ppxlib+stdppx+stdppx.ml.patch"
-    "sha256=dec070c22971345938d20d5b77208497bb500c61ff176f9cc39df7279285ca95"
+    "sha256=65ad51dcab1dc9580928e69e63393c7c3d94f115666d5e0e49897dde128ffd00"
   ]
   [
     "dune.patch"

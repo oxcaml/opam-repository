@@ -175,7 +175,7 @@ extra-files: [
   ]
   [
     "ppxlib+src+deriving.ml.patch"
-    "sha256=e3c0ea8fc1ab4cc253bafe20db654473ced79e8e3069acb2f4ad01847be55032"
+    "sha256=37cbe0b81bbc045f411a95d8c05133075e0b748ca2d382c8f70439fda4bc2b40"
   ]
   [
     "ppxlib+src+deriving.mli.patch"
@@ -183,11 +183,11 @@ extra-files: [
   ]
   [
     "ppxlib+src+driver.ml.patch"
-    "sha256=d5b7355f1351e59d0d2f9ee0b25c1d110bde50de92ef7350ffd7d8b20c6963f3"
+    "sha256=fb30bb8efdf81e36fa014896e060b4bba20263f6b903fddab5822b5e0f7412db"
   ]
   [
     "ppxlib+src+driver.mli.patch"
-    "sha256=123484f1a855962d3e35389dc763442a3a49e717c0abedea76e74abbd22bc750"
+    "sha256=2ad047047323d2d4eb0a217b20e6d599acf76212761dad90a43a1aeb291b0cfb"
   ]
   [
     "ppxlib+src+gen+gen_ast_builder.ml.patch"

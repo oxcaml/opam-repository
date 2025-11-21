@@ -34,3 +34,26 @@
        || unused_code_warnings
      then warnings
      else 60 :: warnings
+@@ -700,11 +700,21 @@ let wrap_sig ~loc ~hide list =
+    | Main expansion                                                  |
+    +-----------------------------------------------------------------+ *)
+ 
++let remove_attributes =
++  object
++    inherit Ast_traverse0.map
++
++    method! attributes _ = []
++  end
++;;
++
+ let types_used_by_deriving (tds : type_declaration list) : structure_item list =
+   if keep_w32_impl () then []
+   else
+     List.map tds ~f:(fun td ->
+-        let typ = Common.core_type_of_type_declaration td in
++        (* TODO: Stop removing attributes, and fix [deriving_inline] so it doesn't result
++           in unused attribute errors when adding e.g. [let _ = fun (_ : t[@x]) -> ()] *)
++        let typ = remove_attributes#core_type (Common.core_type_of_type_declaration td) in
+         let loc = td.ptype_loc in
+         pstr_value ~loc Nonrecursive
+           [
