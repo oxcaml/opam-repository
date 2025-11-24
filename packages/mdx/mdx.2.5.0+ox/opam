@@ -54,8 +54,11 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/realworldocaml/mdx.git"
+x-commit-hash: "1f83f73e06233ea8745cd0c9473613d40e6999bc"
 url {
   src:
-    "git+https://github.com/oxcaml/mdx.git#d711549bc1d735a1995c271c12011a937cce6917"
+    "https://github.com/oxcaml/mdx/archive/d711549bc1d735a1995c271c12011a937cce6917.tar.gz"
+  checksum:
+    "sha256=2691db9a75fd1c53e218e26f62bb87cc3d1fa0b2bd3526c7bd57e7b68d3c2146"
 }
 

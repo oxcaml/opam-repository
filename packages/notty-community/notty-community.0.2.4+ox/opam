@@ -1,0 +1,134 @@
+opam-version: "2.0"
+version: "0.2.4+ox"
+name: "notty-community"
+synopsis: "Declaring terminals"
+description: """\
+Notty is a declarative terminal library for OCaml structured around a notion
+of composable images. It tries to abstract away the basic terminal
+programming model, providing something simpler and more expressive.
+
+This is a branch from the original notty, maintained by the community."""
+maintainer: [
+  "Ali Caglayan <alizter@gmail.com>"
+  "Antonin Décimo <antonin@tarides.com>"
+  "Romain Calascibetta <romain.calascibetta@gmail.com>"
+]
+authors: "David Kaloper <dk505@cam.ac.uk>"
+license: "ISC"
+homepage: "https://github.com/ocaml-community/notty-community"
+bug-reports: "https://github.com/ocaml-community/notty-community/issues"
+depends: [
+  "dune"  {>= "3.0"}
+  "ocaml" {>= "4.08.0"}
+  "cppo"  {build & >= "1.1.0"}
+  "uutf"  {= "1.0.3+ox"}
+  "uucp"  {with-dev-setup}
+  "lwt"   {with-test}
+"base"
+"portable"
+"portable_lockfree_htbl"
+"ppx_jane"
+  "odoc"  {with-doc}
+]
+depopts: ["lwt"]
+conflicts: [
+  "lwt" {< "2.6.0"}
+]
+build: [
+  ["dune" "subst"] {dev}
+  ["rm" "-rf" "src-lwt"]
+  [
+    "dune"
+    "build"
+    "-p"
+    name
+    "-j"
+    jobs
+    "@install"
+    "@runtest" {with-test}
+    "@doc" {with-doc}
+  ]
+]
+dev-repo: "git+https://github.com/ocaml-community/notty-community.git"
+url {
+  src:
+    "https://github.com/ocaml-community/notty-community/releases/download/v0.2.4/notty-community-0.2.4.tar.gz"
+  checksum: [
+    "md5=b8cb51edb37d28d9d53e98ac52848677"
+    "sha512=8922a190a412790285603ba7ab37f9f58202d9406ebc9e6d3329189eac7fda5c25316264c27b6f7decb8f25f0d78801873b9f16c40e90f020e2c06ab9d058686"
+  ]
+}
+patches: [
+  "notty-disable_unsafe_multidomain.patch"
+  "notty-use_correct_newline_escape_code_and_stop_clearing_the_last_text_element_of_a_line.patch"
+  "notty-different_kinds_of_cursors.patch"
+  "notty-use_newline_instead_of_cursor_nextline_for_emacs_support.patch"
+  "notty-expose_fast_tty_width.patch"
+  "notty-do_not_send_clear_eol_on_full_lines.patch"
+  "notty-ctrl_backspace.patch"
+  "notty-reset-cursor-on-release.patch"
+  "notty-line_based_diffing_and_patching.patch"
+  "notty-defensively-ignore-corrupted-x10-vscode-mouse-codes.patch"
+  "notty-portabilize_notty_unix.patch"
+  "notty-add_href_support.patch"
+  "notty-default_color.patch"
+  "dune.patch"
+]
+extra-files: [
+  [
+    "notty-disable_unsafe_multidomain.patch"
+    "sha256=80af0d0d1772a9d7181a24e87d707907086850eaf2c1cbe28eb8305172646c61"
+  ]
+  [
+    "notty-use_correct_newline_escape_code_and_stop_clearing_the_last_text_element_of_a_line.patch"
+    "sha256=c7d0520d54dd1ef31ad9ba7617ee14e721747a370f032fe5fd990d10d29aa38c"
+  ]
+  [
+    "notty-different_kinds_of_cursors.patch"
+    "sha256=542de513fb251b39cb966d57c212af83c1e397cadd53269bfcd83e80a1bb833d"
+  ]
+  [
+    "notty-use_newline_instead_of_cursor_nextline_for_emacs_support.patch"
+    "sha256=086c946882270ba33305f6b4f11917757be36061ce28c041d04428023682f6e4"
+  ]
+  [
+    "notty-expose_fast_tty_width.patch"
+    "sha256=7ceb153d99dbab34b14a5dbabb31a7c45eeaaea86605e561d875443491b08b04"
+  ]
+  [
+    "notty-do_not_send_clear_eol_on_full_lines.patch"
+    "sha256=8c917c686ec312a61e5beba2cf3e6342e8ace5eef4e10a50a2b918ce394b50c0"
+  ]
+  [
+    "notty-ctrl_backspace.patch"
+    "sha256=9a854a48a148883850a5e69529076a6c5998396146730bd92ebc1be0764187ad"
+  ]
+  [
+    "notty-reset-cursor-on-release.patch"
+    "sha256=b460326841b528ba706c9292559770b6e65c81b8e09fa34b5d2d693cd4ebad9c"
+  ]
+  [
+    "notty-line_based_diffing_and_patching.patch"
+    "sha256=3a2becbec99cbf932efa69e632acdb3e1ce98ef0c75352edafa4a29d14eba245"
+  ]
+  [
+    "notty-defensively-ignore-corrupted-x10-vscode-mouse-codes.patch"
+    "sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  ]
+  [
+    "notty-portabilize_notty_unix.patch"
+    "sha256=6d9dbf2a122bd0eb723514bda4b13c988591e1b0625872d44a096caf6982f440"
+  ]
+  [
+    "notty-add_href_support.patch"
+    "sha256=2a19f31a3ac1212b565d6fd09244ebde81a53c958eaa432ca90681e140f0099c"
+  ]
+  [
+    "notty-default_color.patch"
+    "sha256=6fd41656ba6c55498122898b845efd430b4aa695b5ba8b0b788c42d394254f56"
+  ]
+  [
+    "dune.patch"
+    "sha256=0c8ff250019a910256f1f4993de5c52bbaa8c6a38723fa5462d1acd12d38ec8c"
+  ]
+]

@@ -1,0 +1,22 @@
+--- a/src/notty.ml
++++ b/src/notty.ml
+@@ -934,3 +934,7 @@
+   let ((<->), (<|>), (</>)) = I.((<->), (<|>), (</>))
+   let (++) = A.(++)
+ end
++
++module Tty_width_hint = struct
++  let tty_width_hint = Notty_uucp.tty_width_hint
++end
+--- a/src/notty.mli
++++ b/src/notty.mli
+@@ -971,3 +971,9 @@
+        be more important.}}
+ 
+ *)
++
++module Tty_width_hint : sig
++  (** [tty_width_hint] is exposed as the same function that notty uses to compute unicode
++      string widths. It is faster than directly calling [Uucp_break.tty_width_hint]. *)
++  val tty_width_hint : Uchar.t -> int
++end

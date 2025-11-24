@@ -115,11 +115,11 @@ extra-files: [
   ]
   [
     "ppxlib+src+ast_builder.ml.patch"
-    "sha256=49e607a19da6cc7f95a38157be4a31473b96426eefddb5c7aa048bafd893ef95"
+    "sha256=acdbfaf94eacacedb58d36f494ebc71d93fc7135e8d6c28eb3398c77264ac915"
   ]
   [
     "ppxlib+src+ast_builder.mli.patch"
-    "sha256=93c1d7a8d7fa5824a7ac61da6e2a35f0e661b7ea532a901b013a0dc4b03ef7f1"
+    "sha256=1fc8a974777c266e13df6cbc5af6df33182d55fc39eb5e59d6476b74fc18ef0d"
   ]
   [
     "ppxlib+src+ast_builder_intf.ml.patch"
@@ -159,7 +159,7 @@ extra-files: [
   ]
   [
     "ppxlib+src+common.ml.patch"
-    "sha256=1053b7edfffb3279e345dbfdd5222a90fcbe7e87a99e9a0f6b61dfdaaa3f0e7e"
+    "sha256=d8ed6370f9b7f14019a1b5953dac3fd63d59b9e6a963f89bafc237133a394d5f"
   ]
   [
     "ppxlib+src+common.mli.patch"
@@ -175,7 +175,7 @@ extra-files: [
   ]
   [
     "ppxlib+src+deriving.ml.patch"
-    "sha256=e3c0ea8fc1ab4cc253bafe20db654473ced79e8e3069acb2f4ad01847be55032"
+    "sha256=37cbe0b81bbc045f411a95d8c05133075e0b748ca2d382c8f70439fda4bc2b40"
   ]
   [
     "ppxlib+src+deriving.mli.patch"
@@ -183,11 +183,11 @@ extra-files: [
   ]
   [
     "ppxlib+src+driver.ml.patch"
-    "sha256=d5b7355f1351e59d0d2f9ee0b25c1d110bde50de92ef7350ffd7d8b20c6963f3"
+    "sha256=fb30bb8efdf81e36fa014896e060b4bba20263f6b903fddab5822b5e0f7412db"
   ]
   [
     "ppxlib+src+driver.mli.patch"
-    "sha256=123484f1a855962d3e35389dc763442a3a49e717c0abedea76e74abbd22bc750"
+    "sha256=2ad047047323d2d4eb0a217b20e6d599acf76212761dad90a43a1aeb291b0cfb"
   ]
   [
     "ppxlib+src+gen+gen_ast_builder.ml.patch"
@@ -215,7 +215,7 @@ extra-files: [
   ]
   [
     "ppxlib+src+name.ml.patch"
-    "sha256=4d6b8864701a0444f0a4e3b264e2ad0d3c05b8b9cf3aee8c0c3f62cecea98989"
+    "sha256=24f89c989df15d04a0f7339600b14b627311d5ce1d8da4b74c77f00a5c3652ff"
   ]
   [
     "ppxlib+src+ppxlib.ml.patch"

@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/jsonaf"
+bug-reports: "https://github.com/janestreet/jsonaf/issues"
+dev-repo: "git+https://github.com/janestreet/jsonaf.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/jsonaf/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"       {>= "5.1.0"}
+  "base"        {= "v0.18~preview.130.76+222"}
+  "ppx_jane"    {= "v0.18~preview.130.76+222"}
+  "angstrom"    {>= "0.15.0"}
+  "bigstringaf"
+  "dune"        {>= "3.17.0"}
+  "faraday"     {>= "0.8.1"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis:
+  "A library for parsing, manipulating, and serializing data structured as JSON"
+description: """
+A library for parsing, manipulating, and serializing data structured as JSON.
+"""
+url {
+  src:
+    "https://github.com/janestreet/jsonaf/archive/e3ac214e6326522449f82b0165e0813f56dd86a6.tar.gz"
+  checksum:
+    "sha256=da86b8a2cdba7d864836512bd6d24ceb01b78c94885f5aea15ec35bc315b0f6c"
+}

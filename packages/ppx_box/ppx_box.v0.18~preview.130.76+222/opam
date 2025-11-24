@@ -1,0 +1,31 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_box"
+bug-reports: "https://github.com/janestreet/ppx_box/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_box.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_box/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"         {>= "5.1.0"}
+  "ppx_helpers"   {= "v0.18~preview.130.76+222"}
+  "ppx_shorthand" {= "v0.18~preview.130.76+222"}
+  "ppx_template"  {= "v0.18~preview.130.76+222"}
+  "ppxlib_jane"   {= "v0.18~preview.130.76+222"}
+  "dune"          {>= "3.17.0"}
+  "ppxlib"        {= "0.33.0+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Boxes and unboxes product types."
+description: """
+This deriving PPX rewriter provides functions that convert product types (records and tuples) between their boxed and unboxed OxCaml representations. There is also an extension ppx that can be used for anonymous tuple types.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_box/archive/68af2e03c6358d57f3e1920d2881f4cdbf012dcf.tar.gz"
+  checksum:
+    "sha256=ed1575b932b11df4afd335dc6f63eb0b9a12fab6477d53dd4b3339ad8fde81b0"
+}

@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/unique"
+bug-reports: "https://github.com/janestreet/unique/issues"
+dev-repo: "git+https://github.com/janestreet/unique.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/unique/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"        {>= "5.2.0"}
+  "base"         {= "v0.18~preview.130.76+222"}
+  "basement"     {= "v0.18~preview.130.76+222"}
+  "portable"     {= "v0.18~preview.130.76+222"}
+  "ppx_template" {= "v0.18~preview.130.76+222"}
+  "dune"         {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Unique value containers for OxCaml"
+description: """
+ A library for containers of unique values.
+"""
+url {
+  src:
+    "https://github.com/janestreet/unique/archive/74aa3b9b3c404819e5e4f9aba2b63679464f20eb.tar.gz"
+  checksum:
+    "sha256=ccdfec16831997b2bf5ee613d0a8ce2f86f29c8c5d32e09978cbcb639d403292"
+}

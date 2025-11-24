@@ -1,0 +1,38 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/bonsai_term_components"
+bug-reports: "https://github.com/janestreet/bonsai_term_components/issues"
+dev-repo: "git+https://github.com/janestreet/bonsai_term_components.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/bonsai_term_components/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"           {>= "5.1.0"}
+  "bonsai"          {= "v0.18~preview.130.76+222"}
+  "bonsai_concrete" {= "v0.18~preview.130.76+222"}
+  "bonsai_term"     {= "v0.18~preview.130.76+222"}
+  "core"            {= "v0.18~preview.130.76+222"}
+  "core_kernel"     {= "v0.18~preview.130.76+222"}
+  "expectree"       {= "v0.18~preview.130.76+222"}
+  "ppx_jane"        {= "v0.18~preview.130.76+222"}
+  "sexplib"         {= "v0.18~preview.130.76+222"}
+  "vec"             {= "v0.18~preview.130.76+222"}
+  "dune"            {>= "3.17.0"}
+  "notty-community" {= "0.2.4+ox"}
+  "react"
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "A set of Terminal UI (TUI) component libraries for bonsai_term."
+description: """
+bonsai_term_components is an opam package that contains a couple of bonsai_term TUI components.
+"""
+url {
+  src:
+    "https://github.com/janestreet/bonsai_term_components/archive/4430724413d12aaff72c6b38dd23073f09527b4a.tar.gz"
+  checksum:
+    "sha256=207fccccec56e9ca45b3543612ce56d71c9cb1b6bba93e77978cc9477b41b23f"
+}

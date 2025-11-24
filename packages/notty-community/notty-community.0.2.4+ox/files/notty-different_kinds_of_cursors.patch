@@ -1,0 +1,130 @@
+--- a/examples/cursor.ml
++++ b/examples/cursor.ml
+@@ -5,12 +5,13 @@
+ open Common
+ 
+ let rec main t (x, y as pos) =
++  let cursor = (x, y, `Bar) in
+   let img =
+     let dot = I.string A.(bg lightred ++ fg black) "✓" |> I.pad ~l:x ~t:y
+     and txt = I.strf ~attr:A.(fg lightblack) "@(%d, %d)" x y in
+     I.(txt </> dot) in
+   Term.image t img;
+-  Term.cursor t (Some pos);
++  Term.cursor t (Some cursor);
+   match Term.event t with
+   | `End | `Key (`Escape, []) | `Key (`ASCII 'C', [`Ctrl]) -> ()
+   | `Resize _ -> main t pos
+--- a/src/notty.ml
++++ b/src/notty.ml
+@@ -493,6 +493,15 @@
+ 
+   let (&) op1 op2 buf = op1 buf; op2 buf
+ 
++  type cursor =
++    [ `Bar
++    | `Bar_blinking
++    | `Block
++    | `Block_blinking
++    | `Underline
++    | `Underline_blinking
++    ]
++
+   type t = {
+     skip    : int -> op
+   ; sgr     : A.t -> op
+@@ -500,6 +509,7 @@
+   ; clreol  : op
+   ; cursvis : bool -> op
+   ; cursat  : int -> int -> op
++  ; cursor_kind : cursor -> op
+   ; cubcuf  : int -> op
+   ; cuucud  : int -> op
+   ; cr      : op
+@@ -546,7 +556,19 @@
+     ; cuucud  = (fun y b -> b <| "\x1b["; b <! abs y; b <. if y < 0 then 'A' else 'B')
+     ; cr      = (fun b -> b <| "\x1b[1G")
+     ; clreol  = (fun b -> b <| "\x1b[K")
+     ; cursvis = (fun x b -> b <| if x then "\x1b[34h\x1b[?25h" else "\x1b[?25l")
++    ; cursor_kind = (fun kind b -> 
++                      let n =
++                        match kind with
++                        | `Bar -> "6"
++                        | `Bar_blinking -> "5"
++                        | `Block -> "2"
++                        | `Block_blinking -> "1"
++                        | `Underline -> "4"
++                        | `Underline_blinking -> "3"
++                      in
++                      let code = "\x1b[" ^ n ^ " q" in
++                      b <| code)
+     ; mouse   = (fun x b -> b <| if x then "\x1b[?1000;1002;1005;1015;1006h"
+                                       else "\x1b[?1000;1002;1005;1015;1006l")
+     ; bpaste  = (fun x b -> b <| if x then "\x1b[?2004h" else "\x1b[?2004l")
+@@ -566,6 +588,7 @@
+     ; cr      = no0
+     ; clreol  = no0
+     ; cursvis = no1
++    ; cursor_kind = no1
+     ; sgr     = no1
+     ; mouse   = no1
+     ; bpaste  = no1
+@@ -849,7 +872,7 @@
+   type t = {
+     cap           : Cap.t
+   ; mutable write : Buffer.t -> unit
+-  ; mutable curs  : (int * int) option
++  ; mutable curs  : (int * int * Cap.cursor) option
+   ; mutable dim   : (int * int)
+   ; mutable image : I.t
+   ; mutable dead  : bool
+@@ -862,7 +885,7 @@
+ 
+   let cursor cap = function
+     | None        -> cap.cursvis false
+-    | Some (w, h) -> cap.cursvis true & cursat0 cap w h
++    | Some (w, h, cursor_kind) -> cap.cursvis true & cursat0 cap w h & cap.cursor_kind cursor_kind
+ 
+   let create ~mouse ~bpaste cap = {
+       cap
+--- a/src/notty.mli
++++ b/src/notty.mli
+@@ -621,8 +621,17 @@
+   val release : t -> bool
+   val output  : t -> Buffer.t -> unit
+ 
++  type cursor :=
++    [ `Bar
++    | `Bar_blinking
++    | `Block
++    | `Block_blinking
++    | `Underline
++    | `Underline_blinking
++    ]
++
+   val refresh  : t -> unit
+-  val cursor   : t -> (int * int) option -> unit
++  val cursor   : t -> (int * int * cursor) option -> unit
+   val image    : t -> image -> unit
+ 
+   val set_size : t -> int * int -> unit
+--- a/src-unix/notty_unix.mli
++++ b/src-unix/notty_unix.mli
+@@ -73,7 +73,16 @@
+ 
+       Useful if the output might have become garbled. *)
+ 
+-  val cursor : t -> (int * int) option -> unit
++  type cursor :=
++    [ `Bar
++    | `Bar_blinking
++    | `Block
++    | `Block_blinking
++    | `Underline
++    | `Underline_blinking
++    ]
++
++  val cursor : t -> (int * int * cursor) option -> unit
+   (** [cursor t pos] sets and redraws the cursor.
+ 
+       [None] hides it. [Some (x, y)] places it at column [x] and row [y], with

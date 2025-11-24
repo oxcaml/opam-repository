@@ -1,0 +1,12 @@
+--- a/src/notty.ml
++++ b/src/notty.ml
+@@ -734,7 +734,8 @@
+     | Uchar u -> Some (`Key (`Uchar u, []))
+ 
+     | C0 '\x1b'        -> key `Escape []
+-    | C0 ('\b'|'\x7f') -> key `Backspace []
++    | C0 '\b'          -> key `Backspace [ `Ctrl ]
++    | C0 '\x7f'        -> key `Backspace []
+     | C0 '\n'          -> key `Enter []
+     | C0 '\t'          -> key `Tab []
+ 

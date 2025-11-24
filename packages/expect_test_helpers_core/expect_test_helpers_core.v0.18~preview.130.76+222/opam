@@ -1,0 +1,38 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/expect_test_helpers_core"
+bug-reports: "https://github.com/janestreet/expect_test_helpers_core/issues"
+dev-repo: "git+https://github.com/janestreet/expect_test_helpers_core.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/expect_test_helpers_core/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"           {>= "5.1.0"}
+  "base"            {= "v0.18~preview.130.76+222"}
+  "base_quickcheck" {= "v0.18~preview.130.76+222"}
+  "core"            {= "v0.18~preview.130.76+222"}
+  "portable"        {= "v0.18~preview.130.76+222"}
+  "ppx_jane"        {= "v0.18~preview.130.76+222"}
+  "sexp_pretty"     {= "v0.18~preview.130.76+222"}
+  "stdio"           {= "v0.18~preview.130.76+222"}
+  "dune"            {>= "3.17.0"}
+  "re"              {= "1.14.0+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Helpers for writing expectation tests"
+description: """
+This library provides helper functions for writing expect tests.
+
+If you want helpers for writing expect tests using the Async library,
+look at expect_test_helpers_async.
+"""
+url {
+  src:
+    "https://github.com/janestreet/expect_test_helpers_core/archive/75b3eb5859fe8f9af7269466ea65fb4b81c11d86.tar.gz"
+  checksum:
+    "sha256=9f8e27272fa430709471e6594ff92917752ed38685018b02694316f1d3ca7027"
+}

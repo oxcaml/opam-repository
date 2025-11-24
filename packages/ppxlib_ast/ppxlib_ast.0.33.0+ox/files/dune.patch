@@ -46,8 +46,9 @@
  (library
   (name stdppx)
 - (public_name ppxlib.stdppx)
+- (libraries sexplib0 stdlib-shims)
 + (public_name ppxlib_ast.stdppx)
-  (libraries sexplib0 stdlib-shims)
++ (libraries sexplib0 stdlib-shims sexp_type)
   (flags
    (:standard -safe-string)))
 --- a/traverse_builtins/dune

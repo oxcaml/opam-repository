@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_var_name"
+bug-reports: "https://github.com/janestreet/ppx_var_name/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_var_name.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_var_name/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"  {>= "5.1.0"}
+  "base"   {= "v0.18~preview.130.76+222"}
+  "dune"   {>= "3.17.0"}
+  "ppxlib" {= "0.33.0+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis:
+  "Allows you to reference the OCaml variable name in RHS expressions"
+description: """
+Allows you to reference the OCaml variable name in RHS expressions.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_var_name/archive/0da8fefda39226b7e2fcdd4ec5671dd56b406b6f.tar.gz"
+  checksum:
+    "sha256=5c9bc9529cd5c8ef34999b855a4ff34370540032cb4810140c739b8a5ea853f3"
+}

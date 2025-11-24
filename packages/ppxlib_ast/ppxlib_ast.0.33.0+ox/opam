@@ -94,15 +94,15 @@ extra-files: [
   ]
   [
     "ppxlib+ast+ast.ml.patch"
-    "sha256=1370418b4381e03d814ee4f379e517778ecce877272b0c6bcf39a036fc494a7a"
+    "sha256=256649e97269f4d2f55e150eb30c53310f9d75e359af8eb7b38da5c4515d8ce8"
   ]
   [
     "ppxlib+ast+ast_helper_lite.ml.patch"
-    "sha256=fcb837e075692245ec576e6a336f20de55020b128bfe5df5d3c543407b823e20"
+    "sha256=15eeb736edb93d9888008bf830dfb92b803f11525271c19a51f21f258c972328"
   ]
   [
     "ppxlib+ast+ast_helper_lite.mli.patch"
-    "sha256=ee1f7dbff5ab1bb5c2ce3635ff948b75de376d9b632d7c5f763eca09e3010cd1"
+    "sha256=1e684c100bc2fd01ca1d23c140ddb36f8fc4db57ba77d76fe8d0810fcf410b7f"
   ]
   [
     "ppxlib+ast+location_error.ml.patch"
@@ -126,7 +126,7 @@ extra-files: [
   ]
   [
     "ppxlib+astlib+ast_414.ml.patch"
-    "sha256=b5feecd4103b31e66342cb6ae70cfd72b0bccf26c9ecea414bc0b6a136eaf19e"
+    "sha256=c4b85059cabbc633a2e9e191709804d9173ece743813ab11411509ba2b9260cc"
   ]
   [
     "ppxlib+astlib+ast_500.ml.patch"
@@ -134,7 +134,7 @@ extra-files: [
   ]
   [
     "ppxlib+astlib+ast_999.ml.patch"
-    "sha256=c7ccba33220660b099d80a528d391655284bc4867c5a3aaed093dbd271afb656"
+    "sha256=0005e7f6075c5245f560eef83dc13bedfef7a5571a81839005f5aaf8ade777d3"
   ]
   [
     "ppxlib+astlib+ast_metadata.mli.patch"
@@ -154,11 +154,11 @@ extra-files: [
   ]
   [
     "ppxlib+astlib+migrate_500_999.ml.patch"
-    "sha256=36947ec4fb25f6fb39ea0787cb89b5ea032ae90134540c851493ef612cb28acd"
+    "sha256=4e40da58c1f159ee59e88e53242028c7ab5a4e6ed5d2f18db4784816634adf67"
   ]
   [
     "ppxlib+astlib+migrate_999_500.ml.patch"
-    "sha256=49ebeb191f409e642d1ff366e83518594560161d26129494cb2c63d561dc72a4"
+    "sha256=ff49f086e13725595b6ac45fae73151c4e3e5278d0e6070365e73682ada82058"
   ]
   [
     "ppxlib+astlib+parse.mli.patch"
@@ -178,10 +178,10 @@ extra-files: [
   ]
   [
     "ppxlib+stdppx+stdppx.ml.patch"
-    "sha256=dec070c22971345938d20d5b77208497bb500c61ff176f9cc39df7279285ca95"
+    "sha256=65ad51dcab1dc9580928e69e63393c7c3d94f115666d5e0e49897dde128ffd00"
   ]
   [
     "dune.patch"
-    "sha256=e1ccb1e74d85bc4630d3950558b81c6bf00ec0224523e5a9a0ca6493f98337b2"
+    "sha256=5dbed86cbd9caa9b33d029840b5dec1dbcaddb739100643c351e8b29b9965643"
   ]
 ]

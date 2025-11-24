@@ -1,0 +1,34 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ocaml-embed-file"
+bug-reports: "https://github.com/janestreet/ocaml-embed-file/issues"
+dev-repo: "git+https://github.com/janestreet/ocaml-embed-file.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ocaml-embed-file/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"        {>= "5.1.0"}
+  "async"        {= "v0.18~preview.130.76+222"}
+  "async_kernel" {= "v0.18~preview.130.76+222"}
+  "async_unix"   {= "v0.18~preview.130.76+222"}
+  "core"         {= "v0.18~preview.130.76+222"}
+  "core_unix"    {= "v0.18~preview.130.76+222"}
+  "ppx_jane"     {= "v0.18~preview.130.76+222"}
+  "dune"         {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Files contents as module constants"
+description: """
+Embed-file takes some files and generates code for an OCaml module
+defining string constants containing the contents of those files.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ocaml-embed-file/archive/7ac1d0952c5071754cacb8c91f1ad2d1e63e12cc.tar.gz"
+  checksum:
+    "sha256=de9ed4f9ea28947c28950d5776d0ee39c30c4e6e6edd1fa021cb1e9573b05ef3"
+}

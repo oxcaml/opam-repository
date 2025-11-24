@@ -136,15 +136,17 @@
  
            Can only appear in the following context:
  
-@@ -242,6 +290,7 @@ and core_type_desc = Parsetree.core_type
+@@ -242,6 +290,9 @@ and core_type_desc = Parsetree.core_type
            - As the {{!value_description.pval_type} [pval_type]} field of a
              {!value_description}. *)
    | Ptyp_package of package_type  (** [(module S)]. *)
++  | Ptyp_quote of core_type (** [<[T]>] *)
++  | Ptyp_splice of core_type (** [$T] *)
 +  | Ptyp_of_kind of jkind_annotation  (** [(type : k)] *)
    | Ptyp_extension of extension  (** [\[%id\]]. *)
  
  and package_type = longident_loc * (longident_loc * core_type) list
-@@ -303,18 +352,38 @@ and pattern_desc = Parsetree.pattern_des
+@@ -303,18 +354,38 @@ and pattern_desc = Parsetree.pattern_des
  
            Other forms of interval are recognized by the parser but rejected by
            the type-checker. *)
@@ -189,7 +191,7 @@
    | Ppat_variant of label * pattern option
        (** [Ppat_variant(`A, pat)] represents:
  
-@@ -329,9 +398,23 @@ and pattern_desc = Parsetree.pattern_des
+@@ -329,9 +400,23 @@ and pattern_desc = Parsetree.pattern_des
              {{!Asttypes.closed_flag.Open} [Open]}
  
            Invariant: [n > 0] *)
@@ -215,7 +217,7 @@
    | Ppat_type of longident_loc  (** Pattern [#tconst] *)
    | Ppat_lazy of pattern  (** Pattern [lazy P] *)
    | Ppat_unpack of string option loc
-@@ -360,35 +443,33 @@ and expression_desc = Parsetree.expressi
+@@ -360,35 +445,33 @@ and expression_desc = Parsetree.expressi
    | Pexp_constant of constant
        (** Expressions constant such as [1], ['a'], ["true"], [1.0], [1l], [1L],
            [1n] *)
@@ -278,7 +280,7 @@
    | Pexp_apply of expression * (arg_label * expression) list
        (** [Pexp_apply(E0, \[(l1, E1) ; ... ; (ln, En)\])] represents
            [E0 ~l1:E1 ... ~ln:En]
-@@ -403,10 +484,24 @@ and expression_desc = Parsetree.expressi
+@@ -403,10 +486,24 @@ and expression_desc = Parsetree.expressi
        (** [match E0 with P1 -> E1 | ... | Pn -> En] *)
    | Pexp_try of expression * cases
        (** [try E0 with P1 -> E1 | ... | Pn -> En] *)
@@ -307,7 +309,7 @@
    | Pexp_construct of longident_loc * expression option
        (** [Pexp_construct(C, exp)] represents:
  
-@@ -425,10 +520,22 @@ and expression_desc = Parsetree.expressi
+@@ -425,10 +522,22 @@ and expression_desc = Parsetree.expressi
            - [{ E0 with l1=P1; ...; ln=Pn }] when [exp0] is [Some E0]
  
            Invariant: [n > 0] *)
@@ -331,7 +333,7 @@
    | Pexp_ifthenelse of expression * expression * expression option
        (** [if E1 then E2 else E3] *)
    | Pexp_sequence of expression * expression  (** [E1; E2] *)
-@@ -440,7 +547,7 @@ and expression_desc = Parsetree.expressi
+@@ -440,7 +549,7 @@ and expression_desc = Parsetree.expressi
              {{!Asttypes.direction_flag.Upto} [Upto]}
            - [for i = E1 downto E2 do E3 done] when [direction] is
              {{!Asttypes.direction_flag.Downto} [Downto]} *)
@@ -340,7 +342,7 @@
    | Pexp_coerce of expression * core_type option * core_type
        (** [Pexp_coerce(E, from, T)] represents
  
-@@ -448,7 +555,7 @@ and expression_desc = Parsetree.expressi
+@@ -448,7 +557,7 @@ and expression_desc = Parsetree.expressi
            - [(E : T0 :> T)] when [from] is [Some T0]. *)
    | Pexp_send of expression * label loc  (** [E # m] *)
    | Pexp_new of longident_loc  (** [new M.c] *)
@@ -349,7 +351,7 @@
    | Pexp_override of (label loc * expression) list
        (** [{< x1 = E1; ...; xn = En >}] *)
    | Pexp_letmodule of string option loc * module_expr * expression
-@@ -467,7 +574,8 @@ and expression_desc = Parsetree.expressi
+@@ -467,7 +576,8 @@ and expression_desc = Parsetree.expressi
            {{!class_field_kind.Cfk_concrete} [Cfk_concrete]} for methods (not
            values). *)
    | Pexp_object of class_structure  (** [object ... end] *)
@@ -359,7 +361,7 @@
    | Pexp_pack of module_expr
        (** [(module ME)].
  
-@@ -482,6 +590,15 @@ and expression_desc = Parsetree.expressi
+@@ -482,6 +592,17 @@ and expression_desc = Parsetree.expressi
            - [let* P0 = E00 and* P1 = E01 in E1] *)
    | Pexp_extension of extension  (** [\[%id\]] *)
    | Pexp_unreachable  (** [.] *)
@@ -371,11 +373,13 @@
 +          - [CLAUSES] is a series of [comprehension_clause].
 +      *)
 +  | Pexp_overwrite of expression * expression
++  | Pexp_quote of expression (** runtime metaprogramming quotations <[E]> *)
++  | Pexp_splice of expression (** runtime metaprogramming splicing $(E)  *)
 +  | Pexp_hole
  
  and case = Parsetree.case = {
    pc_lhs : pattern;
-@@ -503,11 +620,148 @@ and binding_op = Parsetree.binding_op = 
+@@ -503,11 +624,148 @@ and binding_op = Parsetree.binding_op = 
    pbop_loc : location;
  }
  
@@ -524,7 +528,7 @@
    pval_prim : string list;
    pval_attributes : attributes;  (** [... \[@@id1\] \[@@id2\]] *)
    pval_loc : location;
-@@ -530,6 +784,7 @@ and type_declaration = Parsetree.type_de
+@@ -530,6 +788,7 @@ and type_declaration = Parsetree.type_de
    ptype_private : private_flag;  (** for [= private ...] *)
    ptype_manifest : core_type option;  (** represents [= T] *)
    ptype_attributes : attributes;  (** [... \[@@id1\] \[@@id2\]] *)
@@ -532,7 +536,7 @@
    ptype_loc : location;
  }
  (** Here are type declarations and their representation, for various
-@@ -555,11 +810,13 @@ and type_kind = Parsetree.type_kind =
+@@ -555,11 +814,13 @@ and type_kind = Parsetree.type_kind =
    | Ptype_abstract
    | Ptype_variant of constructor_declaration list
    | Ptype_record of label_declaration list  (** Invariant: non-empty list *)
@@ -546,7 +550,7 @@
    pld_type : core_type;
    pld_loc : location;
    pld_attributes : attributes;  (** [l : T \[@id1\] \[@id2\]] *)
-@@ -573,15 +830,22 @@ and label_declaration = Parsetree.label_
+@@ -573,15 +834,22 @@ and label_declaration = Parsetree.label_
  
  and constructor_declaration = Parsetree.constructor_declaration = {
    pcd_name : string loc;
@@ -571,7 +575,7 @@
    | Pcstr_record of label_declaration list
        (** Values of type {!constructor_declaration} represents the constructor
            arguments of:
-@@ -621,7 +885,8 @@ and type_exception = Parsetree.type_exce
+@@ -621,7 +889,8 @@ and type_exception = Parsetree.type_exce
  (** Definition of a new exception ([exception E]). *)
  
  and extension_constructor_kind = Parsetree.extension_constructor_kind =
@@ -581,7 +585,7 @@
        (** [Pext_decl(existentials, c_args, t_opt)] describes a new extension
            constructor. It can be:
  
-@@ -647,7 +912,7 @@ and extension_constructor_kind = Parsetr
+@@ -647,7 +916,7 @@ and extension_constructor_kind = Parsetr
                - [c_args] is [\[T1; ...; Tn\]],
                - [t_opt] is [Some T0].
             }
@@ -590,7 +594,7 @@
                when
  
                - [existentials] is [\['a;...\]],
-@@ -842,22 +1107,25 @@ and module_type = Parsetree.module_type 
+@@ -842,22 +1111,25 @@ and module_type = Parsetree.module_type 
  and module_type_desc = Parsetree.module_type_desc =
    | Pmty_ident of longident_loc  (** [Pmty_ident(S)] represents [S] *)
    | Pmty_signature of signature  (** [sig ... end] *)
@@ -619,7 +623,7 @@
  
  and signature_item = Parsetree.signature_item = {
    psig_desc : signature_item_desc;
-@@ -882,17 +1150,20 @@ and signature_item_desc = Parsetree.sign
+@@ -882,17 +1154,20 @@ and signature_item_desc = Parsetree.sign
        (** [module type S = MT] and [module type S] *)
    | Psig_modtypesubst of module_type_declaration  (** [module type S :=  ...] *)
    | Psig_open of open_description  (** [open X] *)
@@ -641,7 +645,7 @@
    pmd_attributes : attributes;  (** [... \[@@id1\] \[@@id2\]] *)
    pmd_loc : location;
  }
-@@ -946,6 +1217,7 @@ and open_declaration = module_expr open_
+@@ -946,6 +1221,7 @@ and open_declaration = module_expr open_
      - [open struct ... end] *)
  
  and 'a include_infos = 'a Parsetree.include_infos = {
@@ -649,7 +653,7 @@
    pincl_mod : 'a;
    pincl_loc : location;
    pincl_attributes : attributes;
-@@ -987,9 +1259,18 @@ and module_expr_desc = Parsetree.module_
+@@ -987,9 +1263,18 @@ and module_expr_desc = Parsetree.module_
    | Pmod_functor of functor_parameter * module_expr
        (** [functor(X : MT1) -> ME] *)
    | Pmod_apply of module_expr * module_expr  (** [ME1(ME2)] *)
@@ -669,7 +673,7 @@
  
  and structure = structure_item list
  
-@@ -1028,10 +1309,13 @@ and structure_item_desc = Parsetree.stru
+@@ -1028,10 +1313,13 @@ and structure_item_desc = Parsetree.stru
    | Pstr_include of include_declaration  (** [include ME] *)
    | Pstr_attribute of attribute  (** [\[@@@id\]] *)
    | Pstr_extension of extension * attributes  (** [\[%%id\]] *)
@@ -683,17 +687,17 @@
    pvb_attributes : attributes;
    pvb_loc : location;
  }
-@@ -1044,6 +1328,19 @@ and module_binding = Parsetree.module_bi
+@@ -1044,6 +1332,19 @@ and module_binding = Parsetree.module_bi
  }
  (** Values of type [module_binding] represents [module X = ME] *)
  
 +and jkind_annotation_desc = Parsetree.jkind_annotation_desc =
-+  | Default
-+  | Abbreviation of string
-+  | Mod of jkind_annotation * modes
-+  | With of jkind_annotation * core_type * modalities
-+  | Kind_of of core_type
-+  | Product of jkind_annotation list
++  | Pjk_default
++  | Pjk_abbreviation of string
++  | Pjk_mod of jkind_annotation * modes
++  | Pjk_with of jkind_annotation * core_type * modalities
++  | Pjk_kind_of of core_type
++  | Pjk_product of jkind_annotation list
 +
 +and jkind_annotation = Parsetree.jkind_annotation =
 +  { pjkind_loc : location
@@ -703,7 +707,7 @@
  (** {1 Toplevel} *)
  (** {2 Toplevel phrases} *)
  
-@@ -1069,408 +1366,377 @@ and directive_argument_desc = Parsetree.
+@@ -1069,408 +1370,380 @@ and directive_argument_desc = Parsetree.
    | Pdir_bool of bool
  
  and cases = case list [@@deriving_inline traverse]
@@ -839,7 +843,8 @@
 +            let a = self#string a in
 +            let b = self#char b in Pconst_unboxed_integer (a, b)
 +        | Pconst_char a -> let a = self#char a in Pconst_char a
-+        | Pconst_untagged_char a -> let a = self#char a in Pconst_untagged_char a
++        | Pconst_untagged_char a ->
++            let a = self#char a in Pconst_untagged_char a
          | Pconst_string (a, b, c) ->
              let a = self#string a in
              let b = self#location b in
@@ -991,6 +996,8 @@
 +                   let b = self#option self#jkind_annotation b in (a, b)) a in
 +            let b = self#core_type b in Ptyp_poly (a, b)
 +        | Ptyp_package a -> let a = self#package_type a in Ptyp_package a
++        | Ptyp_quote a -> let a = self#core_type a in Ptyp_quote a
++        | Ptyp_splice a -> let a = self#core_type a in Ptyp_splice a
 +        | Ptyp_of_kind a -> let a = self#jkind_annotation a in Ptyp_of_kind a
 +        | Ptyp_extension a -> let a = self#extension a in Ptyp_extension a
 +    method package_type : package_type -> package_type=
@@ -1331,7 +1338,7 @@
          | Pexp_ifthenelse (a, b, c) ->
              let a = self#expression a in
              let b = self#expression b in
-@@ -1478,160 +1744,226 @@ class virtual map =
+@@ -1478,160 +1751,228 @@ class virtual map =
              Pexp_ifthenelse (a, b, c)
          | Pexp_sequence (a, b) ->
              let a = self#expression a in
@@ -1452,6 +1459,8 @@
 +        | Pexp_overwrite (a, b) ->
 +            let a = self#expression a in
 +            let b = self#expression b in Pexp_overwrite (a, b)
++        | Pexp_quote a -> let a = self#expression a in Pexp_quote a
++        | Pexp_splice a -> let a = self#expression a in Pexp_splice a
 +        | Pexp_hole -> Pexp_hole
 +    method case : case -> case=
        fun { pc_lhs; pc_guard; pc_rhs } ->
@@ -1654,7 +1663,7 @@
          let ptype_loc = self#location ptype_loc in
          {
            ptype_name;
-@@ -1641,10 +1973,10 @@ class virtual map =
+@@ -1641,10 +1982,10 @@ class virtual map =
            ptype_private;
            ptype_manifest;
            ptype_attributes;
@@ -1668,7 +1677,7 @@
        fun x ->
          match x with
          | Ptype_abstract -> Ptype_abstract
-@@ -1652,68 +1984,78 @@ class virtual map =
+@@ -1652,68 +1993,78 @@ class virtual map =
              let a = self#list self#constructor_declaration a in
              Ptype_variant a
          | Ptype_record a ->
@@ -1787,7 +1796,7 @@
          let ptyext_private = self#private_flag ptyext_private in
          let ptyext_loc = self#location ptyext_loc in
          let ptyext_attributes = self#attributes ptyext_attributes in
-@@ -1723,224 +2065,172 @@ class virtual map =
+@@ -1723,224 +2074,172 @@ class virtual map =
            ptyext_constructors;
            ptyext_private;
            ptyext_loc;
@@ -2078,7 +2087,7 @@
        fun x ->
          match x with
          | Pcf_inherit (a, b, c) ->
-@@ -1951,1090 +2241,980 @@ class virtual map =
+@@ -1951,1090 +2250,985 @@ class virtual map =
          | Pcf_val a ->
              let a =
                (fun (a, b, c) ->
@@ -2586,17 +2595,18 @@
 +      jkind_annotation_desc -> jkind_annotation_desc=
 +      fun x ->
 +        match x with
-+        | Default -> Default
-+        | Abbreviation a -> let a = self#string a in Abbreviation a
-+        | Mod (a, b) ->
++        | Pjk_default -> Pjk_default
++        | Pjk_abbreviation a -> let a = self#string a in Pjk_abbreviation a
++        | Pjk_mod (a, b) ->
 +            let a = self#jkind_annotation a in
-+            let b = self#modes b in Mod (a, b)
-+        | With (a, b, c) ->
++            let b = self#modes b in Pjk_mod (a, b)
++        | Pjk_with (a, b, c) ->
 +            let a = self#jkind_annotation a in
 +            let b = self#core_type b in
-+            let c = self#modalities c in With (a, b, c)
-+        | Kind_of a -> let a = self#core_type a in Kind_of a
-+        | Product a -> let a = self#list self#jkind_annotation a in Product a
++            let c = self#modalities c in Pjk_with (a, b, c)
++        | Pjk_kind_of a -> let a = self#core_type a in Pjk_kind_of a
++        | Pjk_product a ->
++            let a = self#list self#jkind_annotation a in Pjk_product a
 +    method jkind_annotation : jkind_annotation -> jkind_annotation=
 +      fun { pjkind_loc; pjkind_desc } ->
 +        let pjkind_loc = self#location pjkind_loc in
@@ -2873,6 +2883,8 @@
 +               a;
 +             self#core_type b)
          | Ptyp_package a -> self#package_type a
++        | Ptyp_quote a -> self#core_type a
++        | Ptyp_splice a -> self#core_type a
 +        | Ptyp_of_kind a -> self#jkind_annotation a
          | Ptyp_extension a -> self#extension a
 -
@@ -3197,6 +3209,8 @@
 +        | Pexp_stack a -> self#expression a
 +        | Pexp_comprehension a -> self#comprehension_expression a
 +        | Pexp_overwrite (a, b) -> (self#expression a; self#expression b)
++        | Pexp_quote a -> self#expression a
++        | Pexp_splice a -> self#expression a
 +        | Pexp_hole -> ()
 +    method case : case -> unit=
        fun { pc_lhs; pc_guard; pc_rhs } ->
@@ -3753,7 +3767,7 @@
          | Psig_typesubst a -> self#list self#type_declaration a
          | Psig_typext a -> self#type_extension a
          | Psig_exception a -> self#type_exception a
-@@ -3044,125 +3224,102 @@ class virtual iter =
+@@ -3044,125 +3238,102 @@ class virtual iter =
          | Psig_modtype a -> self#module_type_declaration a
          | Psig_modtypesubst a -> self#module_type_declaration a
          | Psig_open a -> self#open_description a
@@ -3925,7 +3939,7 @@
          | Pstr_typext a -> self#type_extension a
          | Pstr_exception a -> self#type_exception a
          | Pstr_module a -> self#module_binding a
-@@ -3173,159 +3330,151 @@ class virtual iter =
+@@ -3173,159 +3344,151 @@ class virtual iter =
          | Pstr_class_type a -> self#list self#class_type_declaration a
          | Pstr_include a -> self#include_declaration a
          | Pstr_attribute a -> self#attribute a
@@ -3958,13 +3972,13 @@
 +    method jkind_annotation_desc : jkind_annotation_desc -> unit=
 +      fun x ->
 +        match x with
-+        | Default -> ()
-+        | Abbreviation a -> self#string a
-+        | Mod (a, b) -> (self#jkind_annotation a; self#modes b)
-+        | With (a, b, c) ->
++        | Pjk_default -> ()
++        | Pjk_abbreviation a -> self#string a
++        | Pjk_mod (a, b) -> (self#jkind_annotation a; self#modes b)
++        | Pjk_with (a, b, c) ->
 +            (self#jkind_annotation a; self#core_type b; self#modalities c)
-+        | Kind_of a -> self#core_type a
-+        | Product a -> self#list self#jkind_annotation a
++        | Pjk_kind_of a -> self#core_type a
++        | Pjk_product a -> self#list self#jkind_annotation a
 +    method jkind_annotation : jkind_annotation -> unit=
 +      fun { pjkind_loc; pjkind_desc } ->
 +        self#location pjkind_loc; self#jkind_annotation_desc pjkind_desc
@@ -4167,7 +4181,7 @@
        fun x acc ->
          match x with
          | PStr a -> self#structure a acc
-@@ -3333,160 +3482,169 @@ class virtual ['acc] fold =
+@@ -3333,160 +3496,171 @@ class virtual ['acc] fold =
          | PTyp a -> self#core_type a acc
          | PPat (a, b) ->
              let acc = self#pattern a acc in
@@ -4253,6 +4267,8 @@
 +                a acc in
 +            let acc = self#core_type b acc in acc
          | Ptyp_package a -> self#package_type a acc
++        | Ptyp_quote a -> self#core_type a acc
++        | Ptyp_splice a -> self#core_type a acc
 +        | Ptyp_of_kind a -> self#jkind_annotation a acc
          | Ptyp_extension a -> self#extension a acc
 -
@@ -4418,7 +4434,7 @@
          | Ppat_type a -> self#longident_loc a acc
          | Ppat_lazy a -> self#pattern a acc
          | Ppat_unpack a -> self#loc (self#option self#string) a acc
-@@ -3494,574 +3652,581 @@ class virtual ['acc] fold =
+@@ -3494,574 +3668,583 @@ class virtual ['acc] fold =
          | Ppat_extension a -> self#extension a acc
          | Ppat_open (a, b) ->
              let acc = self#longident_loc a acc in
@@ -4649,6 +4665,8 @@
 +        | Pexp_overwrite (a, b) ->
 +            let acc = self#expression a acc in
 +            let acc = self#expression b acc in acc
++        | Pexp_quote a -> self#expression a acc
++        | Pexp_splice a -> self#expression a acc
 +        | Pexp_hole -> acc
 +    method case : case -> 'acc -> 'acc=
        fun { pc_lhs; pc_guard; pc_rhs } acc ->
@@ -5324,7 +5342,7 @@
          | Psig_typesubst a -> self#list self#type_declaration a acc
          | Psig_typext a -> self#type_extension a acc
          | Psig_exception a -> self#type_exception a acc
-@@ -4071,147 +4236,134 @@ class virtual ['acc] fold =
+@@ -4071,147 +4254,134 @@ class virtual ['acc] fold =
          | Psig_modtype a -> self#module_type_declaration a acc
          | Psig_modtypesubst a -> self#module_type_declaration a acc
          | Psig_open a -> self#open_description a acc
@@ -5536,7 +5554,7 @@
          | Pstr_typext a -> self#type_extension a acc
          | Pstr_exception a -> self#type_exception a acc
          | Pstr_module a -> self#module_binding a acc
-@@ -4224,1812 +4376,1951 @@ class virtual ['acc] fold =
+@@ -4224,1812 +4394,1962 @@ class virtual ['acc] fold =
          | Pstr_attribute a -> self#attribute a acc
          | Pstr_extension (a, b) ->
              let acc = self#extension a acc in
@@ -5573,17 +5591,17 @@
 +    method jkind_annotation_desc : jkind_annotation_desc -> 'acc -> 'acc=
 +      fun x acc ->
 +        match x with
-+        | Default -> acc
-+        | Abbreviation a -> self#string a acc
-+        | Mod (a, b) ->
++        | Pjk_default -> acc
++        | Pjk_abbreviation a -> self#string a acc
++        | Pjk_mod (a, b) ->
 +            let acc = self#jkind_annotation a acc in
 +            let acc = self#modes b acc in acc
-+        | With (a, b, c) ->
++        | Pjk_with (a, b, c) ->
 +            let acc = self#jkind_annotation a acc in
 +            let acc = self#core_type b acc in
 +            let acc = self#modalities c acc in acc
-+        | Kind_of a -> self#core_type a acc
-+        | Product a -> self#list self#jkind_annotation a acc
++        | Pjk_kind_of a -> self#core_type a acc
++        | Pjk_product a -> self#list self#jkind_annotation a acc
 +    method jkind_annotation : jkind_annotation -> 'acc -> 'acc=
 +      fun { pjkind_loc; pjkind_desc } acc ->
 +        let acc = self#location pjkind_loc acc in
@@ -5997,6 +6015,10 @@
 -            let a, acc = self#package_type a acc in
 -            (Ptyp_package a, acc)
 +            let (a, acc) = self#package_type a acc in ((Ptyp_package a), acc)
++        | Ptyp_quote a ->
++            let (a, acc) = self#core_type a acc in ((Ptyp_quote a), acc)
++        | Ptyp_splice a ->
++            let (a, acc) = self#core_type a acc in ((Ptyp_splice a), acc)
 +        | Ptyp_of_kind a ->
 +            let (a, acc) = self#jkind_annotation a acc in
 +            ((Ptyp_of_kind a), acc)
@@ -6579,6 +6601,10 @@
 +            let (a, acc) = self#expression a acc in
 +            let (b, acc) = self#expression b acc in
 +            ((Pexp_overwrite (a, b)), acc)
++        | Pexp_quote a ->
++            let (a, acc) = self#expression a acc in ((Pexp_quote a), acc)
++        | Pexp_splice a ->
++            let (a, acc) = self#expression a acc in ((Pexp_splice a), acc)
 +        | Pexp_hole -> (Pexp_hole, acc)
 +    method case : case -> 'acc -> (case * 'acc)=
        fun { pc_lhs; pc_guard; pc_rhs } acc ->
@@ -8062,21 +8088,22 @@
 +      jkind_annotation_desc -> 'acc -> (jkind_annotation_desc * 'acc)=
 +      fun x acc ->
 +        match x with
-+        | Default -> (Default, acc)
-+        | Abbreviation a ->
-+            let (a, acc) = self#string a acc in ((Abbreviation a), acc)
-+        | Mod (a, b) ->
++        | Pjk_default -> (Pjk_default, acc)
++        | Pjk_abbreviation a ->
++            let (a, acc) = self#string a acc in ((Pjk_abbreviation a), acc)
++        | Pjk_mod (a, b) ->
 +            let (a, acc) = self#jkind_annotation a acc in
-+            let (b, acc) = self#modes b acc in ((Mod (a, b)), acc)
-+        | With (a, b, c) ->
++            let (b, acc) = self#modes b acc in ((Pjk_mod (a, b)), acc)
++        | Pjk_with (a, b, c) ->
 +            let (a, acc) = self#jkind_annotation a acc in
 +            let (b, acc) = self#core_type b acc in
-+            let (c, acc) = self#modalities c acc in ((With (a, b, c)), acc)
-+        | Kind_of a ->
-+            let (a, acc) = self#core_type a acc in ((Kind_of a), acc)
-+        | Product a ->
++            let (c, acc) = self#modalities c acc in
++            ((Pjk_with (a, b, c)), acc)
++        | Pjk_kind_of a ->
++            let (a, acc) = self#core_type a acc in ((Pjk_kind_of a), acc)
++        | Pjk_product a ->
 +            let (a, acc) = self#list self#jkind_annotation a acc in
-+            ((Product a), acc)
++            ((Pjk_product a), acc)
 +    method jkind_annotation :
 +      jkind_annotation -> 'acc -> (jkind_annotation * 'acc)=
 +      fun { pjkind_loc; pjkind_desc } acc ->
@@ -8444,6 +8471,8 @@
 +                ctx a in
 +            let b = self#core_type ctx b in Ptyp_poly (a, b)
 +        | Ptyp_package a -> let a = self#package_type ctx a in Ptyp_package a
++        | Ptyp_quote a -> let a = self#core_type ctx a in Ptyp_quote a
++        | Ptyp_splice a -> let a = self#core_type ctx a in Ptyp_splice a
 +        | Ptyp_of_kind a ->
 +            let a = self#jkind_annotation ctx a in Ptyp_of_kind a
          | Ptyp_extension a ->
@@ -8788,7 +8817,7 @@
          | Pexp_ifthenelse (a, b, c) ->
              let a = self#expression ctx a in
              let b = self#expression ctx b in
-@@ -6037,161 +6328,239 @@ class virtual ['ctx] map_with_context =
+@@ -6037,161 +6357,242 @@ class virtual ['ctx] map_with_context =
              Pexp_ifthenelse (a, b, c)
          | Pexp_sequence (a, b) ->
              let a = self#expression ctx a in
@@ -8910,6 +8939,9 @@
 +        | Pexp_overwrite (a, b) ->
 +            let a = self#expression ctx a in
 +            let b = self#expression ctx b in Pexp_overwrite (a, b)
++        | Pexp_quote a ->
++            let a = self#expression ctx a in Pexp_quote a
++        | Pexp_splice a -> let a = self#expression ctx a in Pexp_splice a
 +        | Pexp_hole -> Pexp_hole
 +    method case : 'ctx -> case -> case=
        fun ctx { pc_lhs; pc_guard; pc_rhs } ->
@@ -9120,7 +9152,7 @@
          let ptype_loc = self#location ctx ptype_loc in
          {
            ptype_name;
-@@ -6201,10 +6570,10 @@ class virtual ['ctx] map_with_context =
+@@ -6201,10 +6602,10 @@ class virtual ['ctx] map_with_context =
            ptype_private;
            ptype_manifest;
            ptype_attributes;
@@ -9134,7 +9166,7 @@
        fun ctx x ->
          match x with
          | Ptype_abstract -> Ptype_abstract
-@@ -6212,69 +6581,80 @@ class virtual ['ctx] map_with_context =
+@@ -6212,69 +6613,80 @@ class virtual ['ctx] map_with_context =
              let a = self#list self#constructor_declaration ctx a in
              Ptype_variant a
          | Ptype_record a ->
@@ -9254,7 +9286,7 @@
          let ptyext_private = self#private_flag ctx ptyext_private in
          let ptyext_loc = self#location ctx ptyext_loc in
          let ptyext_attributes = self#attributes ctx ptyext_attributes in
-@@ -6284,225 +6664,178 @@ class virtual ['ctx] map_with_context =
+@@ -6284,225 +6696,178 @@ class virtual ['ctx] map_with_context =
            ptyext_constructors;
            ptyext_private;
            ptyext_loc;
@@ -9547,7 +9579,7 @@
        fun ctx x ->
          match x with
          | Pcf_inherit (a, b, c) ->
-@@ -6513,3873 +6846,4137 @@ class virtual ['ctx] map_with_context =
+@@ -6513,3873 +6878,4163 @@ class virtual ['ctx] map_with_context =
          | Pcf_val a ->
              let a =
                (fun ctx (a, b, c) ->
@@ -10067,18 +10099,19 @@
 -
 -    method toplevel_directive : 'ctx -> toplevel_directive -> toplevel_directive
 -        =
-+        | Default -> Default
-+        | Abbreviation a -> let a = self#string ctx a in Abbreviation a
-+        | Mod (a, b) ->
++        | Pjk_default -> Pjk_default
++        | Pjk_abbreviation a ->
++            let a = self#string ctx a in Pjk_abbreviation a
++        | Pjk_mod (a, b) ->
 +            let a = self#jkind_annotation ctx a in
-+            let b = self#modes ctx b in Mod (a, b)
-+        | With (a, b, c) ->
++            let b = self#modes ctx b in Pjk_mod (a, b)
++        | Pjk_with (a, b, c) ->
 +            let a = self#jkind_annotation ctx a in
 +            let b = self#core_type ctx b in
-+            let c = self#modalities ctx c in With (a, b, c)
-+        | Kind_of a -> let a = self#core_type ctx a in Kind_of a
-+        | Product a ->
-+            let a = self#list self#jkind_annotation ctx a in Product a
++            let c = self#modalities ctx c in Pjk_with (a, b, c)
++        | Pjk_kind_of a -> let a = self#core_type ctx a in Pjk_kind_of a
++        | Pjk_product a ->
++            let a = self#list self#jkind_annotation ctx a in Pjk_product a
 +    method jkind_annotation : 'ctx -> jkind_annotation -> jkind_annotation=
 +      fun ctx { pjkind_loc; pjkind_desc } ->
 +        let pjkind_loc = self#location ctx pjkind_loc in
@@ -10520,6 +10553,10 @@
 -            let a = self#package_type a in
 -            self#constr "Ptyp_package" [ a ]
 +            let a = self#package_type a in self#constr "Ptyp_package" [a]
++        | Ptyp_quote a ->
++            let a = self#core_type a in self#constr "Ptyp_quote" [a]
++        | Ptyp_splice a ->
++            let a = self#core_type a in self#constr "Ptyp_splice" [a]
 +        | Ptyp_of_kind a ->
 +            let a = self#jkind_annotation a in self#constr "Ptyp_of_kind" [a]
          | Ptyp_extension a ->
@@ -11035,6 +11072,10 @@
 +        | Pexp_overwrite (a, b) ->
 +            let a = self#expression a in
 +            let b = self#expression b in self#constr "Pexp_overwrite" [a; b]
++        | Pexp_quote a ->
++            let a = self#expression a in self#constr "Pexp_quote" [a]
++        | Pexp_splice a ->
++            let a = self#expression a in self#constr "Pexp_splice" [a]
 +        | Pexp_hole -> self#constr "Pexp_hole" []
 +    method case : case -> 'res=
        fun { pc_lhs; pc_guard; pc_rhs } ->
@@ -12382,20 +12423,21 @@
 +    method jkind_annotation_desc : jkind_annotation_desc -> 'res=
 +      fun x ->
 +        match x with
-+        | Default -> self#constr "Default" []
-+        | Abbreviation a ->
-+            let a = self#string a in self#constr "Abbreviation" [a]
-+        | Mod (a, b) ->
++        | Pjk_default -> self#constr "Pjk_default" []
++        | Pjk_abbreviation a ->
++            let a = self#string a in self#constr "Pjk_abbreviation" [a]
++        | Pjk_mod (a, b) ->
 +            let a = self#jkind_annotation a in
-+            let b = self#modes b in self#constr "Mod" [a; b]
-+        | With (a, b, c) ->
++            let b = self#modes b in self#constr "Pjk_mod" [a; b]
++        | Pjk_with (a, b, c) ->
 +            let a = self#jkind_annotation a in
 +            let b = self#core_type b in
-+            let c = self#modalities c in self#constr "With" [a; b; c]
-+        | Kind_of a -> let a = self#core_type a in self#constr "Kind_of" [a]
-+        | Product a ->
++            let c = self#modalities c in self#constr "Pjk_with" [a; b; c]
++        | Pjk_kind_of a ->
++            let a = self#core_type a in self#constr "Pjk_kind_of" [a]
++        | Pjk_product a ->
 +            let a = self#list self#jkind_annotation a in
-+            self#constr "Product" [a]
++            self#constr "Pjk_product" [a]
 +    method jkind_annotation : jkind_annotation -> 'res=
 +      fun { pjkind_loc; pjkind_desc } ->
 +        let pjkind_loc = self#location pjkind_loc in
@@ -12962,6 +13004,14 @@
 -              self#constr ctx "Ptyp_package" [ Stdlib.snd a ] )
 +            ((Ptyp_package (Stdlib.fst a)),
 +              (self#constr ctx "Ptyp_package" [Stdlib.snd a]))
++        | Ptyp_quote a ->
++            let a = self#core_type ctx a in
++            ((Ptyp_quote (Stdlib.fst a)),
++              (self#constr ctx "Ptyp_quote" [Stdlib.snd a]))
++        | Ptyp_splice a ->
++            let a = self#core_type ctx a in
++            ((Ptyp_splice (Stdlib.fst a)),
++              (self#constr ctx "Ptyp_splice" [Stdlib.snd a]))
 +        | Ptyp_of_kind a ->
 +            let a = self#jkind_annotation ctx a in
 +            ((Ptyp_of_kind (Stdlib.fst a)),
@@ -13750,6 +13800,14 @@
 +            let b = self#expression ctx b in
 +            ((Pexp_overwrite ((Stdlib.fst a), (Stdlib.fst b))),
 +              (self#constr ctx "Pexp_overwrite" [Stdlib.snd a; Stdlib.snd b]))
++        | Pexp_quote a ->
++            let a = self#expression ctx a in
++            ((Pexp_quote (Stdlib.fst a)),
++              (self#constr ctx "Pexp_quote" [Stdlib.snd a]))
++        | Pexp_splice a ->
++            let a = self#expression ctx a in
++            ((Pexp_splice (Stdlib.fst a)),
++              (self#constr ctx "Pexp_splice" [Stdlib.snd a]))
 +        | Pexp_hole -> (Pexp_hole, (self#constr ctx "Pexp_hole" []))
 +    method case : 'ctx -> case -> (case * 'res)=
        fun ctx { pc_lhs; pc_guard; pc_rhs } ->
@@ -15929,31 +15987,31 @@
 +      'ctx -> jkind_annotation_desc -> (jkind_annotation_desc * 'res)=
 +      fun ctx x ->
 +        match x with
-+        | Default -> (Default, (self#constr ctx "Default" []))
-+        | Abbreviation a ->
++        | Pjk_default -> (Pjk_default, (self#constr ctx "Pjk_default" []))
++        | Pjk_abbreviation a ->
 +            let a = self#string ctx a in
-+            ((Abbreviation (Stdlib.fst a)),
-+              (self#constr ctx "Abbreviation" [Stdlib.snd a]))
-+        | Mod (a, b) ->
++            ((Pjk_abbreviation (Stdlib.fst a)),
++              (self#constr ctx "Pjk_abbreviation" [Stdlib.snd a]))
++        | Pjk_mod (a, b) ->
 +            let a = self#jkind_annotation ctx a in
 +            let b = self#modes ctx b in
-+            ((Mod ((Stdlib.fst a), (Stdlib.fst b))),
-+              (self#constr ctx "Mod" [Stdlib.snd a; Stdlib.snd b]))
-+        | With (a, b, c) ->
++            ((Pjk_mod ((Stdlib.fst a), (Stdlib.fst b))),
++              (self#constr ctx "Pjk_mod" [Stdlib.snd a; Stdlib.snd b]))
++        | Pjk_with (a, b, c) ->
 +            let a = self#jkind_annotation ctx a in
 +            let b = self#core_type ctx b in
 +            let c = self#modalities ctx c in
-+            ((With ((Stdlib.fst a), (Stdlib.fst b), (Stdlib.fst c))),
-+              (self#constr ctx "With"
++            ((Pjk_with ((Stdlib.fst a), (Stdlib.fst b), (Stdlib.fst c))),
++              (self#constr ctx "Pjk_with"
 +                 [Stdlib.snd a; Stdlib.snd b; Stdlib.snd c]))
-+        | Kind_of a ->
++        | Pjk_kind_of a ->
 +            let a = self#core_type ctx a in
-+            ((Kind_of (Stdlib.fst a)),
-+              (self#constr ctx "Kind_of" [Stdlib.snd a]))
-+        | Product a ->
++            ((Pjk_kind_of (Stdlib.fst a)),
++              (self#constr ctx "Pjk_kind_of" [Stdlib.snd a]))
++        | Pjk_product a ->
 +            let a = self#list self#jkind_annotation ctx a in
-+            ((Product (Stdlib.fst a)),
-+              (self#constr ctx "Product" [Stdlib.snd a]))
++            ((Pjk_product (Stdlib.fst a)),
++              (self#constr ctx "Pjk_product" [Stdlib.snd a]))
 +    method jkind_annotation :
 +      'ctx -> jkind_annotation -> (jkind_annotation * 'res)=
 +      fun ctx { pjkind_loc; pjkind_desc } ->
