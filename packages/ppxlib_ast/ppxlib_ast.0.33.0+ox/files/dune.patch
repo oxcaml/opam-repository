@@ -175,7 +175,7 @@
 +  (ocaml-compiler-libs (>= v0.11.0))
 +  (ppx_derivers (>= 1.0))
 +  (sexplib0 (>= v0.12))
-+  stdlib-shims
++  stdlib-shims)
 + (synopsis "Standard infrastructure for ppx rewriters")
 + (description "Ppxlib is the standard infrastructure for ppx rewriters
 +and other programs that manipulate the in-memory representation of
@@ -187,7 +187,7 @@
 +OCaml syntax directly and `ppxlib.traverse` which provides various
 +ways of automatically traversing values of a given type, in particular
 +allowing to inject a complex structured value into generated code.
-+")))
++"))
 +
 +
 +(package
