@@ -31,7 +31,6 @@ depends: [
   "re"                  {with-test & >= "1.9.0" & = "1.14.0+ox"}
   "cinaps"              {with-test & >= "v0.12.1"}
   "odoc"                {with-doc}
-  "conf-bash"           {build}
 ]
 conflicts: [
   "ocaml-migrate-parsetree" {< "2.0.0"}
@@ -40,7 +39,6 @@ conflicts: [
   "base-effects"
 ]
 build: [
-  ["bash" "./cleanup.sh"]
   ["dune" "subst"] {dev}
   [
     "dune"
@@ -63,6 +61,8 @@ url {
     "sha256=54afd640f863c2f39a6c844f6ceff63c8796e865da7db6d49c60019516fc00d4"
 }
 patches: [
+  "dune.patch"
+  "location_check.ml.patch"
   "ppxlib+ast+ast.ml.patch"
   "ppxlib+ast+ast_helper_lite.ml.patch"
   "ppxlib+ast+ast_helper_lite.mli.patch"
@@ -84,13 +84,49 @@ patches: [
   "ppxlib+astlib+pprintast.ml.patch"
   "ppxlib+astlib+pprintast.mli.patch"
   "ppxlib+astlib+stdlib0.ml.patch"
+  "ppxlib+doc+writing-ppxs.mld.patch"
+  "ppxlib+metaquot+ppxlib_metaquot.ml.patch"
+  "ppxlib+runner_as_ppx+ppxlib_runner_as_ppx.ml.patch"
+  "ppxlib+src+ast_builder.ml.patch"
+  "ppxlib+src+ast_builder.mli.patch"
+  "ppxlib+src+ast_builder_intf.ml.patch"
+  "ppxlib+src+ast_pattern.ml.patch"
+  "ppxlib+src+ast_pattern.mli.patch"
+  "ppxlib+src+ast_traverse.ml.patch"
+  "ppxlib+src+attribute.ml.patch"
+  "ppxlib+src+attribute.mli.patch"
+  "ppxlib+src+cinaps+ppxlib_cinaps_helpers.ml.patch"
+  "ppxlib+src+code_matcher.ml.patch"
+  "ppxlib+src+code_matcher.mli.patch"
+  "ppxlib+src+common.ml.patch"
+  "ppxlib+src+common.mli.patch"
+  "ppxlib+src+context_free.ml.patch"
+  "ppxlib+src+context_free.mli.patch"
+  "ppxlib+src+deriving.ml.patch"
+  "ppxlib+src+deriving.mli.patch"
+  "ppxlib+src+driver.ml.patch"
+  "ppxlib+src+driver.mli.patch"
+  "ppxlib+src+gen+gen_ast_builder.ml.patch"
+  "ppxlib+src+gen+gen_ast_pattern.ml.patch"
+  "ppxlib+src+gen+import.ml.patch"
+  "ppxlib+src+ignore_unused_warning.ml.patch"
+  "ppxlib+src+location.ml.patch"
+  "ppxlib+src+location.mli.patch"
+  "ppxlib+src+name.ml.patch"
+  "ppxlib+src+ppxlib.ml.patch"
+  "ppxlib+src+utils.mli.patch"
   "ppxlib+stdppx+stdppx.ml.patch"
-  "dune.patch"
+  "ppxlib+traverse+ppxlib_traverse.ml.patch"
+  "utils.ml.patch"
 ]
 extra-files: [
   [
-    "cleanup.sh"
-    "sha256=32d1c0b93c6031afa8e27bb309fb00fc5eab10f2f88b16ee424a1c1c420275f2"
+    "dune.patch"
+    "sha256=142e7844f8e76c0d1818b89beceddeb07e89caeb27377c80433285f8c30a5ec6"
+  ]
+  [
+    "location_check.ml.patch"
+    "sha256=29aa6beee5428730b9ca84f4d8d45d81d26bbbd7ff6225e2b00e6aa5224ba385"
   ]
   [
     "ppxlib+ast+ast.ml.patch"
@@ -177,11 +213,139 @@ extra-files: [
     "sha256=b96db1df2b603c7c715529261993fdaa82e99972b014f63d8274b8bc1ff6ed80"
   ]
   [
+    "ppxlib+doc+writing-ppxs.mld.patch"
+    "sha256=ce1d3c2e9ede3a6dc24b4a1bf23a5758af651bf62f7f4ee856a9b6c36047c0ab"
+  ]
+  [
+    "ppxlib+metaquot+ppxlib_metaquot.ml.patch"
+    "sha256=dff0af8c3eeeeebedb154eed019815cb803bf3860778a9744c67af540043ef2e"
+  ]
+  [
+    "ppxlib+runner_as_ppx+ppxlib_runner_as_ppx.ml.patch"
+    "sha256=2d3c5106d177079785e1a81fddc4a7d2aee0a00c576976aab6e45ff82d619931"
+  ]
+  [
+    "ppxlib+src+ast_builder.ml.patch"
+    "sha256=acdbfaf94eacacedb58d36f494ebc71d93fc7135e8d6c28eb3398c77264ac915"
+  ]
+  [
+    "ppxlib+src+ast_builder.mli.patch"
+    "sha256=1fc8a974777c266e13df6cbc5af6df33182d55fc39eb5e59d6476b74fc18ef0d"
+  ]
+  [
+    "ppxlib+src+ast_builder_intf.ml.patch"
+    "sha256=938aabfd0d4f7eb48c4524a7f03154fcc76ec0c8bbf6ea28684c52c52aa318c4"
+  ]
+  [
+    "ppxlib+src+ast_pattern.ml.patch"
+    "sha256=061b75e7217469fd5a6d8ed6d8d74ded558eaa867aa7a3075b710675fad5ac4a"
+  ]
+  [
+    "ppxlib+src+ast_pattern.mli.patch"
+    "sha256=2d52385f3a734c3221ab8a7bd4cd36b4c81dd4c5b44b378bf966922fd18ce1ad"
+  ]
+  [
+    "ppxlib+src+ast_traverse.ml.patch"
+    "sha256=1cf7ff1940cac40a0386b65650ecf745c251a0f1cd14d88af41ca298ac6f1ae1"
+  ]
+  [
+    "ppxlib+src+attribute.ml.patch"
+    "sha256=74ecaaf97f58fa45ddf1c8600c9865ef23dfbba32d359f6d97181f0cdc57c835"
+  ]
+  [
+    "ppxlib+src+attribute.mli.patch"
+    "sha256=96ba1295d087f5f44d7af09ac34afb92df59508ea888f03a7c2acba084c4cb7e"
+  ]
+  [
+    "ppxlib+src+cinaps+ppxlib_cinaps_helpers.ml.patch"
+    "sha256=3d8434915c02f4e84e566cc08a3db42e1e6a861993bbed05c14a49bb98edf856"
+  ]
+  [
+    "ppxlib+src+code_matcher.ml.patch"
+    "sha256=252b7155b35908b002fefa54fd97cb4cbff7f0c30db89f2ba26dead895e3f0ad"
+  ]
+  [
+    "ppxlib+src+code_matcher.mli.patch"
+    "sha256=0014b9354e5a24c24d382db6afcae70c70a852768c82f10f6ca4cb5ca05a1249"
+  ]
+  [
+    "ppxlib+src+common.ml.patch"
+    "sha256=d8ed6370f9b7f14019a1b5953dac3fd63d59b9e6a963f89bafc237133a394d5f"
+  ]
+  [
+    "ppxlib+src+common.mli.patch"
+    "sha256=69769c220fc43d0b00d7033c6d1eb390df47538dac604aba15f6f51a1a504064"
+  ]
+  [
+    "ppxlib+src+context_free.ml.patch"
+    "sha256=5c8d14144863659cb8cbb32360511e32921fa1ae761ec60ec9ab8382bd5f58e5"
+  ]
+  [
+    "ppxlib+src+context_free.mli.patch"
+    "sha256=c41b9d84f8540a02d0e3743a1ec8cf686e4de09e052e2cfd6aae4b5c03e457ca"
+  ]
+  [
+    "ppxlib+src+deriving.ml.patch"
+    "sha256=37cbe0b81bbc045f411a95d8c05133075e0b748ca2d382c8f70439fda4bc2b40"
+  ]
+  [
+    "ppxlib+src+deriving.mli.patch"
+    "sha256=9092776cae8d31e1670061b18751383167477004d8e5f43ca9d09e4976ef52b3"
+  ]
+  [
+    "ppxlib+src+driver.ml.patch"
+    "sha256=fb30bb8efdf81e36fa014896e060b4bba20263f6b903fddab5822b5e0f7412db"
+  ]
+  [
+    "ppxlib+src+driver.mli.patch"
+    "sha256=2ad047047323d2d4eb0a217b20e6d599acf76212761dad90a43a1aeb291b0cfb"
+  ]
+  [
+    "ppxlib+src+gen+gen_ast_builder.ml.patch"
+    "sha256=ac68b651aa66061c202c076e4e009b14fd580748ceebced4b1096b1e9fa3ebb4"
+  ]
+  [
+    "ppxlib+src+gen+gen_ast_pattern.ml.patch"
+    "sha256=b9b763a2f04c239231748c895b84e5f6ae6af4fae6727b041a5282bbcdd38317"
+  ]
+  [
+    "ppxlib+src+gen+import.ml.patch"
+    "sha256=217b43ca4ec72e0f590e44b4b280fdbce917f1b3835d9258471079e6978a39d2"
+  ]
+  [
+    "ppxlib+src+ignore_unused_warning.ml.patch"
+    "sha256=292bc60e7e628d839e5dcaaee1dbcfe60b65e51de6b7f588005d8ab4c65c1af6"
+  ]
+  [
+    "ppxlib+src+location.ml.patch"
+    "sha256=2773f5b33af2bb7537ad45567fd85df72a5b1090d6fc678bc9cd974de2fbb168"
+  ]
+  [
+    "ppxlib+src+location.mli.patch"
+    "sha256=c437419eb0cd3b2227c84b5860034fc8fb3fa2a5c82ef4f4a524af02ed079aee"
+  ]
+  [
+    "ppxlib+src+name.ml.patch"
+    "sha256=24f89c989df15d04a0f7339600b14b627311d5ce1d8da4b74c77f00a5c3652ff"
+  ]
+  [
+    "ppxlib+src+ppxlib.ml.patch"
+    "sha256=d598e4d2359ec08da08644ae866fff9ab67119b7bfc400232609107231b89a5d"
+  ]
+  [
+    "ppxlib+src+utils.mli.patch"
+    "sha256=f1aefb00cc5b06d6564920d80c3dfcda5c7211823f21c7d8bf8feb7efc3dd97d"
+  ]
+  [
     "ppxlib+stdppx+stdppx.ml.patch"
     "sha256=65ad51dcab1dc9580928e69e63393c7c3d94f115666d5e0e49897dde128ffd00"
   ]
   [
-    "dune.patch"
-    "sha256=5dbed86cbd9caa9b33d029840b5dec1dbcaddb739100643c351e8b29b9965643"
+    "ppxlib+traverse+ppxlib_traverse.ml.patch"
+    "sha256=51b412cfb18e773d24110c191b234683d2573d34dcb4e6de9e31fea41f9925ff"
+  ]
+  [
+    "utils.ml.patch"
+    "sha256=098c41f07f318c838dacafc753dbba6697c6e365305e8344d77a46f6a7df7853"
   ]
 ]

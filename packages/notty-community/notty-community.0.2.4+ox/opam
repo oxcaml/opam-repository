@@ -36,7 +36,6 @@ conflicts: [
 ]
 build: [
   ["dune" "subst"] {dev}
-  ["rm" "-rf" "src-lwt"]
   [
     "dune"
     "build"
@@ -73,6 +72,7 @@ patches: [
   "notty-add_href_support.patch"
   "notty-default_color.patch"
   "dune.patch"
+  "lwt.patch"
 ]
 extra-files: [
   [
@@ -130,5 +130,9 @@ extra-files: [
   [
     "dune.patch"
     "sha256=0c8ff250019a910256f1f4993de5c52bbaa8c6a38723fa5462d1acd12d38ec8c"
+  ]
+  [
+    "lwt.patch"
+    "sha256=bf322ab32307d3b8acfe289e3db6c353d2e7cd4781bf924d0d2fc864298a2565"
   ]
 ]

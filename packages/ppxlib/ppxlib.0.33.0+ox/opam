@@ -41,7 +41,6 @@ conflicts: [
   "base-effects"
 ]
 build: [
-  ["rm" "-rf" "ast" "astlib" "stdppx" "traverse_builtins"]
   ["dune" "subst"] {dev}
   [
     "dune"
@@ -64,6 +63,29 @@ url {
 }
 x-commit-hash: "563d5651e877c6f7d5561f9d8ca93fca05b07d07"
 patches: [
+  "dune.patch"
+  "location_check.ml.patch"
+  "ppxlib+ast+ast.ml.patch"
+  "ppxlib+ast+ast_helper_lite.ml.patch"
+  "ppxlib+ast+ast_helper_lite.mli.patch"
+  "ppxlib+ast+location_error.ml.patch"
+  "ppxlib+ast+location_error.mli.patch"
+  "ppxlib+ast+supported_version+supported_version.ml.patch"
+  "ppxlib+ast+versions.ml.patch"
+  "ppxlib+ast+versions.mli.patch"
+  "ppxlib+astlib+ast_414.ml.patch"
+  "ppxlib+astlib+ast_500.ml.patch"
+  "ppxlib+astlib+ast_999.ml.patch"
+  "ppxlib+astlib+ast_metadata.mli.patch"
+  "ppxlib+astlib+astlib.ml.patch"
+  "ppxlib+astlib+cinaps+astlib_cinaps_helpers.ml.patch"
+  "ppxlib+astlib+config+gen.ml.patch"
+  "ppxlib+astlib+migrate_500_999.ml.patch"
+  "ppxlib+astlib+migrate_999_500.ml.patch"
+  "ppxlib+astlib+parse.mli.patch"
+  "ppxlib+astlib+pprintast.ml.patch"
+  "ppxlib+astlib+pprintast.mli.patch"
+  "ppxlib+astlib+stdlib0.ml.patch"
   "ppxlib+doc+writing-ppxs.mld.patch"
   "ppxlib+metaquot+ppxlib_metaquot.ml.patch"
   "ppxlib+runner_as_ppx+ppxlib_runner_as_ppx.ml.patch"
@@ -95,12 +117,103 @@ patches: [
   "ppxlib+src+name.ml.patch"
   "ppxlib+src+ppxlib.ml.patch"
   "ppxlib+src+utils.mli.patch"
+  "ppxlib+stdppx+stdppx.ml.patch"
   "ppxlib+traverse+ppxlib_traverse.ml.patch"
-  "dune.patch"
-  "location_check.ml.patch"
   "utils.ml.patch"
 ]
 extra-files: [
+  [
+    "dune.patch"
+    "sha256=142e7844f8e76c0d1818b89beceddeb07e89caeb27377c80433285f8c30a5ec6"
+  ]
+  [
+    "location_check.ml.patch"
+    "sha256=29aa6beee5428730b9ca84f4d8d45d81d26bbbd7ff6225e2b00e6aa5224ba385"
+  ]
+  [
+    "ppxlib+ast+ast.ml.patch"
+    "sha256=256649e97269f4d2f55e150eb30c53310f9d75e359af8eb7b38da5c4515d8ce8"
+  ]
+  [
+    "ppxlib+ast+ast_helper_lite.ml.patch"
+    "sha256=15eeb736edb93d9888008bf830dfb92b803f11525271c19a51f21f258c972328"
+  ]
+  [
+    "ppxlib+ast+ast_helper_lite.mli.patch"
+    "sha256=1e684c100bc2fd01ca1d23c140ddb36f8fc4db57ba77d76fe8d0810fcf410b7f"
+  ]
+  [
+    "ppxlib+ast+location_error.ml.patch"
+    "sha256=c6392beb60da208e53264e8ef2b6aff87333dd616b4cdd7b7d639c58d781fa18"
+  ]
+  [
+    "ppxlib+ast+location_error.mli.patch"
+    "sha256=1f8146d575a3c0e95170b309b90c78c05f56cd8b4547ce536ed3ed91d9ddd8c5"
+  ]
+  [
+    "ppxlib+ast+supported_version+supported_version.ml.patch"
+    "sha256=a7762cf03e1aeb12d3916da21e08874737a0324e7e3ebd4d13431e04641dec7d"
+  ]
+  [
+    "ppxlib+ast+versions.ml.patch"
+    "sha256=b0860295416b010107a99dbd14f094376c6b44109747f3436935ad861aeda19d"
+  ]
+  [
+    "ppxlib+ast+versions.mli.patch"
+    "sha256=3ea1dd81309fa433ef498a9e756f6a6f815cc3a919bfbe177ceb1e085ffdb055"
+  ]
+  [
+    "ppxlib+astlib+ast_414.ml.patch"
+    "sha256=c4b85059cabbc633a2e9e191709804d9173ece743813ab11411509ba2b9260cc"
+  ]
+  [
+    "ppxlib+astlib+ast_500.ml.patch"
+    "sha256=cfb9281d210a4b7744b938afb39c06cb360b86b7fbdef86f0a496e9ce87e006d"
+  ]
+  [
+    "ppxlib+astlib+ast_999.ml.patch"
+    "sha256=0005e7f6075c5245f560eef83dc13bedfef7a5571a81839005f5aaf8ade777d3"
+  ]
+  [
+    "ppxlib+astlib+ast_metadata.mli.patch"
+    "sha256=f57b43dba6f1abba33cf8c302e12448f4c7262d9831bcfe5545f83f201d90549"
+  ]
+  [
+    "ppxlib+astlib+astlib.ml.patch"
+    "sha256=fc728f66702ffcd43060a8d034c053a2e24939eba89a18f1a3b4d86dee71c41b"
+  ]
+  [
+    "ppxlib+astlib+cinaps+astlib_cinaps_helpers.ml.patch"
+    "sha256=8a45c26531773e7bbc0ca0a195ac0ad7fc7b559fe97110f3adde66181e6f7781"
+  ]
+  [
+    "ppxlib+astlib+config+gen.ml.patch"
+    "sha256=63e1849d90ca2a6c391a401b0e87ce853dbfc44488ba3b8d449af7a81b5ddbad"
+  ]
+  [
+    "ppxlib+astlib+migrate_500_999.ml.patch"
+    "sha256=4e40da58c1f159ee59e88e53242028c7ab5a4e6ed5d2f18db4784816634adf67"
+  ]
+  [
+    "ppxlib+astlib+migrate_999_500.ml.patch"
+    "sha256=ff49f086e13725595b6ac45fae73151c4e3e5278d0e6070365e73682ada82058"
+  ]
+  [
+    "ppxlib+astlib+parse.mli.patch"
+    "sha256=48120552f6d9ac715f5c953d1182fb0d4f5aa294467b23e4f50ca4eeede9993a"
+  ]
+  [
+    "ppxlib+astlib+pprintast.ml.patch"
+    "sha256=3c70c302711a0e05843a720df746d3d3aa8c06b63b89079e07834a8ee716d56f"
+  ]
+  [
+    "ppxlib+astlib+pprintast.mli.patch"
+    "sha256=fa622981e0270f8233b4edaf7e6dde917d74664e53bf4d4b9aeff4c07a09e609"
+  ]
+  [
+    "ppxlib+astlib+stdlib0.ml.patch"
+    "sha256=b96db1df2b603c7c715529261993fdaa82e99972b014f63d8274b8bc1ff6ed80"
+  ]
   [
     "ppxlib+doc+writing-ppxs.mld.patch"
     "sha256=ce1d3c2e9ede3a6dc24b4a1bf23a5758af651bf62f7f4ee856a9b6c36047c0ab"
@@ -226,16 +339,12 @@ extra-files: [
     "sha256=f1aefb00cc5b06d6564920d80c3dfcda5c7211823f21c7d8bf8feb7efc3dd97d"
   ]
   [
+    "ppxlib+stdppx+stdppx.ml.patch"
+    "sha256=65ad51dcab1dc9580928e69e63393c7c3d94f115666d5e0e49897dde128ffd00"
+  ]
+  [
     "ppxlib+traverse+ppxlib_traverse.ml.patch"
     "sha256=51b412cfb18e773d24110c191b234683d2573d34dcb4e6de9e31fea41f9925ff"
-  ]
-  [
-    "dune.patch"
-    "sha256=349dc9cbe7e373ca4cd187263e2d995a064b98599e97060a01718bb6d252db17"
-  ]
-  [
-    "location_check.ml.patch"
-    "sha256=29aa6beee5428730b9ca84f4d8d45d81d26bbbd7ff6225e2b00e6aa5224ba385"
   ]
   [
     "utils.ml.patch"
