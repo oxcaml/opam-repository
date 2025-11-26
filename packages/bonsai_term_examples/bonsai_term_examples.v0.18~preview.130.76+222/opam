@@ -20,7 +20,6 @@ depends: [
   "bonsai_test"            {= "v0.18~preview.130.76+222"}
   "core"                   {= "v0.18~preview.130.76+222"}
   "core_unix"              {= "v0.18~preview.130.76+222"}
-  "ppx_embed_file"         {= "v0.18~preview.130.76+222"}
   "ppx_expect"             {= "v0.18~preview.130.76+222"}
   "ppx_jane"               {= "v0.18~preview.130.76+222"}
   "dune"                   {>= "3.17.0"}
@@ -35,7 +34,7 @@ Bonsai_term is a library for building reusable TUI componetns and apps
 """
 url {
   src:
-    "https://github.com/janestreet/bonsai_term_examples/archive/63556dd30ecc87513876bc952f0778ce3f815709.tar.gz"
+    "https://github.com/janestreet/bonsai_term_examples/archive/16b44cd6f9559ba27957073c10d88529874867d2.tar.gz"
   checksum:
-    "sha256=8242bdf4c574309c57023048724862c8c4cdd6d2315acd3944ac10a741f11ae9"
+    "sha256=b9b19f0c27da4fc76a4c01bb1f5031fd0723413e6715185a087bc0e08846e797"
 }
