@@ -12,6 +12,7 @@ depends: [
   "oxcaml" {post}
   "ctypes" {build & (
               = "0.23.0+ox"
+            | = "0.24.0+ox"
             )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

@@ -12,6 +12,7 @@ depends: [
   "oxcaml" {post}
   "topkg" {build & (
              = "1.0.8+ox"
+           | = "1.1.1+ox"
            )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
