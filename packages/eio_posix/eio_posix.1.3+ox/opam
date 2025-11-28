@@ -35,5 +35,5 @@ x-extra-doc-deps: [
 ]
 url {
   src:
-    "git+https://github.com/oxcaml/eio.git#e6823784545a453af81493f744ddb2e73b8ea10a"
+    "git+https://github.com/oxcaml/eio.git#7de26f5331f1e7aac1c086a5ebe849dd940b5c3e"
 }
