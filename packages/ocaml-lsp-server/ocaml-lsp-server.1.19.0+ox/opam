@@ -23,9 +23,9 @@ depends: [
   "dune"                {>= "3.0"}
   "yojson"              {>= "2.0.0" & < "3.0.0"}
   "base"                {>= "v0.18~"}
-  "lsp"                 {= version & = "1.19.0+ox"}
-  "jsonrpc"             {= version & = "1.19.0+ox"}
-  "re"                  {= "1.14.0+ox"}
+  "lsp"                 {= version}
+  "jsonrpc"             {= version}
+  "re"                  {>= "1.5.0"}
   "ppx_yojson_conv_lib" {>= "v0.14"}
   "dune-rpc"            {>= "3.4.0"}
   "chrome-trace"        {>= "3.3.0"}
@@ -36,25 +36,25 @@ depends: [
   "xdg"
   "ordering"
   "dune-build-info"
-  "spawn"               {= "v0.15.1+ox"}
+  "spawn"
   "astring"
   "camlp-streams"
-  "ppx_expect"          {>= "v0.15.0" & < "0.17.0" & with-test}
-  "ocamlformat"         {with-test & = "0.26.2+ox" & = "0.26.2+ox"}
+  "ppx_expect"          {>= "v0.15.0" & < "v0.17.0" & with-test}
+  "ocamlformat"         {with-test & = "0.26.2"}
   "ocamlc-loc"          {>= "3.7.0"}
   "pp"                  {>= "1.1.2"}
   "csexp"               {>= "1.5"}
   "ocamlformat-rpc-lib" {>= "0.21.0"}
   "odoc"                {with-doc}
   "merlin-lib"          {= "5.2.1-502+ox"}
-  "ocaml-index"         {>= "1.0" & post & = "1.1+ox"}
+  "ocaml-index"         {>= "1.0" & post}
   "ppx_yojson_conv"
   "core_unix"
   "async"
   "cmarkit"
   "expectree"
   "re2"
-  "odoc-parser"         {= "3.1.0+ox"}
+  "odoc-parser"
 ]
 build: [
   ["dune" "subst"] {dev}

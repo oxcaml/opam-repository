@@ -13,7 +13,7 @@ bug-reports: "https://github.com/ocaml/merlin/issues"
 depends: [
   "ocaml"      {>= "5.2"}
   "dune"       {>= "3.0"}
-  "merlin-lib" {= version & = "5.2.1-502+ox"}
+  "merlin-lib" {= version}
   "ocamlfind"  {>= "1.6.0"}
 ]
 build: [

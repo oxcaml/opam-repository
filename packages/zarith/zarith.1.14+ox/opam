@@ -40,7 +40,7 @@ install: [
   [make "install"]
 ]
 depends: [
-  "ocaml-variants"     {= "5.2.0+ox"}
+  "ocaml-variants"     {>= "4.07.0"}
   "ocamlfind"
   "conf-gmp"
 ]
