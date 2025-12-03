@@ -17,7 +17,7 @@ depends: [
   "ppx_jane"   {= "v0.18~preview.130.76+222"}
   "textutils"  {= "v0.18~preview.130.76+222"}
   "dune"       {>= "3.17.0"}
-  "spawn"      {= "v0.15.1+ox"}
+  "spawn"      {>= "v0.15.1"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Yet another implementation of fork&exec and related functionality"

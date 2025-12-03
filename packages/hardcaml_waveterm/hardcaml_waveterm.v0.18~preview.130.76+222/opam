@@ -24,8 +24,8 @@ depends: [
   "stdio"           {= "v0.18~preview.130.76+222"}
   "cryptokit"       {>= "1.16" & < "1.17"}
   "dune"            {>= "3.17.0"}
-  "notty-community" {= "0.2.4+ox"}
-  "re"              {= "1.14.0+ox"}
+  "notty-community" {>= "0.2.4"}
+  "re"              {>= "1.14.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "A terminal based digital waveform viewer for Hardcaml"

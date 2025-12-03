@@ -16,7 +16,7 @@ depends: [
   "core_kernel" {= "v0.18~preview.130.76+222"}
   "ppx_jane"    {= "v0.18~preview.130.76+222"}
   "conf-zstd"
-  "ctypes"      {= "0.23.0+ox"}
+  "ctypes"      {>= "0.23.0"}
   "dune"        {>= "3.17.0"}
   "integers"
 ]

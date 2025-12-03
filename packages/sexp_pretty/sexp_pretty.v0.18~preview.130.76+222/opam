@@ -17,7 +17,7 @@ depends: [
   "ppx_base" {= "v0.18~preview.130.76+222"}
   "sexplib"  {= "v0.18~preview.130.76+222"}
   "dune"     {>= "3.17.0"}
-  "re"       {= "1.14.0+ox"}
+  "re"       {>= "1.14.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "S-expression pretty-printer"
