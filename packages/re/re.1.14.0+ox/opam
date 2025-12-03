@@ -26,7 +26,7 @@ depends: [
   "seq"
   "ppx_expect"  {with-test}
   "ounit2"      {with-test}
-  "js_of_ocaml" {with-test & = "6.0.1+ox"}
+  "js_of_ocaml" {with-test}
   "conf-npm"    {with-test}
   "odoc"        {with-doc}
 ]
