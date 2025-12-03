@@ -1,0 +1,9 @@
+opam-version: "2.0"
+synopsis: "OxCaml patched ocamlformat-lib (not installed)"
+description: "OxCaml meta-package indicating this package is not installed"
+maintainer: "David Allsopp <david@tarides.com>"
+authors: "David Allsopp"
+license: "CC0-1.0+"
+homepage: "https://oxcaml.org"
+bug-reports: "https://github.com/oxcaml/opam-repository/issues"
+conflicts: [ "oxcaml-ocamlformat-lib-patches" "ocamlformat-lib" ]

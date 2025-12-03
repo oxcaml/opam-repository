@@ -1,0 +1,12 @@
+opam-version: "2.0"
+synopsis: "OxCaml patched dune-rpc"
+description: "OxCaml meta-package indicating this library is installed"
+maintainer: "David Allsopp <david@tarides.com>"
+authors: "David Allsopp"
+license: "CC0-1.0+"
+homepage: "https://oxcaml.org"
+bug-reports: "https://github.com/oxcaml/opam-repository/issues"
+conflicts: "oxcaml-dune-rpc"
+depends: "dune-rpc" {build & (
+                       = "3.20.2+ox"
+                     )}

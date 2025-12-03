@@ -1,0 +1,12 @@
+opam-version: "2.0"
+synopsis: "OxCaml patched ocaml-lsp-server"
+description: "OxCaml meta-package indicating this library is installed"
+maintainer: "David Allsopp <david@tarides.com>"
+authors: "David Allsopp"
+license: "CC0-1.0+"
+homepage: "https://oxcaml.org"
+bug-reports: "https://github.com/oxcaml/opam-repository/issues"
+conflicts: "oxcaml-ocaml-lsp-server"
+depends: "ocaml-lsp-server" {build & (
+                               = "1.19.0+ox"
+                             )}

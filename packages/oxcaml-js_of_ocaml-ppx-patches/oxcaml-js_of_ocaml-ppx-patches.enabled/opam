@@ -1,0 +1,12 @@
+opam-version: "2.0"
+synopsis: "OxCaml patched js_of_ocaml-ppx"
+description: "OxCaml meta-package indicating this library is installed"
+maintainer: "David Allsopp <david@tarides.com>"
+authors: "David Allsopp"
+license: "CC0-1.0+"
+homepage: "https://oxcaml.org"
+bug-reports: "https://github.com/oxcaml/opam-repository/issues"
+conflicts: "oxcaml-js_of_ocaml-ppx"
+depends: "js_of_ocaml-ppx" {build & (
+                              = "6.0.1+ox"
+                            )}

@@ -17,6 +17,7 @@ depends: [
   "base-domains"          {post}
   "base-nnp"              {post}
   "ocaml-options-vanilla" {post}
+  "oxcaml-patch-guards"   {post}
 ]
 conflict-class: "ocaml-core-compiler"
 flags: compiler
@@ -105,43 +106,5 @@ extra-files: [
   ]
 ]
 conflicts: [
-  "base" {< "v0.18~"}
-  "alcotest" {!= "1.9.0+ox"}
-  "backoff" {!= "0.1.1+ox"}
-  "ctypes" {!= "0.23.0+ox"}
-  "ctypes-foreign" {!= "0.23.0+ox"}
-  "dot-merlin-reader" {!= "5.2.1-502+ox"}
-  "dune" {<= "3.20.2"}
-  "gen_js_api" {!= "1.1.2+ox"}
-  "js_of_ocaml" {!= "6.0.1+ox"}
-  "js_of_ocaml-compiler" {!= "6.0.1+ox"}
-  "js_of_ocaml-ppx" {!= "6.0.1+ox"}
-  "js_of_ocaml-toplevel" {!= "6.0.1+ox"}
-  "jsonrpc" {!= "1.19.0+ox"}
-  "lsp" {!= "1.19.0+ox"}
-  "lwt_ppx" {!= "5.9.1+ox"}
-  "mdx" {!= "2.5.0+ox"}
-  "merlin" {!= "5.2.1-502+ox"}
-  "merlin-lib" {!= "5.2.1-502+ox"}
-  "notty-community" {!= "0.2.4+ox"}
-  "ocaml-compiler-libs" {!= "v0.17.0+ox"}
-  "ocaml-index" {!= "1.1+ox"}
-  "ocaml-lsp-server" {!= "1.19.0+ox"}
-  "ocamlbuild" {!= "0.15.0+ox"}
-  "ocamlformat" {!= "0.26.2+ox"}
-  "ocamlformat-lib" {!= "0.26.2+ox"}
-  "ojs" {!= "1.1.2+ox"}
-  "ppxlib" {!= "0.33.0+ox"}
-  "ppxlib_ast" {!= "0.33.0+ox"}
-  "re" {!= "1.14.0+ox"}
-  "sedlex" {!= "3.6+ox"}
-  "spawn" {!= "v0.15.1+ox"}
-  "topkg" {!= "1.0.8+ox"}
-  "uTop" {!= "2.16.0+ox"}
-  "uutf" {!= "1.0.3+ox"}
-  "wasm_of_ocaml-compiler" {!= "6.0.1+ox"}
-  "zarith" {<"1.12"}
-  "zarith" {="1.12"}
-  "zarith" {="1.13"}
-  "zarith" {="1.14"}
+  "sexplib0" {< "v0.18~"}
  ]

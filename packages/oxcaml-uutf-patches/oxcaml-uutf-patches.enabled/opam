@@ -1,0 +1,12 @@
+opam-version: "2.0"
+synopsis: "OxCaml patched uutf"
+description: "OxCaml meta-package indicating this library is installed"
+maintainer: "David Allsopp <david@tarides.com>"
+authors: "David Allsopp"
+license: "CC0-1.0+"
+homepage: "https://oxcaml.org"
+bug-reports: "https://github.com/oxcaml/opam-repository/issues"
+conflicts: "oxcaml-uutf"
+depends: "uutf" {build & (
+                   = "1.0.3+ox"
+                 )}
