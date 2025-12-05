@@ -9,6 +9,7 @@ elif [[ ! -d ocaml-variants/ocaml-variants.5.2.0+ox ]]; then
 fi
 
 rm -rf oxcaml-*
+last_guard=''
 for entry in *; do
   if [[ -d $entry ]]; then
     [[ $entry != 'ocaml-variants' ]] || continue
@@ -20,7 +21,7 @@ for entry in *; do
             # Ignore JS 0.18 preview packages
             ;;
           *)
-            if [[ ! -e oxcaml-patch-guards/oxcaml-patch-guards.ox/opam ]]; then
+            if [[ -z $last_guard ]]; then
               mkdir -p oxcaml-patch-guards/oxcaml-patch-guards.ox
               cat > oxcaml-patch-guards/oxcaml-patch-guards.ox/opam <<EOF
 opam-version: "2.0"
@@ -34,7 +35,7 @@ authors: "David Allsopp"
 license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
-depends: [
+depends: "oxcaml-$entry" {post} | "oxcaml-$entry-patches" {post}
 EOF
             fi
             if [[ ! -e oxcaml-$entry/oxcaml-$entry.guard/opam ]]; then
@@ -50,9 +51,11 @@ homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: [ "oxcaml-$entry-patches" "$entry" ]
 EOF
-              cat >> oxcaml-patch-guards/oxcaml-patch-guards.ox/opam << EOF
-  ("oxcaml-$entry" {post} | "oxcaml-$entry-patches" {post})
+              if [[ -n $last_guard ]]; then
+                cat >> "oxcaml-$last_guard/oxcaml-$last_guard.guard/opam" <<EOF
+depends: "oxcaml-$entry" {post} | "oxcaml-$entry-patches" {post}
 EOF
+              fi
               mkdir -p "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled"
               cat > "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled/opam" <<EOF
 opam-version: "2.0"
@@ -64,12 +67,17 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-$entry"
-depends: "$entry" {build & (
-  ${entry//?/ }             = "${package#"$entry".}"
+depends: [
+  "$entry" {build & (
+  ${entry//?/ }      = "${package#"$entry".}"
 EOF
+              if [[ -n $last_guard ]]; then
+                sed -i -e '/depends:/a\  ("oxcaml-'"$entry"'" {post} | "oxcaml-'"$entry"'-patches" {post})' "oxcaml-$last_guard-patches/oxcaml-$last_guard-patches.enabled/opam"
+              fi
+              last_guard="$entry"
             else
               cat >> "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled/opam" <<EOF
-  ${entry//?/ }           | = "${package#"$entry".}"
+  ${entry//?/ }    | = "${package#"$entry".}"
 EOF
             fi;;
         esac
@@ -84,10 +92,9 @@ for entry in oxcaml-*; do
       package="${entry#oxcaml-}"
       package="${package%-patches}"
       cat >> "$entry/"*"/opam" <<EOF
-  ${package//?/ }           )}
+  ${package//?/ }    )}
+]
 EOF
       ;;
   esac
 done
-
-echo ']' >> oxcaml-patch-guards/oxcaml-patch-guards.ox/opam

@@ -7,3 +7,4 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: [ "oxcaml-lsp-patches" "lsp" ]
+depends: "oxcaml-lwt" {post} | "oxcaml-lwt-patches" {post}

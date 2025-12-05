@@ -7,6 +7,9 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-gen_js_api"
-depends: "gen_js_api" {build & (
-                         = "1.1.2+ox"
-                       )}
+depends: [
+  ("oxcaml-js_of_ocaml" {post} | "oxcaml-js_of_ocaml-patches" {post})
+  "gen_js_api" {build & (
+                  = "1.1.2+ox"
+                )}
+]

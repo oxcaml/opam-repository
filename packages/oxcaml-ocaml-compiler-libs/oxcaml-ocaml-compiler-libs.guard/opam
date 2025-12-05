@@ -7,3 +7,4 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: [ "oxcaml-ocaml-compiler-libs-patches" "ocaml-compiler-libs" ]
+depends: "oxcaml-ocaml-index" {post} | "oxcaml-ocaml-index-patches" {post}

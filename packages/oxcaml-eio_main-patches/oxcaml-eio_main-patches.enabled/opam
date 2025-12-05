@@ -7,6 +7,9 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-eio_main"
-depends: "eio_main" {build & (
-                       = "1.3+ox"
-                     )}
+depends: [
+  ("oxcaml-eio_posix" {post} | "oxcaml-eio_posix-patches" {post})
+  "eio_main" {build & (
+                = "1.3+ox"
+              )}
+]

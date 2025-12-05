@@ -7,6 +7,9 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-spawn"
-depends: "spawn" {build & (
-                    = "v0.15.1+ox"
-                  )}
+depends: [
+  ("oxcaml-stdune" {post} | "oxcaml-stdune-patches" {post})
+  "spawn" {build & (
+             = "v0.15.1+ox"
+           )}
+]

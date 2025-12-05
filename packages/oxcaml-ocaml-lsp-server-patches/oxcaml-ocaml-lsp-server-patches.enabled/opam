@@ -7,6 +7,9 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-ocaml-lsp-server"
-depends: "ocaml-lsp-server" {build & (
-                               = "1.19.0+ox"
-                             )}
+depends: [
+  ("oxcaml-ocamlbuild" {post} | "oxcaml-ocamlbuild-patches" {post})
+  "ocaml-lsp-server" {build & (
+                        = "1.19.0+ox"
+                      )}
+]

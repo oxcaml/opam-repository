@@ -7,6 +7,9 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-ctypes"
-depends: "ctypes" {build & (
-                     = "0.23.0+ox"
-                   )}
+depends: [
+  ("oxcaml-ctypes-foreign" {post} | "oxcaml-ctypes-foreign-patches" {post})
+  "ctypes" {build & (
+              = "0.23.0+ox"
+            )}
+]

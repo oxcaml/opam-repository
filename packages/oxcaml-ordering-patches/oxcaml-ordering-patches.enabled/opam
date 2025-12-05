@@ -7,6 +7,9 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-ordering"
-depends: "ordering" {build & (
-                       = "3.20.2+ox"
-                     )}
+depends: [
+  ("oxcaml-ppx_deriving" {post} | "oxcaml-ppx_deriving-patches" {post})
+  "ordering" {build & (
+                = "3.20.2+ox"
+              )}
+]

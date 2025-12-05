@@ -7,6 +7,9 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-mdx"
-depends: "mdx" {build & (
-                  = "2.5.0+ox"
-                )}
+depends: [
+  ("oxcaml-merlin" {post} | "oxcaml-merlin-patches" {post})
+  "mdx" {build & (
+           = "2.5.0+ox"
+         )}
+]

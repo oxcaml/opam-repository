@@ -7,6 +7,9 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-wasm_of_ocaml-compiler"
-depends: "wasm_of_ocaml-compiler" {build & (
-                                     = "6.0.1+ox"
-                                   )}
+depends: [
+  ("oxcaml-zarith" {post} | "oxcaml-zarith-patches" {post})
+  "wasm_of_ocaml-compiler" {build & (
+                              = "6.0.1+ox"
+                            )}
+]

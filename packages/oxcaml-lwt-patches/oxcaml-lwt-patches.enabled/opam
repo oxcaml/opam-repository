@@ -7,6 +7,9 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-lwt"
-depends: "lwt" {build & (
-                  = "5.9.2+ox"
-                )}
+depends: [
+  ("oxcaml-lwt_ppx" {post} | "oxcaml-lwt_ppx-patches" {post})
+  "lwt" {build & (
+           = "5.9.2+ox"
+         )}
+]

@@ -7,6 +7,9 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-notty-community"
-depends: "notty-community" {build & (
-                              = "0.2.4+ox"
-                            )}
+depends: [
+  ("oxcaml-obuild" {post} | "oxcaml-obuild-patches" {post})
+  "notty-community" {build & (
+                       = "0.2.4+ox"
+                     )}
+]

@@ -7,6 +7,9 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-js_of_ocaml-toplevel"
-depends: "js_of_ocaml-toplevel" {build & (
-                                   = "6.0.1+ox"
-                                 )}
+depends: [
+  ("oxcaml-jsonrpc" {post} | "oxcaml-jsonrpc-patches" {post})
+  "js_of_ocaml-toplevel" {build & (
+                            = "6.0.1+ox"
+                          )}
+]

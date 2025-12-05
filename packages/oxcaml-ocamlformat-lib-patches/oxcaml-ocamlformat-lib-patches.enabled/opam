@@ -7,6 +7,9 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-ocamlformat-lib"
-depends: "ocamlformat-lib" {build & (
-                              = "0.26.2+ox"
-                            )}
+depends: [
+  ("oxcaml-odoc" {post} | "oxcaml-odoc-patches" {post})
+  "ocamlformat-lib" {build & (
+                       = "0.26.2+ox"
+                     )}
+]

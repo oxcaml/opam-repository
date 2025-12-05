@@ -7,3 +7,4 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: [ "oxcaml-re-patches" "re" ]
+depends: "oxcaml-sedlex" {post} | "oxcaml-sedlex-patches" {post}
