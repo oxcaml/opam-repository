@@ -90,6 +90,7 @@ patches: [
   "js_of_ocaml-flipped-conditions-in-test.patch"
   "js_of_ocaml-atomic-cmpxchg.patch"
   "js_of_ocaml-small-int-literals.patch"
+  "js_of_ocaml-tls.patch"
   "dune.patch"
 ]
 extra-files: [
@@ -272,6 +273,10 @@ extra-files: [
   [
     "js_of_ocaml-small-int-literals.patch"
     "sha256=4c3fd2d3a50d220af2bdd377016e3f3354b98b770457ff200494be70bc9bb5b2"
+  ]
+  [
+    "js_of_ocaml-tls.patch"
+    "sha256=0b7e836d52bcbe261e2adc63657762bf41ade2665394279a1687702f0ef67609"
   ]
   [
     "dune.patch"
