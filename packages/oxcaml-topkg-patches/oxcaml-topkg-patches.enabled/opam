@@ -1,0 +1,15 @@
+opam-version: "2.0"
+synopsis: "OxCaml patched topkg"
+description: "OxCaml meta-package indicating this library is installed"
+maintainer: "David Allsopp <david@tarides.com>"
+authors: "David Allsopp"
+license: "CC0-1.0+"
+homepage: "https://oxcaml.org"
+bug-reports: "https://github.com/oxcaml/opam-repository/issues"
+conflicts: "oxcaml-topkg"
+depends: [
+  ("oxcaml-utop" {post} | "oxcaml-utop-patches" {post})
+  "topkg" {build & (
+             = "1.0.8+ox"
+           )}
+]

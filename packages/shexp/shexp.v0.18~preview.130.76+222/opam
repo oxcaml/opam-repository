@@ -15,7 +15,7 @@ depends: [
   "sexplib0"     {= "v0.18~preview.130.76+222"}
   "base-threads"
   "dune"         {>= "3.17.0"}
-  "spawn"        {= "v0.15.1+ox"}
+  "spawn"        {>= "v0.15.1"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Process library and s-expression based shell"

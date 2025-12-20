@@ -1,0 +1,16 @@
+opam-version: "2.0"
+synopsis: "OxCaml patched ocaml-compiler-libs"
+description: "OxCaml meta-package indicating this library is installed"
+maintainer: "David Allsopp <david@tarides.com>"
+authors: "David Allsopp"
+license: "CC0-1.0+"
+homepage: "https://oxcaml.org"
+bug-reports: "https://github.com/oxcaml/opam-repository/issues"
+conflicts: "oxcaml-ocaml-compiler-libs"
+depends: [
+  ("oxcaml-ocaml-index" {post} | "oxcaml-ocaml-index-patches" {post})
+  "ocaml-compiler-libs" {build & (
+                           = "v0.12.4"
+                         | = "v0.17.0+ox"
+                         )}
+]

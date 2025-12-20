@@ -1,0 +1,15 @@
+opam-version: "2.0"
+synopsis: "OxCaml patched ocaml-index"
+description: "OxCaml meta-package indicating this library is installed"
+maintainer: "David Allsopp <david@tarides.com>"
+authors: "David Allsopp"
+license: "CC0-1.0+"
+homepage: "https://oxcaml.org"
+bug-reports: "https://github.com/oxcaml/opam-repository/issues"
+conflicts: "oxcaml-ocaml-index"
+depends: [
+  ("oxcaml-ocaml-lsp-server" {post} | "oxcaml-ocaml-lsp-server-patches" {post})
+  "ocaml-index" {build & (
+                   = "1.1+ox"
+                 )}
+]

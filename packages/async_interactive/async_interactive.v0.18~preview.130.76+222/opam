@@ -17,7 +17,7 @@ depends: [
   "core_unix" {= "v0.18~preview.130.76+222"}
   "ppx_jane"  {= "v0.18~preview.130.76+222"}
   "dune"      {>= "3.17.0"}
-  "spawn"     {= "v0.15.1+ox"}
+  "spawn"     {>= "v0.15"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Utilities for building simple command-line based user interfaces"

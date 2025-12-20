@@ -22,7 +22,7 @@ depends: [
   "sexplib0"                {= "v0.18~preview.130.76+222"}
   "dune"                    {>= "3.17.0"}
   "dune-configurator"
-  "ppxlib"                  {= "0.33.0+ox"}
+  "ppxlib"                  {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Full standard library replacement for OCaml"

@@ -1,0 +1,12 @@
+opam-version: "2.0"
+synopsis: "OxCaml patched upstream packages"
+description: """
+oxcaml-patch-guards and the associated oxcaml-* packages ensure that when a
+non-Jane Street package in opam-repository has to be patched to work with OxCaml
+that only those patched versions can be used in a switch with OxCaml."""
+maintainer: "David Allsopp <david@tarides.com>"
+authors: "David Allsopp"
+license: "CC0-1.0+"
+homepage: "https://oxcaml.org"
+bug-reports: "https://github.com/oxcaml/opam-repository/issues"
+depends: "oxcaml-alcotest" {post} | "oxcaml-alcotest-patches" {post}

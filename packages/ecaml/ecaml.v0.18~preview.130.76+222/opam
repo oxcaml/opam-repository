@@ -26,7 +26,7 @@ depends: [
   "sexplib"                  {= "v0.18~preview.130.76+222"}
   "dune"                     {>= "3.17.0"}
   "memtrace"                 {>= "0.2.1.2"}
-  "uutf"                     {= "1.0.3+ox"}
+  "uutf"                     {>= "1.0.3"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Library for writing Emacs plugin in OCaml"

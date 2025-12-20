@@ -40,7 +40,7 @@ bug-reports: "https://github.com/dbuenzli/topkg/issues"
 depends: [
   "ocaml"      {>= "4.08.0"}
   "ocamlfind"  {build & >= "1.6.1"}
-  "ocamlbuild" {= "0.15.0+ox"}
+  "ocamlbuild"
 ]
 build: ["ocaml" "pkg/pkg.ml" "build" "--pkg-name" name "--dev-pkg" "%{dev}%"]
 dev-repo: "git+https://erratique.ch/repos/topkg.git"

@@ -26,8 +26,8 @@ depends: [
   "ppx_quick_test"           {= "v0.18~preview.130.76+222"}
   "ppx_with"                 {= "v0.18~preview.130.76+222"}
   "dune"                     {>= "3.17.0"}
-  "notty-community"          {= "0.2.4+ox"}
-  "re"                       {= "1.14.0+ox"}
+  "notty-community"          {>= "0.2.4"}
+  "re"                       {>= "1.14.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "A library for building dynamic terminal apps, using bonsai"

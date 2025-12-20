@@ -20,7 +20,7 @@ depends: [
   "zarith_stubs_js"    {= "v0.18~preview.130.76+222"}
   "dune"               {>= "3.17.0"}
   "num"
-  "zarith"             {= "1.12+ox"}
+  "zarith"             {>= "1.12"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis:

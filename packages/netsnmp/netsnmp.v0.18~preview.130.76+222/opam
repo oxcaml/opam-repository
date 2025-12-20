@@ -16,7 +16,7 @@ depends: [
   "ppx_jane"     {= "v0.18~preview.130.76+222"}
   "conf-netsnmp" {>= "1.0.0"}
   "dune"         {>= "3.17.0"}
-  "re"           {= "1.14.0+ox"}
+  "re"           {>= "1.14.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "An interface to the Net-SNMP client library"
