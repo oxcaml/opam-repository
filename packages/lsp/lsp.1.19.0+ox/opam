@@ -29,7 +29,7 @@ depends: [
   "ppx_yojson_conv"
   "cinaps"              {with-test}
   "ppx_expect"          {with-test}
-  "uutf"                {= "1.0.3+ox"}
+  "uutf"                {= "1.0.4+ox"}
   "odoc"                {with-doc}
   "ocaml"               {>= "4.14"}
 ]

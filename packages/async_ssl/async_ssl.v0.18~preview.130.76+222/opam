@@ -19,8 +19,8 @@ depends: [
   "ppx_optcomp"       {= "v0.18~preview.130.76+222"}
   "stdio"             {= "v0.18~preview.130.76+222"}
   "conf-libssl"
-  "ctypes"            {= "0.23.0+ox"}
-  "ctypes-foreign"    {= "0.23.0+ox"}
+  "ctypes"            {= "0.24.0+ox"}
+  "ctypes-foreign"    {= "0.24.0+ox"}
   "dune"              {>= "3.17.0"}
   "dune-configurator"
   "integers"

@@ -19,8 +19,8 @@ depends: [
   "ppx_hardcaml"   {= "v0.18~preview.130.76+222"}
   "ppx_jane"       {= "v0.18~preview.130.76+222"}
   "ppx_rope"       {= "v0.18~preview.130.76+222"}
-  "ctypes"         {= "0.23.0+ox"}
-  "ctypes-foreign" {= "0.23.0+ox"}
+  "ctypes"         {= "0.24.0+ox"}
+  "ctypes-foreign" {= "0.24.0+ox"}
   "dune"           {>= "3.17.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
