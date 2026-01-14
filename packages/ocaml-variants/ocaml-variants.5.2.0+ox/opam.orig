@@ -115,7 +115,6 @@ conflicts: [
   "ctypes" {!= "0.23.0+ox"}
   "ctypes-foreign" {!= "0.23.0+ox"}
   "dot-merlin-reader" {!= "5.2.1-502+ox"}
-  "dune" {<= "3.20.2"}
   "gen_js_api" {!= "1.1.2+ox"}
   "js_of_ocaml" {!= "6.0.1+ox"}
   "js_of_ocaml-compiler" {!= "6.0.1+ox"}
@@ -144,8 +143,5 @@ conflicts: [
   "uTop" {!= "2.16.0+ox"}
   "uutf" {!= "1.0.3+ox"}
   "wasm_of_ocaml-compiler" {!= "6.0.1+ox"}
-  "zarith" {<"1.12"}
-  "zarith" {="1.12"}
-  "zarith" {="1.13"}
-  "zarith" {="1.14"}
- ]
+  "zarith" {!= "1.12+ox"}
+]

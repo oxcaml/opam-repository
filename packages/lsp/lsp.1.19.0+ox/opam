@@ -41,8 +41,8 @@ dev-repo: "git+https://github.com/ocaml/ocaml-lsp.git"
 x-commit-hash: "45f5ddac12bb580b4ecaec2d93ee7fac2c903aff"
 url {
   src:
-    "https://github.com/oxcaml/ocaml-lsp/archive/78eb8d73509e24bb7b3ac36d34a6a41c05665b1a.tar.gz"
+    "https://github.com/oxcaml/ocaml-lsp/archive/5ad6ab4aca58943c89660cb43d3022830751dcd0.tar.gz"
   checksum:
-    "sha256=9dd1e2822f0334d064c714464acf7a45188063b5f3fc69f77cab83ddfdc1edc0"
+    "sha256=5e7bcfb861b73e7a0551544aa2ecc8ee0641b2aaa775107f5ba3a1d7ef67d894"
 }
 

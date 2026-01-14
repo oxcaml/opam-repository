@@ -106,6 +106,7 @@ patches: [
   "ppxlib+src+deriving.mli.patch"
   "ppxlib+src+driver.ml.patch"
   "ppxlib+src+driver.mli.patch"
+  "ppxlib+src+extension.ml.patch"
   "ppxlib+src+gen+gen_ast_builder.ml.patch"
   "ppxlib+src+gen+gen_ast_pattern.ml.patch"
   "ppxlib+src+gen+import.ml.patch"
@@ -170,7 +171,7 @@ extra-files: [
   ]
   [
     "ppxlib+astlib+ast_999.ml.patch"
-    "sha256=0005e7f6075c5245f560eef83dc13bedfef7a5571a81839005f5aaf8ade777d3"
+    "sha256=04a83268a19e761d2dab653b39e90b1b62b8dd48d4f83232e89069ad5abbed6e"
   ]
   [
     "ppxlib+astlib+ast_metadata.mli.patch"
@@ -299,6 +300,10 @@ extra-files: [
   [
     "ppxlib+src+driver.mli.patch"
     "sha256=2ad047047323d2d4eb0a217b20e6d599acf76212761dad90a43a1aeb291b0cfb"
+  ]
+  [
+    "ppxlib+src+extension.ml.patch"
+    "sha256=6cc2cef37dda53b5ff5b7b7dd714d4a6604b4048db3aea82413e5ce51fe3bcfc"
   ]
   [
     "ppxlib+src+gen+gen_ast_builder.ml.patch"
