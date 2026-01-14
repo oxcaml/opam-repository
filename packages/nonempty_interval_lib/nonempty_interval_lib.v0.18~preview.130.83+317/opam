@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/nonempty_interval_lib"
+bug-reports: "https://github.com/janestreet/nonempty_interval_lib/issues"
+dev-repo: "git+https://github.com/janestreet/nonempty_interval_lib.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/nonempty_interval_lib/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"     {>= "5.1.0"}
+  "core"      {= "v0.18~preview.130.83+317"}
+  "core_unix" {= "v0.18~preview.130.83+317"}
+  "ppx_jane"  {= "v0.18~preview.130.83+317"}
+  "dune"      {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "An Interval_lib.Interval but with empty intervals disallowed."
+description: """
+An interval with an extra layer of safety and more convenient accessors that return values instead of value options.
+"""
+url {
+  src:
+    "https://github.com/janestreet/nonempty_interval_lib/archive/3a9cad8a4249f3197078b208c64fd1dd774477bc.tar.gz"
+  checksum:
+    "sha256=661bd8f849fa89e1d36d9c50c54bc691d94aa9ca7e40a4336deb1e2793e5203f"
+}

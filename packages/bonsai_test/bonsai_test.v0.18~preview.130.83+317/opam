@@ -1,0 +1,47 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/bonsai_test"
+bug-reports: "https://github.com/janestreet/bonsai_test/issues"
+dev-repo: "git+https://github.com/janestreet/bonsai_test.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/bonsai_test/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                    {>= "5.1.0"}
+  "async"                    {= "v0.18~preview.130.83+317"}
+  "async_js"                 {= "v0.18~preview.130.83+317"}
+  "base"                     {= "v0.18~preview.130.83+317"}
+  "bonsai"                   {= "v0.18~preview.130.83+317"}
+  "bonsai_concrete"          {= "v0.18~preview.130.83+317"}
+  "core"                     {= "v0.18~preview.130.83+317"}
+  "core_unix"                {= "v0.18~preview.130.83+317"}
+  "expect_test_helpers_core" {= "v0.18~preview.130.83+317"}
+  "expectable"               {= "v0.18~preview.130.83+317"}
+  "incr_map"                 {= "v0.18~preview.130.83+317"}
+  "incremental"              {= "v0.18~preview.130.83+317"}
+  "ocaml-embed-file"         {= "v0.18~preview.130.83+317"}
+  "patdiff"                  {= "v0.18~preview.130.83+317"}
+  "ppx_expect"               {= "v0.18~preview.130.83+317"}
+  "ppx_jane"                 {= "v0.18~preview.130.83+317"}
+  "ppx_pattern_bind"         {= "v0.18~preview.130.83+317"}
+  "ppx_quick_test"           {= "v0.18~preview.130.83+317"}
+  "virtual_dom"              {= "v0.18~preview.130.83+317"}
+  "dune"                     {>= "3.17.0"}
+  "re"                       {= "1.14.0+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "A library for testing Bonsai state machines."
+description: """
+Bonsai is a library for building composable state machines. This libary
+    provides testing capabilities.
+"""
+url {
+  src:
+    "https://github.com/janestreet/bonsai_test/archive/d2ad1471850632a810f51a898efc9a82df41cd54.tar.gz"
+  checksum:
+    "sha256=3e306ddee0b8f7ecd5165c0beb8daebbc34bf034f733dfc443462ac0727f9e5f"
+}

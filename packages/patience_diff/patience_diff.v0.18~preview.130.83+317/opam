@@ -1,0 +1,29 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/patience_diff"
+bug-reports: "https://github.com/janestreet/patience_diff/issues"
+dev-repo: "git+https://github.com/janestreet/patience_diff.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/patience_diff/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.1.0"}
+  "base"     {= "v0.18~preview.130.83+317"}
+  "core"     {= "v0.18~preview.130.83+317"}
+  "ppx_jane" {= "v0.18~preview.130.83+317"}
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Diff library using Bram Cohen's patience diff algorithm"
+description: """
+"""
+url {
+  src:
+    "https://github.com/janestreet/patience_diff/archive/c1e93497dccd03db2ecd684e505b53733f3f8f96.tar.gz"
+  checksum:
+    "sha256=4c698f93e169d3894fd5f4da57f4b148f0d7b295eeea4fb02c8a77a3479436da"
+}

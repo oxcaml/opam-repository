@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/abstract_algebra"
+bug-reports: "https://github.com/janestreet/abstract_algebra/issues"
+dev-repo: "git+https://github.com/janestreet/abstract_algebra.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/abstract_algebra/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.1.0"}
+  "base"     {= "v0.18~preview.130.83+317"}
+  "ppx_jane" {= "v0.18~preview.130.83+317"}
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "A small library describing abstract algebra concepts"
+description: """
+A library describing abstract algebra concepts. Currently, it includes
+Commutative_group and Vector_space.
+"""
+url {
+  src:
+    "https://github.com/janestreet/abstract_algebra/archive/3345e6290cc4ce2a8756e7cc284e3ba45ca34e78.tar.gz"
+  checksum:
+    "sha256=ec3bd7b8dd53b3be87622413f45af067d0c0e2100e1cc62f5f8a6115a2d5585e"
+}

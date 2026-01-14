@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/re_parser"
+bug-reports: "https://github.com/janestreet/re_parser/issues"
+dev-repo: "git+https://github.com/janestreet/re_parser.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/re_parser/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"             {>= "5.1.0"}
+  "base"              {= "v0.18~preview.130.83+317"}
+  "regex_parser_intf" {= "v0.18~preview.130.83+317"}
+  "dune"              {>= "3.17.0"}
+  "re"                {= "1.14.0+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Typed parsing using regular expressions."
+description: """
+
+Applicative-based interface for parsing using regular expressions from `ocaml-re`.
+Shares its interface with `Re2.Parser`.
+"""
+url {
+  src:
+    "https://github.com/janestreet/re_parser/archive/9b8bf5d4bb3954686c938eaf84f0286cdeeea5dc.tar.gz"
+  checksum:
+    "sha256=cf29a6bc74c2cd789e5a0f984b01e434cc7688bcec404aae8b98a120b61f6265"
+}

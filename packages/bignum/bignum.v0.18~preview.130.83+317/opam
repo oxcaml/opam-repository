@@ -1,0 +1,35 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/bignum"
+bug-reports: "https://github.com/janestreet/bignum/issues"
+dev-repo: "git+https://github.com/janestreet/bignum.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/bignum/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"              {>= "5.1.0"}
+  "core"               {= "v0.18~preview.130.83+317"}
+  "ppx_jane"           {= "v0.18~preview.130.83+317"}
+  "ppx_stable_witness" {= "v0.18~preview.130.83+317"}
+  "sexplib"            {= "v0.18~preview.130.83+317"}
+  "splittable_random"  {= "v0.18~preview.130.83+317"}
+  "typerep"            {= "v0.18~preview.130.83+317"}
+  "zarith_stubs_js"    {= "v0.18~preview.130.83+317"}
+  "dune"               {>= "3.17.0"}
+  "num"
+  "zarith"             {= "1.12+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis:
+  "Core-flavoured wrapper around zarith's arbitrary-precision rationals"
+description: """
+"""
+url {
+  src:
+    "https://github.com/janestreet/bignum/archive/18586616948564e7cd4ca38227f1ade65bcb375c.tar.gz"
+  checksum:
+    "sha256=3720651e03622f63876fee6444effde5fdcd5a457f65e06d82080aff78fdfa6c"
+}

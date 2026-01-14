@@ -1,0 +1,28 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/zarith_stubs_js"
+bug-reports: "https://github.com/janestreet/zarith_stubs_js/issues"
+dev-repo: "git+https://github.com/janestreet/zarith_stubs_js.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/zarith_stubs_js/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml" {>= "5.1.0"}
+  "dune"  {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Javascripts stubs for the Zarith library"
+description: """
+This library contains no ocaml code, but instead implements
+all of the Zarith C stubs in Javascript for use in Js_of_ocaml
+"""
+url {
+  src:
+    "https://github.com/janestreet/zarith_stubs_js/archive/207a20bece3f632e5a7461f9d92c91078171705e.tar.gz"
+  checksum:
+    "sha256=c2f5f3906b962b195e60b1c138a302b5c43d186046167a5b9372a5615f634b66"
+}

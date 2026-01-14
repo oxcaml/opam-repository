@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/font_awesome_icons"
+bug-reports: "https://github.com/janestreet/font_awesome_icons/issues"
+dev-repo: "git+https://github.com/janestreet/font_awesome_icons.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/font_awesome_icons/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"      {>= "5.1.0"}
+  "async"      {= "v0.18~preview.130.83+317"}
+  "async_unix" {= "v0.18~preview.130.83+317"}
+  "core"       {= "v0.18~preview.130.83+317"}
+  "core_unix"  {= "v0.18~preview.130.83+317"}
+  "ppx_jane"   {= "v0.18~preview.130.83+317"}
+  "dune"       {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "An OCaml library for Font-Awesome SVG icons"
+description: """
+This library contains the free brands, regular and solid SVG icons from Font-Awesome. Compatible for use with bonsai apps.
+"""
+url {
+  src:
+    "https://github.com/janestreet/font_awesome_icons/archive/e04a72b484c2fed9b9a869d3661e2911a8b53105.tar.gz"
+  checksum:
+    "sha256=223e03bd10c1626001f2d1d7e13608dbb7f75fb4718990dfd37b2df6ed0aa541"
+}

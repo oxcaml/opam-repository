@@ -1,0 +1,46 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/hardcaml_waveterm"
+bug-reports: "https://github.com/janestreet/hardcaml_waveterm/issues"
+dev-repo: "git+https://github.com/janestreet/hardcaml_waveterm.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/hardcaml_waveterm/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"           {>= "5.1.0"}
+  "async"           {= "v0.18~preview.130.83+317"}
+  "base"            {= "v0.18~preview.130.83+317"}
+  "bignum"          {= "v0.18~preview.130.83+317"}
+  "core"            {= "v0.18~preview.130.83+317"}
+  "core_unix"       {= "v0.18~preview.130.83+317"}
+  "hardcaml"        {= "v0.18~preview.130.83+317"}
+  "notty_async"     {= "v0.18~preview.130.83+317"}
+  "ppx_hardcaml"    {= "v0.18~preview.130.83+317"}
+  "ppx_jane"        {= "v0.18~preview.130.83+317"}
+  "stdio"           {= "v0.18~preview.130.83+317"}
+  "cryptokit"       {>= "1.16" & < "1.17"}
+  "dune"            {>= "3.17.0"}
+  "notty-community" {= "0.2.4+ox"}
+  "re"              {= "1.14.0+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "A terminal based digital waveform viewer for Hardcaml"
+description: """
+The hardcaml_waveterm library renders digital waveforms to unicode. Such
+waveforms can be used in expect tests or for debugging using the supplied
+interactive terminal application.
+
+The library is closely integrated with Hardcaml and can be easily attached
+to simulations.
+"""
+conflicts: ["hardcaml-waveterm"]
+url {
+  src:
+    "https://github.com/janestreet/hardcaml_waveterm/archive/dbdfd90218e964d4342662df0654add32d813ca6.tar.gz"
+  checksum:
+    "sha256=61dd1ac9ac26d67edd0372a7a4aa5a26db7025f3f81aa7a9cc8c6e6c2d1640fd"
+}

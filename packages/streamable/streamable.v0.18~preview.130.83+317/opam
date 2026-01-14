@@ -1,0 +1,36 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/streamable"
+bug-reports: "https://github.com/janestreet/streamable/issues"
+dev-repo: "git+https://github.com/janestreet/streamable.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/streamable/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"            {>= "5.1.0"}
+  "async_kernel"     {= "v0.18~preview.130.83+317"}
+  "async_rpc_kernel" {= "v0.18~preview.130.83+317"}
+  "base"             {= "v0.18~preview.130.83+317"}
+  "bin_prot"         {= "v0.18~preview.130.83+317"}
+  "core"             {= "v0.18~preview.130.83+317"}
+  "core_kernel"      {= "v0.18~preview.130.83+317"}
+  "ppx_jane"         {= "v0.18~preview.130.83+317"}
+  "ppxlib_jane"      {= "v0.18~preview.130.83+317"}
+  "dune"             {>= "3.17.0"}
+  "ppxlib"           {= "0.33.0+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "A collection of types suitable for incremental serialization."
+description: """
+A collection of types suitable for incremental serialization.
+"""
+url {
+  src:
+    "https://github.com/janestreet/streamable/archive/01a58e0a54288747c12848a2378ce9c3f3f4576b.tar.gz"
+  checksum:
+    "sha256=489b8f908e3143b7f12df1d9853dde8c2b93f3964fac9d0303e9dfb26f6cc0b0"
+}

@@ -1,0 +1,46 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_quick_test"
+bug-reports: "https://github.com/janestreet/ppx_quick_test/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_quick_test.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_quick_test/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                     {>= "5.1.0"}
+  "async"                     {= "v0.18~preview.130.83+317"}
+  "async_kernel"              {= "v0.18~preview.130.83+317"}
+  "base"                      {= "v0.18~preview.130.83+317"}
+  "base_quickcheck"           {= "v0.18~preview.130.83+317"}
+  "core"                      {= "v0.18~preview.130.83+317"}
+  "expect_test_helpers_async" {= "v0.18~preview.130.83+317"}
+  "expect_test_helpers_core"  {= "v0.18~preview.130.83+317"}
+  "ppx_expect"                {= "v0.18~preview.130.83+317"}
+  "ppx_helpers"               {= "v0.18~preview.130.83+317"}
+  "ppx_here"                  {= "v0.18~preview.130.83+317"}
+  "ppx_inline_test"           {= "v0.18~preview.130.83+317"}
+  "ppx_jane"                  {= "v0.18~preview.130.83+317"}
+  "ppx_sexp_conv"             {= "v0.18~preview.130.83+317"}
+  "ppx_sexp_message"          {= "v0.18~preview.130.83+317"}
+  "ppxlib_jane"               {= "v0.18~preview.130.83+317"}
+  "stdio"                     {= "v0.18~preview.130.83+317"}
+  "dune"                      {>= "3.17.0"}
+  "ocaml-compiler-libs"       {= "v0.17.0+ox"}
+  "ppxlib"                    {= "0.33.0+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis:
+  "Spiritual equivalent of let%expect_test, but for property based tests as an ergonomic wrapper to write quickcheck tests."
+description: """
+Part of the Jane Street's PPX rewriters collection.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_quick_test/archive/52b66cfb7bf29573a5b9a186b6d87dbb78d7dcde.tar.gz"
+  checksum:
+    "sha256=8384c7f8141ba22e7433bf463fd389e5ec3fb1c95d30f8a9bf091433fa8ee65e"
+}

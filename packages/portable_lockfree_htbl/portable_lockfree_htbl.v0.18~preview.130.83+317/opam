@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/portable_lockfree_htbl"
+bug-reports: "https://github.com/janestreet/portable_lockfree_htbl/issues"
+dev-repo: "git+https://github.com/janestreet/portable_lockfree_htbl.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/portable_lockfree_htbl/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"         {>= "5.1.0"}
+  "base"          {= "v0.18~preview.130.83+317"}
+  "portable"      {= "v0.18~preview.130.83+317"}
+  "ppx_fuelproof" {= "v0.18~preview.130.83+317"}
+  "ppx_jane"      {= "v0.18~preview.130.83+317"}
+  "base-threads"
+  "dune"          {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Portable lock-free hash table for OxCaml"
+description: """
+Portable lock-free hash table for OxCaml
+"""
+url {
+  src:
+    "https://github.com/janestreet/portable_lockfree_htbl/archive/f9f385a3d289e970ca23ca2f9a54a195f51af48f.tar.gz"
+  checksum:
+    "sha256=ea41f6d8b739dc09ab354b2f8df84c5ea097f958c019795c8184273156804a46"
+}

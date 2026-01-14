@@ -1,0 +1,33 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/notty_async"
+bug-reports: "https://github.com/janestreet/notty_async/issues"
+dev-repo: "git+https://github.com/janestreet/notty_async.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/notty_async/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"           {>= "5.1.0"}
+  "async"           {= "v0.18~preview.130.83+317"}
+  "core_unix"       {= "v0.18~preview.130.83+317"}
+  "ppx_jane"        {= "v0.18~preview.130.83+317"}
+  "dune"            {>= "3.17.0"}
+  "notty-community" {= "0.2.4+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "An Async driver for Notty"
+description: """
+Notty is a library for writing graphical terminal applications, and Notty_async
+is an Async driver, which makes it easy to build terminal applications using
+Async for managing concurrency.
+"""
+url {
+  src:
+    "https://github.com/janestreet/notty_async/archive/3a733accedbcb8343a224fba41a467eca79dc6aa.tar.gz"
+  checksum:
+    "sha256=ce69882089cb1b2f84258b123baae759ef10e33031186b2e36d7b31f22ec9094"
+}

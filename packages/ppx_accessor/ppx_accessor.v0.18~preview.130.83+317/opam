@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_accessor"
+bug-reports: "https://github.com/janestreet/ppx_accessor/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_accessor.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_accessor/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"       {>= "5.1.0"}
+  "accessor"    {= "v0.18~preview.130.83+317"}
+  "base"        {= "v0.18~preview.130.83+317"}
+  "ppxlib_jane" {= "v0.18~preview.130.83+317"}
+  "dune"        {>= "3.17.0"}
+  "ppxlib"      {= "0.33.0+ox"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis:
+  "[@@deriving] plugin to generate accessors for use with the Accessor libraries"
+description: """
+Automatically generate accessors given a type definition.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_accessor/archive/f34d9d39e961575e2600bc767ed3f98a9ef41d7f.tar.gz"
+  checksum:
+    "sha256=a7e0766e8162c2940a2c03908c3a20338e3c240b25642eb0679bed43769fe888"
+}

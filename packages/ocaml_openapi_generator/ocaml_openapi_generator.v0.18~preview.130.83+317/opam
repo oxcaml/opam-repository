@@ -1,0 +1,38 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ocaml_openapi_generator"
+bug-reports: "https://github.com/janestreet/ocaml_openapi_generator/issues"
+dev-repo: "git+https://github.com/janestreet/ocaml_openapi_generator.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ocaml_openapi_generator/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"            {>= "5.1.0"}
+  "async"            {= "v0.18~preview.130.83+317"}
+  "base"             {= "v0.18~preview.130.83+317"}
+  "core"             {= "v0.18~preview.130.83+317"}
+  "core_kernel"      {= "v0.18~preview.130.83+317"}
+  "core_unix"        {= "v0.18~preview.130.83+317"}
+  "jsonaf"           {= "v0.18~preview.130.83+317"}
+  "ocaml-embed-file" {= "v0.18~preview.130.83+317"}
+  "ppx_jane"         {= "v0.18~preview.130.83+317"}
+  "ppx_jsonaf_conv"  {= "v0.18~preview.130.83+317"}
+  "dune"             {>= "3.17.0"}
+  "httpaf"           {>= "0.7.1"}
+  "jingoo"           {>= "1.4.4" & < "1.5.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "An OpenAPI 3 to OCaml client generator."
+description: """
+An OpenAPI 3 to OCaml client generator.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ocaml_openapi_generator/archive/455192195876b9e8696aa4fa9daf943386dec854.tar.gz"
+  checksum:
+    "sha256=12bd2f8d7679eaa0a7f1fd856fc2a47977e935b0ea59cf781029a904fd49c75c"
+}
