@@ -123,7 +123,7 @@ patches: [
 extra-files: [
   [
     "dune.patch"
-    "sha256=61bac89ee669211eca335f1e1ec07ac03bdc49d2502e8963081100beb32297d1"
+    "sha256=4858b355e99af25cda8c301cc685d53a9d110bcc1d3aa51a5131a19ea069aaa3"
   ]
   [
     "location_check.ml.patch"
