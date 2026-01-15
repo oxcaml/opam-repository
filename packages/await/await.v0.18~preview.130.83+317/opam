@@ -29,6 +29,12 @@ depends: [
   "dune"             {>= "3.17.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
+patches: [
+  "macos-futex-compatibility.patch"
+]
+extra-files: [
+  ["macos-futex-compatibility.patch" "sha256=e69d7a7c535248812c5f487e4a847bd29ef4ed56b8adb69d03c07c8f06658dcb"]
+]
 synopsis:
   "Implementations of awaiting and synchronization primitives for OxCaml"
 description: """
