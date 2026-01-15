@@ -67,6 +67,6 @@ patches: ["oxcaml-lwt.patch"]
 extra-files: [
   [
     "oxcaml-lwt.patch"
-    "sha256=97dbcee73e200403694c9b9fd95f9ec7a1d08428343d4d163c945e7f0c431551"
+    "sha256=bdacd370aaa73dd160b79de4733f515013f697cb7181ee7dd571edfeab2b229f"
   ]
 ]

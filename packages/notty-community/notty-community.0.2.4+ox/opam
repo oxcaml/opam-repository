@@ -71,6 +71,7 @@ patches: [
   "notty-portabilize_notty_unix.patch"
   "notty-add_href_support.patch"
   "notty-default_color.patch"
+  "notty-set_save_and_restore_title.patch"
   "dune.patch"
   "lwt.patch"
 ]
@@ -126,6 +127,10 @@ extra-files: [
   [
     "notty-default_color.patch"
     "sha256=6fd41656ba6c55498122898b845efd430b4aa695b5ba8b0b788c42d394254f56"
+  ]
+  [
+    "notty-set_save_and_restore_title.patch"
+    "sha256=bbb4bf0e73bcfa795c93495a7149f7ee8f54b6c33d666d9d79dfefdd51ddec5b"
   ]
   [
     "dune.patch"

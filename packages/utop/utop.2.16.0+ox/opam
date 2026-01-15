@@ -44,8 +44,8 @@ build: [
 dev-repo: "git+https://github.com/ocaml-community/utop.git"
 url {
   src:
-    "https://github.com/oxcaml/utop/archive/34e9c6de5245cfbe03c721994d7fdd08a9dcbce4.tar.gz"
+    "https://github.com/oxcaml/utop/archive/81c591c1fd3f378efceab4939aaca9e321a9c4f9.tar.gz"
   checksum:
-    "sha256=de479fdbfbfbe75b6dc55f3eab174acf8b171300ae1c4b27455623a583c0c541"
+    "sha256=dff3e14b4d99d48757d7e886f69450e802cae5d8d54fd0681631230e71e42953"
 }
 

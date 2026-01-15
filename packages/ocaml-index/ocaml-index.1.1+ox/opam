@@ -34,11 +34,11 @@ build: [
   ["dune" "install" "-p" name "--create-install-files" name]
 ]
 dev-repo: "git+https://github.com/ocaml/merlin.git"
-x-commit-hash: "0eaccc1b8520d605b1e00685e1c3f8acb5da534c"
+x-commit-hash: "aaa0efaa313d28746105da47d11e2a049e7c74d9"
 url {
   src:
-    "https://github.com/oxcaml/merlin/archive/a1c13964b6d44748c0bf538db919e9664240a7f9.tar.gz"
+    "https://github.com/oxcaml/merlin/archive/aaa0efaa313d28746105da47d11e2a049e7c74d9.tar.gz"
   checksum:
-    "sha256=f3f9a94e2315475e1964522780926ba6af82e2589d62bf8be846608334661c69"
+    "sha256=f7b76956485c97f17829c7f9aa8a99ba0d5956b0f0cbcde48b5180c80727bc8a"
 }
 
