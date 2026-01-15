@@ -22,7 +22,7 @@ depends: [
   "re"           {with-test & = "1.14.0+ox"}
   "cmdliner"     {>= "1.1.0"}
   "opam-format"  {with-test}
-  "sedlex"       {= "3.6+ox"}
+  "sedlex"       {= "3.7+ox"}
   "menhir"
   "menhirLib"
   "menhirSdk"
