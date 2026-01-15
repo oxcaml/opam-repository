@@ -1,13 +1,9 @@
-diff --git a/blocking/await_blocking_stubs.c b/blocking/await_blocking_stubs.c
-index 1234567..abcdefg 100644
 --- a/blocking/await_blocking_stubs.c
 +++ b/blocking/await_blocking_stubs.c
-@@ -2,8 +2,14 @@
+@@ -2,8 +2,16 @@
  #include <stdatomic.h>
  #include <stdint.h>
  #include <unistd.h>
--#include <sys/syscall.h>
--#include <linux/futex.h>
 +
 +#ifdef __APPLE__
 +// macOS ulock API declarations (private but stable API used by libc++)
@@ -15,13 +11,13 @@ index 1234567..abcdefg 100644
 +extern int __ulock_wait(uint32_t operation, void *addr, uint64_t value, uint32_t timeout);
 +extern int __ulock_wake(uint32_t operation, void *addr, uint64_t wake_value);
 +#else
-+#include <sys/syscall.h>
-+#include <linux/futex.h>
+ #include <sys/syscall.h>
+ #include <linux/futex.h>
 +#endif
 
  #include "caml/version.h"
  #include "caml/memory.h"
-@@ -54,7 +60,11 @@ CAMLprim value await_blocking_futex_wait(value v_futex /* immediate */,
+@@ -58,7 +66,11 @@
    _Atomic uint32_t *futex = Futex_val(v_futex);
 
    caml_enter_blocking_section();
@@ -33,8 +29,7 @@ index 1234567..abcdefg 100644
    caml_leave_blocking_section();
 
    CAMLreturn(Val_int(atomic_load_explicit(futex, memory_order_acquire)));
-@@ -70,7 +80,11 @@ CAMLprim value await_blocking_futex_signal(value v_futex /* immediate */) {
-
+@@ -76,7 +88,11 @@
    // When using a futex per thread there should be at most one thread blocked on a futex,
    // but we broadcast anyway, because it should not slow things down and allows the
    // approach to work even with a shared futex.

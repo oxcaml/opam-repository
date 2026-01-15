@@ -33,7 +33,7 @@ patches: [
   "macos-futex-compatibility.patch"
 ]
 extra-files: [
-  ["macos-futex-compatibility.patch" "sha256=e69d7a7c535248812c5f487e4a847bd29ef4ed56b8adb69d03c07c8f06658dcb"]
+  ["macos-futex-compatibility.patch" "sha256=af5d0c0974ee6507dc99d183b0f8bf28984e4772c92ee395d62afe148146882d"]
 ]
 synopsis:
   "Implementations of awaiting and synchronization primitives for OxCaml"
