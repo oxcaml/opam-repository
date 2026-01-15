@@ -28,7 +28,7 @@
   (flags
    (:standard -safe-string))
 - (libraries ppxlib_ast astlib ppxlib_traverse_builtins stdppx stdlib-shims))
-+ (libraries ppxlib_ast ppxlib_jane astlib ppxlib_traverse_builtins stdppx stdlib-shims))
++ (libraries ppxlib_ast ppxlib_ast.astlib ppxlib_jane astlib ppxlib_traverse_builtins stdppx stdlib-shims))
 --- a/traverse/dune
 +++ b/traverse/dune
 @@ -4,6 +4,6 @@

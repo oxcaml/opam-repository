@@ -29,12 +29,6 @@ depends: [
   "dune"             {>= "3.17.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
-patches: [
-  "macos-futex-compatibility.patch"
-]
-extra-files: [
-  ["macos-futex-compatibility.patch" "sha256=af5d0c0974ee6507dc99d183b0f8bf28984e4772c92ee395d62afe148146882d"]
-]
 synopsis:
   "Implementations of awaiting and synchronization primitives for OxCaml"
 description: """
@@ -42,7 +36,7 @@ description: """
 """
 url {
   src:
-    "https://github.com/janestreet/await/archive/7e045547c55ac29756a90b9bfc5f848ad7a5f9db.tar.gz"
+    "https://github.com/janestreet/await/archive/19c663468dd0dcda0198bb5281f597b363bd16b6.tar.gz"
   checksum:
-    "sha256=429d96aaef3af43f48bd61c4a39450b0ac7b8c0c4cdb77246a2a97243324446b"
+    "sha256=c3514b7c941a38b6e3f9af65080008e84fb3f06f15950ec3dc212eba5295a91d"
 }

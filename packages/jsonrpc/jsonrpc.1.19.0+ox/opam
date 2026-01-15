@@ -30,7 +30,7 @@ build: [
   ["dune" "build" "-p" name "-j" jobs "@install" "@doc" {with-doc}]
 ]
 dev-repo: "git+https://github.com/ocaml/ocaml-lsp.git"
-x-commit-hash: "c415e03fae4b5823e84bbee21f8adf759e6f04dd"
+x-commit-hash: "45f5ddac12bb580b4ecaec2d93ee7fac2c903aff"
 x-opam-repository-commit-hash-at-time-of-archiving:
   "08d8c16c16dc6b23a5278b06dff0ac6c7a217356"
 x-reason-for-archiving: ["maintenance-intent"]

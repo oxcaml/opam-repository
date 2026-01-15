@@ -21,7 +21,7 @@ build: [
   ["dune" "build" "-p" name "-j" jobs]
 ]
 dev-repo: "git+https://github.com/ocaml/merlin.git"
-x-commit-hash: "aaa0efaa313d28746105da47d11e2a049e7c74d9"
+x-commit-hash: "0eaccc1b8520d605b1e00685e1c3f8acb5da534c"
 url {
   src:
     "https://github.com/oxcaml/merlin/archive/aaa0efaa313d28746105da47d11e2a049e7c74d9.tar.gz"
