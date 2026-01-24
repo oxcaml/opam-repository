@@ -8,7 +8,7 @@ homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-notty-community"
 depends: [
-  ("oxcaml-obuild" {post} | "oxcaml-obuild-patches" {post})
+  ("oxcaml-ocaml-compiler-libs" {post} | "oxcaml-ocaml-compiler-libs-patches" {post})
   "oxcaml" {post}
   "notty-community" {build & (
                        = "0.2.4+ox"
