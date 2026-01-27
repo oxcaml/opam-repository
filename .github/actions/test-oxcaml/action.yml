@@ -84,5 +84,5 @@ runs:
         opam --version
         opam repository list
         opam list
-        opam install ocamlformat merlin ocaml-lsp-server utop parallel concurrent core_unix js_of_ocaml bonsai_term
+        opam install ocamlformat merlin ocaml-lsp-server utop parallel concurrent core_unix js_of_ocaml bonsai_term odoc sherlodoc
         opam list
