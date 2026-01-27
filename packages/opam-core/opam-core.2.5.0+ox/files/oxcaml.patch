@@ -1,0 +1,52 @@
+diff --git a/shell/get_version.ml b/shell/get_version.ml
+index 750297365..afb37bbb0 100644
+--- a/shell/get_version.ml
++++ b/shell/get_version.ml
+@@ -2,7 +2,7 @@ let c = open_in Sys.argv.(1) in
+ try while true do
+   let line = input_line c in
+   begin try
+-    Scanf.sscanf line "AC_INIT([opam],[%s@])" print_endline;
++    Scanf.sscanf line "AC_INIT([opam],[%s@])" (fun x -> print_endline x);
+     raise Exit
+   with Scanf.Scan_failure _ -> () end
+ done with Exit -> close_in c; exit 0
+diff --git a/src/core/opamConsole.ml b/src/core/opamConsole.ml
+index e0af36f6c..8e43c8145 100644
+--- a/src/core/opamConsole.ml
++++ b/src/core/opamConsole.ml
+@@ -643,6 +643,8 @@ let win32_print_functions = lazy (
+   | VT100 force ->
+       (false, (fun s -> force (); print_endline s), (fun s -> force (); print_string s)))
+ 
++let print_endline x = print_endline x
++
+ let status_line fmt =
+   let batch =
+     debug () || not (disp_status_line ()) in
+diff --git a/src/core/opamProcess.ml b/src/core/opamProcess.ml
+index a1662e36b..3191b8447 100644
+--- a/src/core/opamProcess.ml
++++ b/src/core/opamProcess.ml
+@@ -308,6 +308,9 @@ let resolve_command ?env ?dir name =
+   | `Cmd cmd -> Some cmd
+   | `Denied | `Not_found -> None
+ 
++let unix_create_process_env cmd args env stdin stdout stderr =
++  Unix.create_process_env cmd args env stdin stdout stderr
++
+ let create_process_env =
+   if Sys.win32 then
+     fun cmd ->
+@@ -317,9 +320,9 @@ let create_process_env =
+              false
+              (resolve_command cmd) then
+         cygwin_create_process_env cmd
+-      else Unix.create_process_env cmd
++      else unix_create_process_env cmd
+   else
+-    Unix.create_process_env
++    unix_create_process_env
+ 
+ (** [create cmd args] create a new process to execute the command
+     [cmd] with arguments [args]. If [stdout_file] or [stderr_file] are
