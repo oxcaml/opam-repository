@@ -123,7 +123,6 @@ conflicts: [
   "js_of_ocaml-toplevel" {!= "6.0.1+ox"}
   "jsonrpc" {!= "1.19.0+ox"}
   "lsp" {!= "1.19.0+ox"}
-  "lwt_ppx" {!= "5.9.1+ox"}
   "mdx" {!= "2.5.0+ox"}
   "merlin" {!= "5.2.1-502+ox"}
   "merlin-lib" {!= "5.2.1-502+ox"}
