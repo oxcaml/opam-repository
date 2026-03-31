@@ -28,15 +28,15 @@ build: [
   [
     "sh"
     "-exc"
-    "cd ocaml-4.14.2 && ./configure --prefix %{build}%/init_deps --disable-ocamldoc"
+    "cd ocaml-5.4.1 && ./configure --prefix %{build}%/init_deps --disable-ocamldoc"
   ] {os != "openbsd" & os != "macos"}
   [
     "sh"
     "-exc"
-    "cd ocaml-4.14.2 && ./configure --prefix %{build}%/init_deps --disable-ocamldoc CC=cc ASPP='cc -c'"
+    "cd ocaml-5.4.1 && ./configure --prefix %{build}%/init_deps --disable-ocamldoc CC=cc ASPP='cc -c'"
   ] {os = "openbsd" | os = "macos"}
-  ["sh" "-exc" "make -C ocaml-4.14.2 -j%{jobs}%"]
-  ["sh" "-exc" "make -C ocaml-4.14.2 install"]
+  ["sh" "-exc" "make -C ocaml-5.4.1 -j%{jobs}%"]
+  ["sh" "-exc" "make -C ocaml-5.4.1 install"]
   [
     "sh"
     "-exc"
@@ -55,7 +55,7 @@ build: [
   [
     "sh"
     "-exc"
-    "cd menhir-20231231-d3d815e4f554da68b8c247241c8f8678926eecaa; PATH=%{build}%/init_deps/bin/:$PATH %{build}%/init_deps/bin/dune build --root %{build}%/menhir-20231231-d3d815e4f554da68b8c247241c8f8678926eecaa @install -j %{jobs}%"
+    "cd menhir-20231231-d3d815e4f554da68b8c247241c8f8678926eecaa; OCAMLPARAM='_,w=-53' PATH=%{build}%/init_deps/bin/:$PATH %{build}%/init_deps/bin/dune build --root %{build}%/menhir-20231231-d3d815e4f554da68b8c247241c8f8678926eecaa @install -j %{jobs}%"
   ]
   [
     "sh"
@@ -76,9 +76,9 @@ build: [
 ]
 install: ["sh" "-exc" "PATH=%{build}%/init_deps/bin/:$PATH make install"]
 extra-source "init-compiler.tar.gz" {
-  src: "https://github.com/ocaml/ocaml/archive/4.14.2.tar.gz"
+  src: "https://github.com/ocaml/ocaml/archive/5.4.1.tar.gz"
   checksum:
-    "sha256=c2d706432f93ba85bd3383fa451d74543c32a4e84a1afaf3e8ace18f7f097b43"
+    "sha256=d4528517aaa1a44b8e2b1bc109a1ed0a5e0014f3ddc4feb8906b11a7e063e89a"
 }
 extra-source "init-dune.tbz" {
   src:
@@ -95,17 +95,11 @@ extra-source "init-menhir.tar.gz" {
     "sha512=620ff3443143535e03ac98c5e8ee2ddf9ba48f8cfe441302118def1da3e03ffac7f48d4d4cb129766b625ecad0fb341da1baa0169dee8b6d07a5b0bbb735cf2f"
   ]
 }
-url {
-  src:
-    "https://github.com/oxcaml/oxcaml/archive/refs/tags/5.2.0minus-25.tar.gz"
-  checksum:
-    "sha256=08e9cdc1b4e919cb3266eab8b4cd98f74ffc580a6b21b7d09b156278aa2876fc"
-}
 patches: ["ignore-opam.patch"]
 extra-files: [
   [
     "ignore-opam.patch"
-    "sha256=6ece96cd3f06c3ed90f768bf63659266a670e5be0b2302354a2d0e87629ba049"
+    "sha256=6ab72071c764fe6a8ee370d0731a05afe6cd8645ba5c3cb13f11c30735a9672b"
   ]
 ]
 conflicts: [
