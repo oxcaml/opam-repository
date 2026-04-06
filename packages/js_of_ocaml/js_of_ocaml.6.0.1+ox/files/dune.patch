@@ -2,7 +2,15 @@ diff --git a/compiler/lib/dune b/compiler/lib/dune
 index b03e41bd..23a20394 100644
 --- a/compiler/lib/dune
 +++ b/compiler/lib/dune
-@@ -15,7 +15,7 @@
+@@ -5,6 +5,7 @@
+  (synopsis "Js_of_ocaml compiler library")
+  (libraries
+   compiler-libs.common
++  ocaml-compiler-libs.common
+   compiler-libs.bytecomp
+   menhirLib
+   sedlex
+@@ -15,7 +16,7 @@
   (flags
    (:standard -w -7-37 -safe-string))
   (preprocess

@@ -82,14 +82,18 @@ patches: [
   "js_of_ocaml-flipped-conditions-in-test.patch"
   "js_of_ocaml-atomic-cmpxchg.patch"
   "js_of_ocaml-small-int-literals.patch"
-  "js_of_ocaml-5.2.0-minus24-changes.patch"
   "js_of_ocaml-tls.patch"
+  "js_of_ocaml-5.2.0-minus24-changes.patch"
+  "js_of_ocaml-dom-defaultPrevented.patch"
+  "js_of_ocaml-oxcaml_effect_prims.patch"
+  "js_of_ocaml-caml_sys_getenv_opt.patch"
+  "js_of_ocaml-caml_sys_io_buffer_size.patch"
   "dune.patch"
 ]
 extra-files: [
   [
     "js_of_ocaml-magic_number.ml.patch"
-    "sha256=8d027e43deee4c5b86a84ef49b1318184dc97c84067a6d6df08d2b88355d42e1"
+    "sha256=f53ae81566928ad26a030130f7c3949513d788b022be2dcfc4e6e2f10002549f"
   ]
   [
     "js_of_ocaml-compilation_unit-name.patch"
@@ -264,15 +268,31 @@ extra-files: [
     "sha256=4c3fd2d3a50d220af2bdd377016e3f3354b98b770457ff200494be70bc9bb5b2"
   ]
   [
-    "js_of_ocaml-5.2.0-minus24-changes.patch"
-    "sha256=6d3becdb935da2b928f35bae891fd60dc1f8f9db67704209becb2d40da1e3d78"
-  ]
-  [
     "js_of_ocaml-tls.patch"
     "sha256=0b7e836d52bcbe261e2adc63657762bf41ade2665394279a1687702f0ef67609"
   ]
   [
+    "js_of_ocaml-5.2.0-minus24-changes.patch"
+    "sha256=6d3becdb935da2b928f35bae891fd60dc1f8f9db67704209becb2d40da1e3d78"
+  ]
+  [
+    "js_of_ocaml-dom-defaultPrevented.patch"
+    "sha256=9b194506ac9781d2b6f73754c1c90b0c46eb7daa070bbba05a132ee45582638e"
+  ]
+  [
+    "js_of_ocaml-oxcaml_effect_prims.patch"
+    "sha256=1f4f490d0b9039e30759a50a8ec5393fc594bc91e65b0bdcdd28499c6674db59"
+  ]
+  [
+    "js_of_ocaml-caml_sys_getenv_opt.patch"
+    "sha256=c88f2308166931da3923e667ed35868be8871d1f2e17f3249b61e6bea2345f31"
+  ]
+  [
+    "js_of_ocaml-caml_sys_io_buffer_size.patch"
+    "sha256=7f3a20b9cde29bde463cee1780b0afb854a0326390a48480e739f10464eda53d"
+  ]
+  [
     "dune.patch"
-    "sha256=f76da998ab76de56309bd0da3e4db1fb496d6d235d7a0ac2f78e3bafe098714e"
+    "sha256=9631872e076e9c256c8e2383dbaa3f0547c56ae6c6850266cc0b81a49b089894"
   ]
 ]

@@ -1,0 +1,346 @@
+--- a/compiler/lib/effects.ml
++++ b/compiler/lib/effects.ml
+@@ -160,7 +160,11 @@
+ (****)
+ 
+ let effect_primitive_or_application = function
+-  | Prim (Extern ("%resume" | "%perform" | "%reperform"), _) | Apply _ -> true
++  | Prim (
++    Extern ("%resume" | "%perform" | "%reperform" | "%with_stack" | "%with_stack_bind"),
++    _
++  )
++  | Apply _ -> true
+   | Block (_, _, _, _)
+   | Field (_, _, _)
+   | Closure (_, _, _)
+@@ -651,6 +655,42 @@
+               ~check:true
+               ~f
+               [ arg; k' ])
++    | Prim (Extern "%with_stack", [ Pv hv; Pv hx; Pv hf; Pv f; Pv arg ]) ->
++        Some
++          (fun ~k ->
++            let stack = Var.fresh_n "stack" in
++            let k' = Var.fresh_n "cont" in
++            tail_call
++              ~st
++              ~instrs:
++                [ Let (stack, Prim (Extern "caml_alloc_stack", [ Pv hv; Pv hx; Pv hf ]))
++                ; Let
++                    (k', Prim (Extern "caml_resume_stack", [ Pv stack; Pv stack; Pv k ]))
++                ]
++              ~exact:(call_exact st.flow_info f 1)
++              ~in_cps:true
++              ~check:true
++              ~f
++              [ arg; k' ])
++    | Prim
++        ( Extern "%with_stack_bind"
++        , [ Pv hv; Pv hx; Pv hf; Pv _dyn; Pv _bind; Pv f; Pv arg ] ) ->
++        Some
++          (fun ~k ->
++            let stack = Var.fresh_n "stack" in
++            let k' = Var.fresh_n "cont" in
++            tail_call
++              ~st
++              ~instrs:
++                [ Let (stack, Prim (Extern "caml_alloc_stack", [ Pv hv; Pv hx; Pv hf ]))
++                ; Let
++                    (k', Prim (Extern "caml_resume_stack", [ Pv stack; Pv stack; Pv k ]))
++                ]
++              ~exact:(call_exact st.flow_info f 1)
++              ~in_cps:true
++              ~check:true
++              ~f
++              [ arg; k' ])
+     | Prim (Extern "%perform", [ Pv effect_ ]) -> perform_effect ~effect_ None
+     | Prim (Extern "%reperform", [ Pv effect_; continuation; tail ]) ->
+         perform_effect ~effect_ (Some (continuation, tail))
+@@ -731,6 +771,20 @@
+       | Let (x, Prim (Extern "%reperform", [ effect_; _continuation; _tail ])) ->
+           (* Similar to previous case *)
+           [ Let (x, Prim (Extern "caml_raise_unhandled", [ effect_ ])) ]
++      | Let (x, Prim (Extern "%with_stack", [ Pv hv; Pv hx; Pv hf; f; arg ])) ->
++          let stack = Var.fresh_n "stack" in
++          [ Let (stack, Prim (Extern "caml_alloc_stack", [ Pv hv; Pv hx; Pv hf ]))
++          ; Let (x, Prim (Extern "caml_resume", [ f; arg; Pv stack; Pv stack ]))
++          ]
++      | Let
++          ( x
++          , Prim
++              ( Extern "%with_stack_bind"
++              , [ Pv hv; Pv hx; Pv hf; _dyn; _bind; f; arg ] ) ) ->
++          let stack = Var.fresh_n "stack" in
++          [ Let (stack, Prim (Extern "caml_alloc_stack", [ Pv hv; Pv hx; Pv hf ]))
++          ; Let (x, Prim (Extern "caml_resume", [ f; arg; Pv stack; Pv stack ]))
++          ]
+       | Let (x, Prim (Extern "caml_assume_no_perform", [ Pv f ])) ->
+           (* We just need to call [f] in direct style. *)
+           let unit = Var.fresh_n "unit" in
+@@ -1024,7 +1078,12 @@
+   match instr with
+   | Let (x, Apply { f; args; _ }) when Var.Set.mem x cps_needed ->
+       wrap_call ~cps_needed p x f args accu
+-  | Let (x, (Prim (Extern ("%resume" | "%perform" | "%reperform"), _) as e)) ->
++  | Let
++      ( x
++      , (Prim
++           ( Extern
++               ("%resume" | "%perform" | "%reperform" | "%with_stack" | "%with_stack_bind")
++           , _ ) as e) ) ->
+       wrap_primitive ~cps_needed p x e accu
+   | _ -> p, cps_needed, [ instr ] :: accu
+ 
+--- a/compiler/lib/generate.ml
++++ b/compiler/lib/generate.ml
+@@ -1535,5 +1535,7 @@
+             in
+             return e
+         | Extern "caml_alloc_dummy_function", _ -> assert false
+-        | Extern ("%resume" | "%perform" | "%reperform"), _ ->
++        | Extern
++            ("%resume" | "%perform" | "%reperform" | "%with_stack" | "%with_stack_bind"),
++          _ ->
+             assert (not (cps_transform ()));
+--- a/compiler/lib/instr.ml
++++ b/compiler/lib/instr.ml
+@@ -174,6 +174,8 @@
+   | RESUMETERM
+   | REPERFORMTERM
+   | MAKE_FAUX_MIXEDBLOCK
++  | WITH_STACK
++  | WITH_STACK_BIND
+   | FIRST_UNIMPLEMENTED_OP
+ 
+ let equal (a : t) b = Poly.equal a b
+@@ -362,6 +364,8 @@
+      ; RESUMETERM, if_v500 (KStop 1), "RESUMETERM"
+      ; REPERFORMTERM, if_v500 (KStop 1), "REPERFORMTERM"
+      ; MAKE_FAUX_MIXEDBLOCK, KBinary, "MAKE_FAUX_MIXEDBLOCK"
++     ; WITH_STACK, if_v500 (KStop 1), "WITH_STACK"
++     ; WITH_STACK_BIND, if_v500 (KStop 1), "WITH_STACK_BIND"
+      ; FIRST_UNIMPLEMENTED_OP, K_will_not_happen, "FIRST_UNIMPLEMENTED_OP"
+     |]
+   in
+--- a/compiler/lib/instr.mli
++++ b/compiler/lib/instr.mli
+@@ -173,6 +173,8 @@
+   | RESUMETERM
+   | REPERFORMTERM
+   | MAKE_FAUX_MIXEDBLOCK
++  | WITH_STACK
++  | WITH_STACK_BIND
+   | FIRST_UNIMPLEMENTED_OP
+ 
+ type kind =
+--- a/compiler/lib/parse_bytecode.ml
++++ b/compiler/lib/parse_bytecode.ml
+@@ -2436,7 +2436,7 @@
+           :: instrs)
+     | STOP -> instrs, Stop, state
+     | RESUME ->
+-        let stack = State.accu state in
++        let cont = State.accu state in
+         let func = State.peek 0 state in
+         let arg = State.peek 1 state in
+         let x, state = State.fresh_var state in
+@@ -2447,7 +2447,7 @@
+             Var.print
+             x
+             Var.print
+-            stack
++            cont
+             Var.print
+             func
+             Var.print
+@@ -2463,9 +2463,9 @@
+           infos
+           (pc + 1)
+           state
+-          (Let (x, Prim (Extern "%resume", [ Pv stack; Pv func; Pv arg; tail ])) :: instrs)
++          (Let (x, Prim (Extern "%resume", [ Pv cont; Pv func; Pv arg; tail ])) :: instrs)
+     | RESUMETERM ->
+-        let stack = State.accu state in
++        let cont = State.accu state in
+         let func = State.peek 0 state in
+         let arg = State.peek 1 state in
+         let x, state = State.fresh_var state in
+@@ -2481,12 +2481,12 @@
+           Format.printf
+             "return resume(%a, %a, %a)@."
+             Var.print
+-            stack
++            cont
+             Var.print
+             func
+             Var.print
+             arg;
+-        ( Let (x, Prim (Extern "%resume", [ Pv stack; Pv func; Pv arg; tail ])) :: instrs
++        ( Let (x, Prim (Extern "%resume", [ Pv cont; Pv func; Pv arg; tail ])) :: instrs
+         , Return x
+         , state )
+     | PERFORM ->
+@@ -2512,6 +2512,75 @@
+         ( Let (x, Prim (Extern "%reperform", [ Pv eff; Pv stack; Pv tail ])) :: instrs
+         , Return x
+         , state )
++    | WITH_STACK ->
++      let valuec = State.accu state in
++      let exnc = State.peek 0 state in
++      let effc = State.peek 1 state in
++      let f = State.peek 2 state in
++      let arg = State.peek 3 state in
++      let x, state = State.fresh_var state in
++
++      if debug_parser ()
++      then
++        Format.printf
++          "%a = with_stack(%a, %a, %a, %a, %a)@."
++          Var.print
++          x
++          Var.print
++          valuec
++          Var.print
++          exnc
++          Var.print
++          effc
++          Var.print
++          f
++          Var.print
++          arg;
++      ( Let (
++          x,
++          Prim (Extern "%with_stack", [ Pv valuec; Pv exnc; Pv effc; Pv f; Pv arg ])
++        ) :: instrs
++      , Return x
++      , state )
++    | WITH_STACK_BIND ->
++      let valuec = State.accu state in
++      let exnc = State.peek 0 state in
++      let effc = State.peek 1 state in
++      let dyn = State.peek 2 state in
++      let bind = State.peek 3 state in
++      let f = State.peek 4 state in
++      let arg = State.peek 5 state in
++      let x, state = State.fresh_var state in
++
++      if debug_parser ()
++      then
++        Format.printf
++          "%a = with_stack_bind(%a, %a, %a, %a, %a, %a, %a)@."
++          Var.print
++          x
++          Var.print
++          valuec
++          Var.print
++          exnc
++          Var.print
++          effc
++          Var.print
++          dyn
++          Var.print
++          bind
++          Var.print
++          f
++          Var.print
++          arg;
++      ( Let (
++          x,
++          Prim (
++            Extern "%with_stack_bind",
++            [ Pv valuec; Pv exnc; Pv effc; Pv dyn; Pv bind; Pv f; Pv arg ]
++          )
++        ) :: instrs
++      , Return x
++      , state )
+     | EVENT | BREAK | FIRST_UNIMPLEMENTED_OP -> assert false)
+ 
+ (****)
+--- a/compiler/lib/partial_cps_analysis.ml
++++ b/compiler/lib/partial_cps_analysis.ml
+@@ -93,7 +93,14 @@
+                      called functions must be in CPS *)
+                   if not (double_translate ()) then add_dep deps g x)
+                 known)
+-      | Let (x, Prim (Extern ("%perform" | "%reperform" | "%resume"), _)) -> (
++      | Let (
++        x,
++        Prim (
++          Extern (
++            "%perform" | "%reperform" | "%resume" | "%with_stack" | "%with_stack_bind"
++          ),
++          _)
++      ) -> (
+           add_var vars x;
+           match fun_name with
+           | None -> ()
+@@ -155,7 +162,12 @@
+       &&
+       (* If a function escapes, it must be in CPS *)
+       Var.ISet.mem info.Global_flow.info_may_escape x
+-  | Expr (Prim (Extern ("%perform" | "%reperform" | "%resume"), _)) ->
++  | Expr (
++    Prim (
++      Extern ("%perform" | "%reperform" | "%resume" | "%with_stack" | "%with_stack_bind"),
++      _
++    )
++  ) ->
+       (* Effects primitives are in CPS *)
+       true
+   | Expr (Prim _ | Block _ | Constant _ | Field _ | Special _) | Phi _ -> false
+--- a/compiler/lib/unit_info.ml
++++ b/compiler/lib/unit_info.ml
+@@ -57,8 +57,9 @@
+     | `Disabled | `Jspi -> true
+     | `Cps | `Double_translation -> false)
+     && List.exists (Cmo_format.primitives cmo) ~f:(function
+-         | "%resume" | "%reperform" | "%perform" -> true
+-         | _ -> false)
++      | "%resume" | "%reperform" | "%perform" | "%with_stack" | "%with_stack_bind"
++        -> true
++      | _ -> false)
+   in
+   let force_link = Cmo_format.force_link cmo in
+   { provides; requires; aliases = []; primitives = []; force_link; effects_without_cps }
+--- a/runtime/wasm/effect.wat
++++ b/runtime/wasm/effect.wat
+@@ -433,6 +433,39 @@
+          (local.get $hv) (local.get $hx) (local.get $hf)
+          (global.get $initial_cont)
+          (ref.null $fiber)))
++
++   (func (export "%with_stack")
++      (param $hv (ref eq)) (param $hx (ref eq)) (param $hf (ref eq))
++      (param $f (ref eq)) (param $v (ref eq))
++      (result (ref eq))
++      (local $stack (ref $fiber))
++      (local.set $stack
++         (struct.new $fiber
++            (local.get $hv) (local.get $hx) (local.get $hf)
++            (global.get $initial_cont)
++            (ref.null $fiber)))
++      (return_call $capture_continuation
++         (ref.func $do_resume)
++         (struct.new $resume
++            (local.get $stack) (local.get $stack)
++            (struct.new $pair (local.get $f) (local.get $v)))))
++
++   (func (export "%with_stack_bind")
++      (param $hv (ref eq)) (param $hx (ref eq)) (param $hf (ref eq))
++      (param $dyn (ref eq)) (param $bind (ref eq))
++      (param $f (ref eq)) (param $v (ref eq))
++      (result (ref eq))
++      (local $stack (ref $fiber))
++      (local.set $stack
++         (struct.new $fiber
++            (local.get $hv) (local.get $hx) (local.get $hf)
++            (global.get $initial_cont)
++            (ref.null $fiber)))
++      (return_call $capture_continuation
++         (ref.func $do_resume)
++         (struct.new $resume
++            (local.get $stack) (local.get $stack)
++            (struct.new $pair (local.get $f) (local.get $v)))))
+ ))
+ 
+ (@if (= effects "cps")
