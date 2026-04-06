@@ -55,7 +55,7 @@ build: [
   [
     "sh"
     "-exc"
-    "cd menhir-20231231-d3d815e4f554da68b8c247241c8f8678926eecaa; PATH=%{build}%/init_deps/bin/:$PATH %{build}%/init_deps/bin/dune build --root %{build}%/menhir-20231231-d3d815e4f554da68b8c247241c8f8678926eecaa @install -j %{jobs}%"
+    "cd menhir-20231231-d3d815e4f554da68b8c247241c8f8678926eecaa; PATH=%{build}%/init_deps/bin/:$PATH %{build}%/init_deps/bin/dune build --profile release --root %{build}%/menhir-20231231-d3d815e4f554da68b8c247241c8f8678926eecaa @install -j %{jobs}%"
   ]
   [
     "sh"
@@ -105,7 +105,7 @@ patches: ["ignore-opam.patch"]
 extra-files: [
   [
     "ignore-opam.patch"
-    "sha256=6ece96cd3f06c3ed90f768bf63659266a670e5be0b2302354a2d0e87629ba049"
+    "sha256=83d87c0cab3a660c5213b485280df287a81b63c1a3444f0ef2e0e6f3ed02597b"
   ]
 ]
 conflicts: [
@@ -115,7 +115,7 @@ conflicts: [
   "ctypes" {!= "0.23.0+ox"}
   "ctypes-foreign" {!= "0.23.0+ox"}
   "dot-merlin-reader" {!= "5.2.1-502+ox"}
-  "dune" {<= "3.20.2"}
+  "dune" {!= "3.20.2+ox"}
   "gen_js_api" {!= "1.1.2+ox"}
   "js_of_ocaml" {!= "6.0.1+ox"}
   "js_of_ocaml-compiler" {!= "6.0.1+ox"}
