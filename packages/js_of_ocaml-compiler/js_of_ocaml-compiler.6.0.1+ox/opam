@@ -54,7 +54,6 @@ patches: [
   "js_of_ocaml-important-config-changes.patch"
   "js_of_ocaml-wasm-temp-differences.patch"
   "wasm_of_ocaml-bring-back-eval.patch"
-  "js_of_ocaml-symtable-5.2-api.patch"
   "js_of_ocaml-int64-of-string-sign-only.patch"
   "js_of_ocaml-safepoint-friendly-array-init.patch"
   "js_of_ocaml-dom-defaultPrevented.patch"
@@ -100,10 +99,6 @@ extra-files: [
   [
     "wasm_of_ocaml-bring-back-eval.patch"
     "sha256=c413d9617e1122a9fdad8f1f63859bdf9f17a8440f78bdfbaecc432bae580fac"
-  ]
-  [
-    "js_of_ocaml-symtable-5.2-api.patch"
-    "sha256=9a999950e8984cc582e3830f447111e1082dc720609334de66a011347d26da9b"
   ]
   [
     "js_of_ocaml-int64-of-string-sign-only.patch"
