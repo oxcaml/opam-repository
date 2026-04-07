@@ -144,7 +144,7 @@ conflicts: [
   "sedlex" {!= "3.6+ox"}
   "spawn" {!= "v0.15.1+ox"}
   "topkg" {!= "1.0.8+ox"}
-  "uTop" {!= "2.16.0+ox"}
+  "utop" {!= "2.16.0+ox"}
   "uutf" {!= "1.0.4+ox"}
   "wasm_of_ocaml-compiler" {!= "6.0.1+ox"}
   "yojson" {!= "2.2.2+ox"}
