@@ -22,6 +22,12 @@ Basement is a library containing a number of modules that belong to Base, but ne
 defined upstream of Base to break circular dependencies with other libraries, such as
 sexplib0
 """
+patches: [
+  "macos-caml-state.patch"
+]
+extra-files: [
+  ["macos-caml-state.patch" "sha256=74228532a1c89a1b9490dff4c10e5524c60e4b05a9ba789fe3c869fe33c4fbd5"]
+]
 url {
   src:
     "https://github.com/janestreet/basement/archive/6c9b75af42bd9b8505969a6b539181c688f0c588.tar.gz"
