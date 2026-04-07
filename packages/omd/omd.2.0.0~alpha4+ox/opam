@@ -23,7 +23,7 @@ bug-reports: "https://github.com/ocaml/omd/issues"
 depends: [
   "dune"            {>= "2.7"}
   "ocaml"           {>= "4.13"}
-  "uutf"            {= "1.0.3+ox"}
+  "uutf"            {= "1.0.4+ox"}
   "uucp"
   "uunf"
   "dune-build-info" {>= "2.7"}

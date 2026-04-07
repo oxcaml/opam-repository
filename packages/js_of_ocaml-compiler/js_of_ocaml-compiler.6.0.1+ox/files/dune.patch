@@ -2,14 +2,6 @@ diff --git a/compiler/lib/dune b/compiler/lib/dune
 index b03e41bd..23a20394 100644
 --- a/compiler/lib/dune
 +++ b/compiler/lib/dune
-@@ -5,6 +5,7 @@
-  (synopsis "Js_of_ocaml compiler library")
-  (libraries
-   compiler-libs.common
-+  ocaml-compiler-libs.common
-   compiler-libs.bytecomp
-   menhirLib
-   sedlex
 @@ -15,7 +16,7 @@
   (flags
    (:standard -w -7-37 -safe-string))
@@ -44,3 +36,16 @@ index d888f72b..aa92f071 100644
   (kind ppx_rewriter)
   (preprocess
    (pps ppxlib.metaquot)))
+
+diff --git a/dune-project b/dune-project
+--- a/dune-project
++++ b/dune-project
+@@ -25,7 +25,7 @@
+   (ppxlib (>= 0.33))
+   (ocaml-compiler-libs (>= v0.12.4))
+   (re :with-test)
+-  (cmdliner (>= 2.0))
++  (cmdliner (>= 1.1.0))
+   (sedlex (>= 3.3))
+   (qcheck :with-test)
+   menhir

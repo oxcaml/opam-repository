@@ -1,49 +1,24 @@
 --- a/runtime/js/obj.js
 +++ b/runtime/js/obj.js
-@@ -44,6 +44,22 @@
-   return +Array.isArray(x);
- }
+@@ -124,5 +124,6 @@
 
-+//Provides: caml_obj_is_stack
-+function caml_obj_is_stack(x) {
-+  return 0;
-+}
-+
-+//Provides: caml_succ_scannable_prefix_len
-+function caml_succ_scannable_prefix_len(x) {
-+  return 0;
-+}
-+
-+//Provides: caml_obj_uniquely_reachable_words
-+//Requires: caml_failwith
-+function caml_obj_uniquely_reachable_words(x) {
-+  caml_failwith("Obj.uniquely_reachable_words is not available in javascript.");
-+}
-+
- //Provides: caml_obj_tag
- //Requires: caml_is_ml_bytes, caml_is_ml_string
- function caml_obj_tag(x) {
+ //Provides: caml_obj_dup mutable (mutable)
+ function caml_obj_dup(x) {
++  if (x === null) return null;
+   return typeof x === "number" ? x : x.slice();
+ }
 --- a/runtime/wasm/obj.wat
 +++ b/runtime/wasm/obj.wat
-@@ -101,6 +101,21 @@
-    (global $double_array_tag (export "double_array_tag") i32 (i32.const 254))
-    (global $custom_tag i32 (i32.const 255))
-
-+   (func (export "caml_obj_is_stack")
-+      (param (ref eq)) (result (ref eq))
-+      (ref.i31 (i32.const 0)))
-+
-+   (func (export "caml_succ_scannable_prefix_len")
-+      (param (ref eq)) (result (ref eq))
-+      (ref.i31 (i32.const 0)))
-+
-+   (@string $unique_words_unsupported "Obj.uniquely_reachable_words is not available in wasm.")
-+
-+   (func (export "caml_obj_uniquely_reachable_words")
-+      (param (ref eq)) (result (ref eq))
-+      (call $caml_failwith (global.get $unique_words_unsupported))
-+      (ref.i31 (i32.const 0)))
-+
-    (func $caml_is_closure (export "caml_is_closure")
-       (param $v (ref eq)) (result i32)
-       (i32.or (ref.test (ref $closure) (local.get $v))
+@@ -222,6 +222,12 @@
+       (local $forig (ref $float_array)) (local $fres (ref $float_array))
+       (local $s (ref $bytes)) (local $s' (ref $bytes))
+       (local $len i32)
++      ;; Handle null values for or_null
++      (if (ref.eq (local.get 0) (global.get $null))
++         (then (return (global.get $null))))
++      ;; Handle immediate integers
++      (if (ref.test (ref i31) (local.get 0))
++         (then (return (local.get 0))))
+       (drop (block $not_block (result (ref eq))
+          (local.set $orig (br_on_cast_fail $not_block (ref eq) (ref $block)
+             (local.get 0)))

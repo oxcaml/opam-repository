@@ -73,6 +73,7 @@ should take care of basic setup.
 See https://github.com/OCamlPro/opam-user-setup"""
     {success & !user-setup:installed}
 dev-repo: "git+https://github.com/ocaml/merlin.git"
+x-commit-hash: "0eaccc1b8520d605b1e00685e1c3f8acb5da534c"
 url {
   src: "git+https://github.com/oxcaml/merlin.git#merge-5.2.0minus-31-oxcaml"
 }

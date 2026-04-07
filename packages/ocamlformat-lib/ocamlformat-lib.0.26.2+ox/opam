@@ -37,7 +37,7 @@ depends: [
   "ocp-indent"          {with-test = "false" & >= "1.8.0" | with-test & >= "1.8.1"}
   "stdio"
   "uuseg"               {>= "10.0.0"}
-  "uutf"                {= "1.0.3+ox"}
+  "uutf"                {= "1.0.4+ox"}
   "csexp"               {>= "1.4.0"}
   "astring"
   "result"
@@ -59,7 +59,9 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/ocaml-ppx/ocamlformat.git"
+x-commit-hash: "f5727b32127730a2722f86c7119eb6d8f884e26d"
 url {
-  src: "git+https://github.com/oxcaml/ocamlformat.git#with-extensions-minus-31"
+  src:
+    "git+https://github.com/oxcaml/ocamlformat.git#with-extensions-minus-31"
 }
 

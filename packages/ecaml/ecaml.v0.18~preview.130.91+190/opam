@@ -27,7 +27,7 @@ depends: [
   "sexp_pretty"              {= "v0.18~preview.130.91+190"}
   "sexplib"                  {= "v0.18~preview.130.91+190"}
   "dune"                     {>= "3.17.0"}
-  "uutf"                     {= "1.0.3+ox"}
+  "uutf"                     {= "1.0.4+ox"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Library for writing Emacs plugin in OCaml"
@@ -37,7 +37,7 @@ Ecaml is a library for writing Emacs plugins in OCaml. It uses Emacs
 """
 url {
   src:
-    "https://github.com/janestreet/ecaml/archive/bea3e04b20db9ace3c597ae25211082edab29369.tar.gz"
+    "https://github.com/janestreet/ecaml/archive/6a730d73492efb1ffb0b5927f426e6551f07d62a.tar.gz"
   checksum:
-    "sha256=99a6d2c3d07f7aeedae8e2f013c76aafebebfd9eaecd559c1d553c7c2e20305f"
+    "sha256=e6e93583251c029332d4c68de70dec44143b64356cd98eb298b1416f3a7e9cf0"
 }
