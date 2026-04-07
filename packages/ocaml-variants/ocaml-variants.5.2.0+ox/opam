@@ -112,6 +112,7 @@ conflicts: [
   "base" {< "v0.18~"}
   "alcotest" {!= "1.9.0+ox"}
   "backoff" {!= "0.1.1+ox"}
+  "cmarkit" {!= "0.3.0+ox"}
   "ctypes" {!= "0.23.0+ox"}
   "ctypes-foreign" {!= "0.23.0+ox"}
   "dot-merlin-reader" {!= "5.2.1-502+ox"}
@@ -123,6 +124,7 @@ conflicts: [
   "js_of_ocaml-toplevel" {!= "6.0.1+ox"}
   "jsonrpc" {!= "1.19.0+ox"}
   "lsp" {!= "1.19.0+ox"}
+  "lwt" {!= "5.9.2+ox"}
   "lwt_ppx" {!= "5.9.1+ox"}
   "mdx" {!= "2.5.0+ox"}
   "merlin" {!= "5.2.1-502+ox"}
@@ -145,6 +147,7 @@ conflicts: [
   "uTop" {!= "2.16.0+ox"}
   "uutf" {!= "1.0.3+ox"}
   "wasm_of_ocaml-compiler" {!= "6.0.1+ox"}
+  "yojson" {!= "2.2.2+ox"}
   "zarith" {<"1.12"}
   "zarith" {="1.12"}
   "zarith" {="1.13"}

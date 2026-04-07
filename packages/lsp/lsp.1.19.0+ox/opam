@@ -38,11 +38,7 @@ build: [
   ["dune" "build" "-p" name "-j" jobs "@install" "@doc" {with-doc}]
 ]
 dev-repo: "git+https://github.com/ocaml/ocaml-lsp.git"
-x-commit-hash: "45f5ddac12bb580b4ecaec2d93ee7fac2c903aff"
 url {
-  src:
-    "https://github.com/oxcaml/ocaml-lsp/archive/c415e03fae4b5823e84bbee21f8adf759e6f04dd.tar.gz"
-  checksum:
-    "sha256=ca1ff03da86fed33fedaa655fcfa8ce8f200e6b7c94fef94363587d45aad6d61"
+  src: "git+https://github.com/oxcaml/ocaml-lsp.git#5.2.0minus-31"
 }
 

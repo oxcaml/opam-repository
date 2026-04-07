@@ -48,11 +48,7 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/ocaml-ppx/ocamlformat.git"
-x-commit-hash: "f5727b32127730a2722f86c7119eb6d8f884e26d"
 url {
-  src:
-    "https://github.com/oxcaml/ocamlformat/archive/a6f113c6211de01c8188e95ca5fc5fe8d78fb992.tar.gz"
-  checksum:
-    "sha256=3f251df04145372d68b8f3f592572761e7db68e382355828479c9baf3bb60a5f"
+  src: "git+https://github.com/oxcaml/ocamlformat.git#with-extensions-minus-31"
 }
 
