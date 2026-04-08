@@ -109,7 +109,7 @@ extra-files: [
   ]
   [
     "cut-fix.patch"
-    "sha256=521656939d31063f1ec1d5a58921ae41689a38da236b941815419d97957feb08"
+    "sha256=b83b39a7da03a2410525c767ac07f2737eb4dd6a2086df8914bbf0a4866cf8dc"
   ]
 ]
 conflicts: [
