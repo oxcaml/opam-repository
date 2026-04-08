@@ -101,11 +101,15 @@ url {
   checksum:
     "sha256=77ebe5c9df1abdfab7f729ac0a086b412769ee1e14b9473282f13bfd3d0c85dc"
 }
-patches: ["ignore-opam.patch"]
+patches: ["ignore-opam.patch" "cut-fix.patch"]
 extra-files: [
   [
     "ignore-opam.patch"
     "sha256=83d87c0cab3a660c5213b485280df287a81b63c1a3444f0ef2e0e6f3ed02597b"
+  ]
+  [
+    "cut-fix.patch"
+    "sha256=521656939d31063f1ec1d5a58921ae41689a38da236b941815419d97957feb08"
   ]
 ]
 conflicts: [

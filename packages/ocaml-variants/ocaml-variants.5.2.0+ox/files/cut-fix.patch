@@ -1,0 +1,23 @@
+diff --git a/utils/dune b/utils/dune
+index 0000000..0000000 100644
+--- a/utils/dune
++++ b/utils/dune
+@@
+-   (bash
+-    "`grep '^CPP=' %{conf} | cut -d'=' -f2` -I ../%{env:RUNTIME_DIR=runtime-dir-env-var-not-set}/caml %{c}"))))
++   (bash
++    "`grep '^CPP=' %{conf} | cut -d'=' -f2-` -I ../%{env:RUNTIME_DIR=runtime-dir-env-var-not-set}/caml %{c}"))))
+@@
+-   (bash
+-    "`grep '^CPP=' %{conf} | cut -d'=' -f2` -I ../%{env:RUNTIME_DIR=runtime-dir-env-var-not-set}/caml %{c}"))))
++   (bash
++    "`grep '^CPP=' %{conf} | cut -d'=' -f2-` -I ../%{env:RUNTIME_DIR=runtime-dir-env-var-not-set}/caml %{c}"))))
+
+diff --git a/runtime/gen_primsc.sh b/runtime/gen_primsc.sh
+index 0000000..0000000 100755
+--- a/runtime/gen_primsc.sh
++++ b/runtime/gen_primsc.sh
+@@
+-CC=$(cat ../Makefile.config | grep '^CC *=' | cut -d= -f2)
++CC=$(cat ../Makefile.config | grep '^CC *=' | cut -d= -f2-)
+ OCAMLC_CFLAGS=$(cat ../Makefile.config | grep '^OCAMLC_CFLAGS *=' | cut -d= -f2-)
