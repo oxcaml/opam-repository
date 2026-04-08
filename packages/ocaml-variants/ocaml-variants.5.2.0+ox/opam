@@ -142,6 +142,7 @@ conflicts: [
   "ocamlformat-lib" {!= "0.26.2+ox"}
   "ojs" {!= "1.1.2+ox"}
   "omd" {!= "2.0.0~alpha4+ox"}
+  "opam-core" {!= "2.5.0+ox"}
   "ppxlib" {!= "0.33.0+ox"}
   "ppxlib_ast" {!= "0.33.0+ox"}
   "re" {!= "1.14.0+ox"}
