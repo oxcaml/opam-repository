@@ -44,6 +44,12 @@ build: [
 ]
 dev-repo: "git+https://github.com/ocaml/odoc.git"
 x-maintenance-intent: ["(latest)"]
+patches: [
+  "fix-local-closure.patch"
+]
+extra-files: [
+  ["fix-local-closure.patch" "sha256=6447ece5bb0252fe5df86caebb940bf94416d877aee588417f641133df395c28"]
+]
 url {
   src: "git+https://github.com/oxcaml/odoc.git#97e1daecb432d33a7137d525f7a554f203073a95"
 }

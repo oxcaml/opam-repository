@@ -1,0 +1,21 @@
+diff --git a/sherlodoc/jsoo/tyxml.ml b/sherlodoc/jsoo/tyxml.ml
+index 3ebabd7..bc8b67c 100644
+--- a/sherlodoc/jsoo/tyxml.ml
++++ b/sherlodoc/jsoo/tyxml.ml
+@@ -22,7 +22,6 @@ end = struct
+
+   let add_escape_string buf s =
+     (* https://discuss.ocaml.org/t/html-encoding-of-string/4289/4 *)
+-    let add = Buffer.add_string buf in
+     let len = String.length s in
+     let max_idx = len - 1 in
+     let flush start i =
+@@ -43,7 +42,7 @@ end = struct
+       end
+     and escape amperstr start i =
+       flush start i ;
+-      add amperstr ;
++      Buffer.add_string buf amperstr ;
+       let next = i + 1 in
+       loop next next
+     in
