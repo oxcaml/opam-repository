@@ -1,0 +1,20 @@
+diff --git a/src/search/odoc_html_frontend.ml b/src/search/odoc_html_frontend.ml
+--- a/src/search/odoc_html_frontend.ml
++++ b/src/search/odoc_html_frontend.ml
+@@ -19,7 +19,6 @@ end = struct
+
+   let add_escape_string buf s =
+     (* https://discuss.ocaml.org/t/html-encoding-of-string/4289/4 *)
+-    let add = Buffer.add_string buf in
+     let len = String.length s in
+     let max_idx = len - 1 in
+     let flush start i =
+@@ -38,7 +37,7 @@ end = struct
+         | _ -> loop start (i + 1)
+     and escape amperstr start i =
+       flush start i;
+-      add amperstr;
++      Buffer.add_string buf amperstr;
+       let next = i + 1 in
+       loop next next
+     in

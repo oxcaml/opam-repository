@@ -79,6 +79,12 @@ build: [
   ]
 ]
 x-maintenance-intent: ["(latest)"]
+patches: [
+  "fix-local-closure.patch"
+]
+extra-files: [
+  ["fix-local-closure.patch" "sha256=728333871848032c6a5fbdd221899c99855238006c8d08b77c3a1e8f07c1a8a1"]
+]
 url {
   src: "git+https://github.com/oxcaml/odoc.git#97e1daecb432d33a7137d525f7a554f203073a95"
 }
