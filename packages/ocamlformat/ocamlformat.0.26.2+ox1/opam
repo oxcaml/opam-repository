@@ -1,5 +1,5 @@
 opam-version: "2.0"
-version: "0.26.2+ox"
+version: "0.26.2+ox1"
 name: "ocamlformat"
 synopsis: "Auto-formatter for OCaml code"
 description: """\
@@ -28,9 +28,9 @@ depends: [
   "ocaml"               {>= "4.08"}
   "cmdliner"            {with-test = "false" & >= "1.1.0" | with-test & >= "1.2.0"}
   "dune"                {>= "2.8"}
-  "ocamlformat-lib"     {= version & = "0.26.2+ox"}
+  "ocamlformat-lib"     {= version}
   "ocamlformat-rpc-lib" {with-test & = version}
-  "re"                  {= "1.14.0+ox"}
+  "re"                  {>= "1.10.3"}
   "odoc"                {with-doc}
 ]
 build: [
@@ -53,4 +53,6 @@ url {
   src:
     "git+https://github.com/oxcaml/ocamlformat.git#with-extensions-minus-31"
 }
-
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus31"}
+]

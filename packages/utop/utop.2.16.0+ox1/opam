@@ -1,5 +1,5 @@
 opam-version: "2.0"
-version: "2.16.0+ox"
+version: "2.16.0+ox1"
 name: "utop"
 synopsis: "Universal toplevel for OCaml"
 description:
@@ -23,7 +23,7 @@ depends: [
   "zed"          {>= "3.2.0"}
   "react"        {>= "1.0.0"}
   "cppo"         {>= "1.1.2"}
-  "alcotest"     {with-test & = "1.9.0+ox"}
+  "alcotest"     {with-test}
   "xdg"          {>= "3.9.0"}
   "odoc"         {with-doc}
 ]
@@ -45,4 +45,6 @@ dev-repo: "git+https://github.com/ocaml-community/utop.git"
 url {
   src: "git+https://github.com/oxcaml/utop.git#5.2.0minus-31"
 }
-
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus31"}
+]

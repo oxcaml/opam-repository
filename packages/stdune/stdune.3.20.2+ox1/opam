@@ -1,5 +1,5 @@
 opam-version: "2.0"
-version: "3.20.2+ox"
+version: "3.20.2+ox1"
 name: "stdune"
 synopsis: "Dune's unstable standard library"
 description: "This library offers no backwards compatibility guarantees. Use at your own risk."
@@ -13,8 +13,8 @@ depends: [
   "dune"     {>= "3.20"}
   "ocaml"    {>= "4.08.0"}
   "base-unix"
-  "dyn"      {= "3.20.2+ox"}
-  "ordering" {= "3.20.2+ox"}
+  "dyn"      {= version}
+  "ordering" {= version}
   "pp"       {>= "2.0.0"}
   "csexp"    {>= "1.5.0"}
   "odoc"     {with-doc}
@@ -42,4 +42,7 @@ extra-files: [
     "oxcaml-dune.patch"
     "sha256=91307aed44ce2a1d1a9a0b75966db4ea910fd9bb4409d8955420abac3501ef78"
   ]
+]
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus31"}
 ]

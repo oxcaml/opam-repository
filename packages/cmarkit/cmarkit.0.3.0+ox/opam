@@ -39,6 +39,7 @@ depends: [
 depopts: ["cmdliner"]
 conflicts: [
   "cmdliner" {< "1.1.0"}
+  "oxcaml-compiler" {< "5.2.0minus31"}
 ]
 build: [
   "ocaml"

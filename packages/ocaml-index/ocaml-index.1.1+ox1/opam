@@ -1,5 +1,5 @@
 opam-version: "2.0"
-version: "1.1+ox"
+version: "1.1+ox1"
 name: "ocaml-index"
 synopsis: "A tool that indexes value usages from cmt files"
 description:
@@ -12,10 +12,10 @@ bug-reports: "https://github.com/ocaml/merlin/issues"
 depends: [
   "dune"       {>= "3.0"}
   "ocaml"      {>= "5.2"}
-  "merlin-lib" {= "5.2.1-502+ox"}
+  "merlin-lib" {= "5.2.1-502+ox1"}
   "yojson"     {< "3.0.0"}
   "odoc"       {with-doc}
-  "alcotest"   {with-test & = "1.9.0+ox"}
+  "alcotest"   {with-test}
 ]
 build: [
   ["dune" "subst"] {dev}
@@ -38,4 +38,6 @@ x-commit-hash: "0eaccc1b8520d605b1e00685e1c3f8acb5da534c"
 url {
   src: "git+https://github.com/oxcaml/merlin.git#merge-5.2.0minus-31-oxcaml"
 }
-
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus31"}
+]

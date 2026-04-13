@@ -1,5 +1,5 @@
 opam-version: "2.0"
-version: "1.12+ox"
+version: "1.12+ox1"
 name: "zarith"
 synopsis:
   "Implements arithmetic and logical operations over arbitrary-precision integers"
@@ -73,4 +73,7 @@ extra-files: [
     "zarith-portability.patch"
     "sha256=71fff9a702cf3e927782ee8591a26e0c3b7359bf3ce60d1868b0a49e1a7c11e3"
   ]
+]
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus31"}
 ]

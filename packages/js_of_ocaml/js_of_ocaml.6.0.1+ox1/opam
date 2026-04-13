@@ -1,5 +1,5 @@
 opam-version: "2.0"
-version: "6.0.1+ox"
+version: "6.0.1+ox1"
 name: "js_of_ocaml"
 synopsis: "Compiler from OCaml bytecode to JavaScript"
 description:
@@ -15,11 +15,11 @@ bug-reports: "https://github.com/ocsigen/js_of_ocaml/issues"
 depends: [
   "dune"                 {>= "3.17"}
   "ocaml"                {>= "4.08"}
-  "js_of_ocaml-compiler" {= version & = "6.0.1+ox"}
-  "ppxlib"               {= "0.33.0+ox"}
+  "js_of_ocaml-compiler" {= version}
+  "ppxlib"               {>= "0.15"}
   "num"                  {with-test}
   "ppx_expect"           {>= "v0.14.2" & with-test}
-  "re"                   {>= "1.9.0" & with-test & = "1.14.0+ox"}
+  "re"                   {>= "1.9.0" & with-test}
   "odoc"                 {with-doc}
 ]
 build: [
@@ -127,4 +127,7 @@ extra-files: [
     "dune.patch"
     "sha256=3815586228347f32a551098f6fe5ab4751afdac2d65a1812d9134f85e85d8072"
   ]
+]
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus31"}
 ]

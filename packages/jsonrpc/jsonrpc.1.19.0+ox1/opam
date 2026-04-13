@@ -1,5 +1,5 @@
 opam-version: "2.0"
-version: "1.19.0+ox"
+version: "1.19.0+ox1"
 name: "jsonrpc"
 synopsis: "Jsonrpc protocol implemenation"
 description: "See https://www.jsonrpc.org/specification"
@@ -37,4 +37,6 @@ x-reason-for-archiving: ["maintenance-intent"]
 url {
   src: "git+https://github.com/oxcaml/ocaml-lsp.git#5.2.0minus-31"
 }
-
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus31"}
+]
