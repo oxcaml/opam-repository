@@ -7,4 +7,8 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: [ "oxcaml-ppx_deriving-patches" "ppx_deriving" ]
-depends: "oxcaml-ppxlib" {post} | "oxcaml-ppxlib-patches" {post}
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
+depends: [
+  ("oxcaml-ppxlib" {post} | "oxcaml-ppxlib-patches" {post})
+  "oxcaml" {post}
+]

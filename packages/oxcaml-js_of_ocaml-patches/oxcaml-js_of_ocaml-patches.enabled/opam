@@ -9,8 +9,10 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-js_of_ocaml"
 depends: [
   ("oxcaml-js_of_ocaml-compiler" {post} | "oxcaml-js_of_ocaml-compiler-patches" {post})
+  "oxcaml" {post}
   "js_of_ocaml" {build & (
                    = "6.0.1+ox"
                  | = "6.0.1+ox1"
                  )}
 ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

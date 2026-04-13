@@ -9,7 +9,9 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-eio_linux"
 depends: [
   ("oxcaml-eio_main" {post} | "oxcaml-eio_main-patches" {post})
+  "oxcaml" {post}
   "eio_linux" {build & (
                  = "1.3+ox"
                )}
 ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

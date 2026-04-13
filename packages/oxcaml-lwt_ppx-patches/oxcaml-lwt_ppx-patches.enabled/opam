@@ -9,8 +9,10 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-lwt_ppx"
 depends: [
   ("oxcaml-lwt_runtime_events" {post} | "oxcaml-lwt_runtime_events-patches" {post})
+  "oxcaml" {post}
   "lwt_ppx" {build & (
                = "5.9.1+ox"
              | = "6.0.0+ox"
              )}
 ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

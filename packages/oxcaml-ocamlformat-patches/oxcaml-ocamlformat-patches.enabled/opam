@@ -9,8 +9,10 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-ocamlformat"
 depends: [
   ("oxcaml-ocamlformat-lib" {post} | "oxcaml-ocamlformat-lib-patches" {post})
+  "oxcaml" {post}
   "ocamlformat" {build & (
                    = "0.26.2+ox"
                  | = "0.26.2+ox1"
                  )}
 ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

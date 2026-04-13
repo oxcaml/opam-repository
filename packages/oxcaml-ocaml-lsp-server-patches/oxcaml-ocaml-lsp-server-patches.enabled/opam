@@ -9,8 +9,10 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-ocaml-lsp-server"
 depends: [
   ("oxcaml-ocamlbuild" {post} | "oxcaml-ocamlbuild-patches" {post})
+  "oxcaml" {post}
   "ocaml-lsp-server" {build & (
                         = "1.19.0+ox"
                       | = "1.19.0+ox1"
                       )}
 ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

@@ -9,7 +9,9 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-cmarkit"
 depends: [
   ("oxcaml-ctypes" {post} | "oxcaml-ctypes-patches" {post})
+  "oxcaml" {post}
   "cmarkit" {build & (
                = "0.3.0+ox"
              )}
 ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

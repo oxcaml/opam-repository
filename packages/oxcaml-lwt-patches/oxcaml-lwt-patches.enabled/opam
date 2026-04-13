@@ -9,8 +9,10 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-lwt"
 depends: [
   ("oxcaml-lwt_direct" {post} | "oxcaml-lwt_direct-patches" {post})
+  "oxcaml" {post}
   "lwt" {build & (
            = "5.9.2+ox"
          | = "6.0.0+ox"
          )}
 ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

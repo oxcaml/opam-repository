@@ -9,8 +9,10 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-ppxlib"
 depends: [
   ("oxcaml-ppxlib_ast" {post} | "oxcaml-ppxlib_ast-patches" {post})
+  "oxcaml" {post}
   "ppxlib" {build & (
               = "0.33.0+ox"
             | = "0.33.0+ox1"
             )}
 ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

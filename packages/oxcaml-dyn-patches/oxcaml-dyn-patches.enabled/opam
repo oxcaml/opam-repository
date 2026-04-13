@@ -9,8 +9,10 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-dyn"
 depends: [
   ("oxcaml-eio" {post} | "oxcaml-eio-patches" {post})
+  "oxcaml" {post}
   "dyn" {build & (
            = "3.20.2+ox"
          | = "3.21.0+ox"
          )}
 ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

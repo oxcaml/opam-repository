@@ -9,7 +9,9 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-dune-rpc-lwt"
 depends: [
   ("oxcaml-dune-site" {post} | "oxcaml-dune-site-patches" {post})
+  "oxcaml" {post}
   "dune-rpc-lwt" {build & (
                     = "3.21.0+ox"
                   )}
 ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

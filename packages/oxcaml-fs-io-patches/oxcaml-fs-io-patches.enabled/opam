@@ -9,7 +9,9 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-fs-io"
 depends: [
   ("oxcaml-gen_js_api" {post} | "oxcaml-gen_js_api-patches" {post})
+  "oxcaml" {post}
   "fs-io" {build & (
              = "3.21.0+ox"
            )}
 ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

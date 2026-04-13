@@ -9,7 +9,9 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-odoc-md"
 depends: [
   ("oxcaml-odoc-parser" {post} | "oxcaml-odoc-parser-patches" {post})
+  "oxcaml" {post}
   "odoc-md" {build & (
                = "3.1.0+ox"
              )}
 ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

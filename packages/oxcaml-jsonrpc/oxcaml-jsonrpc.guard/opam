@@ -7,4 +7,8 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: [ "oxcaml-jsonrpc-patches" "jsonrpc" ]
-depends: "oxcaml-lsp" {post} | "oxcaml-lsp-patches" {post}
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
+depends: [
+  ("oxcaml-lsp" {post} | "oxcaml-lsp-patches" {post})
+  "oxcaml" {post}
+]

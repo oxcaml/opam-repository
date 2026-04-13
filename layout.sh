@@ -57,11 +57,13 @@ license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: [ "oxcaml-$entry-patches" "$entry" ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
+depends: [
+  "oxcaml" {post}
+]
 EOF
               if [[ -n $last_guard ]]; then
-                cat >> "oxcaml-$last_guard/oxcaml-$last_guard.guard/opam" <<EOF
-depends: "oxcaml-$entry" {post} | "oxcaml-$entry-patches" {post}
-EOF
+                sed -i -e '/depends:/a\  ("oxcaml-'"$entry"'" {post} | "oxcaml-'"$entry"'-patches" {post})' "oxcaml-$last_guard/oxcaml-$last_guard.guard/opam"
               fi
               mkdir -p "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled"
               cat > "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled/opam" <<EOF
@@ -75,6 +77,7 @@ homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-$entry"
 depends: [
+  "oxcaml" {post}
   "$entry" {build & (
   ${entry//?/ }      = "${package#"$entry".}"
 EOF
@@ -101,6 +104,7 @@ for entry in oxcaml-*; do
       cat >> "$entry/"*"/opam" <<EOF
   ${package//?/ }    )}
 ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
 EOF
       ;;
   esac

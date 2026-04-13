@@ -9,7 +9,9 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-omd"
 depends: [
   ("oxcaml-opam-core" {post} | "oxcaml-opam-core-patches" {post})
+  "oxcaml" {post}
   "omd" {build & (
            = "2.0.0~alpha4+ox"
          )}
 ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
