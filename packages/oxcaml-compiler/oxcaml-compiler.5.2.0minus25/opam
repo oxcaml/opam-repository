@@ -1,16 +1,16 @@
 opam-version: "2.0"
-version: "5.2.0+ox"
-synopsis: "OxCaml"
 license: "LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception"
-authors: "Xavier Leroy and many contributors"
+synopsis: "OxCaml"
 maintainer: "Jane Street <opensource-contacts@janestreet.com>"
+authors: "Xavier Leroy and many contributors"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/oxcaml/issues"
-dev-repo: "git+https://github.com/oxcaml/oxcaml/flambda-backend#main"
+dev-repo: "git+https://github.com/oxcaml/oxcaml.git#main"
 depends: [
   "conf-autoconf"         {build}
   "conf-which"            {build}
-  "ocaml"                 {= "5.2.0" & post}
+  "ocaml-variants"        {= "5.2.0+ox" & post}
+  "oxcaml"                {post}
   "base-unix"             {post}
   "base-bigarray"         {post}
   "base-threads"          {post}
@@ -18,8 +18,6 @@ depends: [
   "base-nnp"              {post}
   "ocaml-options-vanilla" {post}
 ]
-conflict-class: "ocaml-core-compiler"
-flags: compiler
 setenv: CAML_LD_LIBRARY_PATH = "%{lib}%/stublibs"
 build: [
   ["tar" "-xf" "init-compiler.tar.gz"]
@@ -115,6 +113,7 @@ conflicts: [
   "ctypes" {!= "0.23.0+ox"}
   "ctypes-foreign" {!= "0.23.0+ox"}
   "dot-merlin-reader" {!= "5.2.1-502+ox"}
+  "dune" {<= "3.20.2"}
   "gen_js_api" {!= "1.1.2+ox"}
   "js_of_ocaml" {!= "6.0.1+ox"}
   "js_of_ocaml-compiler" {!= "6.0.1+ox"}
@@ -134,6 +133,7 @@ conflicts: [
   "ocamlformat" {!= "0.26.2+ox"}
   "ocamlformat-lib" {!= "0.26.2+ox"}
   "ojs" {!= "1.1.2+ox"}
+  "opam-core" {!= "2.5.0+ox"}
   "ppxlib" {!= "0.33.0+ox"}
   "ppxlib_ast" {!= "0.33.0+ox"}
   "re" {!= "1.14.0+ox"}
@@ -143,5 +143,8 @@ conflicts: [
   "uTop" {!= "2.16.0+ox"}
   "uutf" {!= "1.0.3+ox"}
   "wasm_of_ocaml-compiler" {!= "6.0.1+ox"}
-  "zarith" {!= "1.12+ox"}
-]
+  "zarith" {<"1.12"}
+  "zarith" {="1.12"}
+  "zarith" {="1.13"}
+  "zarith" {="1.14"}
+ ]
