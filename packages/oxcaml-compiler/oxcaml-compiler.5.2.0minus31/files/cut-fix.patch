@@ -1,0 +1,32 @@
+diff --git a/runtime/gen_primsc.sh b/runtime/gen_primsc.sh
+--- a/runtime/gen_primsc.sh
++++ b/runtime/gen_primsc.sh
+@@ -30,7 +30,7 @@
+ # float32 primitives contain macros in their definitions, so we preprocess
+ # first.  Of course, we must ensure that CAMLprim does not get preprocessed
+ # away, hence -DCAML_NO_DEFINE_CAMLprim below.
+-CC=$(cat ../Makefile.config | grep '^CC *=' | cut -d= -f2)
++CC=$(cat ../Makefile.config | grep '^CC *=' | cut -d= -f2-)
+ OCAMLC_CFLAGS=$(cat ../Makefile.config | grep '^OCAMLC_CFLAGS *=' | cut -d= -f2-)
+
+ cat <<'EOF'
+diff --git a/utils/dune b/utils/dune
+--- a/utils/dune
++++ b/utils/dune
+@@ -35,7 +35,7 @@
+   (with-stdout-to
+    %{targets}
+    (bash
+-    "`grep '^CPP=' %{conf} | cut -d'=' -f2` -I ../%{env:RUNTIME_DIR=runtime-dir-env-var-not-set}/caml %{c}"))))
++    "`grep '^CPP=' %{conf} | cut -d'=' -f2-` -I ../%{env:RUNTIME_DIR=runtime-dir-env-var-not-set}/caml %{c}"))))
+
+ (rule
+  (targets domainstate.mli)
+@@ -51,7 +51,7 @@
+   (with-stdout-to
+    %{targets}
+    (bash
+-    "`grep '^CPP=' %{conf} | cut -d'=' -f2` -I ../%{env:RUNTIME_DIR=runtime-dir-env-var-not-set}/caml %{c}"))))
++    "`grep '^CPP=' %{conf} | cut -d'=' -f2-` -I ../%{env:RUNTIME_DIR=runtime-dir-env-var-not-set}/caml %{c}"))))
+
+ (include_subdirs unqualified)

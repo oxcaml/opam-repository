@@ -27,15 +27,15 @@ build: [
   [
     "sh"
     "-exc"
-    "cd ocaml-4.14.2 && ./configure --prefix %{build}%/init_deps --disable-ocamldoc"
+    "cd ocaml-5.4.0 && ./configure --prefix %{build}%/init_deps --disable-ocamldoc"
   ] {os != "openbsd" & os != "macos"}
   [
     "sh"
     "-exc"
-    "cd ocaml-4.14.2 && ./configure --prefix %{build}%/init_deps --disable-ocamldoc CC=cc ASPP='cc -c'"
+    "cd ocaml-5.4.0 && ./configure --prefix %{build}%/init_deps --disable-ocamldoc CC=cc ASPP='cc -c'"
   ] {os = "openbsd" | os = "macos"}
-  ["sh" "-exc" "make -C ocaml-4.14.2 -j%{jobs}%"]
-  ["sh" "-exc" "make -C ocaml-4.14.2 install"]
+  ["sh" "-exc" "make -C ocaml-5.4.0 -j%{jobs}%"]
+  ["sh" "-exc" "make -C ocaml-5.4.0 install"]
   [
     "sh"
     "-exc"
@@ -54,7 +54,7 @@ build: [
   [
     "sh"
     "-exc"
-    "cd menhir-20231231-d3d815e4f554da68b8c247241c8f8678926eecaa; PATH=%{build}%/init_deps/bin/:$PATH %{build}%/init_deps/bin/dune build --root %{build}%/menhir-20231231-d3d815e4f554da68b8c247241c8f8678926eecaa @install -j %{jobs}%"
+    "cd menhir-20231231-d3d815e4f554da68b8c247241c8f8678926eecaa; PATH=%{build}%/init_deps/bin/:$PATH %{build}%/init_deps/bin/dune build --profile release --root %{build}%/menhir-20231231-d3d815e4f554da68b8c247241c8f8678926eecaa @install -j %{jobs}%"
   ]
   [
     "sh"
@@ -75,9 +75,10 @@ build: [
 ]
 install: ["sh" "-exc" "PATH=%{build}%/init_deps/bin/:$PATH make install"]
 extra-source "init-compiler.tar.gz" {
+  src: "https://github.com/ocaml/ocaml/archive/5.4.0.tar.gz"
   src: "https://github.com/ocaml/ocaml/archive/4.14.2.tar.gz"
   checksum:
-    "sha256=c2d706432f93ba85bd3383fa451d74543c32a4e84a1afaf3e8ace18f7f097b43"
+    "sha256=4ab55ac30d247e20f35df20a9f7596e5eb5f92fbbd0f8e3e54838bbc3edf931e"
 }
 extra-source "init-dune.tbz" {
   src:
@@ -96,19 +97,22 @@ extra-source "init-menhir.tar.gz" {
 }
 url {
   src:
-    "https://github.com/oxcaml/oxcaml/archive/refs/tags/5.2.0minus-25.tar.gz"
+    "https://github.com/oxcaml/oxcaml/archive/refs/tags/5.2.0minus-31.tar.gz"
   checksum:
-    "sha256=08e9cdc1b4e919cb3266eab8b4cd98f74ffc580a6b21b7d09b156278aa2876fc"
+    "sha256=77ebe5c9df1abdfab7f729ac0a086b412769ee1e14b9473282f13bfd3d0c85dc"
 }
-patches: ["ignore-opam.patch"]
+patches: ["ignore-opam.patch" "cut-fix.patch"]
 extra-files: [
   [
     "ignore-opam.patch"
-    "sha256=6ece96cd3f06c3ed90f768bf63659266a670e5be0b2302354a2d0e87629ba049"
+    "sha256=83d87c0cab3a660c5213b485280df287a81b63c1a3444f0ef2e0e6f3ed02597b"
+  ]
+  [
+    "cut-fix.patch"
+    "sha256=b83b39a7da03a2410525c767ac07f2737eb4dd6a2086df8914bbf0a4866cf8dc"
   ]
 ]
 conflicts: [
-  "base" {< "v0.18~"}
   "sexplib0" {< "v0.18~"}
+  "base" {< "v0.18~"}
 ]
-flags: avoid-version

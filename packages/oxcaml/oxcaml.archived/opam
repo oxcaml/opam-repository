@@ -8,7 +8,7 @@ bug-reports: "https://github.com/oxcaml/oxcaml/issues"
 dev-repo: "git+https://github.com/oxcaml/oxcaml.git#main"
 depends: [
   # This guard should always be < the lowerbound in oxcaml.latest
-  "oxcaml-compiler" {< "5.2.0minus25"}
+  "oxcaml-compiler" {< "5.2.0minus31"}
 ]
 messages: ["WARNING! This is not the latest version of OxCaml"]
 flags: avoid-version
