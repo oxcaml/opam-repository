@@ -11,5 +11,6 @@ depends: [
   ("oxcaml-obuild" {post} | "oxcaml-obuild-patches" {post})
   "notty-community" {build & (
                        = "0.2.4+ox"
+                     | = "0.2.4+ox1"
                      )}
 ]

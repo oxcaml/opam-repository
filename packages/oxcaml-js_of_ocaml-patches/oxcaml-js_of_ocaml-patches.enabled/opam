@@ -11,5 +11,6 @@ depends: [
   ("oxcaml-js_of_ocaml-compiler" {post} | "oxcaml-js_of_ocaml-compiler-patches" {post})
   "js_of_ocaml" {build & (
                    = "6.0.1+ox"
+                 | = "6.0.1+ox1"
                  )}
 ]

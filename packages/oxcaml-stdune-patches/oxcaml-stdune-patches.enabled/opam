@@ -11,6 +11,7 @@ depends: [
   ("oxcaml-top-closure" {post} | "oxcaml-top-closure-patches" {post})
   "stdune" {build & (
               = "3.20.2+ox"
+            | = "3.20.2+ox1"
             | = "3.21.0+ox"
             )}
 ]

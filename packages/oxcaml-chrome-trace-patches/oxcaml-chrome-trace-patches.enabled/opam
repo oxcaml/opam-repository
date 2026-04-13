@@ -8,7 +8,7 @@ homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-chrome-trace"
 depends: [
-  ("oxcaml-ctypes" {post} | "oxcaml-ctypes-patches" {post})
+  ("oxcaml-cmarkit" {post} | "oxcaml-cmarkit-patches" {post})
   "chrome-trace" {build & (
                     = "3.21.0+ox"
                   )}

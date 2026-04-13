@@ -11,5 +11,6 @@ depends: [
   ("oxcaml-ocaml-lsp-server" {post} | "oxcaml-ocaml-lsp-server-patches" {post})
   "ocaml-index" {build & (
                    = "1.1+ox"
+                 | = "1.1+ox1"
                  )}
 ]

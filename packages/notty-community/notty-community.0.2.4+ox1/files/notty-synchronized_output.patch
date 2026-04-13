@@ -1,0 +1,49 @@
+--- a/src/notty.ml
++++ b/src/notty.ml
+@@ -546,6 +546,8 @@
+   ; set_title        : string -> op
+   ; save_title       : op
+   ; restore_title    : op
++  ; sync_start       : op
++  ; sync_end         : op
+   }
+ 
+   let ((<|), (<.), (<!)) = Buffer.(add_string, add_char, add_decimal)
+@@ -626,6 +628,8 @@
+     ; set_title = (fun title b -> b <| [%string "\027]0;%{title}\007"])
+     ; save_title = (fun b -> b <| "\x1b[22;0t")
+     ; restore_title = (fun b -> b <| "\x1b[23;0t")
++    ; sync_start = (fun b -> b <| "\x1b[?2026h")
++    ; sync_end = (fun b -> b <| "\x1b[?2026l")
+     ; sgr }
+ 
+   let no0 _     = ()
+@@ -650,6 +654,8 @@
+     ; set_title = no1
+     ; save_title = no0
+     ; restore_title = no0
++    ; sync_start = no0
++    ; sync_end = no0
+     }
+ 
+   let erase cap buf = cap.sgr ~inside:(fun _ -> ()) A.empty buf; cap.clreol buf (* KEEP ETA-LONG. *)
+@@ -1042,7 +1048,8 @@
+   let output t buf = t.write buf; t.write <- ignore
+ 
+   let refresh ({ dim; image; _ } as t) =
+-    emit t ( 
++    emit t (
++      t.cap.sync_start &
+       cursor t.cap None &
+       cursat0 t.cap 0 0 &
+              (fun buf -> 
+@@ -1050,7 +1057,8 @@
+                 Render.to_buffer' ~buf ~cap:t.cap ~dim ~previous_operations:t.previous_lines ~operations;
+                 t.previous_lines <- (Some operations);
+              ) &
+-             cursor t.cap t.curs )
++             cursor t.cap t.curs &
++      t.cap.sync_end )
+ 
+   let set_size t dim = t.dim <- dim
+   let image t image = t.image <- image; refresh t

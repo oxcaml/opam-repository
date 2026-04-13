@@ -11,5 +11,6 @@ depends: [
   ("oxcaml-wasm_of_ocaml-compiler" {post} | "oxcaml-wasm_of_ocaml-compiler-patches" {post})
   "uutf" {build & (
             = "1.0.3+ox"
+          | = "1.0.4+ox"
           )}
 ]

@@ -11,5 +11,6 @@ depends: [
   ("oxcaml-lsp" {post} | "oxcaml-lsp-patches" {post})
   "jsonrpc" {build & (
                = "1.19.0+ox"
+             | = "1.19.0+ox1"
              )}
 ]

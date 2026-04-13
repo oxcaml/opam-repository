@@ -11,5 +11,6 @@ depends: [
   ("oxcaml-dune" {post} | "oxcaml-dune-patches" {post})
   "dot-merlin-reader" {build & (
                          = "5.2.1-502+ox"
+                       | = "5.2.1-502+ox1"
                        )}
 ]

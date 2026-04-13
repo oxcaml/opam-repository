@@ -11,5 +11,6 @@ depends: [
   ("oxcaml-xdg" {post} | "oxcaml-xdg-patches" {post})
   "wasm_of_ocaml-compiler" {build & (
                               = "6.0.1+ox"
+                            | = "6.0.1+ox1"
                             )}
 ]

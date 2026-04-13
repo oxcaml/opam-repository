@@ -1,0 +1,25 @@
+--- a/src/notty.mli
++++ b/src/notty.mli
+@@ -612,6 +612,22 @@
+ 
+     These are private interfaces, prone to breakage. Don't use them. *)
+ 
++module Text : sig
++  val graphemes : string -> int array
++  (** [graphemes str] returns an index array mapping display column positions to byte
++      offsets in [str]. The array has length [display_width + 1], where the last element
++      is the string length.
++
++      Special values in the array:
++      - [-1] indicates that this column is occupied by the right half of a wide character
++        (e.g., CJK characters that take 2 columns)
++
++      For example:
++      - ["abc"] returns [[|0; 1; 2; 3|]] (3 ASCII chars, each 1 column)
++      - A string with a wide character like "中" (3 bytes, 2 columns) would have [-1]
++        in the second position to mark the continuation of the wide char. *)
++end
++
+ module Operation : sig
+   type t
+   val of_image : (int * int) -> int * int -> image -> t list

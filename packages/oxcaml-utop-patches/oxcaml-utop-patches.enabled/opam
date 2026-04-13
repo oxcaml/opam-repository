@@ -11,5 +11,6 @@ depends: [
   ("oxcaml-uutf" {post} | "oxcaml-uutf-patches" {post})
   "utop" {build & (
             = "2.16.0+ox"
+          | = "2.16.0+ox1"
           )}
 ]

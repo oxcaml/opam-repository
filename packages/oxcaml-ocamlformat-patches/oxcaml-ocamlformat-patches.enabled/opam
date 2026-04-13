@@ -11,5 +11,6 @@ depends: [
   ("oxcaml-ocamlformat-lib" {post} | "oxcaml-ocamlformat-lib-patches" {post})
   "ocamlformat" {build & (
                    = "0.26.2+ox"
+                 | = "0.26.2+ox1"
                  )}
 ]

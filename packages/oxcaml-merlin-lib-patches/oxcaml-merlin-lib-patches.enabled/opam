@@ -11,5 +11,6 @@ depends: [
   ("oxcaml-notty-community" {post} | "oxcaml-notty-community-patches" {post})
   "merlin-lib" {build & (
                   = "5.2.1-502+ox"
+                | = "5.2.1-502+ox1"
                 )}
 ]

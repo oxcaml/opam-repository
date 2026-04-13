@@ -11,5 +11,6 @@ depends: [
   ("oxcaml-merlin-lib" {post} | "oxcaml-merlin-lib-patches" {post})
   "merlin" {build & (
               = "5.2.1-502+ox"
+            | = "5.2.1-502+ox1"
             )}
 ]

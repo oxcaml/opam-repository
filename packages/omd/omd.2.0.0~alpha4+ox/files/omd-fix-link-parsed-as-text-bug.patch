@@ -1,0 +1,9 @@
+--- a/src/parser.ml
++++ b/src/parser.ml
+@@ -1890,5 +1890,5 @@
+               loop ~seen_link acc st
+         in
+-        aux ~seen_link [] acc
++        aux ~seen_link:false [] acc
+     | '[' -> reference_link ~seen_link Url acc st
+     | ('*' | '_') as c ->

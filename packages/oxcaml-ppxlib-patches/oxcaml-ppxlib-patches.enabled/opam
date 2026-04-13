@@ -11,5 +11,6 @@ depends: [
   ("oxcaml-ppxlib_ast" {post} | "oxcaml-ppxlib_ast-patches" {post})
   "ppxlib" {build & (
               = "0.33.0+ox"
+            | = "0.33.0+ox1"
             )}
 ]

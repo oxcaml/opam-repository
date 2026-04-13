@@ -11,6 +11,7 @@ depends: [
   ("oxcaml-dune-action-plugin" {post} | "oxcaml-dune-action-plugin-patches" {post})
   "dune" {build & (
             = "3.20.2+ox"
+          | = "3.20.2+ox1"
           | = "3.21.0+ox"
           )}
 ]

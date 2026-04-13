@@ -10,6 +10,7 @@ conflicts: "oxcaml-zarith"
 depends: [
   "zarith" {build & (
               = "1.12+ox"
+            | = "1.12+ox1"
             | = "1.14+ox"
             )}
 ]
