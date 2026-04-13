@@ -33,6 +33,7 @@ depends: [
 depopts: ["lwt"]
 conflicts: [
   "lwt" {< "2.6.0"}
+  "oxcaml-compiler" {> "5.2.0minus25"}
 ]
 build: [
   ["dune" "subst"] {dev}

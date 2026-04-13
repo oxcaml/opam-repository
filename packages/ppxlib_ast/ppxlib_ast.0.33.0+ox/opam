@@ -37,6 +37,7 @@ conflicts: [
   "ocaml-base-compiler" {= "5.1.0~alpha1"}
   "ocaml-variants" {= "5.1.0~alpha1+options"}
   "base-effects"
+  "oxcaml-compiler" {> "5.2.0minus25"}
 ]
 build: [
   ["dune" "subst"] {dev}

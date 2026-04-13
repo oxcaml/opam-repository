@@ -43,3 +43,6 @@ extra-files: [
     "sha256=12528b02ce3cd810872428f6e4f93596744d3193aafeea9eb4c5ccc458d456fd"
   ]
 ]
+conflicts: [
+  "oxcaml-compiler" {> "5.2.0minus25"}
+]
