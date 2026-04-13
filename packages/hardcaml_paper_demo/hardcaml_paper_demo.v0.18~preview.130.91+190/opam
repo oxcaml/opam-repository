@@ -1,0 +1,45 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/hardcaml_paper_demo"
+bug-reports: "https://github.com/janestreet/hardcaml_paper_demo/issues"
+dev-repo: "git+https://github.com/janestreet/hardcaml_paper_demo.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/hardcaml_paper_demo/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                    {>= "5.2.0"}
+  "core"                     {= "v0.18~preview.130.91+190"}
+  "hardcaml"                 {= "v0.18~preview.130.91+190"}
+  "hardcaml_axi"             {= "v0.18~preview.130.91+190"}
+  "hardcaml_circuits"        {= "v0.18~preview.130.91+190"}
+  "hardcaml_computation_dsl" {= "v0.18~preview.130.91+190"}
+  "hardcaml_lws"             {= "v0.18~preview.130.91+190"}
+  "hardcaml_waveterm"        {= "v0.18~preview.130.91+190"}
+  "ppx_hardcaml"             {= "v0.18~preview.130.91+190"}
+  "ppx_jane"                 {= "v0.18~preview.130.91+190"}
+  "textutils"                {= "v0.18~preview.130.91+190"}
+  "unboxed"                  {= "v0.18~preview.130.91+190"}
+  "vec"                      {= "v0.18~preview.130.91+190"}
+  "dune"                     {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Hardcaml 1D Convolution Demo"
+description: """
+A demonstration of Hardcaml's capabilities for implementing a pipelined
+1D convolution with fixed-point arithmetic. This package includes:
+- RTL implementation using Hardcaml's computation DSL
+- A software driver for hardware interaction
+- Comprehensive test suite with quickcheck-based verification
+"""
+url {
+  src:
+    "https://github.com/janestreet/hardcaml_paper_demo/archive/55998a83a341cb50c224541e973795f4128344fc.tar.gz"
+  checksum:
+    "sha256=a2742f49212dd615fa6f5ebaa084d1c2141fe1189e3ab6d389c68b79bc4a9f60"
+}
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

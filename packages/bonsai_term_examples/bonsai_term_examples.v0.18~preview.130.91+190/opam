@@ -1,0 +1,43 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/bonsai_term_examples"
+bug-reports: "https://github.com/janestreet/bonsai_term_examples/issues"
+dev-repo: "git+https://github.com/janestreet/bonsai_term_examples.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/bonsai_term_examples/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                  {>= "5.1.0"}
+  "async"                  {= "v0.18~preview.130.91+190"}
+  "bonsai"                 {= "v0.18~preview.130.91+190"}
+  "bonsai_term"            {= "v0.18~preview.130.91+190"}
+  "bonsai_term_components" {= "v0.18~preview.130.91+190"}
+  "bonsai_term_test"       {= "v0.18~preview.130.91+190"}
+  "bonsai_test"            {= "v0.18~preview.130.91+190"}
+  "core"                   {= "v0.18~preview.130.91+190"}
+  "core_unix"              {= "v0.18~preview.130.91+190"}
+  "ppx_embed_file"         {= "v0.18~preview.130.91+190"}
+  "ppx_expect"             {= "v0.18~preview.130.91+190"}
+  "ppx_jane"               {= "v0.18~preview.130.91+190"}
+  "dune"                   {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Some examples for bonsai_term"
+description: """
+Bonsai_term is a library for building reusable TUI componetns and apps
+   inside an Incremental-style UI framework such as Bonsai_web, Incr_dom or
+   React. This library contains some examples that you can reference on how to
+   use `bonsai_term`.
+"""
+url {
+  src:
+    "https://github.com/janestreet/bonsai_term_examples/archive/b0a1f4c254146fda773c6c05a6058d2bb280107b.tar.gz"
+  checksum:
+    "sha256=8392605467413efdce78bff80367c73d258d6264530a905f1690980d204738c1"
+}
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

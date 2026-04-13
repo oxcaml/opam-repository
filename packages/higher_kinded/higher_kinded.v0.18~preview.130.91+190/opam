@@ -1,0 +1,34 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/higher_kinded"
+bug-reports: "https://github.com/janestreet/higher_kinded/issues"
+dev-repo: "git+https://github.com/janestreet/higher_kinded.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/higher_kinded/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.1.0"}
+  "base"     {= "v0.18~preview.130.91+190"}
+  "ppx_jane" {= "v0.18~preview.130.91+190"}
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "A library with an encoding of higher kinded types in OCaml"
+description: """
+OCaml natively supports parameterized type constructors, such as =option=. The parameters
+of a type constructor may only be types, not arbitrary type constructors. This library
+makes it possible to parameterize a type with a witness that represents a type
+constructor.
+"""
+url {
+  src:
+    "https://github.com/janestreet/higher_kinded/archive/6c2acf09a13300282b1c53497ef1b59e9081c6f7.tar.gz"
+  checksum:
+    "sha256=abb988c4f32a9abfddd638d959c16b5cd093304fe9aa92fde35b026abd405446"
+}
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

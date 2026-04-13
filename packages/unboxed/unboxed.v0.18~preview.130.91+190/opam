@@ -1,0 +1,37 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/unboxed"
+bug-reports: "https://github.com/janestreet/unboxed/issues"
+dev-repo: "git+https://github.com/janestreet/unboxed.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/unboxed/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                   {>= "5.2.0"}
+  "base"                    {= "v0.18~preview.130.91+190"}
+  "bin_prot"                {= "v0.18~preview.130.91+190"}
+  "core"                    {= "v0.18~preview.130.91+190"}
+  "float_array"             {= "v0.18~preview.130.91+190"}
+  "ocaml_intrinsics_kernel" {= "v0.18~preview.130.91+190"}
+  "ppx_box"                 {= "v0.18~preview.130.91+190"}
+  "ppx_jane"                {= "v0.18~preview.130.91+190"}
+  "sexplib"                 {= "v0.18~preview.130.91+190"}
+  "typerep"                 {= "v0.18~preview.130.91+190"}
+  "dune"                    {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Unboxed types for OxCaml"
+description: """
+ A library for unboxed number types.
+"""
+url {
+  src:
+    "https://github.com/janestreet/unboxed/archive/d4b0598cf2cb96da4b32c354ffd92495adbd8d2a.tar.gz"
+  checksum:
+    "sha256=61a7d78ca67480a694798ec884a1a287118b252ffb71d0285862aee5286b77e8"
+}
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

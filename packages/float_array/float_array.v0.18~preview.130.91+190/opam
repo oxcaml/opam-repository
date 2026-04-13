@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/float_array"
+bug-reports: "https://github.com/janestreet/float_array/issues"
+dev-repo: "git+https://github.com/janestreet/float_array.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/float_array/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.2.0"}
+  "bin_prot" {= "v0.18~preview.130.91+190"}
+  "core"     {= "v0.18~preview.130.91+190"}
+  "ppx_jane" {= "v0.18~preview.130.91+190"}
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Mutable vector of floats with efficient operations"
+description: """
+Mutable vector of floats with O(1) get and set operations.
+"""
+url {
+  src:
+    "https://github.com/janestreet/float_array/archive/aab18080a1273eea07162c1b7bbf60ab2ae440ac.tar.gz"
+  checksum:
+    "sha256=16450b385f02ed6cc08cec44fcb887a27a97c720ad8f21d3c48c6420265cb9d8"
+}
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

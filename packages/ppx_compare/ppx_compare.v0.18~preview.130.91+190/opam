@@ -1,0 +1,34 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_compare"
+bug-reports: "https://github.com/janestreet/ppx_compare/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_compare.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_compare/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"         {>= "5.1.0"}
+  "ppx_helpers"   {= "v0.18~preview.130.91+190"}
+  "ppx_shorthand" {= "v0.18~preview.130.91+190"}
+  "ppx_template"  {= "v0.18~preview.130.91+190"}
+  "ppxlib_jane"   {= "v0.18~preview.130.91+190"}
+  "dune"          {>= "3.17.0"}
+  "ppxlib"        {>= "0.33.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Generation of comparison functions from types"
+description: """
+Part of the Jane Street's PPX rewriters collection.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_compare/archive/2ad18f5c3a1a3077b7745f2b308f1ac6600c6a43.tar.gz"
+  checksum:
+    "sha256=bd393496b53e5bdeecc76227ceb539cb833579e579d13ec8e27415a33275d1c9"
+}
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}
