@@ -37,7 +37,10 @@ interactive terminal application.
 The library is closely integrated with Hardcaml and can be easily attached
 to simulations.
 """
-conflicts: ["hardcaml-waveterm"]
+conflicts: [
+  "hardcaml-waveterm"
+  "oxcaml-compiler" {< "5.2.0minus31"}
+]
 url {
   src:
     "https://github.com/janestreet/hardcaml_waveterm/archive/dbdfd90218e964d4342662df0654add32d813ca6.tar.gz"
