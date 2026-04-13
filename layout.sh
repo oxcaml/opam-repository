@@ -47,6 +47,12 @@ EOF
             fi
             if [[ ! -e oxcaml-$entry/oxcaml-$entry.guard/opam ]]; then
               mkdir -p "oxcaml-$entry/oxcaml-$entry.guard"
+              case $entry in
+                chrome-trace|dune-action-plugin|dune-build-info|dune-glob|dune-private-libs|dune-rpc-lwt|dune-site|xdg)
+                  constraint=' {>= "3.21.0"}';;
+                *)
+                  constraint=''
+              esac
               cat > "oxcaml-$entry/oxcaml-$entry.guard/opam" <<EOF
 opam-version: "2.0"
 synopsis: "OxCaml patched $entry (not installed)"
@@ -56,7 +62,7 @@ authors: "David Allsopp"
 license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
-conflicts: [ "oxcaml-$entry-patches" "$entry" ]
+conflicts: [ "oxcaml-$entry-patches" "$entry"$constraint ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
 depends: [
   "oxcaml" {post}
