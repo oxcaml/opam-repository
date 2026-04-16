@@ -1,3 +1,13 @@
+diff --git a/otherlibs/stdune/src/array.mli b/otherlibs/stdune/src/array.mli
+index 1234567..abcdefg 100644
+--- a/otherlibs/stdune/src/array.mli
++++ b/otherlibs/stdune/src/array.mli
+@@ -1,4 +1,4 @@
+-include module type of Stdlib.ArrayLabels with type 'a t = 'a array
++include module type of Stdlib.ArrayLabels with type ('a : any mod separable) t = 'a array
+
+ val find_opt : f:('a -> bool) -> 'a t -> 'a option
+ val equal : ('a -> 'a -> bool) -> 'a t -> 'a t -> bool
 diff --git a/otherlibs/configurator/src/v1.ml b/otherlibs/configurator/src/v1.ml
 index 1234567..abcdefg 100644
 --- a/otherlibs/configurator/src/v1.ml
@@ -27,6 +37,20 @@ index 1234567..abcdefg 100644
          ~build_dir
          ~name
      in
+diff --git a/otherlibs/stdune/src/string.ml b/otherlibs/stdune/src/string.ml
+index 1234567..abcdefg 100644
+--- a/otherlibs/stdune/src/string.ml
++++ b/otherlibs/stdune/src/string.ml
+@@ -45,7 +45,7 @@ let uppercase = uppercase_ascii
+ let lowercase = lowercase_ascii
+ let index = index_opt
+-let index_from = index_from_opt
++let index_from s i c = index_from_opt s i c
+ let rindex = rindex_opt
+-let rindex_from = rindex_from_opt
++let rindex_from s i c = rindex_from_opt s i c
+ let break s ~pos = sub s ~pos:0 ~len:pos, sub s ~pos ~len:(length s - pos)
+ let is_empty s = length s = 0
 diff --git a/otherlibs/stdune/src/fpath.ml b/otherlibs/stdune/src/fpath.ml
 index 47bff89c0..e3f8e3d3c 100644
 --- a/otherlibs/stdune/src/fpath.ml
@@ -61,6 +85,32 @@ index 6a5fbb493..fb3db35a9 100644
  let fold t ~f ~init = fold f init t
 +let transfer t1 t2 = transfer t1 t2
  let to_list t = List.rev (fold t ~f:(fun acc a -> a :: acc) ~init:[])
+diff --git a/src/dune_rules/merlin/merlin.ml b/src/dune_rules/merlin/merlin.ml
+index 1234567..abcdefg 100644
+--- a/src/dune_rules/merlin/merlin.ml
++++ b/src/dune_rules/merlin/merlin.ml
+@@ -301,6 +301,6 @@ let comment_body = [^ '\n' '\r']*
+     let b = Buffer.create 256 in
+     let printf = Printf.bprintf b in
+-    let print = Buffer.add_string b in
++    let print s = Buffer.add_string b s in
+     print "EXCLUDE_QUERY_DIR\n";
+     Option.iter stdlib_dir ~f:(fun stdlib_dir ->
+       printf "STDLIB %s\n" (serialize_path stdlib_dir));
+diff --git a/src/dune_sexp/lexer.mll b/src/dune_sexp/lexer.mll
+index 1234567..abcdefg 100644
+--- a/src/dune_sexp/lexer.mll
++++ b/src/dune_sexp/lexer.mll
+@@ -129,7 +129,7 @@ let comment_body = [^ '\n' '\r']*
+         state := Template (v::parts)
+
+-    let add_text   = Buffer.add_string text_buf
+-    let add_text_c = Buffer.add_char text_buf
++    let add_text s  = Buffer.add_string text_buf s
++    let add_text_c c = Buffer.add_char text_buf c
+   end
+ end
+ }
 diff --git a/src/dune_stats/dune_stats.ml b/src/dune_stats/dune_stats.ml
 index 1234567..abcdefg 100644
 --- a/src/dune_stats/dune_stats.ml
