@@ -1,0 +1,137 @@
+diff --git a/src/loader/cmi.ml b/src/loader/cmi.ml
+index 942c03dd0a..027c1c0afa 100644
+--- a/src/loader/cmi.ml
++++ b/src/loader/cmi.ml
+@@ -287,6 +287,7 @@
+       | Tsubst (ty,_) -> loop visited ty
+ #endif
+       | Tlink _ -> assert false
++      | Tquote ty | Tsplice ty -> loop visited ty
+       | Tof_kind _ -> ()
+   in
+   loop [] ty
+@@ -525,6 +526,7 @@
+       | Tsubst (typ,_) -> read_type_expr env typ
+ #endif
+       | Tlink _ -> assert false
++      | Tquote typ | Tsplice typ -> read_type_expr env typ
+       | Tof_kind _ -> assert false
+     in
+       match alias with
+@@ -649,7 +651,7 @@
+   let type_ = read_type_expr env vd.val_type in
+   let value =
+     match vd.val_kind with
+-    | Val_reg -> Value.Abstract
++    | Val_reg _ -> Value.Abstract
+     | Val_prim desc ->
+         let primitives =
+           let open Primitive in
+diff --git a/src/loader/cmt.ml b/src/loader/cmt.ml
+index d5afebefd2..3827ea73a2 100644
+--- a/src/loader/cmt.ml
++++ b/src/loader/cmt.ml
+@@ -44,7 +44,7 @@
+ #if OCAML_VERSION < (5,2,0)
+     | Tpat_var(id, _, _, _) ->
+ #else
+-    | Tpat_var(id,_,_uid, _) ->
++    | Tpat_var(id,_,_uid, _, _) ->
+ #endif
+         let open Value in
+         let id = Env.find_value_identifier env.ident_env id in
+@@ -56,7 +56,7 @@
+ #if OCAML_VERSION < (5,2, 0)
+     | Tpat_alias(pat, id, _, _, _) ->
+ #else
+-    | Tpat_alias(pat, id, _,_, _, _) ->
++    | Tpat_alias(pat, id, _, _, _, _, _) ->
+ #endif
+         let open Value in
+         let id = Env.find_value_identifier env.ident_env id in
+diff --git a/src/loader/cmti.ml b/src/loader/cmti.ml
+index 553dbc5341..08c1e3ff47 100644
+--- a/src/loader/cmti.ml
++++ b/src/loader/cmti.ml
+@@ -171,6 +171,7 @@
+ #endif
+     | Ttyp_call_pos -> Constr(Env.Path.read_type env.ident_env Predef.path_lexing_position, [])
+     | Ttyp_of_kind _ -> assert false
++    | Ttyp_quote ty | Ttyp_splice ty -> read_core_type env container ty
+ 
+ let read_value_description env parent vd =
+   let open Signature in
+diff --git a/src/loader/ident_env.cppo.ml b/src/loader/ident_env.cppo.ml
+index 691509d4f6..4cd9974db8 100644
+--- a/src/loader/ident_env.cppo.ml
++++ b/src/loader/ident_env.cppo.ml
+@@ -305,13 +305,13 @@
+ #if OCAML_VERSION < (5,2,0)
+   | Tpat_var(id, loc, _, _) ->
+ #else
+-  | Tpat_var(id, loc, _, _) ->
++  | Tpat_var(id, loc, _, _, _) ->
+ #endif
+     [`Value(id, hide_item, Some loc.loc)]
+ #if OCAML_VERSION < (5,2,0)
+   | Tpat_alias(pat, id, loc, _, _) ->
+ #else
+-  | Tpat_alias(pat, id, loc, _, _, _) ->
++  | Tpat_alias(pat, id, loc, _, _, _, _) ->
+ #endif
+     `Value(id, hide_item, Some loc.loc) :: read_pattern hide_item pat
+   | Tpat_record(pats, _) -> 
+diff --git a/src/loader/typedtree_traverse.ml b/src/loader/typedtree_traverse.ml
+index df7e24b45f..e9909da7dc 100644
+--- a/src/loader/typedtree_traverse.ml
++++ b/src/loader/typedtree_traverse.ml
+@@ -26,7 +26,7 @@
+         let () =
+           match pat_desc with
+ #if OCAML_VERSION >= (5, 2, 0)
+-          | Tpat_var (id, loc, _uid, _) -> (
++          | Tpat_var (id, loc, _uid, _, _) -> (
+ #else
+           | Tpat_var (id, loc, _, _) -> (
+ #endif
+@@ -34,7 +34,7 @@
+               | Some x -> poses := x :: !poses
+               | None -> ())
+ #if OCAML_VERSION >= (5, 2, 0)
+-          | Tpat_alias (_, id, loc, _uid, _, _) -> (
++          | Tpat_alias (_, id, loc, _uid, _, _, _) -> (
+ #else
+           | Tpat_alias (_, id, loc, _, _) -> (
+ #endif
+diff --git a/src/model/compat.cppo.ml b/src/model/compat.cppo.ml
+index b73518cbff..f53189de17 100644
+--- a/src/model/compat.cppo.ml
++++ b/src/model/compat.cppo.ml
+@@ -107,7 +107,7 @@
+ 
+ and functor_parameter : Types.functor_parameter -> functor_parameter = function
+   | Types.Unit -> Unit
+-  | Types.Named (a,b) -> Named (a, module_type b)
++  | Types.Named (a, b) -> Named (a, module_type b)
+ 
+ and module_presence : Types.module_presence -> module_presence = function
+   | Types.Mp_present -> Mp_present
+diff --git a/src/xref2/shape_tools.cppo.ml b/src/xref2/shape_tools.cppo.ml
+index 0aa8ffa350..bde7cd4882 100644
+--- a/src/xref2/shape_tools.cppo.ml
++++ b/src/xref2/shape_tools.cppo.ml
+@@ -148,8 +148,12 @@
+   result.uid >>= fun uid ->
+ #else
+   let module Reduce = Shape_reduce.Make(struct
+-    let fuel = 10
+-    let read_unit_shape ~unit_name =
++    let fuel () = Misc.Maybe_bounded.of_int 10
++    let fuel_for_compilation_units () = Misc.Maybe_bounded.Unbounded
++    let max_shape_reduce_steps_per_variable () = Misc.Maybe_bounded.Unbounded
++    let max_compilation_unit_depth () = Misc.Maybe_bounded.Unbounded
++    let projection_rules_for_merlin_enabled = true
++    let read_unit_shape ~diagnostics:_ ~unit_name =
+       match Env.lookup_impl unit_name env with
+       | Some impl -> (
+           match impl.shape_info with
