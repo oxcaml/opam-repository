@@ -25,10 +25,10 @@ runs:
               ubuntu|debian)
                 apt-get update
                 DEBIAN_FRONTEND=noninteractive apt-get install -y \
-                    build-essential curl git rsync sudo unzip nano
+                    build-essential curl git rsync sudo unzip nano autoconf
                 ;;
               arch)
-                pacman -Sy --noconfirm make gcc patch tar ca-certificates git \
+                pacman -Sy --noconfirm autoconf make gcc patch tar ca-certificates git \
                     rsync curl sudo bash nano coreutils xz ncurses diffutils \
                     unzip
                 ;;
