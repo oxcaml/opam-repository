@@ -29,8 +29,8 @@ depends: [
   "cohttp"              {>= "2.5.6"}
   "cohttp-async"        {>= "2.5.7" & < "3.0.0" | >= "5.1.1" & < "6.0.0"}
   "dune"                {>= "3.17.0"}
-  "js_of_ocaml"         {= "6.0.1+ox"}
-  "js_of_ocaml-ppx"     {= "6.0.1+ox"}
+  "js_of_ocaml"         {>= "6.0.1"}
+  "js_of_ocaml-ppx"     {>= "6.0.1"}
   "uri"                 {>= "3.0.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
@@ -47,3 +47,4 @@ url {
   checksum:
     "sha256=3788679b284e35e3008024c55ca912e91505aab7850c623e3c04f78292e93e0c"
 }
+conflicts: "oxcaml-compiler" {> "5.2.0minus25"}

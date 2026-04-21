@@ -16,7 +16,7 @@ depends: [
   "jane_rope"  {= "v0.18~preview.130.83+317"}
   "ppx_string" {= "v0.18~preview.130.83+317"}
   "dune"       {>= "3.17.0"}
-  "ppxlib"     {= "0.33.0+ox"}
+  "ppxlib"     {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Ppx extension for string interpolation using ropes"
@@ -29,3 +29,4 @@ url {
   checksum:
     "sha256=dae2e753dfa98b39decb8fc865f24127c2d034d817d353ff62329820d055bd19"
 }
+conflicts: "oxcaml-compiler" {> "5.2.0minus25"}

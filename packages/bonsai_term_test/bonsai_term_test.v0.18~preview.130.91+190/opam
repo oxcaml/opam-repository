@@ -1,0 +1,45 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/bonsai_term_test"
+bug-reports: "https://github.com/janestreet/bonsai_term_test/issues"
+dev-repo: "git+https://github.com/janestreet/bonsai_term_test.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/bonsai_term_test/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                    {>= "5.1.0"}
+  "async"                    {= "v0.18~preview.130.91+190"}
+  "bonsai"                   {= "v0.18~preview.130.91+190"}
+  "bonsai_term"              {= "v0.18~preview.130.91+190"}
+  "bonsai_term_components"   {= "v0.18~preview.130.91+190"}
+  "bonsai_test"              {= "v0.18~preview.130.91+190"}
+  "core"                     {= "v0.18~preview.130.91+190"}
+  "expect_test_helpers_core" {= "v0.18~preview.130.91+190"}
+  "expectable"               {= "v0.18~preview.130.91+190"}
+  "notty_async"              {= "v0.18~preview.130.91+190"}
+  "patdiff"                  {= "v0.18~preview.130.91+190"}
+  "ppx_jane"                 {= "v0.18~preview.130.91+190"}
+  "ppx_quick_test"           {= "v0.18~preview.130.91+190"}
+  "ppx_with"                 {= "v0.18~preview.130.91+190"}
+  "dune"                     {>= "3.17.0"}
+  "notty-community"          {>= "0.2.4"}
+  "re"                       {>= "1.14.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "A library for building dynamic terminal apps, using bonsai"
+description: """
+Bonsai_term is a library for building reusable TUI componetns and apps inside an
+    Incremental-style UI framework such as Bonsai_web, Incr_dom or React.
+"""
+url {
+  src:
+    "https://github.com/janestreet/bonsai_term_test/archive/1505376ecf01812a0e89adbee71331afa5c80d23.tar.gz"
+  checksum:
+    "sha256=a115fa0606ddda71b02e2a9494f49bd12739cd8673a69029e7eeae04db603ffb"
+}
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

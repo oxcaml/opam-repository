@@ -1,0 +1,39 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/unstring"
+bug-reports: "https://github.com/janestreet/unstring/issues"
+dev-repo: "git+https://github.com/janestreet/unstring.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/unstring/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                    {>= "5.2.0"}
+  "base"                     {= "v0.18~preview.130.91+190"}
+  "core"                     {= "v0.18~preview.130.91+190"}
+  "core_kernel"              {= "v0.18~preview.130.91+190"}
+  "expect_test_helpers_core" {= "v0.18~preview.130.91+190"}
+  "heterogeneous_list"       {= "v0.18~preview.130.91+190"}
+  "ppx_jane"                 {= "v0.18~preview.130.91+190"}
+  "ppx_quick_test"           {= "v0.18~preview.130.91+190"}
+  "vec"                      {= "v0.18~preview.130.91+190"}
+  "dune"                     {>= "3.17.0"}
+  "ppxlib"                   {>= "0.33.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis:
+  "Typeful, composable string parsers with explicit ambiguity handling"
+description: """
+Unstring is a library for building low-effort, typeful, composable string parsers.
+Includes a PPX for deriving parsers from format strings and type definitions.
+"""
+url {
+  src:
+    "https://github.com/janestreet/unstring/archive/9c8fbdc5a3cde391ea1148dfb1efc90ab6974e0f.tar.gz"
+  checksum:
+    "sha256=4bd717b7b211ef07b440e80aec7dbf38eb83ff649c8dc6f2097889a29ae95506"
+}
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

@@ -1,0 +1,40 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ocaml_simd"
+bug-reports: "https://github.com/janestreet/ocaml_simd/issues"
+dev-repo: "git+https://github.com/janestreet/ocaml_simd.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ocaml_simd/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"               {>= "5.2.0"}
+  "base"                {= "v0.18~preview.130.91+190"}
+  "core"                {= "v0.18~preview.130.91+190"}
+  "ocaml_intrinsics"    {= "v0.18~preview.130.91+190"}
+  "ppx_builtin"         {= "v0.18~preview.130.91+190"}
+  "ppx_jane"            {= "v0.18~preview.130.91+190"}
+  "ppx_template"        {= "v0.18~preview.130.91+190"}
+  "sexplib"             {= "v0.18~preview.130.91+190"}
+  "unboxed"             {= "v0.18~preview.130.91+190"}
+  "vec"                 {= "v0.18~preview.130.91+190"}
+  "dune"                {>= "3.17.0"}
+  "ocaml-compiler-libs" {>= "v0.17.0"}
+  "ppxlib"              {>= "0.33.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "SIMD intrinsics supported by the OxCaml compiler."
+description: """
+ SIMD intrinsics supported by the OxCaml compiler.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ocaml_simd/archive/b79dd2b5b39503911110456c0064c17efa44abd3.tar.gz"
+  checksum:
+    "sha256=27a14e7a22633fde103f4728d40d1cb2cef13157bb9ff7bb385c7ac0f2dc1601"
+}
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

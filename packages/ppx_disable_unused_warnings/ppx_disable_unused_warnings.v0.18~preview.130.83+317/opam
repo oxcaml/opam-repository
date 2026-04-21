@@ -14,7 +14,7 @@ build: [
 depends: [
   "ocaml"  {>= "5.1.0"}
   "dune"   {>= "3.17.0"}
-  "ppxlib" {= "0.33.0+ox"}
+  "ppxlib" {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis:
@@ -28,3 +28,4 @@ url {
   checksum:
     "sha256=a4771daf48e2d81bdfa844534c288ac00d273aabc7e46cefd7d26813f4183f9d"
 }
+conflicts: "oxcaml-compiler" {> "5.2.0minus25"}

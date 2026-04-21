@@ -21,8 +21,8 @@ depends: [
   "ppx_jane"        {= "v0.18~preview.130.83+317"}
   "virtual_dom"     {= "v0.18~preview.130.83+317"}
   "dune"            {>= "3.17.0"}
-  "js_of_ocaml"     {= "6.0.1+ox"}
-  "js_of_ocaml-ppx" {= "6.0.1+ox"}
+  "js_of_ocaml"     {>= "6.0.1"}
+  "js_of_ocaml-ppx" {>= "6.0.1"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "A library for building dynamic webapps, using Js_of_ocaml"
@@ -53,3 +53,4 @@ url {
   checksum:
     "sha256=9cf8fd1793f9163c84c5fd7b8d240a6a706a4573164867e9cfab052a1fe3a99b"
 }
+conflicts: "oxcaml-compiler" {> "5.2.0minus25"}

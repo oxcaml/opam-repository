@@ -42,7 +42,10 @@ depends: [
     "conf-msvc32" {os = "win32" & os-distribution != "cygwinports"} &
     "conf-msvc64" {os = "win32" & os-distribution != "cygwinports"}))
 ]
-conflicts: ["extlib-compat"]
+conflicts: [
+  "extlib-compat"
+  "oxcaml-compiler" {> "5.2.0minus25"}
+]
 build: [
   ["./configure" "--disable-checks" "--prefix" prefix]
   ["dune" "build" "-p" name "-j" jobs]

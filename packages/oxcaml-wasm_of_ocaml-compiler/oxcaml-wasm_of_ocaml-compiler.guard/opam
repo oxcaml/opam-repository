@@ -1,0 +1,14 @@
+opam-version: "2.0"
+synopsis: "OxCaml patched wasm_of_ocaml-compiler (not installed)"
+description: "OxCaml meta-package indicating this package is not installed"
+maintainer: "David Allsopp <dallsopp@janestreet.com>"
+authors: "David Allsopp"
+license: "CC0-1.0+"
+homepage: "https://oxcaml.org"
+bug-reports: "https://github.com/oxcaml/opam-repository/issues"
+conflicts: [ "oxcaml-wasm_of_ocaml-compiler-patches" "wasm_of_ocaml-compiler" ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
+depends: [
+  ("oxcaml-xdg" {post} | "oxcaml-xdg-patches" {post})
+  "oxcaml" {post}
+]

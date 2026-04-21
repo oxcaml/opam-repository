@@ -54,6 +54,7 @@ conflicts: [
   "dune-release"        {< "2.0.0"}
   "js_of_ocaml-compiler" {< "3.6.0"}
   "jbuilder"            {= "transition"}
+  "oxcaml-compiler" {> "5.2.0minus25"}
 ]
 build: [
   ["ocaml" "boot/bootstrap.ml" "-j" jobs]

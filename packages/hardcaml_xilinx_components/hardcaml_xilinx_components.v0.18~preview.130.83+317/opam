@@ -20,7 +20,7 @@ depends: [
   "ppx_jane"  {= "v0.18~preview.130.83+317"}
   "stdio"     {= "v0.18~preview.130.83+317"}
   "dune"      {>= "3.17.0"}
-  "re"        {= "1.14.0+ox"}
+  "re"        {>= "1.14.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Hardcaml Xilinx component definitions"
@@ -34,3 +34,4 @@ url {
   checksum:
     "sha256=8eadefffa0e7a47d1a716e359a1163fd76098f7ab2fa01a4b4a60bccf2c668ca"
 }
+conflicts: "oxcaml-compiler" {> "5.2.0minus25"}

@@ -1,0 +1,37 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/basement"
+bug-reports: "https://github.com/janestreet/basement/issues"
+dev-repo: "git+https://github.com/janestreet/basement.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/basement/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml" {>= "5.1.0"}
+  "dune"  {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Modules defined upstream of and reexported in Base"
+description: """
+Part of Jane Street's Core library
+Basement is a library containing a number of modules that belong to Base, but need to be
+defined upstream of Base to break circular dependencies with other libraries, such as
+sexplib0
+"""
+patches: [
+  "macos-caml-state.patch"
+]
+extra-files: [
+  ["macos-caml-state.patch" "sha256=74228532a1c89a1b9490dff4c10e5524c60e4b05a9ba789fe3c869fe33c4fbd5"]
+]
+url {
+  src:
+    "https://github.com/janestreet/basement/archive/6c9b75af42bd9b8505969a6b539181c688f0c588.tar.gz"
+  checksum:
+    "sha256=668585334bf47ecb16dc09dd23082f68aa9ba5539df13b3d7a5becd54d7acf28"
+}
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/browser"
+bug-reports: "https://github.com/janestreet/browser/issues"
+dev-repo: "git+https://github.com/janestreet/browser.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/browser/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"           {>= "5.1.0"}
+  "dune"            {>= "3.17.0"}
+  "js_of_ocaml"     {>= "6.0.1"}
+  "js_of_ocaml-ppx" {>= "6.0.1"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "A library containing bindings to web APIs"
+description: """
+Browser contains bindings to web APIs. The bindings are generated from Chromium's WebIDL files
+"""
+url {
+  src:
+    "https://github.com/janestreet/browser/archive/a493d9f586f58fd19a554e9aed48c12431c17489.tar.gz"
+  checksum:
+    "sha256=adda8cec30be76987886cac24d9ddcbd53689300756460273dbe746b95da27bd"
+}
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

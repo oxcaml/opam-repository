@@ -19,8 +19,8 @@ depends: [
   "ppx_optcomp"       {= "v0.18~preview.130.83+317"}
   "stdio"             {= "v0.18~preview.130.83+317"}
   "conf-libssl"
-  "ctypes"            {= "0.23.0+ox"}
-  "ctypes-foreign"    {= "0.23.0+ox"}
+  "ctypes"            {>= "0.23.0"}
+  "ctypes-foreign"    {>= "0.23.0"}
   "dune"              {>= "3.17.0"}
   "dune-configurator"
   "integers"
@@ -37,3 +37,4 @@ url {
   checksum:
     "sha256=1b158c069eadb993529a0baed6705ce0dc903489647732a9e1b9923ba35595b0"
 }
+conflicts: "oxcaml-compiler" {> "5.2.0minus25"}

@@ -17,7 +17,7 @@ depends: [
   "ppx_base" {= "v0.18~preview.130.83+317"}
   "sexplib"  {= "v0.18~preview.130.83+317"}
   "dune"     {>= "3.17.0"}
-  "re"       {= "1.14.0+ox"}
+  "re"       {>= "1.14.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "S-expression pretty-printer"
@@ -31,3 +31,4 @@ url {
   checksum:
     "sha256=7a0c9d7e4aee771ddfce0d5fc99f0b64db016ce09adce038170cf71305c6d6d6"
 }
+conflicts: "oxcaml-compiler" {> "5.2.0minus25"}

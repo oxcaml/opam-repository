@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+
+export LC_ALL=C
+
+if [[ $(basename "$PWD") != 'packages' ]]; then
+  echo 'Expect to be run from within a packages directory?'>&2
+  exit 1
+elif [[ ! -d oxcaml-compiler ]]; then
+  echo 'Expect to be run in an OxCaml opam-repository?'>&2
+  exit 1
+fi
+
+mv oxcaml-compiler t-oxcaml-compiler
+rm -rf oxcaml-*
+mv t-oxcaml-compiler oxcaml-compiler
+last_guard=''
+for entry in *; do
+  if [[ -d $entry ]]; then
+    case $entry in
+      ocaml-variants|oxcaml-compiler|oxcaml)
+        continue;;
+    esac
+    for package in "$entry/"*; do
+      if [[ -e $package/opam ]]; then
+        package="${package#"$entry"/}"
+        case $package in
+          *~preview.*)
+            # Ignore JS 0.18 preview packages
+            ;;
+          *)
+            if [[ -z $last_guard ]]; then
+              mkdir -p oxcaml-patch-guards/oxcaml-patch-guards.ox
+              cat > oxcaml-patch-guards/oxcaml-patch-guards.ox/opam <<EOF
+opam-version: "2.0"
+synopsis: "OxCaml patched upstream packages"
+description: """
+oxcaml-patch-guards and the associated oxcaml-* packages ensure that when a
+non-Jane Street package in opam-repository has to be patched to work with OxCaml
+that only those patched versions can be used in a switch with OxCaml."""
+maintainer: "David Allsopp <dallsopp@janestreet.com>"
+authors: "David Allsopp"
+license: "CC0-1.0+"
+homepage: "https://oxcaml.org"
+bug-reports: "https://github.com/oxcaml/opam-repository/issues"
+depends: "oxcaml-$entry" {post} | "oxcaml-$entry-patches" {post}
+EOF
+            fi
+            if [[ ! -e oxcaml-$entry/oxcaml-$entry.guard/opam ]]; then
+              mkdir -p "oxcaml-$entry/oxcaml-$entry.guard"
+              case $entry in
+                chrome-trace|dune-action-plugin|dune-build-info|dune-glob|dune-private-libs|dune-rpc-lwt|dune-site|xdg)
+                  constraint=' {>= "3.21.0"}';;
+                *)
+                  constraint=''
+              esac
+              cat > "oxcaml-$entry/oxcaml-$entry.guard/opam" <<EOF
+opam-version: "2.0"
+synopsis: "OxCaml patched $entry (not installed)"
+description: "OxCaml meta-package indicating this package is not installed"
+maintainer: "David Allsopp <dallsopp@janestreet.com>"
+authors: "David Allsopp"
+license: "CC0-1.0+"
+homepage: "https://oxcaml.org"
+bug-reports: "https://github.com/oxcaml/opam-repository/issues"
+conflicts: [ "oxcaml-$entry-patches" "$entry"$constraint ]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
+depends: [
+  "oxcaml" {post}
+]
+EOF
+              if [[ -n $last_guard ]]; then
+                sed -i -e '/depends:/a\  ("oxcaml-'"$entry"'" {post} | "oxcaml-'"$entry"'-patches" {post})' "oxcaml-$last_guard/oxcaml-$last_guard.guard/opam"
+              fi
+              mkdir -p "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled"
+              cat > "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled/opam" <<EOF
+opam-version: "2.0"
+synopsis: "OxCaml patched $entry"
+description: "OxCaml meta-package indicating this library is installed"
+maintainer: "David Allsopp <dallsopp@janestreet.com>"
+authors: "David Allsopp"
+license: "CC0-1.0+"
+homepage: "https://oxcaml.org"
+bug-reports: "https://github.com/oxcaml/opam-repository/issues"
+conflicts: "oxcaml-$entry"
+depends: [
+  "oxcaml" {post}
+  "$entry" {build & (
+  ${entry//?/ }      = "${package#"$entry".}"
+EOF
+              if [[ -n $last_guard ]]; then
+                sed -i -e '/depends:/a\  ("oxcaml-'"$entry"'" {post} | "oxcaml-'"$entry"'-patches" {post})' "oxcaml-$last_guard-patches/oxcaml-$last_guard-patches.enabled/opam"
+              fi
+              last_guard="$entry"
+            else
+              cat >> "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled/opam" <<EOF
+  ${entry//?/ }    | = "${package#"$entry".}"
+EOF
+            fi;;
+        esac
+      fi
+    done
+  fi
+done
+
+for entry in oxcaml-*; do
+  case $entry in
+    oxcaml-*-patches)
+      package="${entry#oxcaml-}"
+      package="${package%-patches}"
+      cat >> "$entry/"*"/opam" <<EOF
+  ${package//?/ }    )}
+]
+messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
+EOF
+      ;;
+  esac
+done

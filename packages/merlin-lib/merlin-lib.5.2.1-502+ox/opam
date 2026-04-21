@@ -15,7 +15,7 @@ depends: [
   "ocaml"     {>= "5.2" & < "5.3"}
   "dune" {>= "3.0"}
   "csexp"     {>= "1.5.1" & <= "1.5.2"}
-  "alcotest"  {with-test & <= "1.9.0" & = "1.9.0+ox"}
+  "alcotest"  {with-test & >= "1.3.0"}
   "menhir"    {dev & >= "20201216" & <= "20240715"}
   "menhirLib" {dev & >= "20201216" & <= "20240715"}
   "menhirSdk" {dev & >= "20201216" & <= "20240715"}
@@ -35,4 +35,6 @@ url {
   checksum:
     "sha256=f7b76956485c97f17829c7f9aa8a99ba0d5956b0f0cbcde48b5180c80727bc8a"
 }
-
+conflicts: [
+  "oxcaml-compiler" {> "5.2.0minus25"}
+]
