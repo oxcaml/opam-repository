@@ -1,0 +1,53 @@
+diff --git a/src/extArray.mli b/src/extArray.mli
+index 971ebb156c..108a4ca745 100644
+--- a/src/extArray.mli
++++ b/src/extArray.mli
+@@ -112,7 +112,7 @@ sig
+ 
+   (** These functions are reimplemented in extlib when they are missing from the stdlib *)
+ 
+-#if OCAML >= 503
++#if OCAML >= 502
+   external create_float : int -> float array = "caml_array_create_float"
+ #elif OCAML >= 403
+   external create_float : int -> float array = "caml_make_float_vect"
+@@ -151,7 +151,7 @@ sig
+   external length : 'a array -> int = "%array_length"
+   external get : 'a array -> int -> 'a = "%array_safe_get"
+   external set : 'a array -> int -> 'a -> unit = "%array_safe_set"
+-#if OCAML >= 503
++#if OCAML >= 502
+   external make : int -> 'a -> 'a array = "caml_array_make"
+ #else
+   external make : int -> 'a -> 'a array = "caml_make_vect"
+diff --git a/src/extList.ml b/src/extList.ml
+index af9877c030..7863cd0e94 100644
+--- a/src/extList.ml
++++ b/src/extList.ml
+@@ -36,6 +36,9 @@ exception Different_list_size of string
+ 
+ include List
+ 
++let mem x t = mem x t
++let memq x t = memq x t
++
+ (* Thanks to Jacques Garrigue for suggesting the following structure *)
+ type 'a mut_list =  {
+   hd: 'a;
+diff --git a/src/extString.ml b/src/extString.ml
+index dffdd42333..71d56151c0 100644
+--- a/src/extString.ml
++++ b/src/extString.ml
+@@ -24,6 +24,12 @@ module String = struct
+ 
+ include String
+ 
++let blit a b c d e = blit a b c d e
++let index_from a b c = index_from a b c
++let index_from_opt a b c = index_from_opt a b c
++let rindex_from a b c = rindex_from a b c
++let rindex_from_opt a b c = rindex_from_opt a b c
++
+ #if OCAML < 413
+ let empty = ""
+ #endif
