@@ -12,7 +12,7 @@ index 750297365..afb37bbb0 100644
    with Scanf.Scan_failure _ -> () end
  done with Exit -> close_in c; exit 0
 diff --git a/src/core/opamConsole.ml b/src/core/opamConsole.ml
-index e0af36f6c..8e43c8145 100644
+index 1cc2354cd..9eadfb7ef 100644
 --- a/src/core/opamConsole.ml
 +++ b/src/core/opamConsole.ml
 @@ -643,6 +643,8 @@ let win32_print_functions = lazy (
@@ -25,7 +25,7 @@ index e0af36f6c..8e43c8145 100644
    let batch =
      debug () || not (disp_status_line ()) in
 diff --git a/src/core/opamProcess.ml b/src/core/opamProcess.ml
-index a1662e36b..3191b8447 100644
+index a1662e36b..c3ff4a235 100644
 --- a/src/core/opamProcess.ml
 +++ b/src/core/opamProcess.ml
 @@ -308,6 +308,9 @@ let resolve_command ?env ?dir name =
@@ -50,3 +50,12 @@ index a1662e36b..3191b8447 100644
  
  (** [create cmd args] create a new process to execute the command
      [cmd] with arguments [args]. If [stdout_file] or [stderr_file] are
+@@ -819,7 +822,7 @@ let truncate l =
+ 
+ let string_of_result ?(color=`yellow) r =
+   let b = Buffer.create 2048 in
+-  let print = Buffer.add_string b in
++  let print str = Buffer.add_string b str in
+   let println str =
+     print str;
+     Buffer.add_char b '\n' in
