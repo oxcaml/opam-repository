@@ -12,6 +12,7 @@ depends: [
   "oxcaml" {post}
   "opam-core" {build & (
                  = "2.5.0+ox"
+               | = "2.5.1+ox"
                )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
