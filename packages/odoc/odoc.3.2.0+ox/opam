@@ -1,4 +1,6 @@
 opam-version: "2.0"
+
+version: "3.2.0+ox"
 homepage: "https://github.com/ocaml/odoc"
 doc: "https://ocaml.github.io/odoc/"
 bug-reports: "https://github.com/ocaml/odoc/issues"
@@ -41,9 +43,9 @@ depends: [
   "astring"
   "cmdliner" {>= "1.3.0"}
   "cppo" {build & >= "1.1.0"}
-  "dune" {>= "3.18.0"}
+  "dune" {>= "3.21.0"}
   "fpath" {>= "0.7.3"}
-  "ocaml" {>= "4.08.0" & < "5.5"}
+  "ocaml" {>= "4.08.0" & < "5.6"}
   "tyxml" {>= "4.4.0"}
   "fmt"
   "crunch" {>= "1.4.1"}
@@ -79,6 +81,7 @@ build: [
   ]
 ]
 x-maintenance-intent: ["(latest)"]
+
 url {
-  src: "git+https://github.com/oxcaml/odoc.git#97e1daecb432d33a7137d525f7a554f203073a95"
+  src: "git+https://github.com/ocaml/odoc.git#9695cd79ec29c082f62c768a99a650ebf06892d3"
 }
