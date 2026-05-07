@@ -115,4 +115,5 @@ extra-files: [
 conflicts: [
   "sexplib0" {< "v0.18~"}
   "base" {< "v0.18~"}
+  "odoc" {< "3.2.0"}
 ]

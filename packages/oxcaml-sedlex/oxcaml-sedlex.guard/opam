@@ -9,6 +9,6 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: [ "oxcaml-sedlex-patches" "sedlex" ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
 depends: [
-  ("oxcaml-sherlodoc" {post} | "oxcaml-sherlodoc-patches" {post})
+  ("oxcaml-spawn" {post} | "oxcaml-spawn-patches" {post})
   "oxcaml" {post}
 ]
