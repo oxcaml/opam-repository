@@ -11,7 +11,7 @@ depends: [
   ("oxcaml-spawn" {post} | "oxcaml-spawn-patches" {post})
   "oxcaml" {post}
   "sherlodoc" {build & (
-                 = "3.1.0+ox"
+                 = "3.2.0+ox"
                )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

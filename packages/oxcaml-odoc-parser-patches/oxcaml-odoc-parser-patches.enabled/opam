@@ -11,7 +11,7 @@ depends: [
   ("oxcaml-ojs" {post} | "oxcaml-ojs-patches" {post})
   "oxcaml" {post}
   "odoc-parser" {build & (
-                   = "3.1.0+ox"
+                   = "3.2.0+ox"
                  )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
