@@ -31,7 +31,7 @@ for entry in *; do
           *)
             if [[ $last != $entry ]]; then
               case $entry in
-                cmarkit|omd|yojson)
+                cmarkit|extlib|omd|yojson)
                   echo "5.2.0minus31:$entry";;
                 *)
                   echo "5.2.0minus25:$entry";;

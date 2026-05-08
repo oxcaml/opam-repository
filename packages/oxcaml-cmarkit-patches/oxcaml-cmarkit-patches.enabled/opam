@@ -8,7 +8,7 @@ homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: ["oxcaml-cmarkit" "oxcaml-compiler" {< "5.2.0minus31"}]
 depends: [
-  ("oxcaml-omd" {post} | "oxcaml-omd-patches" {post})
+  ("oxcaml-extlib" {post} | "oxcaml-extlib-patches" {post})
   "oxcaml" {post}
   "cmarkit" {build & (
                = "0.3.0+ox"
