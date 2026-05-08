@@ -30,7 +30,12 @@ for entry in *; do
             ;;
           *)
             if [[ $last != $entry ]]; then
-              echo "$entry"
+              case $entry in
+                cmarkit|omd|yojson)
+                  echo "5.2.0minus31:$entry";;
+                *)
+                  echo "5.2.0minus25:$entry";;
+              esac
               last="$entry"
             fi
             ;;
@@ -41,7 +46,12 @@ for entry in *; do
 done > overrides
 
 last_guard=''
-for entry in $(sort -r overrides); do
+last_since=''
+declare -A VERSIONS
+for entry in $(sort -t: -k1,1V -k2,2r overrides); do
+  since="${entry%:*}"
+  entry="${entry#*:}"
+  VERSIONS[$since]="$entry"
   for package in "$entry/"*; do
     if [[ -e $package/opam ]]; then
       package="${package#"$entry"/}"
@@ -59,6 +69,11 @@ for entry in $(sort -r overrides); do
               *)
                 constraint=''
             esac
+            if [[ $since = '5.2.0minus25' ]]; then
+              since_guard=''
+            else
+              since_guard=" \"oxcaml-compiler\" {< \"$since\"}"
+            fi
             cat > "oxcaml-$entry/oxcaml-$entry.guard/opam" <<EOF
 opam-version: "2.0"
 synopsis: "OxCaml patched $entry (not installed)"
@@ -68,7 +83,7 @@ authors: "David Allsopp"
 license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
-conflicts: [ "oxcaml-$entry-patches" "$entry"$constraint ]
+conflicts: [ "oxcaml-$entry-patches" "$entry"$constraint$since_guard ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
 depends: [
   "oxcaml" {post}
@@ -87,7 +102,17 @@ authors: "David Allsopp"
 license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
+EOF
+            if [[ $since = '5.2.0minus25' ]]; then
+              cat >> "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled/opam" <<EOF
 conflicts: "oxcaml-$entry"
+EOF
+            else
+              cat >> "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled/opam" <<EOF
+conflicts: ["oxcaml-$entry" "oxcaml-compiler" {< "$since"}]
+EOF
+            fi
+            cat >> "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled/opam" <<EOF
 depends: [
   "oxcaml" {post}
   "$entry" {build & (
@@ -105,6 +130,18 @@ EOF
       esac
     fi
   done
+  last_since="$since"
+done
+
+guard_clause=''
+for k in $(printf '%s\n' "${!VERSIONS[@]}" | sort -r); do
+  if [[ -z $guard_clause ]]; then
+    oxcaml_version=' & "oxcaml-compiler" {post & < "'"$k"'"}'
+  else
+    oxcaml_version=
+    guard_clause="$guard_clause | "
+  fi
+  guard_clause="$guard_clause\"oxcaml-${VERSIONS[$k]}\" {post}$oxcaml_version | \"oxcaml-${VERSIONS[$k]}-patches\" {post}$oxcaml_version"
 done
 
 mkdir -p oxcaml-patch-guards/oxcaml-patch-guards.ox
@@ -120,7 +157,7 @@ authors: "David Allsopp"
 license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
-depends: "oxcaml-$entry" {post} | "oxcaml-$entry-patches" {post}
+depends: $guard_clause
 EOF
 
 rm -f overrides

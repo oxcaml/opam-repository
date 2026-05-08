@@ -8,7 +8,7 @@ homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-ojs"
 depends: [
-  ("oxcaml-omd" {post} | "oxcaml-omd-patches" {post})
+  ("oxcaml-opam-core" {post} | "oxcaml-opam-core-patches" {post})
   "oxcaml" {post}
   "ojs" {build & (
            = "1.1.2+ox"

@@ -6,9 +6,9 @@ authors: "David Allsopp"
 license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
-conflicts: "oxcaml-omd"
+conflicts: ["oxcaml-omd" "oxcaml-compiler" {< "5.2.0minus31"}]
 depends: [
-  ("oxcaml-opam-core" {post} | "oxcaml-opam-core-patches" {post})
+  ("oxcaml-yojson" {post} | "oxcaml-yojson-patches" {post})
   "oxcaml" {post}
   "omd" {build & (
            = "2.0.0~alpha4+ox"
