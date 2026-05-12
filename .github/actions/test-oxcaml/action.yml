@@ -84,10 +84,5 @@ runs:
         opam --version
         opam repository list
         opam list
-        # Temporarily until odoc >= 3.2.0 is released upstream
-        opam pin add --no-action odoc-parser --with-version=3.2.0 git+https://github.com/ocaml/odoc.git#9695cd79ec29c082f62c768a99a650ebf06892d3
-        opam pin add --no-action odoc --with-version=3.2.0 git+https://github.com/ocaml/odoc.git#9695cd79ec29c082f62c768a99a650ebf06892d3
-        opam pin add --no-action sherlodoc --with-version=3.2.0 git+https://github.com/ocaml/odoc.git#9695cd79ec29c082f62c768a99a650ebf06892d3
-
         opam install ocamlformat merlin ocaml-lsp-server utop parallel concurrent core_unix js_of_ocaml bonsai_term odoc sherlodoc
         opam list
