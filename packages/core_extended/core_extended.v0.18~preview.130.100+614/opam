@@ -9,6 +9,7 @@ doc:
 license: "MIT"
 x-maintenance-intent: ["(latest)"]
 build: [
+  ["sed" "-ib" "-e" "s/libraries/& unboxed/" "delimited_kernel/src/dune"]
   ["dune" "build" "-p" name "-j" jobs]
 ]
 depends: [
