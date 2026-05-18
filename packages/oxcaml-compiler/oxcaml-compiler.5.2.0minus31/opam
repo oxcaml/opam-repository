@@ -76,7 +76,6 @@ build: [
 install: ["sh" "-exc" "PATH=%{build}%/init_deps/bin/:$PATH make install"]
 extra-source "init-compiler.tar.gz" {
   src: "https://github.com/ocaml/ocaml/archive/5.4.0.tar.gz"
-  src: "https://github.com/ocaml/ocaml/archive/4.14.2.tar.gz"
   checksum:
     "sha256=4ab55ac30d247e20f35df20a9f7596e5eb5f92fbbd0f8e3e54838bbc3edf931e"
 }
@@ -117,3 +116,4 @@ conflicts: [
   "base" {< "v0.18~"}
   "odoc" {< "3.2.0"}
 ]
+flags: avoid-version

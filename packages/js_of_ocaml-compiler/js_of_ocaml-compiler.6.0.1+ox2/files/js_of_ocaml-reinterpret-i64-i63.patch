@@ -1,0 +1,36 @@
+--- a/compiler/lib-runtime-files/gen/gen.ml
++++ b/compiler/lib-runtime-files/gen/gen.ml
+@@ -54,7 +54,7 @@
+
+ let () =
+   Js_of_ocaml_compiler.Warning.werror := true;
+-  Js_of_ocaml_compiler.Warning.enable `Unused_js_variable;
++  (*= Js_of_ocaml_compiler.Warning.enable `Unused_js_variable; *)
+   Js_of_ocaml_compiler.Config.set_target `JavaScript;
+   let () = set_binary_mode_out stdout true in
+   match Array.to_list Sys.argv with
+--- a/runtime/js/int64.js
++++ b/runtime/js/int64.js
+@@ -502,3 +502,9 @@
+ function caml_int64_hash(v) {
+   return v.lo32() ^ v.hi32();
+ }
++
++//Provides: caml_reinterpret_unboxed_int64_as_tagged_int63
++//Requires: caml_failwith
++function caml_reinterpret_unboxed_int64_as_tagged_int63(v) {
++  caml_failwith("caml_reinterpret_unboxed_int64_as_tagged_int63 is not supported in javascript.");
++}
+--- a/runtime/wasm/int64.wat
++++ b/runtime/wasm/int64.wat
+@@ -317,4 +317,10 @@
+                               (local.get $uppercase)))))))))
+       (local.get $s))
+
++   (@string $unsupported "caml_reinterpret_unboxed_int64_as_tagged_int63 is not supported in wasm.")
++
++   (func (export "caml_reinterpret_unboxed_int64_as_tagged_int63")
++      (param (ref eq)) (result (ref eq))
++      (call $caml_failwith (global.get $unsupported))
++      (ref.i31 (i32.const 0)))
+ )
