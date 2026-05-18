@@ -1,0 +1,45 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_typed_fields"
+bug-reports: "https://github.com/janestreet/ppx_typed_fields/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_typed_fields.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_typed_fields/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"            {>= "5.1.0"}
+  "base"             {= "v0.18~preview.130.91+190"}
+  "ppx_base"         {= "v0.18~preview.130.91+190"}
+  "ppx_compare"      {= "v0.18~preview.130.91+190"}
+  "ppx_enumerate"    {= "v0.18~preview.130.91+190"}
+  "ppx_globalize"    {= "v0.18~preview.130.91+190"}
+  "ppx_hash"         {= "v0.18~preview.130.91+190"}
+  "ppx_pipebang"     {= "v0.18~preview.130.91+190"}
+  "ppx_sexp_conv"    {= "v0.18~preview.130.91+190"}
+  "ppx_sexp_message" {= "v0.18~preview.130.91+190"}
+  "ppx_string"       {= "v0.18~preview.130.91+190"}
+  "ppx_template"     {= "v0.18~preview.130.91+190"}
+  "ppxlib_jane"      {= "v0.18~preview.130.91+190"}
+  "sexplib"          {= "v0.18~preview.130.91+190"}
+  "sexplib0"         {= "v0.18~preview.130.91+190"}
+  "univ_map"         {= "v0.18~preview.130.91+190"}
+  "dune"             {>= "3.17.0"}
+  "ppxlib"           {>= "0.33.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "GADT-based field accessors and utilities"
+description: """
+Part of the Jane Street's PPX rewriters collection.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_typed_fields/archive/79a3f87400322b8d72d3065345fc9ecdb1f161c0.tar.gz"
+  checksum:
+    "sha256=16ea19b651e217c57de2819cd739bd38212f796edec4b31271c78c4df932c847"
+}
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/oklab"
+bug-reports: "https://github.com/janestreet/oklab/issues"
+dev-repo: "git+https://github.com/janestreet/oklab.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/oklab/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.1.0"}
+  "base"     {= "v0.18~preview.130.91+190"}
+  "ppx_jane" {= "v0.18~preview.130.91+190"}
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "A library for the oklab color space"
+description: """
+A library for the oklab color space.  Also includes oklch.
+"""
+url {
+  src:
+    "https://github.com/janestreet/oklab/archive/8f31f72f150c6bb00cf877031c6f7efe00ec2d54.tar.gz"
+  checksum:
+    "sha256=37798f808b83be09078ad6e5b6365210435636e6ac45d60f67b16c40291801df"
+}
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

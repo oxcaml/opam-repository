@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/semantic_version"
+bug-reports: "https://github.com/janestreet/semantic_version/issues"
+dev-repo: "git+https://github.com/janestreet/semantic_version.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/semantic_version/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.1.0"}
+  "core"     {= "v0.18~preview.130.91+190"}
+  "ppx_jane" {= "v0.18~preview.130.91+190"}
+  "dune"     {>= "3.17.0"}
+  "re"       {>= "1.14.0"}
+]
+available: arch != "arm32" & arch != "x86_32"
+synopsis: "Semantic versioning"
+description: """
+A library for representing semantic versions (https://semver.org)
+"""
+url {
+  src:
+    "https://github.com/janestreet/semantic_version/archive/b042427bf5c5d6781b8d68bbc7cfce2783aed18e.tar.gz"
+  checksum:
+    "sha256=3ef58a71070f87dab01875b54c5ac8ef77d4bc8348cdf846b1dcf46902327c46"
+}
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}
