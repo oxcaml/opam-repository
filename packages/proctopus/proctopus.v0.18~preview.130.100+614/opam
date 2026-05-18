@@ -30,7 +30,7 @@ depends: [
   "vec"                    {= "v0.18~preview.130.100+614"}
   "dune"                   {>= "3.17.0"}
   "num"
-  "uutf"                   {= "1.0.4+ox"}
+  "uutf"                   {>= "1.0.4"}
 ]
 available: arch != "x86_32"
 synopsis: "A Bonsai_term application for managing multiple processes."

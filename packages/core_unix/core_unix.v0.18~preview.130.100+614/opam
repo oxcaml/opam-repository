@@ -27,7 +27,7 @@ depends: [
   "sexplib"                  {= "v0.18~preview.130.100+614"}
   "base-threads"
   "dune"                     {>= "3.17.0"}
-  "spawn"                    {= "v0.15.1+ox"}
+  "spawn"                    {>= "v0.15.1"}
 ]
 synopsis: "Unix-specific portions of Core"
 description: """

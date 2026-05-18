@@ -1,14 +1,6 @@
 --- a/src/name.ml
 +++ b/src/name.ml
-@@ -80,6 +80,7 @@ module Allowlisted = struct
-         "ocaml.extension_constructor";
-         "ocaml.immediate";
-         "ocaml.immediate64";
-+        "ocaml.implicit_kind";
-         "ocaml.inline";
-         "ocaml.inlined";
-         "ocaml.local";
-@@ -97,8 +98,34 @@ module Allowlisted = struct
+@@ -97,8 +97,32 @@ module Allowlisted = struct
          "ocaml.warn_on_literal_pattern";
          "ocaml.warnerror";
          "ocaml.warning";
@@ -37,13 +29,11 @@
 +        "ocaml.unsafe_allow_any_mode_crossing";
 +        "ocaml.or_null_reexport";
 +        "ocaml.atomic";
-+        "ocaml.llvm_backend";
-+        "ocaml.cold";
-+        "ocaml.unpacked"
++        "ocaml.llvm_backend"
        ]
  
    (* Allow list the following extensions.
-@@ -107,7 +134,17 @@ module Allowlisted = struct
+@@ -107,7 +131,17 @@ module Allowlisted = struct
       at the level of a ppx rewriter that they have been properly interpreted, so
       we just accept them anywhere.
    *)
@@ -62,7 +52,7 @@
  
    let is_allowlisted ~kind name =
      match kind with
-@@ -166,6 +203,8 @@ module Reserved_namespaces = struct
+@@ -166,6 +200,8 @@ module Reserved_namespaces = struct
    let () = reserve "metaocaml"
    let () = reserve "ocamlformat"
    let () = reserve "ppxlib.migration"
@@ -71,7 +61,7 @@
  
    let check_not_reserved ~kind name =
      let kind, list =
-@@ -185,8 +224,13 @@ module Reserved_namespaces = struct
+@@ -185,8 +221,13 @@ module Reserved_namespaces = struct
          kind name
  end
  

@@ -13,6 +13,7 @@ depends: [
   "js_of_ocaml-toplevel" {build & (
                             = "6.0.1+ox"
                           | = "6.0.1+ox1"
+                          | = "6.0.1+ox2"
                           )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

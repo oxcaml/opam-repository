@@ -43,10 +43,10 @@ depends: [
   "toplayer"                 {= "v0.18~preview.130.100+614"}
   "virtual_dom"              {= "v0.18~preview.130.100+614"}
   "dune"                     {>= "3.17.0"}
-  "gen_js_api"               {= "1.1.2+ox"}
-  "js_of_ocaml"              {= "6.0.1+ox"}
-  "js_of_ocaml-ppx"          {= "6.0.1+ox"}
-  "omd"                      {= "2.0.0~alpha4+ox"}
+  "gen_js_api"               {>= "1.1.2"}
+  "js_of_ocaml"              {>= "6.0.1"}
+  "js_of_ocaml-ppx"          {>= "6.0.1"}
+  "omd"                      {>= "2.0.0~alpha4"}
 ]
 available: arch != "x86_32"
 synopsis: "A Bonsai web component library."

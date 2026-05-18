@@ -22,7 +22,7 @@ depends: [
   "ppx_jane"                 {= "v0.18~preview.130.100+614"}
   "angstrom"                 {>= "0.15.0"}
   "dune"                     {>= "3.17.0"}
-  "re"                       {= "1.14.0+ox"}
+  "re"                       {>= "1.14.0"}
   "uucp"
 ]
 available: arch != "x86_32"

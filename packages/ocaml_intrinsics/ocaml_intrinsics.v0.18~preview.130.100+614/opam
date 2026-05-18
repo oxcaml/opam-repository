@@ -16,7 +16,7 @@ depends: [
   "ocaml_intrinsics_kernel" {= "v0.18~preview.130.100+614"}
   "ppx_builtin"             {= "v0.18~preview.130.100+614"}
   "dune"                    {>= "3.17.0"}
-  "ocaml-compiler-libs"     {= "v0.17.0+ox"}
+  "ocaml-compiler-libs"     {>= "v0.17.0"}
 ]
 synopsis: "Intrinsics"
 description: """

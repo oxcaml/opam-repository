@@ -25,7 +25,7 @@ depends: [
   "ppx_pattern_bind" {= "v0.18~preview.130.100+614"}
   "textutils"        {= "v0.18~preview.130.100+614"}
   "dune"             {>= "3.17.0"}
-  "js_of_ocaml-ppx"  {= "6.0.1+ox"}
+  "js_of_ocaml-ppx"  {>= "6.0.1"}
   "uri"              {>= "3.0.0"}
 ]
 available: arch != "x86_32"

@@ -18,7 +18,7 @@ depends: [
   "ppx_jane"                 {= "v0.18~preview.130.100+614"}
   "sexp_pretty"              {= "v0.18~preview.130.100+614"}
   "dune"                     {>= "3.17.0"}
-  "re"                       {= "1.14.0+ox"}
+  "re"                       {>= "1.14.0"}
 ]
 available: arch != "x86_32"
 synopsis: "Helpers for writing expectation tests"

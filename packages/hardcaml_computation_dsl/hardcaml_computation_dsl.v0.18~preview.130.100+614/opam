@@ -29,7 +29,7 @@ depends: [
   "ppx_jane"                 {= "v0.18~preview.130.100+614"}
   "re2"                      {= "v0.18~preview.130.100+614"}
   "dune"                     {>= "3.17.0"}
-  "zarith"                   {= "1.12+ox"}
+  "zarith"                   {>= "1.12"}
 ]
 available: arch != "x86_32"
 synopsis: "Hardcaml computation DSL."

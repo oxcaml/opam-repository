@@ -32,7 +32,7 @@ depopts: ["ocamlfind"]
 conflicts: [
   "ocamlfind" {< "1.5.1"}
   "js_of_ocaml" {< "3.0"}
-  "oxcaml-compiler" {< "5.2.0minus31"}
+  "oxcaml-compiler" {< "5.2.0minus31" | >= "5.2.0minus38"}
 ]
 build: [
   ["dune" "subst"] {dev}

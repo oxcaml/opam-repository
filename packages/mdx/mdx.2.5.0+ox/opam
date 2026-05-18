@@ -28,16 +28,17 @@ depends: [
   "astring"
   "logs"          {>= "0.7.0"}
   "cmdliner"      {>= "1.1.0" & < "2.0.0"}
-  "re"            {= "1.14.0+ox"}
+  "re"            {>= "1.7.2"}
   "ocaml-version" {>= "2.3.0"}
   "lwt"           {with-test}
   "camlp-streams"
   "result"
-  "alcotest"      {with-test & = "1.9.0+ox"}
+  "alcotest"      {with-test}
   "odoc"          {with-doc}
 ]
 conflicts: [
   "result" {< "1.5"}
+  "oxcaml-compiler" {> "5.2.0minus25"}
 ]
 build: [
   ["dune" "subst"] {dev}
