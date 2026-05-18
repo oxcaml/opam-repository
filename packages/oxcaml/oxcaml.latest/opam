@@ -9,5 +9,7 @@ dev-repo: "git+https://github.com/oxcaml/oxcaml.git#main"
 depends: [
   # This guard must either be an exact version or have an upperbound to ensure
   # that a new release which forgets to update this package is not installable.
-  "oxcaml-compiler" {= "5.2.0minus31"}
+  # The slightly generous bound allows for downstream forks to extend the
+  # version number further.
+  "oxcaml-compiler" {>= "5.2.0minus38~" & < "5.2.0minus39~"}
 ]

@@ -96,19 +96,15 @@ extra-source "init-menhir.tar.gz" {
 }
 url {
   src:
-    "https://github.com/oxcaml/oxcaml/archive/refs/tags/5.2.0minus-31.tar.gz"
+    "https://github.com/oxcaml/oxcaml/archive/refs/tags/5.2.0minus-38.tar.gz"
   checksum:
-    "sha256=77ebe5c9df1abdfab7f729ac0a086b412769ee1e14b9473282f13bfd3d0c85dc"
+    "sha256=712d763e77e1a3230f5b560dd6577f51659c1ebdc7f874e1bfe215cbe88a274d"
 }
-patches: ["ignore-opam.patch" "cut-fix.patch"]
+patches: ["ignore-opam.patch"]
 extra-files: [
   [
     "ignore-opam.patch"
     "sha256=83d87c0cab3a660c5213b485280df287a81b63c1a3444f0ef2e0e6f3ed02597b"
-  ]
-  [
-    "cut-fix.patch"
-    "sha256=b83b39a7da03a2410525c767ac07f2737eb4dd6a2086df8914bbf0a4866cf8dc"
   ]
 ]
 conflicts: [
@@ -116,4 +112,3 @@ conflicts: [
   "base" {< "v0.18~"}
   "odoc" {< "3.2.0"}
 ]
-flags: avoid-version
