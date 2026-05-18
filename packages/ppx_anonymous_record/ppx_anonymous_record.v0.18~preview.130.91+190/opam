@@ -18,7 +18,7 @@ depends: [
   "ppx_string"  {= "v0.18~preview.130.91+190"}
   "ppxlib_jane" {= "v0.18~preview.130.91+190"}
   "dune"        {>= "3.17.0"}
-  "ppxlib"      {= "0.33.0+ox"}
+  "ppxlib"      {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis:
@@ -32,3 +32,4 @@ url {
   checksum:
     "sha256=887446aefb0a0f3f5fee3980180cbc693e11f53e79577657ae3ab6bb7b288d5a"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

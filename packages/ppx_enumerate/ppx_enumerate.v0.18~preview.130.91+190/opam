@@ -15,7 +15,7 @@ depends: [
   "ocaml"       {>= "5.1.0"}
   "ppxlib_jane" {= "v0.18~preview.130.91+190"}
   "dune"        {>= "3.17.0"}
-  "ppxlib"      {= "0.33.0+ox"}
+  "ppxlib"      {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Generate a list containing all values of a finite type"
@@ -28,3 +28,4 @@ url {
   checksum:
     "sha256=e2d2471fe9f96641697599313c55add1eeea8ab8e37458c82e318e55680565fa"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

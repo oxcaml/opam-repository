@@ -21,7 +21,7 @@ depends: [
   "sexp_grammar"             {= "v0.18~preview.130.91+190"}
   "stdio"                    {= "v0.18~preview.130.91+190"}
   "dune"                     {>= "3.17.0"}
-  "ppxlib"                   {= "0.33.0+ox"}
+  "ppxlib"                   {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "A ppx extension for hashing the sexp_grammar of a type."
@@ -36,3 +36,4 @@ url {
   checksum:
     "sha256=29de59d140463be5810c1f991397bda877fa705cea73b9612323683d71e334af"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

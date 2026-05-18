@@ -25,7 +25,7 @@ depends: [
   "ppx_pattern_bind" {= "v0.18~preview.130.91+190"}
   "textutils"        {= "v0.18~preview.130.91+190"}
   "dune"             {>= "3.17.0"}
-  "js_of_ocaml-ppx"  {= "6.0.1+ox"}
+  "js_of_ocaml-ppx"  {>= "6.0.1"}
   "uri"              {>= "3.0.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
@@ -41,3 +41,4 @@ url {
   checksum:
     "sha256=7392860565a55566464fd4b0a475ce98170fd1e46eb2c31d1a14637596a743a4"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

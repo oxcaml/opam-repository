@@ -18,8 +18,8 @@ depends: [
   "ppx_expect"       {= "v0.18~preview.130.91+190"}
   "ppx_jane"         {= "v0.18~preview.130.91+190"}
   "dune"             {>= "3.17.0"}
-  "js_of_ocaml"      {= "6.0.1+ox"}
-  "js_of_ocaml-ppx"  {= "6.0.1+ox"}
+  "js_of_ocaml"      {>= "6.0.1"}
+  "js_of_ocaml-ppx"  {>= "6.0.1"}
   "uri"              {>= "3.0.0"}
   "uri-sexp"         {>= "3.0.0"}
 ]
@@ -34,3 +34,4 @@ url {
   checksum:
     "sha256=fc48762dea4a5823409022b9f0d6b527f9c375fd4c8453c4f2df66555718d4a4"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

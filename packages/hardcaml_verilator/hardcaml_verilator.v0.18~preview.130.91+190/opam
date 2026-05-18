@@ -22,8 +22,8 @@ depends: [
   "ppx_hardcaml"   {= "v0.18~preview.130.91+190"}
   "ppx_jane"       {= "v0.18~preview.130.91+190"}
   "stdio"          {= "v0.18~preview.130.91+190"}
-  "ctypes"         {= "0.23.0+ox"}
-  "ctypes-foreign" {= "0.23.0+ox"}
+  "ctypes"         {>= "0.23.0"}
+  "ctypes-foreign" {>= "0.23.0"}
   "dune"           {>= "3.17.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
@@ -40,3 +40,4 @@ url {
   checksum:
     "sha256=8a4d4bc091fcc40004d4459e9564716d530897fd3003f87a47c807990c129f4c"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

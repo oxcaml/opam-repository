@@ -17,7 +17,7 @@ depends: [
   "ppx_expect" {= "v0.18~preview.130.91+190"}
   "ppx_jane"   {= "v0.18~preview.130.91+190"}
   "dune"       {>= "3.17.0"}
-  "ppxlib"     {= "0.33.0+ox"}
+  "ppxlib"     {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Parsing of top-expect files"
@@ -32,3 +32,4 @@ url {
   checksum:
     "sha256=f23206d837c62cd7ecf0674cc449041bbd43125d1ad384ae0a4a435d1eb4444b"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

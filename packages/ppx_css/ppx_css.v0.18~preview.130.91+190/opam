@@ -27,12 +27,12 @@ depends: [
   "ppxlib_jane"         {= "v0.18~preview.130.91+190"}
   "virtual_dom"         {= "v0.18~preview.130.91+190"}
   "dune"                {>= "3.17.0"}
-  "js_of_ocaml"         {= "6.0.1+ox"}
-  "js_of_ocaml-ppx"     {= "6.0.1+ox"}
-  "ocaml-compiler-libs" {= "v0.17.0+ox"}
+  "js_of_ocaml"         {>= "6.0.1"}
+  "js_of_ocaml-ppx"     {>= "6.0.1"}
+  "ocaml-compiler-libs" {>= "v0.17.0"}
   "ocamlgraph"          {= "2.0.0"}
-  "ppxlib"              {= "0.33.0+ox"}
-  "sedlex"              {= "3.6+ox"}
+  "ppxlib"              {>= "0.33.0"}
+  "sedlex"              {>= "3.6"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis:
@@ -46,3 +46,4 @@ url {
   checksum:
     "sha256=6a80c0f0750ac569b21ee84709daddbe7c30ab321217f7a582bfec782e025cea"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

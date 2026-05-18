@@ -24,8 +24,8 @@ depends: [
   "splay_tree"      {= "v0.18~preview.130.91+190"}
   "virtual_dom"     {= "v0.18~preview.130.91+190"}
   "dune"            {>= "3.17.0"}
-  "js_of_ocaml"     {= "6.0.1+ox"}
-  "js_of_ocaml-ppx" {= "6.0.1+ox"}
+  "js_of_ocaml"     {>= "6.0.1"}
+  "js_of_ocaml-ppx" {>= "6.0.1"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "A monad for composing chains of interactive UI elements"
@@ -38,3 +38,4 @@ url {
   checksum:
     "sha256=b6fdb27ad32ac4ee6bca45acb146813b91fb3b55285bcf22bd7d43990a7b4742"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

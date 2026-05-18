@@ -28,7 +28,7 @@ depends: [
   "sexplib"           {= "v0.18~preview.130.91+190"}
   "stdio"             {= "v0.18~preview.130.91+190"}
   "dune"              {>= "3.17.0"}
-  "ppxlib"            {= "0.33.0+ox"}
+  "ppxlib"            {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis:
@@ -42,3 +42,4 @@ url {
   checksum:
     "sha256=879022ad8071811a2c388415d22a0da42e0156bea7abb470a1b70903f1c77cb7"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

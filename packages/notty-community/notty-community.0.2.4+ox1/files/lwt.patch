@@ -1,0 +1,29 @@
+--- a/src-lwt/notty_lwt.ml
++++ b/src-lwt/notty_lwt.ml
+@@ -43,7 +43,7 @@
+ 
+   let winches = lazy (
+     let c = Lwt_condition.create () in
+-    let `Revert _ = set_winch_handler (Lwt_condition.broadcast c) in
++    let `Revert _ = set_winch_handler (Base.Obj.magic_portable (Lwt_condition.broadcast c)) in
+     c
+   )
+ 
+--- a/src-lwt/notty_lwt.mli
++++ b/src-lwt/notty_lwt.mli
+@@ -44,7 +44,14 @@
+ 
+   val image   : t -> image -> unit Lwt.t
+   val refresh : t -> unit Lwt.t
+-  val cursor  : t -> (int * int) option -> unit Lwt.t
++  val cursor  : t -> (int * int *
++         [ `Bar
++         | `Bar_blinking
++         | `Block
++         | `Block_blinking
++         | `Default
++         | `Underline
++         | `Underline_blinking ] ) option -> unit Lwt.t
+ 
+   (** {1 Events} *)
+ 

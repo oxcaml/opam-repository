@@ -35,7 +35,7 @@ depends: [
   "bigstringaf"
   "dune"                       {>= "3.17.0"}
   "faraday"                    {>= "0.8.1"}
-  "re"                         {= "1.14.0+ox"}
+  "re"                         {>= "1.14.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "OCaml bindings for the Neovim API"
@@ -61,3 +61,4 @@ url {
   checksum:
     "sha256=c1c9d77b48b6b301a23333c4e0392202d6e1eaec3ef386e074f27adb7603480f"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

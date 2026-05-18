@@ -26,8 +26,8 @@ depends: [
   "ppxlib_jane"         {= "v0.18~preview.130.91+190"}
   "splittable_random"   {= "v0.18~preview.130.91+190"}
   "dune"                {>= "3.17.0"}
-  "ocaml-compiler-libs" {= "v0.17.0+ox"}
-  "ppxlib"              {= "0.33.0+ox"}
+  "ocaml-compiler-libs" {>= "v0.17.0"}
+  "ppxlib"              {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis:
@@ -42,3 +42,4 @@ url {
   checksum:
     "sha256=0ab8c9aeea51945e5d7c3f6586d98a38701a7422ea097c5a756d13ebe4f175dc"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

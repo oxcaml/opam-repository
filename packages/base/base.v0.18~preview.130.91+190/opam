@@ -23,7 +23,7 @@ depends: [
   "sexplib0"                {= "v0.18~preview.130.91+190"}
   "dune"                    {>= "3.17.0"}
   "dune-configurator"
-  "ppxlib"                  {= "0.33.0+ox"}
+  "ppxlib"                  {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Full standard library replacement for OCaml"
@@ -47,3 +47,4 @@ url {
   checksum:
     "sha256=403f3c7dcabcbdeda0685e9de1aa93ac3d74574e0c90c1bf3666524411de92a7"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

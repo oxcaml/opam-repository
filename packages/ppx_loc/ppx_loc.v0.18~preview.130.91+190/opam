@@ -16,7 +16,7 @@ depends: [
   "core"     {= "v0.18~preview.130.91+190"}
   "ppx_jane" {= "v0.18~preview.130.91+190"}
   "dune"     {>= "3.17.0"}
-  "ppxlib"   {= "0.33.0+ox"}
+  "ppxlib"   {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "A ppx for referencing code locations and names."
@@ -29,3 +29,4 @@ url {
   checksum:
     "sha256=bae056f0f25b5ab2da17c00beba81b09186152c081877433ce64443a5d17da3d"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

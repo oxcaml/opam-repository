@@ -14,7 +14,7 @@ build: [
 depends: [
   "ocaml"      {>= "5.1.0"}
   "dune"       {>= "3.17.0"}
-  "ppxlib_ast" {= "0.33.0+ox"}
+  "ppxlib_ast" {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Utilities for working with Jane Street AST constructs"
@@ -27,3 +27,4 @@ url {
   checksum:
     "sha256=e3ef640b8b4433b85efc7991a8156aba72275f024996a00f3c534b8d8b501085"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

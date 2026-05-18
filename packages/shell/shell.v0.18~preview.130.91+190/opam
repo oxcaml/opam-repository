@@ -19,7 +19,7 @@ depends: [
   "ppx_jane"   {= "v0.18~preview.130.91+190"}
   "textutils"  {= "v0.18~preview.130.91+190"}
   "dune"       {>= "3.17.0"}
-  "spawn"      {= "v0.15.1+ox"}
+  "spawn"      {>= "v0.15.1"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Yet another implementation of fork&exec and related functionality"
@@ -33,3 +33,4 @@ url {
   checksum:
     "sha256=71b65aeca4d7aae9c5fd56ae897954ce58691839a50714302d5e308e8594431b"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

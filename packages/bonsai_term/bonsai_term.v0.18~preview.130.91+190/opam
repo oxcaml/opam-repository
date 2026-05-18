@@ -23,7 +23,7 @@ depends: [
   "uopt"              {= "v0.18~preview.130.91+190"}
   "virtual_dom"       {= "v0.18~preview.130.91+190"}
   "dune"              {>= "3.17.0"}
-  "notty-community"   {= "0.2.4+ox"}
+  "notty-community"   {>= "0.2.4"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "A library for building dynamic terminal apps, using bonsai"
@@ -37,3 +37,4 @@ url {
   checksum:
     "sha256=dd47ea6a7611bdf86616e002e30e806d6e3a4a87444c88cc219c7bd13103d72c"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

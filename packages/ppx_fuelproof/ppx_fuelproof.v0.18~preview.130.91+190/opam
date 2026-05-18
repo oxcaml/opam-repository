@@ -19,7 +19,7 @@ depends: [
   "ppx_sexp_conv" {= "v0.18~preview.130.91+190"}
   "ppxlib_jane"   {= "v0.18~preview.130.91+190"}
   "dune"          {>= "3.17.0"}
-  "ppxlib"        {= "0.33.0+ox"}
+  "ppxlib"        {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Get better error messages and improve mode crossing for types"
@@ -38,3 +38,4 @@ url {
   checksum:
     "sha256=af88fda1383b104596f7649101d9ff91c204b033d782f6182377d695f9b0f8a0"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

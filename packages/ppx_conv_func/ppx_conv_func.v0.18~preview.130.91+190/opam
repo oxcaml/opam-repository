@@ -16,7 +16,7 @@ depends: [
   "base"        {= "v0.18~preview.130.91+190"}
   "ppxlib_jane" {= "v0.18~preview.130.91+190"}
   "dune"        {>= "3.17.0"}
-  "ppxlib"      {= "0.33.0+ox"}
+  "ppxlib"      {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Deprecated"
@@ -29,3 +29,4 @@ url {
   checksum:
     "sha256=3b7556d5a8cc53ac97ff81236becfa182a684cdd91483423bb9133650a58632e"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

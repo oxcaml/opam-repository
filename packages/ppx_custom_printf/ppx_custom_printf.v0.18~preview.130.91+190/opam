@@ -16,7 +16,7 @@ depends: [
   "base"          {= "v0.18~preview.130.91+190"}
   "ppx_sexp_conv" {= "v0.18~preview.130.91+190"}
   "dune"          {>= "3.17.0"}
-  "ppxlib"        {= "0.33.0+ox"}
+  "ppxlib"        {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Printf-style format-strings for user-defined string conversion"
@@ -29,3 +29,4 @@ url {
   checksum:
     "sha256=e47f997da25693f469fb2321bd321ee8e13db10c09f5aa8f65fed50a1588f5e4"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

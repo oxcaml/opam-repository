@@ -28,8 +28,8 @@ depends: [
   "uopt"             {= "v0.18~preview.130.91+190"}
   "virtual_dom"      {= "v0.18~preview.130.91+190"}
   "dune"             {>= "3.17.0"}
-  "js_of_ocaml-ppx"  {= "6.0.1+ox"}
-  "ppxlib"           {= "0.33.0+ox"}
+  "js_of_ocaml-ppx"  {>= "6.0.1"}
+  "ppxlib"           {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "A library for building dynamic webapps, using Js_of_ocaml"
@@ -43,3 +43,4 @@ url {
   checksum:
     "sha256=0097a5abf84c3bab299885340deda241a33ebaeb4b9acfac0c736c35cc295059"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

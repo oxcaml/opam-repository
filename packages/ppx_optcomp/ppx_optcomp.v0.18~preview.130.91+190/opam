@@ -17,8 +17,8 @@ depends: [
   "ppxlib_jane"         {= "v0.18~preview.130.91+190"}
   "stdio"               {= "v0.18~preview.130.91+190"}
   "dune"                {>= "3.17.0"}
-  "ocaml-compiler-libs" {= "v0.17.0+ox"}
-  "ppxlib"              {= "0.33.0+ox"}
+  "ocaml-compiler-libs" {>= "v0.17.0"}
+  "ppxlib"              {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Optional compilation for OCaml"
@@ -31,3 +31,4 @@ url {
   checksum:
     "sha256=2b56874964aa105c333f264e2e9ce6f20a136b28c82c4115674d5a6a4c1a7c83"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

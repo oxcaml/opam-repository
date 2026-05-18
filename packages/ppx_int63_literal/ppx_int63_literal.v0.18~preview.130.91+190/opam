@@ -15,7 +15,7 @@ depends: [
   "ocaml"  {>= "5.2.0"}
   "base"   {= "v0.18~preview.130.91+190"}
   "dune"   {>= "3.17.0"}
-  "ppxlib" {= "0.33.0+ox"}
+  "ppxlib" {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Syntax extension for writing int63 literals."
@@ -28,3 +28,4 @@ url {
   checksum:
     "sha256=92725ce36037e277fabe8e7c7fa775fdc74275fc97a18d17efe84850046b2062"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

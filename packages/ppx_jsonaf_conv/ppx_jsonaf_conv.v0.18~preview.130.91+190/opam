@@ -21,7 +21,7 @@ depends: [
   "ppx_template"   {= "v0.18~preview.130.91+190"}
   "ppxlib_jane"    {= "v0.18~preview.130.91+190"}
   "dune"           {>= "3.17.0"}
-  "ppxlib"         {= "0.33.0+ox"}
+  "ppxlib"         {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "[@@deriving] plugin to generate Jsonaf conversion functions"
@@ -34,3 +34,4 @@ url {
   checksum:
     "sha256=550340a32af346aef115970c664e0021eaf3947fbcb6fcbb27d5bf8b92cf5641"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

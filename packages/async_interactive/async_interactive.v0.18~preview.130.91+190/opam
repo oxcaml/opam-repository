@@ -18,7 +18,7 @@ depends: [
   "core_unix" {= "v0.18~preview.130.91+190"}
   "ppx_jane"  {= "v0.18~preview.130.91+190"}
   "dune"      {>= "3.17.0"}
-  "spawn"     {= "v0.15.1+ox"}
+  "spawn"     {>= "v0.15"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Utilities for building simple command-line based user interfaces"
@@ -30,3 +30,4 @@ url {
   checksum:
     "sha256=8f2be0512844b3f98b9b08d4376fad9d44522bfb78c615fa72ad1ba41b27f40b"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

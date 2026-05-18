@@ -19,8 +19,8 @@ depends: [
   "ppx_jane"        {= "v0.18~preview.130.91+190"}
   "ppx_yojson_conv" {= "v0.18~preview.130.91+190"}
   "dune"            {>= "3.17.0"}
-  "jsonrpc"         {= "1.19.0+ox"}
-  "lsp"             {= "1.19.0+ox"}
+  "jsonrpc"         {>= "1.19.0"}
+  "lsp"             {>= "1.19.0"}
   "yojson"          {>= "1.7.0" & < "3.0.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
@@ -37,3 +37,4 @@ url {
   checksum:
     "sha256=42c92cde0edeb27a47f80f1718b38306d4b474b1ed1d73c26b574f18eceef699"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

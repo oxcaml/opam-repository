@@ -18,7 +18,7 @@ depends: [
   "ppx_jane"           {= "v0.18~preview.130.91+190"}
   "ppx_stable_witness" {= "v0.18~preview.130.91+190"}
   "dune"               {>= "3.17.0"}
-  "zarith"             {= "1.12+ox"}
+  "zarith"             {>= "1.12"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Arbitrary-precision decimal based on Zarith"
@@ -32,3 +32,4 @@ url {
   checksum:
     "sha256=b683d884b48d8d085961f11098287f105fb7bc413d57436bb2d7628885ea407e"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

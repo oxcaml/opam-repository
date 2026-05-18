@@ -16,7 +16,7 @@ depends: [
   "ocaml_intrinsics_kernel" {= "v0.18~preview.130.91+190"}
   "ppx_builtin"             {= "v0.18~preview.130.91+190"}
   "dune"                    {>= "3.17.0"}
-  "ocaml-compiler-libs"     {= "v0.17.0+ox"}
+  "ocaml-compiler-libs"     {>= "v0.17.0"}
 ]
 synopsis: "Intrinsics"
 description: """
@@ -30,3 +30,4 @@ url {
   checksum:
     "sha256=52e8ce54a83b234ce8f744ecba248be3f5d2a422c1cd8343c9e8980a0d02cea2"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

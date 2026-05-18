@@ -18,7 +18,7 @@ depends: [
   "ppx_conv_func"   {= "v0.18~preview.130.91+190"}
   "ppx_fields_conv" {= "v0.18~preview.130.91+190"}
   "dune"            {>= "3.17.0"}
-  "ppxlib"          {= "0.33.0+ox"}
+  "ppxlib"          {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Generate functions to read/write records in csv format"
@@ -31,3 +31,4 @@ url {
   checksum:
     "sha256=25e3ba3d88b2c3c03903d8f6dbe744283904231a25ac5861477c8c2a58a1c580"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

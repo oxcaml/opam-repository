@@ -20,7 +20,7 @@ depends: [
   "cppo" {>= "1.1.0" & build}
   "ocamlfind"
   "ppx_derivers"
-  "ppxlib" {= "0.33.0+ox"}
+  "ppxlib" {>= "0.33.0"}
   "ounit2" {with-test}
 ]
 synopsis: "Type-driven code generation for OCaml"
@@ -33,3 +33,6 @@ url {
   src:
     "git+https://github.com/patricoferris/ppx_deriving.git#4cb09f54ff13e525804852190bfed8abb9267014"
 }
+conflicts: [
+  "oxcaml-compiler" {> "5.2.0minus25"}
+]

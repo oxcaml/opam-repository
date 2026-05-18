@@ -15,7 +15,7 @@ build: [
 depends: [
   "ocaml"  {>= "5.1.0"}
   "dune"   {>= "3.17.0"}
-  "ppxlib" {= "0.33.0+ox"}
+  "ppxlib" {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Ignore Jane Street specific instrumentation extensions"
@@ -29,3 +29,4 @@ url {
   checksum:
     "sha256=e9d74ac7c7881e2a363f513047d0358518ce6f46249839578371693ecac0fa85"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

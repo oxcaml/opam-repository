@@ -22,7 +22,7 @@ depends: [
   "ppx_jane"                 {= "v0.18~preview.130.91+190"}
   "angstrom"                 {>= "0.15.0"}
   "dune"                     {>= "3.17.0"}
-  "re"                       {= "1.14.0+ox"}
+  "re"                       {>= "1.14.0"}
   "uucp"
 ]
 available: arch != "arm32" & arch != "x86_32"
@@ -35,3 +35,4 @@ url {
   checksum:
     "sha256=e06e5936aa5a2b3392b0b727c902a291f271e9351337d019467205907aadd0f3"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

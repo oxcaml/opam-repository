@@ -21,7 +21,7 @@ depends: [
   "sexp_pretty"     {= "v0.18~preview.130.91+190"}
   "stdio"           {= "v0.18~preview.130.91+190"}
   "dune"            {>= "3.17.0"}
-  "re"              {= "1.14.0+ox"}
+  "re"              {>= "1.14.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Helpers for writing expectation tests"
@@ -37,3 +37,4 @@ url {
   checksum:
     "sha256=01edb1e0ef927472254058aecb9088dfd1923fee5b74b9d03390d1c6bbd5e63e"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

@@ -22,7 +22,7 @@ depends: [
   "ppx_inline_test" {= "v0.18~preview.130.91+190"}
   "stdio"           {= "v0.18~preview.130.91+190"}
   "dune"            {>= "3.17.0"}
-  "ppxlib"          {= "0.33.0+ox"}
+  "ppxlib"          {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Cram like framework for OCaml"
@@ -35,3 +35,4 @@ url {
   checksum:
     "sha256=1678b8bdee9fa03a7f48f07067ec745b41a122f5ca352ea1b43d339bca8f5923"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

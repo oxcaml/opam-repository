@@ -28,8 +28,8 @@ depends: [
   "textutils"         {= "v0.18~preview.130.91+190"}
   "time_now"          {= "v0.18~preview.130.91+190"}
   "dune"              {>= "3.17.0"}
-  "js_of_ocaml-ppx"   {= "6.0.1+ox"}
-  "re"                {= "1.14.0+ox"}
+  "js_of_ocaml-ppx"   {>= "6.0.1"}
+  "re"                {>= "1.14.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Benchmarking library"
@@ -41,3 +41,4 @@ url {
   checksum:
     "sha256=4fe582d38c7e46574fa61a0f8d15114f719c6b594685f464c62abf027b41f85a"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

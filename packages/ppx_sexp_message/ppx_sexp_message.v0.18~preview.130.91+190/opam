@@ -17,7 +17,7 @@ depends: [
   "ppx_here"      {= "v0.18~preview.130.91+190"}
   "ppx_sexp_conv" {= "v0.18~preview.130.91+190"}
   "dune"          {>= "3.17.0"}
-  "ppxlib"        {= "0.33.0+ox"}
+  "ppxlib"        {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "A ppx rewriter for easy construction of s-expressions"
@@ -30,3 +30,4 @@ url {
   checksum:
     "sha256=006ee34408d03ac1545a387770fb06d170c791c03c3b3987fc215633b7b72615"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

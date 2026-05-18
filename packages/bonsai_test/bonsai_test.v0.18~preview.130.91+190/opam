@@ -32,7 +32,7 @@ depends: [
   "ppx_quick_test"           {= "v0.18~preview.130.91+190"}
   "virtual_dom"              {= "v0.18~preview.130.91+190"}
   "dune"                     {>= "3.17.0"}
-  "re"                       {= "1.14.0+ox"}
+  "re"                       {>= "1.14.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "A library for testing Bonsai state machines."
@@ -46,3 +46,4 @@ url {
   checksum:
     "sha256=a947ecbecdd9cd72f1947273c3f1136aaa882cf858d67a9a71ffe1146f1387cf"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

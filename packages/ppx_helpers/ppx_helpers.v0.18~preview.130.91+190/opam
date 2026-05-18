@@ -16,7 +16,7 @@ depends: [
   "ppxlib_jane" {= "v0.18~preview.130.91+190"}
   "sexplib0"    {= "v0.18~preview.130.91+190"}
   "dune"        {>= "3.17.0"}
-  "ppxlib"      {= "0.33.0+ox"}
+  "ppxlib"      {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Miscellaneous helpers for writing PPXes"
@@ -29,3 +29,4 @@ url {
   checksum:
     "sha256=42a4d25e127011945575e8fb844c431a7e94f9a78a99025ff9c7c682ebb59800"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

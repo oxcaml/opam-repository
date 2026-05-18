@@ -16,7 +16,7 @@ depends: [
   "dune"              {>= "2.9"}
   "ocaml"             {>= "4.03.0"}
   "integers"          {with-test & >= "0.2.2"}
-  "ctypes"            {= version & = "0.23.0+ox"}
+  "ctypes"            {= version}
   "dune-configurator"
   "conf-pkg-config"
   "lwt"               {with-test & >= "2.4.7"}

@@ -17,8 +17,8 @@ depends: [
   "core_kernel"     {= "v0.18~preview.130.91+190"}
   "ppx_jane"        {= "v0.18~preview.130.91+190"}
   "dune"            {>= "3.17.0"}
-  "js_of_ocaml"     {= "6.0.1+ox"}
-  "js_of_ocaml-ppx" {= "6.0.1+ox"}
+  "js_of_ocaml"     {>= "6.0.1"}
+  "js_of_ocaml-ppx" {>= "6.0.1"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis:
@@ -32,3 +32,4 @@ url {
   checksum:
     "sha256=75d36483a4fc5c26fe4a3ebb86a635568ba68da320b0637e45d7333209ee8eb7"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

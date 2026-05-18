@@ -19,7 +19,7 @@ depends: [
   "ppx_string"     {= "v0.18~preview.130.91+190"}
   "ppxlib_jane"    {= "v0.18~preview.130.91+190"}
   "dune"           {>= "3.17.0"}
-  "ppxlib"         {= "0.33.0+ox"}
+  "ppxlib"         {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Ppx extension for generating of_string & to_string"
@@ -32,3 +32,4 @@ url {
   checksum:
     "sha256=3a27609060559b999e38fc19d971553c030eba27beff0785a3f71c4596db85b4"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

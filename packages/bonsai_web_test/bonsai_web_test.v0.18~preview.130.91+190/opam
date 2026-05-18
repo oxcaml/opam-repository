@@ -45,10 +45,10 @@ depends: [
   "versioned_polling_state_rpc" {= "v0.18~preview.130.91+190"}
   "virtual_dom"                 {= "v0.18~preview.130.91+190"}
   "dune"                        {>= "3.17.0"}
-  "js_of_ocaml"                 {= "6.0.1+ox"}
-  "js_of_ocaml-ppx"             {= "6.0.1+ox"}
+  "js_of_ocaml"                 {>= "6.0.1"}
+  "js_of_ocaml-ppx"             {>= "6.0.1"}
   "lambdasoup"                  {>= "0.6.3"}
-  "re"                          {= "1.14.0+ox"}
+  "re"                          {>= "1.14.0"}
   "uri"                         {>= "3.0.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
@@ -64,3 +64,4 @@ url {
   checksum:
     "sha256=e300f1781080f836f718db793ef5074ba030e9d1bd640cdcb46f8e8ec228be0b"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

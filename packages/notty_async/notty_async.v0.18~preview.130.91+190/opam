@@ -17,7 +17,7 @@ depends: [
   "core_unix"       {= "v0.18~preview.130.91+190"}
   "ppx_jane"        {= "v0.18~preview.130.91+190"}
   "dune"            {>= "3.17.0"}
-  "notty-community" {= "0.2.4+ox"}
+  "notty-community" {>= "0.2.4"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "An Async driver for Notty"
@@ -32,3 +32,4 @@ url {
   checksum:
     "sha256=dea2bf5e130708946ff7b9e6ef1f7b3e8df8b2692bbc7ed0e2ce02313b36d66e"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

@@ -1,0 +1,37 @@
+opam-version: "2.0"
+version: "5.2.1-502+ox1"
+name: "merlin-lib"
+synopsis: "Merlin's libraries"
+description: """\
+These libraries provides access to low-level compiler interfaces and the
+  standard higher-level merlin protocol. The library is provided as-is, is not
+  thoroughly documented, and its public API might break with any new release."""
+maintainer: "defree@gmail.com"
+authors: "The Merlin team"
+license: "MIT"
+homepage: "https://github.com/ocaml/merlin"
+bug-reports: "https://github.com/ocaml/merlin/issues"
+depends: [
+  "ocaml"     {>= "5.2" & < "5.3"}
+  "dune" {>= "3.0"}
+  "csexp"     {>= "1.5.1" & <= "1.5.2"}
+  "alcotest"  {with-test & >= "1.3.0"}
+  "menhir"    {dev & >= "20201216" & <= "20240715"}
+  "menhirLib" {dev & >= "20201216" & <= "20240715"}
+  "menhirSdk" {dev & >= "20201216" & <= "20240715"}
+]
+build: [
+  ["dune" "subst"] {dev}
+  ["dune" "build" "-p" name "-j" jobs]
+]
+dev-repo: "git+https://github.com/ocaml/merlin.git"
+x-commit-hash: "0eaccc1b8520d605b1e00685e1c3f8acb5da534c"
+x-opam-repository-commit-hash-at-time-of-archiving:
+  "08d8c16c16dc6b23a5278b06dff0ac6c7a217356"
+x-reason-for-archiving: ["maintenance-intent"]
+url {
+  src: "git+https://github.com/oxcaml/merlin.git#merge-5.2.0minus-31-oxcaml"
+}
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus31"}
+]

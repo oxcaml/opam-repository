@@ -54,6 +54,7 @@ conflicts: [
   "dune-release"        {< "2.0.0"}
   "js_of_ocaml-compiler" {< "3.6.0"}
   "jbuilder"            {= "transition"}
+  "oxcaml-compiler" {> "5.2.0minus25"}
 ]
 build: [
   ["ocaml" "boot/bootstrap.ml" "-j" jobs]
@@ -83,6 +84,6 @@ patches: ["oxcaml-dune.patch"]
 extra-files: [
   [
     "oxcaml-dune.patch"
-    "sha256=91307aed44ce2a1d1a9a0b75966db4ea910fd9bb4409d8955420abac3501ef78"
+    "sha256=12528b02ce3cd810872428f6e4f93596744d3193aafeea9eb4c5ccc458d456fd"
   ]
 ]

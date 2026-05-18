@@ -14,7 +14,7 @@ depends: [
   "ocaml"  {>= "5.1.0"}
   "base"   {= "v0.18~preview.130.91+190"}
   "dune"   {>= "3.17.0"}
-  "ppxlib" {= "0.33.0+ox"}
+  "ppxlib" {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Expands [%here] into its location"
@@ -27,3 +27,4 @@ url {
   checksum:
     "sha256=9ebc63eb085027d5e493ea06a4b08e47b6212671f143376e5cad929cba5f6c55"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

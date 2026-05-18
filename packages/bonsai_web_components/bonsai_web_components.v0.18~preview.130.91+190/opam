@@ -48,10 +48,10 @@ depends: [
   "uri_parsing"              {= "v0.18~preview.130.91+190"}
   "virtual_dom"              {= "v0.18~preview.130.91+190"}
   "dune"                     {>= "3.17.0"}
-  "gen_js_api"               {= "1.1.2+ox"}
-  "js_of_ocaml"              {= "6.0.1+ox"}
-  "js_of_ocaml-ppx"          {= "6.0.1+ox"}
-  "re"                       {= "1.14.0+ox"}
+  "gen_js_api"               {>= "1.1.2"}
+  "js_of_ocaml"              {>= "6.0.1"}
+  "js_of_ocaml-ppx"          {>= "6.0.1"}
+  "re"                       {>= "1.14.0"}
   "uri"                      {>= "3.0.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
@@ -68,3 +68,4 @@ url {
   checksum:
     "sha256=d0668f528132d897f327a74e62857f81f0b336a36c32e9ef1688eb23516b8ce1"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

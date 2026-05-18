@@ -24,9 +24,9 @@ depends: [
   "toplevel_backend"    {= "v0.18~preview.130.91+190"}
   "base-threads"
   "dune"                {>= "3.17.0"}
-  "ocaml-compiler-libs" {= "v0.17.0+ox"}
+  "ocaml-compiler-libs" {>= "v0.17.0"}
   "ocamlfind"           {>= "1.7.2"}
-  "ppxlib"              {= "0.33.0+ox"}
+  "ppxlib"              {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Expectation tests for the OCaml toplevel"
@@ -42,3 +42,4 @@ url {
   checksum:
     "sha256=a6a9ddd57e6ce390e6a62a5315c835b4dd6ede6c1bdbe341a682f40c062caaf0"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

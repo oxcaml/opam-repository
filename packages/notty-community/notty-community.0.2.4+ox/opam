@@ -21,7 +21,7 @@ depends: [
   "dune"  {>= "3.0"}
   "ocaml" {>= "4.08.0"}
   "cppo"  {build & >= "1.1.0"}
-  "uutf"  {= "1.0.4+ox"}
+  "uutf"  {>= "1.0.0"}
   "uucp"  {with-dev-setup}
   "lwt"   {with-test}
 "base"
@@ -33,6 +33,7 @@ depends: [
 depopts: ["lwt"]
 conflicts: [
   "lwt" {< "2.6.0"}
+  "oxcaml-compiler" {> "5.2.0minus25"}
 ]
 build: [
   ["dune" "subst"] {dev}
@@ -72,11 +73,6 @@ patches: [
   "notty-add_href_support.patch"
   "notty-default_color.patch"
   "notty-set_save_and_restore_title.patch"
-  "notty-synchronized_output.patch"
-  "notty-expose-Text.graphemes.patch"
-  "notty-vs16_makes_characters_look_like_emojis.patch"
-  "notty-expose_operation_intermediate_representation.patch"
-  "notty-dynamic_mouse_reporting.patch"
   "dune.patch"
   "lwt.patch"
 ]
@@ -136,26 +132,6 @@ extra-files: [
   [
     "notty-set_save_and_restore_title.patch"
     "sha256=bbb4bf0e73bcfa795c93495a7149f7ee8f54b6c33d666d9d79dfefdd51ddec5b"
-  ]
-  [
-    "notty-synchronized_output.patch"
-    "sha256=e78bf6ec740279bc822db4490ed6679a19e7910028837c262fcb48a99d42fd92"
-  ]
-  [
-    "notty-expose-Text.graphemes.patch"
-    "sha256=2ac7a79b9e9ed1c2c61799902b91d310fd171358bd614bd2b6e5bbd838eac2f3"
-  ]
-  [
-    "notty-vs16_makes_characters_look_like_emojis.patch"
-    "sha256=c13b73bacc99d6288e217296c7de29953a4a2648ab966419382ecba8f03b920e"
-  ]
-  [
-    "notty-expose_operation_intermediate_representation.patch"
-    "sha256=6788fbf3fc8f93d9bc68b01c8262af60c2850730e2a28db3f5806cf95166eb7e"
-  ]
-  [
-    "notty-dynamic_mouse_reporting.patch"
-    "sha256=883150741961a07cff7a238c4c4ab6c1c3fe5d559887bcc4e4099a29aa164757"
   ]
   [
     "dune.patch"

@@ -14,7 +14,7 @@ depends: [
   "ocaml"  {>= "5.1.0"}
   "base"   {= "v0.18~preview.130.91+190"}
   "dune"   {>= "3.17.0"}
-  "ppxlib" {= "0.33.0+ox"}
+  "ppxlib" {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Let expressions, inferring pattern type from expression."
@@ -27,3 +27,4 @@ url {
   checksum:
     "sha256=940a08911627c43ac9ca30c2f34da41c1ca66af5aa238a2c36bba7094e5c0381"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

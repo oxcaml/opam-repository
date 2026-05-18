@@ -21,9 +21,9 @@ depends: [
   "textutils"        {= "v0.18~preview.130.91+190"}
   "base64"           {>= "3.4.0"}
   "dune"             {>= "3.17.0"}
-  "js_of_ocaml-ppx"  {= "6.0.1+ox"}
-  "ppxlib"           {= "0.33.0+ox"}
-  "re"               {= "1.14.0+ox"}
+  "js_of_ocaml-ppx"  {>= "6.0.1"}
+  "ppxlib"           {>= "0.33.0"}
+  "re"               {>= "1.14.0"}
   "uri"              {>= "3.0.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
@@ -38,3 +38,4 @@ url {
   checksum:
     "sha256=84c5bce5d721041ad6575cc4b77d364a775ca9122e897a3d51656afd5d3b18ce"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

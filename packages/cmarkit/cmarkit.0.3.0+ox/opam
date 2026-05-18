@@ -33,12 +33,13 @@ bug-reports: "https://github.com/dbuenzli/cmarkit/issues"
 depends: [
   "ocaml" {>= "4.14.0"}
   "ocamlfind" {build}
-  "ocamlbuild" {= "0.15.0+ox"}
+  "ocamlbuild"
   "topkg" {build & >= "1.0.3"}
 ]
 depopts: ["cmdliner"]
 conflicts: [
   "cmdliner" {< "1.1.0"}
+  "oxcaml-compiler" {< "5.2.0minus31"}
 ]
 build: [
   "ocaml"

@@ -18,7 +18,7 @@ depends: [
   "ppxlib_jane" {= "v0.18~preview.130.91+190"}
   "sexplib0"    {= "v0.18~preview.130.91+190"}
   "dune"        {>= "3.17.0"}
-  "ppxlib"      {= "0.33.0+ox"}
+  "ppxlib"      {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "[@@deriving] plugin to generate S-expression conversion functions"
@@ -31,3 +31,4 @@ url {
   checksum:
     "sha256=dc0c09948b5a9b10cd8a5ea9776956f41897653b50637f6d35604ff4207ce92e"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

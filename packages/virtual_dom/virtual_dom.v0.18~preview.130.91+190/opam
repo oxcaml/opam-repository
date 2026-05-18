@@ -23,9 +23,9 @@ depends: [
   "stdio"           {= "v0.18~preview.130.91+190"}
   "base64"          {>= "3.4.0"}
   "dune"            {>= "3.17.0"}
-  "gen_js_api"      {= "1.1.2+ox"}
-  "js_of_ocaml"     {= "6.0.1+ox"}
-  "js_of_ocaml-ppx" {= "6.0.1+ox"}
+  "gen_js_api"      {>= "1.1.2"}
+  "js_of_ocaml"     {>= "6.0.1"}
+  "js_of_ocaml-ppx" {>= "6.0.1"}
   "lambdasoup"      {>= "0.6.3"}
   "tyxml"           {>= "4.3.0"}
   "uri"             {>= "3.0.0"}
@@ -42,3 +42,4 @@ url {
   checksum:
     "sha256=7b591f21a66f5733ac7523a2da2df6b0532ab98f8ef4378ec62df9f674241daa"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

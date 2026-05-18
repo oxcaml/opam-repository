@@ -19,7 +19,7 @@ depends: [
   "ppx_yojson_conv_lib" {= "v0.18~preview.130.91+190"}
   "ppxlib_jane"         {= "v0.18~preview.130.91+190"}
   "dune"                {>= "3.17.0"}
-  "ppxlib"              {= "0.33.0+ox"}
+  "ppxlib"              {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "[@@deriving] plugin to generate Yojson conversion functions"
@@ -32,3 +32,4 @@ url {
   checksum:
     "sha256=9465fb60475fe75537ba1435712fa8bdd76051c9f269839555e2894eb035c7a5"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

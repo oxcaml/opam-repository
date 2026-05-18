@@ -67,10 +67,13 @@ extra-files: [
   ]
   [
     "zarith-local.patch"
-    "sha256=d2f7f6481c5b061bd8b022672bcf6bd9f25cd6f6f1b30c80a16cd2d02751589b"
+    "sha256=bd168f393265f734efda1cb5b61588bf8edb07e10f1d49d9fc1df81aafcfecc2"
   ]
   [
     "zarith-portability.patch"
-    "sha256=71fff9a702cf3e927782ee8591a26e0c3b7359bf3ce60d1868b0a49e1a7c11e3"
+    "sha256=92c4036a9fc4eb5e996b0e704a032d748bf09197ee567909513bc991d6b4dddd"
   ]
+]
+conflicts: [
+  "oxcaml-compiler" {> "5.2.0minus25"}
 ]

@@ -19,7 +19,7 @@ depends: [
   "ppx_jane"       {= "v0.18~preview.130.91+190"}
   "ppxlib_jane"    {= "v0.18~preview.130.91+190"}
   "dune"           {>= "3.17.0"}
-  "ppxlib"         {= "0.33.0+ox"}
+  "ppxlib"         {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Easily write C bindings from within OCaml"
@@ -32,3 +32,4 @@ url {
   checksum:
     "sha256=12408573618d84451f3aecb063cb80f739e40893c14ca8ba53d7f067888a7d36"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

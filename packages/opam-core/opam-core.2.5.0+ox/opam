@@ -42,7 +42,9 @@ depends: [
     "conf-msvc32" {os = "win32" & os-distribution != "cygwinports"} &
     "conf-msvc64" {os = "win32" & os-distribution != "cygwinports"}))
 ]
-conflicts: ["extlib-compat"]
+conflicts: [
+  "extlib-compat"
+]
 build: [
   ["./configure" "--disable-checks" "--prefix" prefix]
   ["dune" "build" "-p" name "-j" jobs]
@@ -59,6 +61,6 @@ patches: ["oxcaml.patch"]
 extra-files: [
   [
     "oxcaml.patch"
-    "sha256=8f9d4b2374db740f73405320fe0d00d4ac3c4be67326f84979d1599b0f4e4592"
+    "sha256=ff360490f447eec0b2f051703f064eec7a9e7ce4562d64c9f142f6213445e00d"
   ]
 ]

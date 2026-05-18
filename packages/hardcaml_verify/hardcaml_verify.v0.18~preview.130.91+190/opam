@@ -22,7 +22,7 @@ depends: [
   "ppx_rope"          {= "v0.18~preview.130.91+190"}
   "stdio"             {= "v0.18~preview.130.91+190"}
   "dune"              {>= "3.17.0"}
-  "re"                {= "1.14.0+ox"}
+  "re"                {>= "1.14.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Hardcaml Verification Tools"
@@ -42,3 +42,4 @@ url {
   checksum:
     "sha256=8680132bc91ee4360126cecf3f0a1a40cc0a610ba601f1f6519c589af4da511b"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}

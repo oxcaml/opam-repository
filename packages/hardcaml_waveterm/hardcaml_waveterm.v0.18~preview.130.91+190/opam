@@ -25,8 +25,8 @@ depends: [
   "stdio"           {= "v0.18~preview.130.91+190"}
   "cryptokit"       {>= "1.16" & < "1.17"}
   "dune"            {>= "3.17.0"}
-  "notty-community" {= "0.2.4+ox"}
-  "re"              {= "1.14.0+ox"}
+  "notty-community" {>= "0.2.4"}
+  "re"              {>= "1.14.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "A terminal based digital waveform viewer for Hardcaml"
@@ -38,7 +38,10 @@ interactive terminal application.
 The library is closely integrated with Hardcaml and can be easily attached
 to simulations.
 """
-conflicts: ["hardcaml-waveterm"]
+conflicts: [
+  "hardcaml-waveterm"
+  "oxcaml-compiler" {< "5.2.0minus31"}
+]
 url {
   src:
     "https://github.com/janestreet/hardcaml_waveterm/archive/13cf395c8e9edadc77e93e44292126096a976e07.tar.gz"

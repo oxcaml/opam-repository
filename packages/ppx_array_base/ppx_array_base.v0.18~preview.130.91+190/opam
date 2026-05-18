@@ -16,7 +16,7 @@ depends: [
   "ppx_helpers" {= "v0.18~preview.130.91+190"}
   "ppxlib_jane" {= "v0.18~preview.130.91+190"}
   "dune"        {>= "3.17.0"}
-  "ppxlib"      {= "0.33.0+ox"}
+  "ppxlib"      {>= "0.33.0"}
 ]
 available: arch != "arm32" & arch != "x86_32"
 synopsis: "Defines array functions used in [Base.Array]."
@@ -29,3 +29,4 @@ url {
   checksum:
     "sha256=e0deafae0640690b2cc96548da9d66117cd330a68c990cf548b70f88fe2d1f5d"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus31"}
