@@ -27,7 +27,7 @@
  
    val apply :
      ?loc:loc ->
-@@ -162,6 +173,7 @@ module Exp : sig
+@@ -162,11 +173,16 @@ module Exp : sig
  
    val match_ : ?loc:loc -> ?attrs:attrs -> expression -> case list -> expression
    val try_ : ?loc:loc -> ?attrs:attrs -> expression -> case list -> expression
@@ -35,7 +35,16 @@
    val tuple : ?loc:loc -> ?attrs:attrs -> expression list -> expression
  
    val construct :
-@@ -177,8 +189,17 @@ module Exp : sig
+     ?loc:loc -> ?attrs:attrs -> lid -> expression option -> expression
+ 
++  val unboxed_unit : ?loc:loc -> ?attrs:attrs -> unit -> expression
++
++  val unboxed_bool : ?loc:loc -> ?attrs:attrs -> bool -> expression
++
+   val variant :
+     ?loc:loc -> ?attrs:attrs -> label -> expression option -> expression
+ 
+@@ -177,8 +193,17 @@ module Exp : sig
      expression option ->
      expression
  
@@ -53,7 +62,7 @@
    val setfield :
      ?loc:loc -> ?attrs:attrs -> expression -> lid -> expression -> expression
  
-@@ -264,8 +285,15 @@ module Exp : sig
+@@ -264,8 +289,16 @@ module Exp : sig
  
    val extension : ?loc:loc -> ?attrs:attrs -> extension -> expression
    val unreachable : ?loc:loc -> ?attrs:attrs -> unit -> expression
@@ -66,10 +75,11 @@
 +  val quote : ?loc:loc -> ?attrs:attrs -> expression -> expression
 +  val splice : ?loc:loc -> ?attrs:attrs -> expression -> expression
 +  val hole : ?loc:loc -> ?attrs:attrs -> unit -> expression
++  val borrow : ?loc:loc -> ?attrs:attrs -> expression -> expression
  end
  
  (** Value declarations *)
-@@ -351,10 +379,10 @@ module Mty : sig
+@@ -351,10 +384,10 @@ module Mty : sig
    val attr : module_type -> attribute -> module_type
    val ident : ?loc:loc -> ?attrs:attrs -> lid -> module_type
    val alias : ?loc:loc -> ?attrs:attrs -> lid -> module_type

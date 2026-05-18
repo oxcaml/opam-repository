@@ -1,0 +1,45 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/await"
+bug-reports: "https://github.com/janestreet/await/issues"
+dev-repo: "git+https://github.com/janestreet/await.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/await/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                  {>= "5.2.0"}
+  "async"                  {= "v0.18~preview.130.100+614"}
+  "base"                   {= "v0.18~preview.130.100+614"}
+  "basement"               {= "v0.18~preview.130.100+614"}
+  "capsule"                {= "v0.18~preview.130.100+614"}
+  "capsule0"               {= "v0.18~preview.130.100+614"}
+  "core"                   {= "v0.18~preview.130.100+614"}
+  "handled_effect"         {= "v0.18~preview.130.100+614"}
+  "portable"               {= "v0.18~preview.130.100+614"}
+  "portable_lockfree_htbl" {= "v0.18~preview.130.100+614"}
+  "portable_mpmc_queue"    {= "v0.18~preview.130.100+614"}
+  "ppx_debug_assert"       {= "v0.18~preview.130.100+614"}
+  "ppx_fuelproof"          {= "v0.18~preview.130.100+614"}
+  "ppx_jane"               {= "v0.18~preview.130.100+614"}
+  "ppx_sexp_conv"          {= "v0.18~preview.130.100+614"}
+  "ppx_sexp_value"         {= "v0.18~preview.130.100+614"}
+  "ppx_shorthand"          {= "v0.18~preview.130.100+614"}
+  "ppx_template"           {= "v0.18~preview.130.100+614"}
+  "dune"                   {>= "3.17.0"}
+]
+available: arch != "x86_32"
+synopsis:
+  "Implementations of awaiting and synchronization primitives for OxCaml"
+description: """
+[Await] provides implementations of awaiting and synchronization primitives for OxCaml.
+"""
+url {
+  src:
+    "https://github.com/janestreet/await/archive/97c25b8e51f5ed011b461ddd820d8cd0c60972b8.tar.gz"
+  checksum:
+    "sha256=16b62dd7e9bd45a82002b049ade2a48cc958936c97bd44b119a49a5e94387738"
+}

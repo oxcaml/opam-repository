@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/unboxed_datatypes"
+bug-reports: "https://github.com/janestreet/unboxed_datatypes/issues"
+dev-repo: "git+https://github.com/janestreet/unboxed_datatypes.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/unboxed_datatypes/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.2.0"}
+  "base"     {= "v0.18~preview.130.100+614"}
+  "ppx_jane" {= "v0.18~preview.130.100+614"}
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "x86_32"
+synopsis: "OxCaml Unboxed Datatypes"
+description: """
+ Unboxed versions of common sum types.
+"""
+url {
+  src:
+    "https://github.com/janestreet/unboxed_datatypes/archive/33c23d1bb77b4874e29b91e4a1831ad5dc720a7f.tar.gz"
+  checksum:
+    "sha256=75fde65ea30db3b16965619f8f4146fc9273323f074dbef962e1bef0dfd958df"
+}

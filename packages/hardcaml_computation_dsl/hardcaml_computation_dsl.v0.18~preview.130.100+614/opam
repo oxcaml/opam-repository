@@ -1,0 +1,47 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/hardcaml_computation_dsl"
+bug-reports: "https://github.com/janestreet/hardcaml_computation_dsl/issues"
+dev-repo: "git+https://github.com/janestreet/hardcaml_computation_dsl.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/hardcaml_computation_dsl/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                    {>= "5.1.0"}
+  "bignum"                   {= "v0.18~preview.130.100+614"}
+  "core"                     {= "v0.18~preview.130.100+614"}
+  "expect_test_helpers_base" {= "v0.18~preview.130.100+614"}
+  "expect_test_helpers_core" {= "v0.18~preview.130.100+614"}
+  "hardcaml"                 {= "v0.18~preview.130.100+614"}
+  "hardcaml_axi"             {= "v0.18~preview.130.100+614"}
+  "hardcaml_circuits"        {= "v0.18~preview.130.100+614"}
+  "hardcaml_fixed_point"     {= "v0.18~preview.130.100+614"}
+  "hardcaml_step_testbench"  {= "v0.18~preview.130.100+614"}
+  "hardcaml_test_harness"    {= "v0.18~preview.130.100+614"}
+  "hardcaml_waveterm"        {= "v0.18~preview.130.100+614"}
+  "n_ary"                    {= "v0.18~preview.130.100+614"}
+  "ppx_hardcaml"             {= "v0.18~preview.130.100+614"}
+  "ppx_jane"                 {= "v0.18~preview.130.100+614"}
+  "re2"                      {= "v0.18~preview.130.100+614"}
+  "dune"                     {>= "3.17.0"}
+  "zarith"                   {= "1.12+ox"}
+]
+available: arch != "x86_32"
+synopsis: "Hardcaml computation DSL."
+description: """
+The Hardcaml computation DSL, which allows for describing a graph of fixed-precision
+   arithmetic computations using built-in helper functions. It automatically aligns
+   pipelines for functional correctness and tracks any overflows or other computational
+   errors.
+"""
+url {
+  src:
+    "https://github.com/janestreet/hardcaml_computation_dsl/archive/2597bf0bcefeebec92b2d9f05b2cb6e058e6322b.tar.gz"
+  checksum:
+    "sha256=a21336d7491f01bd7ff56e183776ceb8fd8d00153b3e0fd88d7bc1555d5cfd68"
+}

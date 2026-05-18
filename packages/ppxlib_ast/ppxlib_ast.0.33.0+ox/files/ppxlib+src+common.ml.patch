@@ -46,7 +46,7 @@
      | { ptyp_desc = Ptyp_constr _; _ } -> `Maybe
      | _ -> `Surely_not
      (* Type vars go here even though they could be polymorphic
-@@ -219,12 +218,22 @@ let is_polymorphic_variant =
+@@ -219,12 +218,23 @@ let is_polymorphic_variant =
    in
    fun td ~sig_ ->
      match td.ptype_kind with
@@ -61,8 +61,9 @@
 +  List.exists params ~f:(fun (ty, _) ->
 +      match ty.ptyp_desc with
 +      | Ptyp_var (_, Some jkind) -> begin
-+         match jkind.pjkind_desc with
-+         | Pjk_default | Pjk_abbreviation "value" -> false
++         match jkind.pjka_desc with
++         | Pjk_default
++         | Pjk_abbreviation ({ txt = Lident "value"; _ }, []) -> false
 +         | _ -> true
 +        end
 +      | _ -> false)
@@ -70,7 +71,7 @@
  let mk_named_sig ~loc ~sg_name ~handle_polymorphic_variant = function
    | [ td ]
      when String.equal td.ptype_name.txt "t" && List.is_empty td.ptype_cstrs ->
-@@ -235,6 +244,7 @@ let mk_named_sig ~loc ~sg_name ~handle_p
+@@ -235,6 +245,7 @@ let mk_named_sig ~loc ~sg_name ~handle_p
        else
          let arity = List.length td.ptype_params in
          if arity >= 4 then None
@@ -78,7 +79,7 @@
          else
            let mty =
              if arity = 0 then sg_name else Printf.sprintf "%s%d" sg_name arity
-@@ -272,3 +282,12 @@ module With_errors = struct
+@@ -272,3 +283,12 @@ module With_errors = struct
  
    let combine_errors list = (List.map list ~f:fst, List.concat_map list ~f:snd)
  end

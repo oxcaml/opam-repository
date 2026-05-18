@@ -1,0 +1,45 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/parallel"
+bug-reports: "https://github.com/janestreet/parallel/issues"
+dev-repo: "git+https://github.com/janestreet/parallel.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/parallel/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                    {>= "5.2.0"}
+  "async"                    {= "v0.18~preview.130.100+614"}
+  "await"                    {= "v0.18~preview.130.100+614"}
+  "base"                     {= "v0.18~preview.130.100+614"}
+  "base_bigstring"           {= "v0.18~preview.130.100+614"}
+  "bignum"                   {= "v0.18~preview.130.100+614"}
+  "concurrent"               {= "v0.18~preview.130.100+614"}
+  "core"                     {= "v0.18~preview.130.100+614"}
+  "expect_test_helpers_core" {= "v0.18~preview.130.100+614"}
+  "handled_effect"           {= "v0.18~preview.130.100+614"}
+  "portable"                 {= "v0.18~preview.130.100+614"}
+  "portable_mpmc_queue"      {= "v0.18~preview.130.100+614"}
+  "portable_ws_deque"        {= "v0.18~preview.130.100+614"}
+  "ppx_jane"                 {= "v0.18~preview.130.100+614"}
+  "unboxed"                  {= "v0.18~preview.130.100+614"}
+  "unboxed_datatypes"        {= "v0.18~preview.130.100+614"}
+  "unique"                   {= "v0.18~preview.130.100+614"}
+  "vec"                      {= "v0.18~preview.130.100+614"}
+  "base-threads"
+  "dune"                     {>= "3.17.0"}
+]
+available: arch != "x86_32"
+synopsis: "OxCaml Parallelism"
+description: """
+ Parallelism infrastructure.
+"""
+url {
+  src:
+    "https://github.com/janestreet/parallel/archive/e88365e36ac3f819b543bd7e0d942bcad1f9861c.tar.gz"
+  checksum:
+    "sha256=d52a4b5ab02b417d9b9edbd7c5b4dd1890b9267a75a447c90b69a48c4a2d69a3"
+}

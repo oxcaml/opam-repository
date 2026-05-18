@@ -1,0 +1,36 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/jst-config"
+bug-reports: "https://github.com/janestreet/jst-config/issues"
+dev-repo: "git+https://github.com/janestreet/jst-config.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/jst-config/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"             {>= "5.1.0"}
+  "base"              {= "v0.18~preview.130.100+614"}
+  "ppx_assert"        {= "v0.18~preview.130.100+614"}
+  "dune"              {>= "3.17.0"}
+  "dune-configurator"
+]
+available: arch != "x86_32"
+synopsis: "Compile-time configuration for Jane Street libraries"
+description: """
+Defines compile-time constants used in Jane Street libraries such as Base, Core, and
+Async.
+
+This package has an unstable interface; it is intended only to share configuration between
+different packages from Jane Street. Future updates may not be backward-compatible, and we
+do not recommend using this package directly.
+"""
+url {
+  src:
+    "https://github.com/janestreet/jst-config/archive/970af9d0427111fc948ffbf373af9a79900bcda8.tar.gz"
+  checksum:
+    "sha256=a8f279322e5565b4a505d9ae3bb7dcefe3221993e86e4c8983ae753c9acbe21a"
+}

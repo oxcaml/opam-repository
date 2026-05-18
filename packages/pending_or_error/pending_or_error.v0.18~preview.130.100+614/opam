@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/pending_or_error"
+bug-reports: "https://github.com/janestreet/pending_or_error/issues"
+dev-repo: "git+https://github.com/janestreet/pending_or_error.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/pending_or_error/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.2.0"}
+  "core"     {= "v0.18~preview.130.100+614"}
+  "ppx_diff" {= "v0.18~preview.130.100+614"}
+  "ppx_jane" {= "v0.18~preview.130.100+614"}
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "x86_32"
+synopsis: "A type useful for representing asynchronous results."
+description: """
+A `'a Pending_or_error.t` is a value that comes from an RPC server or some other fallible, asynchronous place. It's isomorphic to an `'a Or_error.t option`, but flattened out and slightly more semantically specific.
+    
+"""
+url {
+  src:
+    "https://github.com/janestreet/pending_or_error/archive/7b1d6c2143df28f5aae520295d00f71c4be0da9c.tar.gz"
+  checksum:
+    "sha256=2a24e87f27d921891ee42f5923df7cdd6edc615cb9be08cae5be6e1dd62f6e47"
+}

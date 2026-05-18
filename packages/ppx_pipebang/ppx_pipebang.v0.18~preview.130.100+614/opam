@@ -1,0 +1,31 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_pipebang"
+bug-reports: "https://github.com/janestreet/ppx_pipebang/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_pipebang.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_pipebang/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"       {>= "5.1.0"}
+  "ppxlib_jane" {= "v0.18~preview.130.100+614"}
+  "dune"        {>= "3.17.0"}
+  "ppxlib"      {= "0.33.0+ox"}
+]
+available: arch != "x86_32"
+synopsis:
+  "A ppx rewriter that inlines reverse application operators `|>` and `|!`"
+description: """
+Part of the Jane Street's PPX rewriters collection.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_pipebang/archive/757535124d06d61436cb47ced2410af2fcc6fc32.tar.gz"
+  checksum:
+    "sha256=4078de8b2c74a81c58c0d3f543631d3f625fa06c0ab87eb3e2167a48acbb9360"
+}

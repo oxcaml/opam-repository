@@ -1,0 +1,37 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_delta_types"
+bug-reports: "https://github.com/janestreet/ppx_delta_types/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_delta_types.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_delta_types/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"      {>= "5.2.0"}
+  "base"       {= "v0.18~preview.130.100+614"}
+  "core"       {= "v0.18~preview.130.100+614"}
+  "ppx_jane"   {= "v0.18~preview.130.100+614"}
+  "ppx_stable" {= "v0.18~preview.130.100+614"}
+  "dune"       {>= "3.17.0"}
+  "ppxlib"     {= "0.33.0+ox"}
+]
+available: arch != "x86_32"
+synopsis:
+  "A ppx for defining types by their differences from existing types."
+description: """
+Delta types are the changes you need to make to modify one type into
+     another. `ppx_delta_types` lets you write down these changes as code
+     instead of copying the previous version of the type and making the
+     changes yourself.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_delta_types/archive/6440883a62a4d1ffde7fe0c5c71d58491cfe02a4.tar.gz"
+  checksum:
+    "sha256=2a7982ab2365c137b02daf696c8acd5b888a1a3d930eb1acc5012599a19d5149"
+}

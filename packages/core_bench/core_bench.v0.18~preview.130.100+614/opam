@@ -1,0 +1,44 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/core_bench"
+bug-reports: "https://github.com/janestreet/core_bench/issues"
+dev-repo: "git+https://github.com/janestreet/core_bench.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/core_bench/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"             {>= "5.1.0"}
+  "command_nodejs"    {= "v0.18~preview.130.100+614"}
+  "core"              {= "v0.18~preview.130.100+614"}
+  "core_extended"     {= "v0.18~preview.130.100+614"}
+  "core_kernel"       {= "v0.18~preview.130.100+614"}
+  "core_unix"         {= "v0.18~preview.130.100+614"}
+  "delimited_parsing" {= "v0.18~preview.130.100+614"}
+  "ppx_bench"         {= "v0.18~preview.130.100+614"}
+  "ppx_compare"       {= "v0.18~preview.130.100+614"}
+  "ppx_fields_conv"   {= "v0.18~preview.130.100+614"}
+  "ppx_jane"          {= "v0.18~preview.130.100+614"}
+  "ppx_let"           {= "v0.18~preview.130.100+614"}
+  "ppx_optcomp"       {= "v0.18~preview.130.100+614"}
+  "ppx_sexp_conv"     {= "v0.18~preview.130.100+614"}
+  "textutils"         {= "v0.18~preview.130.100+614"}
+  "time_now"          {= "v0.18~preview.130.100+614"}
+  "dune"              {>= "3.17.0"}
+  "js_of_ocaml-ppx"   {= "6.0.1+ox"}
+  "re"                {= "1.14.0+ox"}
+]
+available: arch != "x86_32"
+synopsis: "Benchmarking library"
+description: """
+"""
+url {
+  src:
+    "https://github.com/janestreet/core_bench/archive/7cf4af9d0f338066817abf65b89e662fdca15ab9.tar.gz"
+  checksum:
+    "sha256=783e35f768e6b2b20d9fd208fca2a1c2a57bdceaf817e5e5848407ac304c89db"
+}

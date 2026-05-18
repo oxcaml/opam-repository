@@ -23,7 +23,7 @@ depends: [
   "zed"          {>= "3.2.0"}
   "react"        {>= "1.0.0"}
   "cppo"         {>= "1.1.2"}
-  "alcotest"     {with-test}
+  "alcotest"     {with-test & = "1.9.0+ox"}
   "xdg"          {>= "3.9.0"}
   "odoc"         {with-doc}
 ]
@@ -48,6 +48,4 @@ url {
   checksum:
     "sha256=dff3e14b4d99d48757d7e886f69450e802cae5d8d54fd0681631230e71e42953"
 }
-conflicts: [
-  "oxcaml-compiler" {> "5.2.0minus25"}
-]
+

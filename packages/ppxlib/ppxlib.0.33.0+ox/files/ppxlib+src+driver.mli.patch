@@ -41,3 +41,12 @@
  (**/**)
  
  val map_structure : structure -> structure
+@@ -244,3 +251,8 @@ val map_signature : signature -> signatu
+ val enable_checks : unit -> unit
+ val enable_location_check : unit -> unit
+ val disable_location_check : unit -> unit
++
++(** Passes additional flags to the driver to process as if they'd been passed on the
++    command line. This can be used to programmatically parse PPX flags when using the
++    driver as a library (e.g., in toplevel_expect_test). *)
++val parse_additional_flags : prog:string -> flags:string list -> unit

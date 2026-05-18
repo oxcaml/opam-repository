@@ -23,7 +23,7 @@ bug-reports: "https://github.com/ocaml/omd/issues"
 depends: [
   "dune"            {>= "2.7"}
   "ocaml"           {>= "4.13"}
-  "uutf"
+  "uutf"            {= "1.0.4+ox"}
   "uucp"
   "uunf"
   "dune-build-info" {>= "2.7"}
@@ -67,7 +67,4 @@ extra-files: [
     "omd-fix-link-parsed-as-text-bug.patch"
     "sha256=50a4e520a67741be1b97d4bfe657985e2f17fb09ae85f7abefec001770a1c912"
   ]
-]
-conflicts: [
-  "oxcaml-compiler" {< "5.2.0minus31"}
 ]

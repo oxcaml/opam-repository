@@ -1,0 +1,45 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/proctopus"
+bug-reports: "https://github.com/janestreet/proctopus/issues"
+dev-repo: "git+https://github.com/janestreet/proctopus.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/proctopus/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                  {>= "5.2.0"}
+  "async"                  {= "v0.18~preview.130.100+614"}
+  "babel"                  {= "v0.18~preview.130.100+614"}
+  "bonsai"                 {= "v0.18~preview.130.100+614"}
+  "bonsai_term"            {= "v0.18~preview.130.100+614"}
+  "bonsai_term_components" {= "v0.18~preview.130.100+614"}
+  "core"                   {= "v0.18~preview.130.100+614"}
+  "core_unix"              {= "v0.18~preview.130.100+614"}
+  "expectable"             {= "v0.18~preview.130.100+614"}
+  "expectree"              {= "v0.18~preview.130.100+614"}
+  "pending_or_error"       {= "v0.18~preview.130.100+614"}
+  "ppx_jane"               {= "v0.18~preview.130.100+614"}
+  "procfs"                 {= "v0.18~preview.130.100+614"}
+  "sexp_pretty"            {= "v0.18~preview.130.100+614"}
+  "tmux"                   {= "v0.18~preview.130.100+614"}
+  "vec"                    {= "v0.18~preview.130.100+614"}
+  "dune"                   {>= "3.17.0"}
+  "num"
+  "uutf"                   {= "1.0.4+ox"}
+]
+available: arch != "x86_32"
+synopsis: "A Bonsai_term application for managing multiple processes."
+description: """
+A Bonsai_term application for managing multiple processes.
+"""
+url {
+  src:
+    "https://github.com/janestreet/proctopus/archive/dc9623e2b324a561a7632950df28c4d2f0a4d414.tar.gz"
+  checksum:
+    "sha256=62375050d110f73659160eecf63a34101952be4f13cad75e16bd01020b9f0bba"
+}

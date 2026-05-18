@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/mmap"
+bug-reports: "https://github.com/janestreet/mmap/issues"
+dev-repo: "git+https://github.com/janestreet/mmap.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/mmap/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"            {>= "5.1.0"}
+  "core"             {= "v0.18~preview.130.100+614"}
+  "core_kernel"      {= "v0.18~preview.130.100+614"}
+  "core_unix"        {= "v0.18~preview.130.100+614"}
+  "ocaml_intrinsics" {= "v0.18~preview.130.100+614"}
+  "ppx_jane"         {= "v0.18~preview.130.100+614"}
+  "dune"             {>= "3.17.0"}
+]
+available: arch != "x86_32"
+synopsis: "Memory-mapped buffers, using the mmap system call"
+description: """
+Provides some convenience functions for creating memory-mapped buffers when writing low-level code.
+"""
+url {
+  src:
+    "https://github.com/janestreet/mmap/archive/70a1b927aec600c4d0e5a2b43b4e52e1af8085be.tar.gz"
+  checksum:
+    "sha256=21b71442427dec524ac1deb6f209037827a8973e8b904097fc7c8976e2cdb576"
+}

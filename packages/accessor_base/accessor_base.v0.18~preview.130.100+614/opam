@@ -1,0 +1,33 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/accessor_base"
+bug-reports: "https://github.com/janestreet/accessor_base/issues"
+dev-repo: "git+https://github.com/janestreet/accessor_base.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/accessor_base/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"         {>= "5.1.0"}
+  "accessor"      {= "v0.18~preview.130.100+614"}
+  "base"          {= "v0.18~preview.130.100+614"}
+  "higher_kinded" {= "v0.18~preview.130.100+614"}
+  "ppx_accessor"  {= "v0.18~preview.130.100+614"}
+  "ppx_jane"      {= "v0.18~preview.130.100+614"}
+  "dune"          {>= "3.17.0"}
+]
+available: arch != "x86_32"
+synopsis: "Accessors for Base types, for use with the Accessor library"
+description: """
+This library provides accessors for numerous types in Base.
+"""
+url {
+  src:
+    "https://github.com/janestreet/accessor_base/archive/9cce4497134be23dd246c6425216dfb8debb526f.tar.gz"
+  checksum:
+    "sha256=27027c446839e8bee42ec8cb6c0e71c0417e9b5dc6578adedff2593d723d6650"
+}

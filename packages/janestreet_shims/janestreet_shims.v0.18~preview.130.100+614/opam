@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/janestreet_shims"
+bug-reports: "https://github.com/janestreet/janestreet_shims/issues"
+dev-repo: "git+https://github.com/janestreet/janestreet_shims.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/janestreet_shims/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml" {>= "5.1.0"}
+  "dune"  {>= "3.17.0"}
+]
+available: arch != "x86_32"
+synopsis: "Shims for Jane Street compiler extensions"
+description: """
+Janestreet_shims provides shims for Jane Street compiler extensions
+  like unboxed types. It simulates primitives like unboxed integers at the cost
+  of runtime performance.
+"""
+url {
+  src:
+    "https://github.com/janestreet/janestreet_shims/archive/d97e19f857824c5e3eb41e9ac2188cd2c9ca190f.tar.gz"
+  checksum:
+    "sha256=fbb008c91d9115e52c00af302dae4a25c5b01fe66baf89ee45b9cb6059ffab26"
+}

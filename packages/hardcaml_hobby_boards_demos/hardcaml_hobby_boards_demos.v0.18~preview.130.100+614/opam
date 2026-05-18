@@ -1,0 +1,29 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/hardcaml_hobby_boards_demos"
+bug-reports:
+  "https://github.com/janestreet/hardcaml_hobby_boards_demos/issues"
+dev-repo: "git+https://github.com/janestreet/hardcaml_hobby_boards_demos.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/hardcaml_hobby_boards_demos/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml" {>= "5.1.0"}
+  "dune"  {>= "3.17.0"}
+]
+available: arch != "x86_32"
+synopsis: "Example projects using hardcaml_hobby_boards library."
+description: """
+Example projects to demonstrate how to use hardcaml_hobby_boards libraries with different boards.
+"""
+url {
+  src:
+    "https://github.com/janestreet/hardcaml_hobby_boards_demos/archive/9a137f817cb423145f1925dd73ed749f6e7210a2.tar.gz"
+  checksum:
+    "sha256=fc065c955bf3b0669b1614a124383c2b3ce26fba537ea9af16e0b46405456af0"
+}

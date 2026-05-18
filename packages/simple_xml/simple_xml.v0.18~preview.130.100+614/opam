@@ -1,0 +1,36 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/simple_xml"
+bug-reports: "https://github.com/janestreet/simple_xml/issues"
+dev-repo: "git+https://github.com/janestreet/simple_xml.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/simple_xml/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"              {>= "5.1.0"}
+  "core"               {= "v0.18~preview.130.100+614"}
+  "ppx_jane"           {= "v0.18~preview.130.100+614"}
+  "ppx_stable_witness" {= "v0.18~preview.130.100+614"}
+  "sexplib"            {= "v0.18~preview.130.100+614"}
+  "dune"               {>= "3.17.0"}
+  "xmlm"               {>= "1.4.0"}
+]
+available: arch != "x86_32"
+synopsis: "A library for representing XML documents based on XMLM."
+description: """
+This library contains a type definition for XML documents, as well a
+  way to parse and serialize it to XML bytes based on XMLM, and other
+  helpers like sexp, bin_io, and quickcheck derivations.
+  
+"""
+url {
+  src:
+    "https://github.com/janestreet/simple_xml/archive/d1969b3c697d8bf2e2a2cf09b89d5d0356bcb7c9.tar.gz"
+  checksum:
+    "sha256=0b422a7e77bb3a320211865b2033b6483919fdbd96e399a821c43f1fd04a5d28"
+}

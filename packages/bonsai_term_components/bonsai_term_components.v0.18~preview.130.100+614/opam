@@ -1,0 +1,47 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/bonsai_term_components"
+bug-reports: "https://github.com/janestreet/bonsai_term_components/issues"
+dev-repo: "git+https://github.com/janestreet/bonsai_term_components.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/bonsai_term_components/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"            {>= "5.1.0"}
+  "async"            {= "v0.18~preview.130.100+614"}
+  "bonsai"           {= "v0.18~preview.130.100+614"}
+  "bonsai_concrete"  {= "v0.18~preview.130.100+614"}
+  "bonsai_term"      {= "v0.18~preview.130.100+614"}
+  "core"             {= "v0.18~preview.130.100+614"}
+  "core_kernel"      {= "v0.18~preview.130.100+614"}
+  "core_unix"        {= "v0.18~preview.130.100+614"}
+  "expectree"        {= "v0.18~preview.130.100+614"}
+  "jane_term_types"  {= "v0.18~preview.130.100+614"}
+  "patdiff"          {= "v0.18~preview.130.100+614"}
+  "pending_or_error" {= "v0.18~preview.130.100+614"}
+  "ppx_delta_types"  {= "v0.18~preview.130.100+614"}
+  "ppx_expect"       {= "v0.18~preview.130.100+614"}
+  "ppx_jane"         {= "v0.18~preview.130.100+614"}
+  "sexplib"          {= "v0.18~preview.130.100+614"}
+  "tmux"             {= "v0.18~preview.130.100+614"}
+  "vec"              {= "v0.18~preview.130.100+614"}
+  "base64"           {>= "3.4.0"}
+  "dune"             {>= "3.17.0"}
+  "react"
+]
+available: arch != "x86_32"
+synopsis: "A set of Terminal UI (TUI) component libraries for bonsai_term."
+description: """
+bonsai_term_components is an opam package that contains a couple of bonsai_term TUI components.
+"""
+url {
+  src:
+    "https://github.com/janestreet/bonsai_term_components/archive/4273bfd024e1649fc83872e94a9473a16dda3155.tar.gz"
+  checksum:
+    "sha256=2527d67127aa36e97227ae527ba3e00b9b3ec7d5c26a261781257bea3da9d985"
+}

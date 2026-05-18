@@ -370,7 +370,29 @@
    ]
  
  let get_args ?(standalone_args = standalone_args) () =
-@@ -1556,6 +1610,8 @@ let run_as_ppx_rewriter () =
+@@ -1486,7 +1540,7 @@ let rewrite_binary_ast_file input_fn out
+ 
+ let parse_input passed_in_args ~valid_args ~incorrect_input_msg =
+   try
+-    Arg.parse_argv passed_in_args (Arg.align valid_args)
++    Arg.parse_argv ~current:(ref 0) passed_in_args (Arg.align valid_args)
+       (fun _ -> raise (Arg.Bad "anonymous arguments not accepted"))
+       incorrect_input_msg
+   with
+@@ -1497,6 +1551,12 @@ let parse_input passed_in_args ~valid_ar
+       Printf.eprintf "%s" msg;
+       Stdlib.exit 0
+ 
++let parse_additional_flags ~prog ~flags =
++  parse_input
++    (Array.of_list (prog :: flags))
++    ~valid_args:!args
++    ~incorrect_input_msg:"unrecognized PPX flags"
++
+ let run_as_ppx_rewriter_main ~standalone_args ~usage input =
+   let valid_args = get_args ~standalone_args () in
+   match List.rev @@ Array.to_list @@ input with
+@@ -1556,6 +1616,8 @@ let run_as_ppx_rewriter () =
  
  let pretty () = !pretty
  
@@ -379,7 +401,7 @@
  let enable_checks () =
    (* We do not enable the locations check here, we currently require that one
       to be specifically enabled. *)
-@@ -1565,3 +1621,24 @@ let enable_checks () =
+@@ -1565,3 +1627,24 @@ let enable_checks () =
  let enable_location_check () = perform_locations_check := true
  let disable_location_check () = perform_locations_check := false
  let map_structure st = map_structure st

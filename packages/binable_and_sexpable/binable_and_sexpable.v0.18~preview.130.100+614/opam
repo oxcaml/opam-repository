@@ -1,0 +1,30 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/binable_and_sexpable"
+bug-reports: "https://github.com/janestreet/binable_and_sexpable/issues"
+dev-repo: "git+https://github.com/janestreet/binable_and_sexpable.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/binable_and_sexpable/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.2.0"}
+  "core"     {= "v0.18~preview.130.100+614"}
+  "ppx_jane" {= "v0.18~preview.130.100+614"}
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "x86_32"
+synopsis: "Combined [Binable] and [Sexpable] [Of_format] functors"
+description: """
+[Binable_and_sexpable] provides functors that derive both [Binable] and [Sexpable] instances from a single [to_format]/[of_format] pair, avoiding the duplication of writing separate [Sexpable.Of_sexpable] and [Binable.Of_binable] applications.
+"""
+url {
+  src:
+    "https://github.com/janestreet/binable_and_sexpable/archive/97b240aa61f262bec648ad6bd27da30819f2ca7a.tar.gz"
+  checksum:
+    "sha256=1093306f877876922e38fc4f5dc741ec3dcb95d3a782564c3dcea1982f0746bc"
+}

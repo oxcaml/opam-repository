@@ -1,0 +1,31 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_fixed_literal"
+bug-reports: "https://github.com/janestreet/ppx_fixed_literal/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_fixed_literal.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_fixed_literal/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"  {>= "5.1.0"}
+  "base"   {= "v0.18~preview.130.100+614"}
+  "dune"   {>= "3.17.0"}
+  "ppxlib" {= "0.33.0+ox"}
+]
+available: arch != "x86_32"
+synopsis: "Simpler notation for fixed point literals"
+description: """
+A ppx rewriter that rewrites fixed point literal of the
+form 1.0v to conversion functions currently in scope.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_fixed_literal/archive/7abcad8c2e81111b5a4e8b24ed8dbb0c19021622.tar.gz"
+  checksum:
+    "sha256=814cc8dc4122c2c36f70212036c1fd332bd8489ddeb13cb472f42e4bc9bee5e4"
+}

@@ -90,7 +90,17 @@
  
  module type Comparisons = sig
    type t
-@@ -288,7 +365,7 @@ end
+@@ -21,7 +98,8 @@ module type Comparisons = sig
+ end
+ 
+ module Poly = struct
+-  let compare = compare
++  let compare__local (a @ local) (b @ local) = compare a b
++  let compare a b = compare__local a b
+   let equal = ( = )
+   let ( = ) = ( = )
+   let ( < ) = ( < )
+@@ -288,7 +366,7 @@ end
  module Result = struct
    let bind t ~f = match t with Ok a -> f a | Error e -> Error e
    let map t ~f = match t with Ok a -> Ok (f a) | Error e -> Error e
@@ -99,7 +109,7 @@
    let ( >>= ) t f = bind t ~f
    let ( >>| ) t f = map t ~f
    let handle_error t ~f = match t with Ok a -> a | Error e -> f e
-@@ -386,6 +463,25 @@ module String = struct
+@@ -386,6 +464,25 @@ module String = struct
    let uncapitalize_ascii = Stdlib.String.uncapitalize_ascii
    let split_on_char t ~sep = Stdlib.String.split_on_char sep t
  

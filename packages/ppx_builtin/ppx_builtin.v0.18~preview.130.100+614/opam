@@ -1,0 +1,31 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_builtin"
+bug-reports: "https://github.com/janestreet/ppx_builtin/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_builtin.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_builtin/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"               {>= "5.2.0"}
+  "ppxlib_jane"         {= "v0.18~preview.130.100+614"}
+  "dune"                {>= "3.17.0"}
+  "ocaml-compiler-libs" {= "v0.17.0+ox"}
+  "ppxlib"              {= "0.33.0+ox"}
+]
+available: arch != "x86_32"
+synopsis: "Elides unsupported [@@builtin] attributes."
+description: """
+A ppx rewriter that elides [@@builtin] attributes on unsupported architectures.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_builtin/archive/269a58c0223beee27021bcd1ae8f5dc5e9572311.tar.gz"
+  checksum:
+    "sha256=f6a6109c93e8e45658b7139cbf70588c5351e8d9e0ab9dfc9599dac40283e2af"
+}

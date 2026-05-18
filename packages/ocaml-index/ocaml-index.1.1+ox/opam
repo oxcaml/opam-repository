@@ -15,7 +15,7 @@ depends: [
   "merlin-lib" {= "5.2.1-502+ox"}
   "yojson"     {< "3.0.0"}
   "odoc"       {with-doc}
-  "alcotest"   {with-test}
+  "alcotest"   {with-test & = "1.9.0+ox"}
 ]
 build: [
   ["dune" "subst"] {dev}
@@ -41,6 +41,4 @@ url {
   checksum:
     "sha256=f7b76956485c97f17829c7f9aa8a99ba0d5956b0f0cbcde48b5180c80727bc8a"
 }
-conflicts: [
-  "oxcaml-compiler" {> "5.2.0minus25"}
-]
+

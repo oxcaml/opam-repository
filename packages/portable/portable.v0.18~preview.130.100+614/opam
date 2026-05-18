@@ -1,0 +1,37 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/portable"
+bug-reports: "https://github.com/janestreet/portable/issues"
+dev-repo: "git+https://github.com/janestreet/portable.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/portable/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"           {>= "5.1.0"}
+  "base"            {= "v0.18~preview.130.100+614"}
+  "base_quickcheck" {= "v0.18~preview.130.100+614"}
+  "basement"        {= "v0.18~preview.130.100+614"}
+  "capsule"         {= "v0.18~preview.130.100+614"}
+  "ppx_compare"     {= "v0.18~preview.130.100+614"}
+  "ppx_sexp_conv"   {= "v0.18~preview.130.100+614"}
+  "ppx_shorthand"   {= "v0.18~preview.130.100+614"}
+  "ppx_template"    {= "v0.18~preview.130.100+614"}
+  "dune"            {>= "3.17.0"}
+]
+available: arch != "x86_32"
+synopsis: "Library for parallel programming in OCaml and OxCaml"
+description: """
+Part of Jane Street's Core library
+Portable is a library containing core interfaces and data structures for parallel
+programming using OCaml and OxCaml
+"""
+url {
+  src:
+    "https://github.com/janestreet/portable/archive/6c41985789968254882f70cddedd905dceb2cb0d.tar.gz"
+  checksum:
+    "sha256=f25298a8bb96935bdd019c0affd065d6ed4805f98d9b5e3e057425843cf0fc08"
+}
