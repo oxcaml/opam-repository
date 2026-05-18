@@ -32,3 +32,4 @@ url {
   checksum:
     "sha256=f88a442da7d601ebd3b02841f6f9c6c70f6857a85235072a0a145b0989e138c3"
 }
+conflicts: "oxcaml-compiler" {< "5.2.0minus38"}
