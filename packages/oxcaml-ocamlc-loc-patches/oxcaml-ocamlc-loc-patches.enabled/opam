@@ -13,6 +13,7 @@ depends: [
   "ocamlc-loc" {build & (
                   = "3.20.2+ox"
                 | = "3.21.0+ox"
+                | = "3.22.2+ox"
                 )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
