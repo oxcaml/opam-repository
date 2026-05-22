@@ -78,6 +78,7 @@ patches: [
   "notty-vs16_makes_characters_look_like_emojis.patch"
   "notty-expose_operation_intermediate_representation.patch"
   "notty-dynamic_mouse_reporting.patch"
+  "notty-hover_events.patch"
   "dune.patch"
   "lwt.patch"
 ]
@@ -157,6 +158,10 @@ extra-files: [
   [
     "notty-dynamic_mouse_reporting.patch"
     "sha256=883150741961a07cff7a238c4c4ab6c1c3fe5d559887bcc4e4099a29aa164757"
+  ]
+  [
+    "notty-hover_events.patch"
+    "sha256=a95b68a0e3fca32c933f9af477de1eac1fb8836730fa15d1b0423cf8ec9d001e"
   ]
   [
     "dune.patch"
