@@ -9,6 +9,7 @@ doc:
 license: "MIT"
 x-maintenance-intent: ["(latest)"]
 build: [
+  ["sed" "-ib" "-e" "/Nums_flat/d" "src/process_manager.ml"]
   ["dune" "build" "-p" name "-j" jobs]
 ]
 depends: [
