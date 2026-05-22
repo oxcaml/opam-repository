@@ -38,6 +38,7 @@ jobs:
         with:
           ocaml-compiler: ocaml-variants.5.2.0+ox
           opam-disable-sandboxing: true
+          additional-test-packages: strace_ui proctopus
 
   test-macos:
     strategy:
