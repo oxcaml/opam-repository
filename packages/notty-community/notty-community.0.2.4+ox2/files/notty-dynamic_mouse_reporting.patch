@@ -1,0 +1,28 @@
+--- a/src/notty.ml
++++ b/src/notty.ml
+@@ -1040,6 +1040,8 @@
+     ; previous_lines = None
+     }
+ 
++  let set_mouse t enabled = emit t (t.cap.mouse enabled)
++
+   let release t =
+     if t.dead then false else
+       ( emit t ( t.cap.altscr false & t.cap.cursvis true &
+--- a/src/notty.mli
++++ b/src/notty.mli
+@@ -641,6 +641,14 @@
+   val release : t -> bool
+   val output  : t -> Buffer.t -> unit
+ 
++  (** Dynamically enable/disable mouse reporting.
++
++      This controls whether the terminal is asked to send mouse events on stdin.
++      Disabling mouse reporting is important for allowing users to use terminal-native
++      text selection.
++  *)
++  val set_mouse : t -> bool -> unit
++
+   type cursor :=
+     [ `Default
+     | `Bar

@@ -1,0 +1,12 @@
+--- a/src/dune
++++ b/src/dune
+@@ -4,7 +4,8 @@
+   (name notty)
+   (public_name notty-community)
+   (synopsis "Declaring terminals")
+-  (libraries uutf)
++  (libraries base uutf portable portable_lockfree_htbl)
++  (preprocess (pps ppx_jane))
+   (wrapped false)
+   (modules notty notty_grapheme_cluster notty_uucp notty_uucp_data)
+   (private_modules notty_grapheme_cluster notty_uucp notty_uucp_data))

@@ -1,0 +1,36 @@
+--- a/src/notty.ml
++++ b/src/notty.ml
+@@ -606,19 +606,25 @@
+   let skip_op cap buf n = cap.skip n buf
+   let text_op cap buf a x = cap.sgr a buf; Text.to_buffer buf x
+ 
+-  let rec line cap buf = function
+-    End              -> erase cap buf
++  let rec line ~screen_width ~line_width cap buf = function
++  | End              
++  | Skip (0,    End) ->
++    (* NOTE: If we are at the end of a line, we do not call [erase] (which sends cleareol)
++       as terminal emulators behave differently when a fully filled column receives a
++       "cleareol" at the end of the line. e.g. notty and vim's [:term] will reset the last
++       column. *)
++    if screen_width = line_width then () else (erase cap buf)
+   | Skip (n,    End) -> erase cap buf; skip_op cap buf n
+-  | Skip (n,    ops) -> skip_op cap buf n; line cap buf ops
+-  | Text (a, x, ops) -> text_op cap buf a x; line cap buf ops
++  | Skip (n,    ops) -> skip_op cap buf n; line ~screen_width ~line_width:(line_width + n) cap buf ops
++  | Text (a, x, ops) -> text_op cap buf a x; line ~screen_width ~line_width:(line_width + Text.width x) cap buf ops
+ 
+-  let rec lines cap buf = function
++  let rec lines ~screen_width cap buf = function
+     []      -> ()
+-  | [ln]    -> line cap buf ln; cap.sgr A.empty buf
+-  | ln::lns -> line cap buf ln; cap.newline buf; lines cap buf lns
++  | [ln]    -> line ~screen_width ~line_width:0 cap buf ln; cap.sgr A.empty buf
++  | ln::lns -> line ~screen_width ~line_width:0 cap buf ln; cap.newline buf; lines ~screen_width cap buf lns
+ 
+   let to_buffer buf cap off dim img =
+-    Operation.of_image off dim img |> lines cap buf
++    Operation.of_image off dim img |> lines ~screen_width:(fst dim) cap buf
+ 
+   let pp cap ppf img =
+     let open Format in

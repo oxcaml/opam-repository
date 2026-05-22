@@ -1,0 +1,135 @@
+--- a/src/notty.ml
++++ b/src/notty.ml
+@@ -172,11 +172,9 @@
+ 
+     type color = int [@@deriving equal]
+     type style = int [@@deriving equal]
+-    type t = { fg : color; bg : color; st : style } [@@deriving equal]
++    type t = { fg : color; bg : color; st : style; url : string option } [@@deriving equal]
+   end
+ 
+-  let equal t1 t2 = t1.fg = t2.fg && t1.bg = t2.bg && t1.st = t2.st
+-
+   let black        = 0x01000000
+   and red          = 0x01000001
+   and green        = 0x01000002
+@@ -222,17 +220,19 @@
+   and blink     = 8
+   and reverse   = 16
+ 
+-  let empty = { fg = 0; bg = 0; st = 0 }
++  let empty = { fg = 0; bg = 0; st = 0; url = None }
+ 
+  let (++) a1 a2 =
+    if a1 == empty then a2 else if a2 == empty then a1 else
+      { fg = (match a2.fg with 0 -> a1.fg | x -> x)
+      ; bg = (match a2.bg with 0 -> a1.bg | x -> x)
+-     ; st = a1.st lor a2.st }
++     ; st = a1.st lor a2.st
++     ; url = (match a2.url with None -> a1.url | x -> x) }
+ 
+   let fg fg = { empty with fg }
+   let bg bg = { empty with bg }
+   let st st = { empty with st }
++  let href ~url = { empty with url = Some url }
+ end
+ 
+ module I = struct
+@@ -517,7 +517,7 @@
+ 
+   type t = {
+     skip    : int -> op
+-  ; sgr     : A.t -> op
++  ; sgr     : A.t -> inside:op -> op
+   ; newline : op
+   ; clreol  : op
+   ; cursvis : bool -> op
+@@ -536,7 +536,19 @@
+ 
+   let sts = [ ";1"; ";3"; ";4"; ";5"; ";7" ]
+ 
+-  let sgr { A.fg; bg; st } buf =
++  let sgr { A.fg; bg; st; url } ~inside buf =
++    (* NOTE: [inside] is a callback. Some attrs (e.g. the "link") attrs, need to send
++       some codes at the _beginning_ of some text, and also at the _end_ of some text, so
++       this `inside` callback is used to implement the things that should be drawn
++       "in-between" (e.g. the visual part of a hyperlink.) *)
++    let after () = 
++      match url with
++      | None ->  () 
++      | Some _ -> buf <| "\x1b]8;;\x1b\\";
++    in
++    ( match url with
++      | Some u -> buf <| "\x1b]8;;"; buf <| u; buf <| "\x1b\\"
++      | None -> () );
+     buf <| "\x1b[0";
+     let rgb888 buf x =
+       buf <! A.r x; buf <. ';'; buf <! A.g x; buf <. ';'; buf <! A.b x in
+@@ -559,7 +571,12 @@
+           | (0, _) | (_, []) -> ()
+           | (_, x::xs) -> if f land 1 > 0 then buf <| x; go (f lsr 1) xs in
+         go st sts );
+-    buf <. 'm'
++    buf <. 'm';
++    inside buf;
++    after ();
++  ;;
++
++
+ 
+   let ansi = {
+       skip    = (fun n b -> b <| "\x1b[0m"; Buffer.add_chars b ' ' n)
+@@ -606,12 +623,12 @@
+     ; clreol  = no0
+     ; cursvis = no1
+     ; cursor_kind = no1
+-    ; sgr     = no1
++    ; sgr     =( fun _ ~inside buffer -> inside buffer)
+     ; mouse   = no1
+     ; bpaste  = no1
+     }
+ 
+-  let erase cap buf = cap.sgr A.empty buf; cap.clreol buf (* KEEP ETA-LONG. *)
++  let erase cap buf = cap.sgr ~inside:(fun _ -> ()) A.empty buf; cap.clreol buf (* KEEP ETA-LONG. *)
+   let cursat0 cap w h = cap.cursat (max w 0 + 1) (max h 0 + 1)
+ end
+ 
+@@ -621,7 +638,7 @@
+   open Operation
+ 
+   let skip_op cap buf n = cap.skip n buf
+-  let text_op cap buf a x = cap.sgr a buf; Text.to_buffer buf x
++  let text_op cap buf a x = cap.sgr ~inside:(fun buf -> Text.to_buffer buf x) a buf
+ 
+   let rec line ~screen_width ~line_width cap buf = function
+   | End              
+@@ -637,7 +654,7 @@
+ 
+   let rec lines ~screen_width cap buf = function
+     []      -> ()
+-  | [ln]    -> line ~screen_width ~line_width:0 cap buf ln; cap.sgr A.empty buf
++  | [ln]    -> line ~screen_width ~line_width:0 cap buf ln; cap.sgr ~inside:(fun _ -> ()) A.empty buf
+   | ln::lns -> line ~screen_width ~line_width:0 cap buf ln; cap.newline buf; lines ~screen_width cap buf lns
+ 
+ 
+@@ -650,7 +667,7 @@
+   let rec lines_diffed ~screen_width cap buf = function
+     []      -> ()
+   | [ln]    ->
+-    line_diffed ~screen_width ~line_width:0 cap buf ln ~on_draw:(fun () -> cap.sgr A.empty buf)
++    line_diffed ~screen_width ~line_width:0 cap buf ln ~on_draw:(fun () -> cap.sgr ~inside:(fun _ -> ()) A.empty buf)
+   | ln::lns ->
+     line_diffed ~screen_width ~line_width:0 cap buf ln ~on_draw:(fun () -> cap.newline buf);
+     lines_diffed ~screen_width cap buf lns
+--- a/src/notty.mli
++++ b/src/notty.mli
+@@ -168,6 +168,9 @@
+ 
+   val st : style -> attr
+   (** [st s] is [empty] with style [s]. *)
++
++  val href : url:string -> attr
++  (** [href ~url] is [empty] with a clickable hyperlink to [url]. *)
+ end
+ 
+ (** [I] is for image.
