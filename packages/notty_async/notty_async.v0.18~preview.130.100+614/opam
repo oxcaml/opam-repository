@@ -9,6 +9,8 @@ doc:
 license: "MIT"
 x-maintenance-intent: ["(latest)"]
 build: [
+  ["sed" "-ib" "-e" "/Tmachine.create/s/create /&~hover:false /;/let create ?/s/?bpaste /&?(hover = false) /" "src/notty_async.ml"]
+  ["sed" "-ib" "-e" "/bpaste/a    -> ?hover:bool" "src/notty_async.mli"]
   ["dune" "build" "-p" name "-j" jobs]
 ]
 depends: [
