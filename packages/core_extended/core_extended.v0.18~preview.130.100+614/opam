@@ -21,6 +21,7 @@ depends: [
   "ppx_stable_witness" {= "v0.18~preview.130.100+614"}
   "record_builder"     {= "v0.18~preview.130.100+614"}
   "sexplib"            {= "v0.18~preview.130.100+614"}
+  "unboxed"            {= "v0.18~preview.130.100+614"}
   "dune"               {>= "3.17.0"}
   "re"                 {>= "1.14.0"}
 ]
