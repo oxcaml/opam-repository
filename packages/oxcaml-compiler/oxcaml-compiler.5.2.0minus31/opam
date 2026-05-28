@@ -105,7 +105,7 @@ patches: ["ignore-opam.patch" "cut-fix.patch"]
 extra-files: [
   [
     "ignore-opam.patch"
-    "sha256=83d87c0cab3a660c5213b485280df287a81b63c1a3444f0ef2e0e6f3ed02597b"
+    "sha256=acf0443a54832e9f6b46c91335a7af63e52072308d0842f5d519d9ff670a29e5"
   ]
   [
     "cut-fix.patch"
