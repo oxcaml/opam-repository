@@ -1,0 +1,155 @@
+--- a/src/notty.ml
++++ b/src/notty.ml
+@@ -75,9 +75,13 @@
+   let err_ctrl u = invalid_arg "Notty: control char: U+%02X, %S" (Char.code u)
+   let err_malformed = invalid_arg "Notty: malformed UTF-8: %s, %S"
+ 
+-  type t =
+-    | Ascii of string * int * int
+-    | Utf8  of string * int array * int * int
++  include struct
++    open! Base
++
++    type t =
++      | Ascii of string * int * int
++      | Utf8  of string * int array * int * int [@@deriving equal]
++  end
+ 
+   let equal t1 t2 = match (t1, t2) with
+     | (Utf8 (s1, _, i1, n1), Utf8 (s2, _, i2, n2))
+@@ -163,9 +167,13 @@
+ 
+ module A = struct
+ 
+-  type color = int
+-  type style = int
+-  type t = { fg : color; bg : color; st : style }
++  include struct
++    open! Base
++
++    type color = int [@@deriving equal]
++    type style = int [@@deriving equal]
++    type t = { fg : color; bg : color; st : style } [@@deriving equal]
++  end
+ 
+   let equal t1 t2 = t1.fg = t2.fg && t1.bg = t2.bg && t1.st = t2.st
+ 
+@@ -427,10 +435,14 @@
+ 
+ module Operation = struct
+ 
+-  type t =
+-    End
+-  | Skip of int * t
+-  | Text of A.t * Text.t * t
++  include struct
++    open! Base
++
++    type t =
++      End
++    | Skip of int * t
++    | Text of A.t * Text.t * t [@@deriving equal]
++  end
+ 
+   let skip n k = if n = 0 then k else match k with
+       End         -> End
+@@ -517,6 +529,7 @@
+   ; altscr  : bool -> op
+   ; mouse   : bool -> op
+   ; bpaste  : bool -> op
++  ; cursor_nextline  : op
+   }
+ 
+   let ((<|), (<.), (<!)) = Buffer.(add_string, add_char, add_decimal)
+@@ -551,6 +564,7 @@
+   let ansi = {
+       skip    = (fun n b -> b <| "\x1b[0m"; Buffer.add_chars b ' ' n)
+     ; newline = (fun b -> b <| "\n")
++    ; cursor_nextline = (fun b -> b <| "\x1b[E")
+     ; altscr  = (fun x b -> b <| if x then "\x1b[?1049h" else "\x1b[?1049l")
+     ; cursat  = (fun w h b -> b <| "\x1b["; b <! h; b <. ';'; b <! w; b <. 'H')
+     ; cubcuf  = (fun x b -> b <| "\x1b["; b <! abs x; b <. if x < 0 then 'D' else 'C')
+@@ -588,6 +602,7 @@
+     ; cubcuf  = no1
+     ; cuucud  = no1
+     ; cr      = no0
++    ; cursor_nextline = no0
+     ; clreol  = no0
+     ; cursvis = no1
+     ; cursor_kind = no1
+@@ -625,8 +640,41 @@
+   | [ln]    -> line ~screen_width ~line_width:0 cap buf ln; cap.sgr A.empty buf
+   | ln::lns -> line ~screen_width ~line_width:0 cap buf ln; cap.newline buf; lines ~screen_width cap buf lns
+ 
++
++  let line_diffed ~screen_width ~line_width ~on_draw cap buf (prev_operation, operation) = 
++    match [%equal: Operation.t] prev_operation operation with
++    | true -> cap.cursor_nextline buf
++    | false -> line ~screen_width ~line_width cap buf operation; on_draw ()
++  ;;
++
++  let rec lines_diffed ~screen_width cap buf = function
++    []      -> ()
++  | [ln]    ->
++    line_diffed ~screen_width ~line_width:0 cap buf ln ~on_draw:(fun () -> cap.sgr A.empty buf)
++  | ln::lns ->
++    line_diffed ~screen_width ~line_width:0 cap buf ln ~on_draw:(fun () -> cap.newline buf);
++    lines_diffed ~screen_width cap buf lns
++  ;;
++
++  let to_buffer' ~buf ~cap ~dim ~previous_operations ~operations =
++    match previous_operations with
++    | None -> lines ~screen_width:(fst dim) cap buf operations 
++    | Some previous_operations ->
++      let is_same_height =
++        List.length operations = List.length previous_operations
++      in
++      (match is_same_height with
++        | false -> 
++          lines ~screen_width:(fst dim) cap buf operations 
++        | true ->
++          lines_diffed ~screen_width:(fst dim) cap buf (Base.List.zip_exn previous_operations operations ) 
++      )
++  ;;
++
+   let to_buffer buf cap off dim img =
+-    Operation.of_image off dim img |> lines ~screen_width:(fst dim) cap buf
++    let operations = Operation.of_image off dim img in
++    to_buffer' ~buf ~cap ~dim ~operations ~previous_operations:None
++  ;;
+ 
+   let pp cap ppf img =
+     let open Format in
+@@ -885,6 +933,7 @@
+   ; mutable dim   : (int * int)
+   ; mutable image : I.t
+   ; mutable dead  : bool
++  ; mutable previous_lines : Operation.t list option
+   }
+ 
+   let emit t op =
+@@ -906,6 +955,7 @@
+     ; dead  = false
+     ; write =
+         cap.altscr true & cursor cap None & cap.mouse mouse & cap.bpaste bpaste
++    ; previous_lines = None
+     }
+ 
+   let release t =
+@@ -918,8 +968,14 @@
+   let output t buf = t.write buf; t.write <- ignore
+ 
+   let refresh ({ dim; image; _ } as t) =
+-    emit t ( cursor t.cap None & cursat0 t.cap 0 0 &
+-             (fun buf -> Render.to_buffer buf t.cap (0, 0) dim image) &
++    emit t ( 
++      cursor t.cap None &
++      cursat0 t.cap 0 0 &
++             (fun buf -> 
++                let operations = Operation.of_image (0, 0) dim image in
++                Render.to_buffer' ~buf ~cap:t.cap ~dim ~previous_operations:t.previous_lines ~operations;
++                t.previous_lines <- (Some operations);
++             ) &
+              cursor t.cap t.curs )
+ 
+   let set_size t dim = t.dim <- dim
