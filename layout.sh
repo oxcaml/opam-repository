@@ -13,13 +13,14 @@ fi
 mv oxcaml-compiler t-oxcaml-compiler
 rm -rf oxcaml-*
 mv t-oxcaml-compiler oxcaml-compiler
-last_guard=''
+
 for entry in *; do
   if [[ -d $entry ]]; then
     case $entry in
       ocaml-variants|oxcaml-compiler|oxcaml)
         continue;;
     esac
+    last=''
     for package in "$entry/"*; do
       if [[ -e $package/opam ]]; then
         package="${package#"$entry"/}"
@@ -28,32 +29,37 @@ for entry in *; do
             # Ignore JS 0.18 preview packages
             ;;
           *)
-            if [[ -z $last_guard ]]; then
-              mkdir -p oxcaml-patch-guards/oxcaml-patch-guards.ox
-              cat > oxcaml-patch-guards/oxcaml-patch-guards.ox/opam <<EOF
-opam-version: "2.0"
-synopsis: "OxCaml patched upstream packages"
-description: """
-oxcaml-patch-guards and the associated oxcaml-* packages ensure that when a
-non-Jane Street package in opam-repository has to be patched to work with OxCaml
-that only those patched versions can be used in a switch with OxCaml."""
-maintainer: "David Allsopp <dallsopp@janestreet.com>"
-authors: "David Allsopp"
-license: "CC0-1.0+"
-homepage: "https://oxcaml.org"
-bug-reports: "https://github.com/oxcaml/opam-repository/issues"
-depends: "oxcaml-$entry" {post} | "oxcaml-$entry-patches" {post}
-EOF
+            if [[ $last != $entry ]]; then
+              echo "$entry"
+              last="$entry"
             fi
-            if [[ ! -e oxcaml-$entry/oxcaml-$entry.guard/opam ]]; then
-              mkdir -p "oxcaml-$entry/oxcaml-$entry.guard"
-              case $entry in
-                chrome-trace|dune-action-plugin|dune-build-info|dune-glob|dune-private-libs|dune-rpc-lwt|dune-site|xdg)
-                  constraint=' {>= "3.21.0"}';;
-                *)
-                  constraint=''
-              esac
-              cat > "oxcaml-$entry/oxcaml-$entry.guard/opam" <<EOF
+            ;;
+        esac
+      fi
+    done
+  fi
+done > overrides
+
+last_guard=''
+for entry in $(sort -r overrides); do
+  for package in "$entry/"*; do
+    if [[ -e $package/opam ]]; then
+      package="${package#"$entry"/}"
+      case $package in
+        *~preview.*)
+          # Ignore JS 0.18 preview packages
+          ;;
+        *)
+          if [[ ! -e oxcaml-$entry/oxcaml-$entry.guard/opam ]]; then
+            mkdir -p "oxcaml-$entry/oxcaml-$entry.guard"
+            case $entry in
+              # These packages are only patched from a given version in OxCaml - the older versions don't (necessarily) require patches
+              chrome-trace|dune-action-plugin|dune-build-info|dune-glob|dune-private-libs|dune-rpc-lwt|dune-site|xdg)
+                constraint=' {>= "3.21.0"}';;
+              *)
+                constraint=''
+            esac
+            cat > "oxcaml-$entry/oxcaml-$entry.guard/opam" <<EOF
 opam-version: "2.0"
 synopsis: "OxCaml patched $entry (not installed)"
 description: "OxCaml meta-package indicating this package is not installed"
@@ -68,11 +74,11 @@ depends: [
   "oxcaml" {post}
 ]
 EOF
-              if [[ -n $last_guard ]]; then
-                sed -i -e '/depends:/a\  ("oxcaml-'"$entry"'" {post} | "oxcaml-'"$entry"'-patches" {post})' "oxcaml-$last_guard/oxcaml-$last_guard.guard/opam"
-              fi
-              mkdir -p "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled"
-              cat > "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled/opam" <<EOF
+            if [[ -n $last_guard ]]; then
+              sed -i -e '/depends:/a\  ("oxcaml-'"$last_guard"'" {post} | "oxcaml-'"$last_guard"'-patches" {post})' "oxcaml-$entry/oxcaml-$entry.guard/opam"
+            fi
+            mkdir -p "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled"
+            cat > "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled/opam" <<EOF
 opam-version: "2.0"
 synopsis: "OxCaml patched $entry"
 description: "OxCaml meta-package indicating this library is installed"
@@ -87,20 +93,37 @@ depends: [
   "$entry" {build & (
   ${entry//?/ }      = "${package#"$entry".}"
 EOF
-              if [[ -n $last_guard ]]; then
-                sed -i -e '/depends:/a\  ("oxcaml-'"$entry"'" {post} | "oxcaml-'"$entry"'-patches" {post})' "oxcaml-$last_guard-patches/oxcaml-$last_guard-patches.enabled/opam"
-              fi
-              last_guard="$entry"
-            else
-              cat >> "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled/opam" <<EOF
+            if [[ -n $last_guard ]]; then
+              sed -i -e '/depends:/a\  ("oxcaml-'"$last_guard"'" {post} | "oxcaml-'"$last_guard"'-patches" {post})' "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled/opam"
+            fi
+            last_guard="$entry"
+          else
+            cat >> "oxcaml-$entry-patches/oxcaml-$entry-patches.enabled/opam" <<EOF
   ${entry//?/ }    | = "${package#"$entry".}"
 EOF
-            fi;;
-        esac
-      fi
-    done
-  fi
+          fi;;
+      esac
+    fi
+  done
 done
+
+mkdir -p oxcaml-patch-guards/oxcaml-patch-guards.ox
+cat > oxcaml-patch-guards/oxcaml-patch-guards.ox/opam <<EOF
+opam-version: "2.0"
+synopsis: "OxCaml patched upstream packages"
+description: """
+oxcaml-patch-guards and the associated oxcaml-* packages ensure that when a
+non-Jane Street package in opam-repository has to be patched to work with OxCaml
+that only those patched versions can be used in a switch with OxCaml."""
+maintainer: "David Allsopp <dallsopp@janestreet.com>"
+authors: "David Allsopp"
+license: "CC0-1.0+"
+homepage: "https://oxcaml.org"
+bug-reports: "https://github.com/oxcaml/opam-repository/issues"
+depends: "oxcaml-$entry" {post} | "oxcaml-$entry-patches" {post}
+EOF
+
+rm -f overrides
 
 for entry in oxcaml-*; do
   case $entry in
