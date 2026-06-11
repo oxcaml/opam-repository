@@ -8,7 +8,7 @@ homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-xdg"
 depends: [
-  ("oxcaml-yojson" {post} | "oxcaml-yojson-patches" {post})
+  ("oxcaml-zarith" {post} | "oxcaml-zarith-patches" {post})
   "oxcaml" {post}
   "xdg" {build & (
            = "3.21.0+ox"

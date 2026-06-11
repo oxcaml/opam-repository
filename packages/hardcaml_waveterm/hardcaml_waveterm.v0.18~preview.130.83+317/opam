@@ -39,7 +39,7 @@ to simulations.
 """
 conflicts: [
   "hardcaml-waveterm"
-  "oxcaml-compiler" {< "5.2.0minus31"}
+  "oxcaml-compiler" {< "5.2.0minus25"}
 ]
 url {
   src:
