@@ -134,14 +134,17 @@ EOF
 done
 
 guard_clause=''
+last_key=''
 for k in $(printf '%s\n' "${!VERSIONS[@]}" | sort -r); do
+  echo "$k = ${VERSIONS[$k]}"
   if [[ -z $guard_clause ]]; then
-    oxcaml_version=' & "oxcaml-compiler" {post & < "'"$k"'"}'
+    oxcaml_version=''
   else
-    oxcaml_version=
+    oxcaml_version=' & "oxcaml-compiler" {post & < "'"$last_key"'"}'
     guard_clause="$guard_clause | "
   fi
   guard_clause="$guard_clause\"oxcaml-${VERSIONS[$k]}\" {post}$oxcaml_version | \"oxcaml-${VERSIONS[$k]}-patches\" {post}$oxcaml_version"
+  last_key="$k"
 done
 
 mkdir -p oxcaml-patch-guards/oxcaml-patch-guards.ox
