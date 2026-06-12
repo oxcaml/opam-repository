@@ -9,8 +9,31 @@
      c
    )
  
+@@ -106,12 +106,12 @@
+         |> Lwt_stream.map (fun dim -> `Resize dim)
+     else Lwt_stream.of_list []
+ 
+-  let create ?(dispose=true) ?(nosig=true) ?(mouse=true) ?(bpaste=true)
++  let create ?(dispose=true) ?(nosig=true) ?(mouse=true) ?(hover=false) ?(bpaste=true)
+              ?(input=Lwt_unix.stdin) ?(output=Lwt_unix.stdout) () =
+     let fd = Lwt_unix.unix_file_descr output in
+     let (stop, stopw) = Lwt.wait () in
+     let rec t = lazy {
+-        trm    = Tmachine.create ~mouse ~bpaste (cap_for_fd fd)
++        trm    = Tmachine.create ~mouse ~hover ~bpaste (cap_for_fd fd)
+       ; ochan  = Lwt_io.(of_fd ~mode:output) output
+       ; buf    = Buffer.create 4096
+       ; fds    = (input, output)
 --- a/src-lwt/notty_lwt.mli
 +++ b/src-lwt/notty_lwt.mli
+@@ -26,6 +26,7 @@
+   val create : ?dispose:bool ->
+                ?nosig:bool ->
+                ?mouse:bool ->
++               ?hover:bool ->
+                ?bpaste:bool ->
+                ?input:Lwt_unix.file_descr ->
+                ?output:Lwt_unix.file_descr ->
 @@ -44,7 +44,14 @@
  
    val image   : t -> image -> unit Lwt.t

@@ -169,6 +169,6 @@ extra-files: [
   ]
   [
     "lwt.patch"
-    "sha256=bf322ab32307d3b8acfe289e3db6c353d2e7cd4781bf924d0d2fc864298a2565"
+    "sha256=fe6ee41138d48e9a752a391d6a113f38e1b385bc5fb925e6b0d623969045e6df"
   ]
 ]
