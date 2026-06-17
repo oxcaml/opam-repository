@@ -1,10 +1,6 @@
 ---
 name: Setup OxCaml with a predefined set of opam packages
 inputs:
-  ocaml-compiler:
-    description: The OCaml compiler switch to install
-    required: true
-
   opam-disable-sandboxing:
     description: Disable the opam sandboxing feature.
     required: false
@@ -54,11 +50,9 @@ runs:
     - name: Get hash of the ocaml-variant opam file
       id: hash-opam-file
       shell: bash
-      env:
-        OCAML_COMPILER: ${{ inputs.ocaml-compiler }}
       run: |
         set -e
-        OPAM_FILE="packages/ocaml-variants/${OCAML_COMPILER}/opam"
+        OPAM_FILE="packages/oxcaml/oxcaml.latest/opam"
 
         if command -v sha256sum >/dev/null 2>&1; then
           COMMAND="sha256sum"
@@ -75,7 +69,7 @@ runs:
     - uses: ocaml/setup-ocaml@v3
       with:
         cache-prefix: ${{ steps.hash-opam-file.outputs.hash }}
-        ocaml-compiler: ${{ inputs.ocaml-compiler }}
+        ocaml-compiler: oxcaml.latest
         opam-pin: false
         opam-disable-sandboxing: ${{ inputs.opam-disable-sandboxing }}
         opam-repositories: |
@@ -86,6 +80,7 @@ runs:
       shell: bash
       run: |
         opam --version
+        opam switch invariant
         opam repository list
         opam list
         opam install ocamlformat merlin ocaml-lsp-server utop parallel concurrent core_unix js_of_ocaml bonsai_term odoc sherlodoc ${{ inputs.additional-test-packages }}
