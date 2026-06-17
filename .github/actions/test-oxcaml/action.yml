@@ -79,5 +79,6 @@ runs:
         opam switch invariant
         opam repository list
         opam list
-        opam install ocamlformat merlin ocaml-lsp-server utop parallel concurrent core_unix js_of_ocaml bonsai_term odoc sherlodoc strace_ui proctopus
+        # utop, sherlodoc and odoc are broken with minus38
+        opam install ocamlformat merlin ocaml-lsp-server parallel concurrent core_unix js_of_ocaml bonsai_term strace_ui proctopus
         opam list
