@@ -72,7 +72,7 @@ runs:
         HASH=$($COMMAND "$OPAM_FILE" | awk '{print $1}')
         echo "hash=${HASH}" >> "$GITHUB_OUTPUT"
 
-    - uses: ocaml/setup-ocaml@v3.3.5
+    - uses: ocaml/setup-ocaml@v3
       with:
         cache-prefix: ${{ steps.hash-opam-file.outputs.hash }}
         ocaml-compiler: ${{ inputs.ocaml-compiler }}
