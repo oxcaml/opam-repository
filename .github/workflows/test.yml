@@ -37,6 +37,7 @@ jobs:
         uses: ./.github/actions/test-oxcaml
         with:
           opam-disable-sandboxing: true
+          additional-test-packages: strace_ui proctopus
 
   test-macos:
     strategy:

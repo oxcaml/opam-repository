@@ -5,6 +5,10 @@ inputs:
     description: Disable the opam sandboxing feature.
     required: false
     default: "false"
+  additional-test-packages:
+    description: Extra opam packages to install (space-separated).
+    required: false
+    default: ""
 
 runs:
   using: "composite"
@@ -80,5 +84,5 @@ runs:
         opam repository list
         opam list
         # utop, sherlodoc and odoc are broken with minus38
-        opam install ocamlformat merlin ocaml-lsp-server parallel concurrent core_unix js_of_ocaml bonsai_term strace_ui proctopus
+        opam install ocamlformat merlin ocaml-lsp-server parallel concurrent core_unix js_of_ocaml bonsai_term ${{ inputs.additional-test-packages }}
         opam list
