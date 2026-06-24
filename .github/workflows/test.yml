@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+      - 5.2.0minus38
   pull_request:
   schedule:
     - cron: "30 0 * * *"
