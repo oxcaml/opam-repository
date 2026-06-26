@@ -112,3 +112,7 @@ runs:
         # utop, sherlodoc and odoc are broken with minus38
         opam install ocamlformat merlin ocaml-lsp-server parallel concurrent core_unix js_of_ocaml bonsai_term ${{ inputs.additional-test-packages }}
         opam list
+
+    - name: Install non-JS (overridden) packages
+      shell: bash
+      run: opam install $(find packages -name opam | sed -ne 's|packages/\([^/]*\)/.*+ox.*|\1|p' | sort -u | grep -Fvxf <(sed -e "/^$RUNNER_OS:/d" -e 's/^[^:]*://' .github/actions/test-oxcaml/broken-packages.txt))

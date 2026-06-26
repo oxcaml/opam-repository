@@ -1,0 +1,14 @@
+# ocaml-variants is of course not actually broken!
+ocaml-variants
+# Broken since 5.2.0minus31
+mdx
+# Not co-installable with stdune 3.22+
+ocaml-lsp-server
+# Broken since 5.2.0minus31
+ppx_deriving
+# Broken since 5.2.0minus38
+utop
+# Not co-installable with ocamlformat (cmdliner)
+wasm_of_ocaml-compiler
+# eio_linux can only install on Linux
+Linux:eio_linux
