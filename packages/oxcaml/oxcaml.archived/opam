@@ -12,3 +12,13 @@ depends: [
 ]
 messages: ["WARNING! This is not the latest version of OxCaml"]
 flags: avoid-version
+install: [
+  ["sh" "./write-config.sh" name "-v" "release:string" oxcaml-compiler:release "-v" "commit:string" oxcaml-compiler:commit]
+]
+extra-source "write-config.sh" {
+  src: "https://raw.githubusercontent.com/dra27/mingw-w64-shims/refs/tags/1.0.1/write-config.sh"
+  checksum: [
+    "sha256=b6cc5f98c2cfc23a7bc7774038621a2e7e7b94ed3d3080db40bc455a2575fc7a"
+    "sha512=00c4e7c605e46c8fb4d24c40da0a9317e31e3ec723a7aac59546b1cfb180024cc76dbd27c2aca8d223047ad4b0a4bcd047443fc64a6e218a21931aaa672c3e71"
+  ]
+}

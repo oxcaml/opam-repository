@@ -72,6 +72,7 @@ build: [
     "-exc"
     "unset INSIDE_DUNE; PATH=%{build}%/init_deps/bin/:$PATH make -j%{jobs}%"
   ]
+  ["sh" "./write-config.sh" name "-v" "release:string" "5.2.0minus-40" "-v" "commit:string" "9cfe2002ce39e1657f374e6c9146af63205f1d3d"]
 ]
 install: ["sh" "-exc" "PATH=%{build}%/init_deps/bin/:$PATH make install"]
 extra-source "init-compiler.tar.gz" {
@@ -92,6 +93,13 @@ extra-source "init-menhir.tar.gz" {
   checksum: [
     "md5=799748bc3b7a542798a85956c7863865"
     "sha512=620ff3443143535e03ac98c5e8ee2ddf9ba48f8cfe441302118def1da3e03ffac7f48d4d4cb129766b625ecad0fb341da1baa0169dee8b6d07a5b0bbb735cf2f"
+  ]
+}
+extra-source "write-config.sh" {
+  src: "https://raw.githubusercontent.com/dra27/mingw-w64-shims/refs/tags/1.0.1/write-config.sh"
+  checksum: [
+    "sha256=b6cc5f98c2cfc23a7bc7774038621a2e7e7b94ed3d3080db40bc455a2575fc7a"
+    "sha512=00c4e7c605e46c8fb4d24c40da0a9317e31e3ec723a7aac59546b1cfb180024cc76dbd27c2aca8d223047ad4b0a4bcd047443fc64a6e218a21931aaa672c3e71"
   ]
 }
 url {
