@@ -9,7 +9,7 @@ dev-repo: "git+https://github.com/oxcaml/oxcaml.git#main"
 depends: [
   "conf-autoconf"         {build}
   "conf-which"            {build}
-  "ocaml-variants"        {= "5.2.0+ox" & post}
+  "ocaml-variants"        {= "5.4.0+ox" & post}
   "oxcaml"                {post}
   "base-unix"             {post}
   "base-bigarray"         {post}
@@ -96,9 +96,9 @@ extra-source "init-menhir.tar.gz" {
 }
 url {
   src:
-    "https://github.com/oxcaml/oxcaml/archive/refs/tags/5.2.0minus-38.tar.gz"
+    "https://github.com/oxcaml/oxcaml/archive/refs/tags/5.2.0-ox1.tar.gz"
   checksum:
-    "sha256=712d763e77e1a3230f5b560dd6577f51659c1ebdc7f874e1bfe215cbe88a274d"
+    "sha256=d5558cd419c8d46bdc958064cb97f963d1ea793866414c025906ec15033512ed"
 }
 patches: ["ignore-opam.patch"]
 extra-files: [
