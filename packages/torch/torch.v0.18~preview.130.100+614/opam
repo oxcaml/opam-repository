@@ -35,7 +35,7 @@ depopts: ["libtorch"]
 available: arch != "x86_32"
 conflicts: [
   "libtorch" {< "2.3.0" | >= "2.4.0"}
-  "oxcaml-compiler" {< "5.2.0minus38"}
+  "oxcaml-compiler" {!= "5.2.0minus38"}
 ]
 synopsis: "Torch bindings for OCaml"
 description: """
