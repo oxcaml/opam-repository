@@ -8,7 +8,5 @@ ocaml-lsp-server
 ppx_deriving
 # Broken since 5.2.0minus38
 utop
-# Not co-installable with ocamlformat (cmdliner)
-wasm_of_ocaml-compiler
 # eio_linux can only install on Linux
 Linux:eio_linux
