@@ -1,5 +1,5 @@
 opam-version: "2.0"
-version: "0.2.4+ox2"
+version: "0.2.4+ox"
 name: "notty-community"
 synopsis: "Declaring terminals"
 description: """\
@@ -18,10 +18,10 @@ license: "ISC"
 homepage: "https://github.com/ocaml-community/notty-community"
 bug-reports: "https://github.com/ocaml-community/notty-community/issues"
 depends: [
-  "dune"  {>= "3.0"}
+  "dune"  {>= "3.17.0"}
   "ocaml" {>= "4.08.0"}
   "cppo"  {build & >= "1.1.0"}
-  "uutf"  {>= "1.0.0"}
+  "uutf"  {>= "1.0.2"}
   "uucp"  {with-dev-setup}
   "lwt"   {with-test}
 "base"
@@ -33,8 +33,8 @@ depends: [
 depopts: ["lwt"]
 conflicts: [
   "lwt" {< "2.6.0"}
-  "oxcaml-compiler" {< "5.2.0minus38"}
 ]
+available: os != "win32"
 build: [
   ["dune" "subst"] {dev}
   [
@@ -79,6 +79,7 @@ patches: [
   "notty-expose_operation_intermediate_representation.patch"
   "notty-dynamic_mouse_reporting.patch"
   "notty-hover_events.patch"
+  "notty-tail_recursive_concatm.patch"
   "dune.patch"
   "lwt.patch"
 ]
@@ -89,47 +90,47 @@ extra-files: [
   ]
   [
     "notty-use_correct_newline_escape_code_and_stop_clearing_the_last_text_element_of_a_line.patch"
-    "sha256=c7d0520d54dd1ef31ad9ba7617ee14e721747a370f032fe5fd990d10d29aa38c"
+    "sha256=d801821c1b8cd4b249c962c5c102a8c09db5368bc7c5938feccadf3eaf9ebb16"
   ]
   [
     "notty-different_kinds_of_cursors.patch"
-    "sha256=542de513fb251b39cb966d57c212af83c1e397cadd53269bfcd83e80a1bb833d"
+    "sha256=1ce4625287de1ed7852cecdfa9c5daeaf166238b52f7f98f621a5c2cec1a8b65"
   ]
   [
     "notty-use_newline_instead_of_cursor_nextline_for_emacs_support.patch"
-    "sha256=086c946882270ba33305f6b4f11917757be36061ce28c041d04428023682f6e4"
+    "sha256=53c678d537954fff1217f6a3e4f89b85455a82502aaedc640cae731cfd0585fe"
   ]
   [
     "notty-expose_fast_tty_width.patch"
-    "sha256=7ceb153d99dbab34b14a5dbabb31a7c45eeaaea86605e561d875443491b08b04"
+    "sha256=fdc57d05f2b1ecba561e777f32b6fb21c84f74e61b948106ea9ee48e6c9fb045"
   ]
   [
     "notty-do_not_send_clear_eol_on_full_lines.patch"
-    "sha256=8c917c686ec312a61e5beba2cf3e6342e8ace5eef4e10a50a2b918ce394b50c0"
+    "sha256=1d66250374a5208bb7c2a3ca14177dcf87da430c3c4300c1c6e44b6b77673bea"
   ]
   [
     "notty-ctrl_backspace.patch"
-    "sha256=9a854a48a148883850a5e69529076a6c5998396146730bd92ebc1be0764187ad"
+    "sha256=7ca07dabd2ecc8b44b6ac444961deec52eb248557ff286477df5251eda357e34"
   ]
   [
     "notty-reset-cursor-on-release.patch"
-    "sha256=b460326841b528ba706c9292559770b6e65c81b8e09fa34b5d2d693cd4ebad9c"
+    "sha256=bef646ee860a485825e5d4a303210bbc23a9f98fa06da3fd627c01cf1bf31575"
   ]
   [
     "notty-line_based_diffing_and_patching.patch"
-    "sha256=3a2becbec99cbf932efa69e632acdb3e1ce98ef0c75352edafa4a29d14eba245"
+    "sha256=62376e21d09a85b37fe80423083826dfd12b71dae15226c1fffd42aa12548d97"
   ]
   [
     "notty-defensively-ignore-corrupted-x10-vscode-mouse-codes.patch"
-    "sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    "sha256=a087414c543e480eee1d3bb45349b693e6018943a90cb3e952e93ab4b2035b31"
   ]
   [
     "notty-portabilize_notty_unix.patch"
-    "sha256=6d9dbf2a122bd0eb723514bda4b13c988591e1b0625872d44a096caf6982f440"
+    "sha256=3ea480fafc7777b2f060b366afa9198072705aeae7b4505311efd289a887bf1a"
   ]
   [
     "notty-add_href_support.patch"
-    "sha256=2a19f31a3ac1212b565d6fd09244ebde81a53c958eaa432ca90681e140f0099c"
+    "sha256=2c0fafcbcbd5994774c1bedee1ce25d3d71990d7c149ce4248d1aab1277ede7b"
   ]
   [
     "notty-default_color.patch"
@@ -157,11 +158,15 @@ extra-files: [
   ]
   [
     "notty-dynamic_mouse_reporting.patch"
-    "sha256=883150741961a07cff7a238c4c4ab6c1c3fe5d559887bcc4e4099a29aa164757"
+    "sha256=a6a51e9351bde5317bbb9e9bcd6c524ca2b5e2e18eb29b87d299782186fd8103"
   ]
   [
     "notty-hover_events.patch"
-    "sha256=a95b68a0e3fca32c933f9af477de1eac1fb8836730fa15d1b0423cf8ec9d001e"
+    "sha256=30e3bab1d558a84844e88c93b18ca38e3001ed82bac41a6d32d34bf1622cb954"
+  ]
+  [
+    "notty-tail_recursive_concatm.patch"
+    "sha256=a08cf622b43eff3f96a67e0566eb3acc504fb488a0325a0c4778d502b6e35eff"
   ]
   [
     "dune.patch"
@@ -169,6 +174,6 @@ extra-files: [
   ]
   [
     "lwt.patch"
-    "sha256=fe6ee41138d48e9a752a391d6a113f38e1b385bc5fb925e6b0d623969045e6df"
+    "sha256=bf322ab32307d3b8acfe289e3db6c353d2e7cd4781bf924d0d2fc864298a2565"
   ]
 ]

@@ -1,0 +1,77 @@
+--- a/src/notty.ml
++++ b/src/notty.ml
+@@ -165,6 +165,14 @@
+   let replicatec w c = replicateu w (Uchar.of_char c)
+ end
+ 
++type 'a or_unset = Unset | Set of 'a [@@deriving equal]
++
++let resolve_color color = 
++  match color with
++  | Unset -> 0
++  | Set color -> color
++;;
++
+ module A = struct
+ 
+   include struct
+@@ -172,7 +180,7 @@
+ 
+     type color = int [@@deriving equal]
+     type style = int [@@deriving equal]
+-    type t = { fg : color; bg : color; st : style; url : string option } [@@deriving equal]
++type t = { fg : color or_unset; bg : color or_unset; st : style ; url : string option } [@@deriving equal]
+   end
+ 
+   let black        = 0x01000000
+@@ -191,6 +199,7 @@
+   and lightmagenta = 0x0100000d
+   and lightcyan    = 0x0100000e
+   and lightwhite   = 0x0100000f
++  and default      = 0 
+ 
+   let tag c = (c land 0x03000000) lsr 24
+ 
+@@ -220,17 +229,18 @@
+   and blink     = 8
+   and reverse   = 16
+ 
+-  let empty = { fg = 0; bg = 0; st = 0; url = None }
++let empty = { fg = Unset; bg = Unset; st = 0; url = None }
++
+ 
+  let (++) a1 a2 =
+    if a1 == empty then a2 else if a2 == empty then a1 else
+-     { fg = (match a2.fg with 0 -> a1.fg | x -> x)
+-     ; bg = (match a2.bg with 0 -> a1.bg | x -> x)
++     { fg = (match a2.fg with Unset -> a1.fg | x -> x)
++     ; bg = (match a2.bg with Unset -> a1.bg | x -> x)
+      ; st = a1.st lor a2.st
+      ; url = (match a2.url with None -> a1.url | x -> x) }
+ 
+-  let fg fg = { empty with fg }
+-  let bg bg = { empty with bg }
++  let fg fg = { empty with fg = Set fg }
++  let bg bg = { empty with bg = Set bg }
+   let st st = { empty with st }
+   let href ~url = { empty with url = Some url }
+ end
+@@ -540,6 +550,8 @@
+   let sts = [ ";1"; ";3"; ";4"; ";5"; ";7" ]
+ 
+   let sgr { A.fg; bg; st; url } ~inside buf =
++    let fg = resolve_color fg in
++    let bg = resolve_color bg in 
+     (* NOTE: [inside] is a callback. Some attrs (e.g. the "link") attrs, need to send
+        some codes at the _beginning_ of some text, and also at the _end_ of some text, so
+        this `inside` callback is used to implement the things that should be drawn
+--- a/src/notty.mli
++++ b/src/notty.mli
+@@ -103,6 +103,7 @@
+   val lightmagenta : color
+   val lightcyan    : color
+   val lightwhite   : color
++  val default      : color
+ 
+   (** {2 Extended 256-color palette} *)
+ 

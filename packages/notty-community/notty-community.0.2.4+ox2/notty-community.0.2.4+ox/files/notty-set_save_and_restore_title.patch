@@ -1,0 +1,66 @@
+--- a/src/notty.ml
++++ b/src/notty.ml
+@@ -543,6 +543,9 @@
+   ; mouse   : bool -> op
+   ; bpaste  : bool -> op
+   ; cursor_nextline  : op
++  ; set_title        : string -> op
++  ; save_title       : op
++  ; restore_title    : op
+   }
+ 
+   let ((<|), (<.), (<!)) = Buffer.(add_string, add_char, add_decimal)
+@@ -620,6 +623,9 @@
+     ; mouse   = (fun x b -> b <| if x then "\x1b[?1000;1002;1005;1015;1006h"
+                                       else "\x1b[?1000;1002;1005;1015;1006l")
+     ; bpaste  = (fun x b -> b <| if x then "\x1b[?2004h" else "\x1b[?2004l")
++    ; set_title = (fun title b -> b <| [%string "\027]0;%{title}\007"])
++    ; save_title = (fun b -> b <| "\x1b[22;0t")
++    ; restore_title = (fun b -> b <| "\x1b[23;0t")
+     ; sgr }
+ 
+   let no0 _     = ()
+@@ -641,6 +647,9 @@
+     ; sgr     =( fun _ ~inside buffer -> inside buffer)
+     ; mouse   = no1
+     ; bpaste  = no1
++    ; set_title = no1
++    ; save_title = no0
++    ; restore_title = no0
+     }
+ 
+   let erase cap buf = cap.sgr ~inside:(fun _ -> ()) A.empty buf; cap.clreol buf (* KEEP ETA-LONG. *)
+@@ -1005,6 +1014,11 @@
+     | None        -> cap.cursvis false
+     | Some (w, h, cursor_kind) -> cap.cursvis true & cursat0 cap w h & cap.cursor_kind cursor_kind
+ 
++  let set_title cap title = cap.set_title title
++
++  let save_title cap = cap.save_title
++  let restore_title cap = cap.restore_title
++
+   let reset_cursor cap = cap.cursvis true & cap.cursor_kind `Default
+ 
+   let create ~mouse ~bpaste cap = {
+@@ -1041,6 +1055,9 @@
+   let set_size t dim = t.dim <- dim
+   let image t image = t.image <- image; refresh t
+   let cursor t curs = t.curs <- curs; emit t (cursor t.cap curs)
++  let set_title t curs = emit t (set_title t.cap curs)
++  let save_title t = emit t (save_title t.cap)
++  let restore_title t = emit t (restore_title t.cap)
+ 
+   let size t = t.dim
+   let dead t = t.dead
+--- a/src/notty.mli
++++ b/src/notty.mli
+@@ -637,6 +637,9 @@
+ 
+   val refresh  : t -> unit
+   val cursor   : t -> (int * int * cursor) option -> unit
++  val set_title: t -> string -> unit
++  val save_title : t -> unit
++  val restore_title : t -> unit
+   val image    : t -> image -> unit
+ 
+   val set_size : t -> int * int -> unit
