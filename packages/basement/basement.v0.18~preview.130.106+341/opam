@@ -8,6 +8,7 @@ doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/basement/index.html"
 license: "MIT"
 x-maintenance-intent: ["(latest)"]
 build: [
+  ["sed" "-ib" "-e" "s/caml_state/Caml_state/" "src/stubs.c"] {os = "macos"}
   ["dune" "build" "-p" name "-j" jobs]
 ]
 depends: [
