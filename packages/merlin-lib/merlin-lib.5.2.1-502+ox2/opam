@@ -1,0 +1,43 @@
+opam-version: "2.0"
+version: "5.2.1-502+ox2"
+name: "merlin-lib"
+synopsis: "Merlin's libraries"
+description: """\
+These libraries provides access to low-level compiler interfaces and the
+  standard higher-level merlin protocol. The library is provided as-is, is not
+  thoroughly documented, and its public API might break with any new release."""
+maintainer: "defree@gmail.com"
+authors: "The Merlin team"
+license: "MIT"
+homepage: "https://github.com/ocaml/merlin"
+bug-reports: "https://github.com/ocaml/merlin/issues"
+depends: [
+  "ocaml"     {>= "5.2" & < "5.3"}
+  "dune" {>= "3.0"}
+  "csexp"     {>= "1.5.1" & <= "1.5.2"}
+  "alcotest"  {with-test & >= "1.3.0"}
+  "menhir"    {>= "20201216" & <= "20240715"}
+  "menhirLib" {>= "20201216" & <= "20240715"}
+  "menhirSdk" {>= "20201216" & <= "20240715"}
+]
+build: [
+  ["sh" "-exc" "cd external/merlin && dune build -p %{name}% -j %{jobs}% @install && cp %{name}%.install ../.."]
+]
+dev-repo: "git+https://github.com/ocaml/merlin.git"
+x-commit-hash: "f10f14fb514ccb9035fc899961cc24c2958bcba6"
+url {
+  src:
+    "https://github.com/oxcaml/oxcaml/archive/f10f14fb514ccb9035fc899961cc24c2958bcba6.tar.gz"
+  checksum:
+    "sha256=23669e367d5f0ce021800456bdae3d4ff0e0d555a6c49cf1b60757dd0a212053"
+}
+patches: ["merlin-minus39-standalone.patch"]
+extra-files: [
+  [
+    "merlin-minus39-standalone.patch"
+    "sha256=037292031a2190b0b42907a00d94062a6b486be37fb99388a186ad927549a4f3"
+  ]
+]
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.2.0minus40"}
+]
