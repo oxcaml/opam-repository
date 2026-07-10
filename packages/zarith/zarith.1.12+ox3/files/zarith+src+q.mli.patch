@@ -1,0 +1,95 @@
+--- a/q.mli
++++ b/q.mli
+@@ -1,3 +1,4 @@
++@@portable
+ (**
+    Rationals.
+ 
+@@ -21,9 +22,9 @@
+ 
+ (** {1 Types} *)
+ 
+-type t = {
+-    num: Z.t; (** Numerator. *)
+-    den: Z.t; (** Denominator, >= 0 *)
++type t : immutable_data = {
++    num: Z.t @@ global; (** Numerator. *)
++    den: Z.t @@ global; (** Denominator, >= 0 *)
+   }
+ (** A rational is represented as a pair numerator/denominator, reduced to
+     have a non-negative denominator and no common factor.
+@@ -99,7 +100,7 @@ type kind =
+     whether the numerator and/or denominator is null.
+  *)
+ 
+-val classify: t -> kind
++val classify: t @ local -> kind
+ (** Determines the kind of a rational. *)
+ 
+ val is_real: t -> bool
+@@ -110,7 +111,7 @@ val sign: t -> int
+     negative (including -inf), and 0 if it is null or undefined.
+  *)
+ 
+-val compare: t -> t -> int
++val compare: t @ local -> t @ local -> int
+ (** [compare x y] compares [x] to [y] and returns 1 if [x] is strictly
+     greater that [y], -1 if it is strictly smaller, and 0 if they are
+     equal.
+@@ -124,7 +125,7 @@ val compare: t -> t -> int
+     the ordering of rationals.
+  *)
+ 
+-val equal: t -> t -> bool
++val equal: t @ local -> t @ local -> bool
+ (** Equality testing.
+     Unlike [compare], this follows IEEE semantics: [undef] <> [undef].
+  *)
+@@ -135,16 +136,16 @@ val min: t -> t -> t
+ val max: t -> t -> t
+ (** Returns the largest of its arguments. *)
+ 
+-val leq: t -> t -> bool
++val leq: t @ local -> t @ local -> bool
+ (** Less than or equal. [leq undef undef] resturns false. *)
+ 
+-val geq: t -> t -> bool
++val geq: t @ local -> t @ local -> bool
+ (** Greater than or equal. [leq undef undef] resturns false. *)
+ 
+-val lt: t -> t -> bool
++val lt: t @ local -> t @ local -> bool
+ (** Less than (not equal). *)
+ 
+-val gt: t -> t -> bool
++val gt: t @ local -> t @ local -> bool
+ (** Greater than (not equal). *)
+ 
+ 
+@@ -273,20 +274,20 @@ val (~$$): Z.t -> t
+ val (///): Z.t -> Z.t -> t
+ (** Creates a rational from two [Z.t]. *)
+ 
+-val (=): t -> t -> bool
++val (=): t @ local -> t @ local -> bool
+ (** Same as [equal]. *)
+ 
+-val (<): t -> t -> bool
++val (<): t @ local -> t @ local -> bool
+ (** Same as [lt]. *)
+ 
+-val (>): t -> t -> bool
++val (>): t @ local -> t @ local -> bool
+ (** Same as [gt]. *)
+ 
+-val (<=): t -> t -> bool
++val (<=): t @ local -> t @ local -> bool
+ (** Same as [leq]. *)
+ 
+-val (>=): t -> t -> bool
++val (>=): t @ local -> t @ local -> bool
+ (** Same as [geq]. *)
+ 
+-val (<>): t -> t -> bool
++val (<>): t @ local -> t @ local -> bool
+ (** [a <> b] is equivalent to [not (equal a b)]. *)

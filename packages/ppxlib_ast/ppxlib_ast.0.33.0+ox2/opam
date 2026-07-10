@@ -20,15 +20,15 @@ homepage: "https://github.com/ocaml-ppx/ppxlib"
 doc: "https://ocaml-ppx.github.io/ppxlib/"
 bug-reports: "https://github.com/ocaml-ppx/ppxlib/issues"
 depends: [
-  "dune"                {>= "2.7"}
+  "dune"                {>= "3.17.0"}
   "ocaml"               {>= "4.04.1" & < "5.3.0"}
-  "ocaml-compiler-libs" {>= "v0.11.0"}
+  "ocaml-compiler-libs" {>= "v0.11.0" & >= "v0.11.0"}
   "ppx_derivers"        {>= "1.0"}
   "sexplib0"            {>= "v0.12"}
   "sexplib0"            {with-test & >= "v0.15"}
   "stdlib-shims"
-  "ocamlfind"           {with-test}
-  "re"                  {with-test & >= "1.9.0"}
+  "ocamlfind"           {with-test & >= "1.7.2"}
+  "re"                  {with-test & >= "1.9.0" & >= "1.8.0"}
   "cinaps"              {with-test & >= "v0.12.1"}
   "odoc"                {with-doc}
 ]
@@ -235,7 +235,7 @@ extra-files: [
   ]
   [
     "ppxlib+src+ast_builder.ml.patch"
-    "sha256=acdbfaf94eacacedb58d36f494ebc71d93fc7135e8d6c28eb3398c77264ac915"
+    "sha256=eae71db7c61b65b24ae09f6bebfa2bf82aca7ea98cc4d56a5caf72dacef0dce5"
   ]
   [
     "ppxlib+src+ast_builder.mli.patch"
@@ -347,7 +347,7 @@ extra-files: [
   ]
   [
     "ppxlib+src+name.ml.patch"
-    "sha256=89074199c1a9808b737faf1d20440f57ebd1bb22befee52cc70dcd0d0324a34a"
+    "sha256=ebceaa2af253a2d947e0654bab4017d6405955f221efb809cbac0227ba274891"
   ]
   [
     "ppxlib+src+ppxlib.ml.patch"

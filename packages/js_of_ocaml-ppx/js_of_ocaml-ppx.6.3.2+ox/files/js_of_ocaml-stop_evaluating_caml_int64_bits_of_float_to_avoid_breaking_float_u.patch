@@ -1,0 +1,12 @@
+--- a/compiler/lib/eval.ml
++++ b/compiler/lib/eval.ml
+@@ -285,7 +285,8 @@
+           Some (Int (Targetint.of_int32_truncate (Int64.to_int32 i)))
+       | "caml_nativeint_of_int", [ Int i ] -> nativeint (Targetint.to_int32 i)
+       (* int64 *)
+-      | "caml_int64_bits_of_float", [ Float f ] -> int64 f
++
++      (* | "caml_int64_bits_of_float", [ Float f ] -> int64 f *)
+       | "caml_int64_float_of_bits", [ Int64 i ]
+         when match target with
+              | `JavaScript ->

@@ -1,0 +1,628 @@
+index 241d052..a936ca9 100644
+--- a/lib/angstrom.ml
++++ b/lib/angstrom.ml
+@@ -31,6 +31,15 @@
+     POSSIBILITY OF SUCH DAMAGE.
+   ----------------------------------------------------------------------------*)
+ 
++[%%template
++[@@@mode p = nonportable, c = uncontended]
++
++open struct
++  module Parser = Parser[@mode p]
++  module Input = Input.Internal[@mode p]
++  module Exported_state = Exported_state.Internal[@mode c]
++end
++
+ module Bigarray = struct
+   (* Do not access Bigarray operations directly. If anything's needed, refer to
+    * the internal Bigstring module. *)
+@@ -65,7 +74,7 @@ module Buffered = struct
+ 
+   type 'a state =
+     | Partial of ([ input | `Eof ] -> 'a state)
+-    | Done    of unconsumed * 'a
++    | Done    of unconsumed * 'a @@ c
+     | Fail    of unconsumed * string list * string
+ 
+   let from_unbuffered_state ~f buffering = function
+@@ -295,7 +304,7 @@ let char c =
+   in
+   ensure 1 p
+ 
+-let not_char c =
++let not_char (c : char) =
+   let p =
+     { run = fun input pos more fail succ ->
+       let c' = Input.unsafe_get_char input pos in
+@@ -416,25 +425,31 @@ let string_ci s = string_ Char.lowercase_ascii s
+ let skip_while f =
+   count_while ~init:0 ~f ~with_buffer:(fun _ ~off:_ ~len:_ -> ())
+ 
++let bigstringaf_substring s ~off ~len =
++  Bigstringaf.substring s ~off ~len
++
++let bigstringaf_copy s ~off ~len =
++  Bigstringaf.copy s ~off ~len
++
+ let take n =
+   if n < 0
+   then fail "take: n < 0"
+   else
+     let n = max n 0 in
+-    ensure n (unsafe_apply n ~f:Bigstringaf.substring)
++    ensure n (unsafe_apply n ~f:bigstringaf_substring)
+ 
+ let take_bigstring n =
+   if n < 0
+   then fail "take_bigstring: n < 0"
+   else
+     let n = max n 0 in
+-    ensure n (unsafe_apply n ~f:Bigstringaf.copy)
++    ensure n (unsafe_apply n ~f:bigstringaf_copy)
+ 
+ let take_bigstring_while f =
+-  count_while ~init:0 ~f ~with_buffer:Bigstringaf.copy
++  count_while ~init:0 ~f ~with_buffer:bigstringaf_copy
+ 
+ let take_bigstring_while1 f =
+-  count_while1 ~f ~with_buffer:Bigstringaf.copy
++  count_while1 ~f ~with_buffer:bigstringaf_copy
+ 
+ let take_bigstring_till f =
+   take_bigstring_while (fun c -> not (f c))
+@@ -443,10 +458,10 @@ let peek_string n =
+   unsafe_lookahead (take n)
+ 
+ let take_while f =
+-  count_while ~init:0 ~f ~with_buffer:Bigstringaf.substring
++  count_while ~init:0 ~f ~with_buffer:bigstringaf_substring
+ 
+ let take_while1 f =
+-  count_while1 ~f ~with_buffer:Bigstringaf.substring
++  count_while1 ~f ~with_buffer:bigstringaf_substring
+ 
+ let take_till f =
+   take_while (fun c -> not (f c))
+@@ -567,8 +582,8 @@ let consume_with p f =
+     p.run input pos more fail succ'
+   }
+ 
+-let consumed           p = consume_with p Bigstringaf.substring
+-let consumed_bigstring p = consume_with p Bigstringaf.copy
++let consumed           p = consume_with p bigstringaf_substring
++let consumed_bigstring p = consume_with p bigstringaf_copy
+ 
+ let both a b = lift2 (fun a b -> a, b) a b
+ let map t ~f = t >>| f
+@@ -741,3 +756,6 @@ let parse_string ~consume p s =
+   let bs  = Bigstringaf.create len in
+   Bigstringaf.unsafe_blit_from_string s ~src_off:0 bs ~dst_off:0 ~len;
+   parse_bigstring ~consume p bs
++]
++
++module Portable = Angstrom__portable
+index d669595..aeacb6d 100644
+--- a/lib/angstrom.mli
++++ b/lib/angstrom.mli
+@@ -31,6 +31,9 @@
+     POSSIBILITY OF SUCH DAMAGE.
+   ----------------------------------------------------------------------------*)
+ 
++[%%template:
++[@@@mode p = nonportable, c = uncontended]
++
+ (** Parser combinators built for speed and memory-efficiency.
+ 
+     Angstrom is a parser-combinator library that provides monadic and
+@@ -44,7 +47,7 @@
+     reusable parsers suitable for high-performance applications. *)
+ 
+ 
+-type +'a t
++type +'a t : value mod c p
+ (** A parser for values of type ['a]. *)
+ 
+ 
+@@ -80,7 +83,7 @@ val not_char : char -> char t
+ val any_char : char t
+ (** [any_char] accepts any character and returns it. *)
+ 
+-val satisfy : (char -> bool) -> char t
++val satisfy : (char -> bool) @ p -> char t
+ (** [satisfy f] accepts any character for which [f] returns [true] and
+     returns the accepted character. In the case that none of the parser
+     succeeds, then the parser will fail indicating the offending
+@@ -93,12 +96,12 @@ val string_ci : string -> string t
+ (** [string_ci s] accepts [s], ignoring case, and returns the matched string,
+     preserving the case of the original input. *)
+ 
+-val skip : (char -> bool) -> unit t
++val skip : (char -> bool) @ p -> unit t
+ (** [skip f] accepts any character for which [f] returns [true] and discards
+     the accepted character. [skip f] is equivalent to [satisfy f] but discards
+     the accepted character. *)
+ 
+-val skip_while : (char -> bool) -> unit t
++val skip_while : (char -> bool) @ p -> unit t
+ (** [skip_while f] accepts input as long as [f] returns [true] and discards
+     the accepted characters. *)
+ 
+@@ -106,21 +109,21 @@ val take : int -> string t
+ (** [take n] accepts exactly [n] characters of input and returns them as a
+     string. *)
+ 
+-val take_while : (char -> bool) -> string t
++val take_while : (char -> bool) @ p -> string t
+ (** [take_while f] accepts input as long as [f] returns [true] and returns the
+     accepted characters as a string.
+ 
+     This parser does not fail. If [f] returns [false] on the first character,
+     it will return the empty string. *)
+ 
+-val take_while1 : (char -> bool) -> string t
++val take_while1 : (char -> bool) @ p -> string t
+ (** [take_while1 f] accepts input as long as [f] returns [true] and returns the
+     accepted characters as a string.
+ 
+     This parser requires that [f] return [true] for at least one character of
+     input, and will fail otherwise. *)
+ 
+-val take_till : (char -> bool) -> string t
++val take_till : (char -> bool) @ p -> string t
+ (** [take_till f] accepts input as long as [f] returns [false] and returns the
+     accepted characters as a string.
+ 
+@@ -135,21 +138,21 @@ val take_bigstring : int -> bigstring t
+ (** [take_bigstring n] accepts exactly [n] characters of input and returns them
+     as a newly allocated bigstring. *)
+ 
+-val take_bigstring_while : (char -> bool) -> bigstring t
++val take_bigstring_while : (char -> bool) @ p -> bigstring t
+ (** [take_bigstring_while f] accepts input as long as [f] returns [true] and
+     returns the accepted characters as a newly allocated bigstring.
+ 
+     This parser does not fail. If [f] returns [false] on the first character,
+     it will return the empty bigstring. *)
+ 
+-val take_bigstring_while1 : (char -> bool) -> bigstring t
++val take_bigstring_while1 : (char -> bool) @ p -> bigstring t
+ (** [take_bigstring_while1 f] accepts input as long as [f] returns [true] and
+     returns the accepted characters as a newly allocated bigstring.
+ 
+     This parser requires that [f] return [true] for at least one character of
+     input, and will fail otherwise. *)
+ 
+-val take_bigstring_till : (char -> bool) -> bigstring t
++val take_bigstring_till : (char -> bool) @ p -> bigstring t
+ (** [take_bigstring_till f] accepts input as long as [f] returns [false] and
+     returns the accepted characters as a newly allocated bigstring.
+ 
+@@ -266,7 +269,7 @@ end
+ 
+ (** {2 Combinators} *)
+ 
+-val option : 'a -> 'a t -> 'a t
++val option : 'a @ p -> 'a t -> 'a t
+ (** [option v p] runs [p], returning the result of [p] if it succeeds and [v]
+     if it fails. *)
+ 
+@@ -305,7 +308,7 @@ val skip_many : _ t -> unit t
+ val skip_many1 : _ t -> unit t
+ (** [skip_many1 p] runs [p] {i one} or more times, discarding the results. *)
+ 
+-val fix : ('a t -> 'a t) -> 'a t
++val fix : ('a t -> 'a t) @ p -> 'a t
+ (** [fix f] computes the fixpoint of [f] and runs the resultant parser. The
+     argument that [f] receives is the result of [fix f], which [f] must use,
+     paradoxically, to define [fix f].
+@@ -389,27 +392,27 @@ val commit : unit t
+ 
+ (** {2 Monadic/Applicative interface} *)
+ 
+-val return : 'a -> 'a t
++val return : 'a @ p -> 'a t
+ (** [return v] creates a parser that will always succeed and return [v] *)
+ 
+ val fail : string -> _ t
+ (** [fail msg] creates a parser that will always fail with the message [msg] *)
+ 
+-val (>>=) : 'a t -> ('a -> 'b t) -> 'b t
++val (>>=) : 'a t -> ('a @ p c -> 'b t) @ p -> 'b t
+ (** [p >>= f] creates a parser that will run [p], pass its result to [f], run
+     the parser that [f] produces, and return its result. *)
+ 
+-val bind : 'a t -> f:('a -> 'b t) -> 'b t
++val bind : 'a t -> f:('a @ p c -> 'b t) @ p -> 'b t
+ (** [bind] is a prefix version of [>>=] *)
+ 
+-val (>>|) : 'a t -> ('a -> 'b) -> 'b t
++val (>>|) : 'a t -> ('a @ p c -> 'b @ p) @ p -> 'b t
+ (** [p >>| f] creates a parser that will run [p], and if it succeeds with
+     result [v], will return [f v] *)
+ 
+-val (<*>) : ('a -> 'b) t -> 'a t -> 'b t
++val (<*>) : ('a @ p c -> 'b @ p c) t -> 'a t -> 'b t
+ (** [f <*> p] is equivalent to [f >>= fun f -> p >>| f]. *)
+ 
+-val (<$>) : ('a -> 'b) -> 'a t -> 'b t
++val (<$>) : ('a @ p c -> 'b @ p c) @ p -> 'a t -> 'b t
+ (** [f <$> p] is equivalent to [p >>| f] *)
+ 
+ val ( *>) : _ t -> 'a t -> 'a t
+@@ -420,10 +423,10 @@ val (<* ) : 'a t -> _ t -> 'a t
+ (** [p <* q] runs [p], then runs [q], discards its result, and returns the
+     result of [p]. *)
+ 
+-val lift : ('a -> 'b) -> 'a t -> 'b t
+-val lift2 : ('a -> 'b -> 'c) -> 'a t -> 'b t -> 'c t
+-val lift3 : ('a -> 'b -> 'c -> 'd) -> 'a t -> 'b t -> 'c t -> 'd t
+-val lift4 : ('a -> 'b -> 'c -> 'd -> 'e) -> 'a t -> 'b t -> 'c t -> 'd t -> 'e t
++val lift : ('a @ p c -> 'b @ p c) @ p -> 'a t -> 'b t
++val lift2 : ('a @ p c -> 'b @ p c -> 'c @ p c) @ p -> 'a t -> 'b t -> 'c t
++val lift3 : ('a @ p c -> 'b @ p c -> 'c @ p c -> 'd @ p c) @ p -> 'a t -> 'b t -> 'c t -> 'd t
++val lift4 : ('a @ p c -> 'b @ p c -> 'c @ p c -> 'd @ p c -> 'e @ p c) @ p -> 'a t -> 'b t -> 'c t -> 'd t -> 'e t
+ (** The [liftn] family of functions promote functions to the parser monad.
+     For any of these functions, the following equivalence holds:
+ 
+@@ -441,33 +444,33 @@ val lift4 : ('a -> 'b -> 'c -> 'd -> 'e) -> 'a t -> 'b t -> 'c t -> 'd t -> 'e t
+     Even with the partial application, it will be more efficient than the
+     applicative implementation. *)
+ 
+-val map : 'a t -> f:('a -> 'b) -> 'b t
+-val map2 : 'a t -> 'b t -> f:('a -> 'b -> 'c) -> 'c t
+-val map3 : 'a t -> 'b t -> 'c t -> f:('a -> 'b -> 'c -> 'd) -> 'd t
+-val map4 : 'a t -> 'b t -> 'c t -> 'd t -> f:('a -> 'b -> 'c -> 'd -> 'e) -> 'e t
++val map : 'a t -> f:('a @ p c -> 'b @ p c) @ p -> 'b t
++val map2 : 'a t -> 'b t -> f:('a @ p c -> 'b @ p c -> 'c @ p c) @ p -> 'c t
++val map3 : 'a t -> 'b t -> 'c t -> f:('a @ p c -> 'b @ p c -> 'c @ p c -> 'd @ p c) @ p -> 'd t
++val map4 : 'a t -> 'b t -> 'c t -> 'd t -> f:('a @ p c -> 'b @ p c -> 'c @ p c -> 'd @ p c -> 'e @ p c) @ p -> 'e t
+ (** The [mapn] family of functions are just like [liftn], with a slightly
+     different interface. *)
+ 
+ (** The [Let_syntax] module is intended to be used with the [ppx_let]
+     pre-processor, and just contains copies of functions described elsewhere. *)
+ module Let_syntax : sig
+-  val return : 'a -> 'a t
+-  val ( >>| ) : 'a t -> ('a -> 'b) -> 'b t
+-  val ( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
++  val return : 'a @ p -> 'a t
++  val ( >>| ) : 'a t -> ('a @ p c -> 'b @ p c) @ p -> 'b t
++  val ( >>= ) : 'a t -> ('a @ p c -> 'b t) @ p -> 'b t
+ 
+   module Let_syntax : sig
+-    val return : 'a -> 'a t
+-    val map : 'a t -> f:('a -> 'b) -> 'b t
+-    val bind : 'a t -> f:('a -> 'b t) -> 'b t
++    val return : 'a @ p -> 'a t
++    val map : 'a t -> f:('a @ p c -> 'b @ p c) @ p -> 'b t
++    val bind : 'a t -> f:('a @ p c -> 'b t) @ p -> 'b t
+     val both : 'a t -> 'b t -> ('a * 'b) t
+-    val map2 : 'a t -> 'b t -> f:('a -> 'b -> 'c) -> 'c t
+-    val map3 : 'a t -> 'b t -> 'c t -> f:('a -> 'b -> 'c -> 'd) -> 'd t
+-    val map4 : 'a t -> 'b t -> 'c t -> 'd t -> f:('a -> 'b -> 'c -> 'd -> 'e) -> 'e t
++    val map2 : 'a t -> 'b t -> f:('a @ p c -> 'b @ p c -> 'c @ p c) @ p -> 'c t
++    val map3 : 'a t -> 'b t -> 'c t -> f:('a @ p c -> 'b @ p c -> 'c @ p c -> 'd @ p c) @ p -> 'd t
++    val map4 : 'a t -> 'b t -> 'c t -> 'd t -> f:('a @ p c -> 'b @ p c -> 'c @ p c -> 'd @ p c -> 'e @ p c) @ p -> 'e t
+   end
+ end
+ 
+-val ( let+ ) : 'a t -> ('a -> 'b) -> 'b t
+-val ( let* ) : 'a t -> ('a -> 'b t) -> 'b t
++val ( let+ ) : 'a t -> ('a @ p c -> 'b @ p c) @ p -> 'b t
++val ( let* ) : 'a t -> ('a @ p c -> 'b t) @ p -> 'b t
+ val ( and+ ) : 'a t -> 'b t -> ('a * 'b) t
+ 
+ (** Unsafe Operations on Angstrom's Internal Buffer
+@@ -489,14 +492,14 @@ val ( and+ ) : 'a t -> 'b t -> ('a * 'b) t
+     the client may consider their use safe. *)
+ module Unsafe : sig
+ 
+-  val take : int -> (bigstring -> off:int -> len:int -> 'a) -> 'a t
++  val take : int -> (bigstring -> off:int -> len:int -> 'a @ p) @ p -> 'a t
+   (** [take n f] accepts exactly [n] characters of input into the parser's
+       internal buffer then calls [f buffer ~off ~len].  [buffer] is the
+       parser's internal buffer.  [off] is the offset from the start of [buffer]
+       containing the requested content.  [len] is the length of the requested
+       content.  [len] is guaranteed to be equal to [n]. *)
+ 
+-  val take_while : (char -> bool) -> (bigstring -> off:int -> len:int -> 'a) -> 'a t
++  val take_while : (char -> bool) @ p -> (bigstring -> off:int -> len:int -> 'a @ p) @ p -> 'a t
+   (** [take_while check f] accepts input into the parser's interal buffer as
+       long as [check] returns [true] then calls [f buffer ~off ~len].  [buffer]
+       is the parser's internal buffer.  [off] is the offset from the start of
+@@ -506,7 +509,7 @@ module Unsafe : sig
+       This parser does not fail. If [check] returns [false] on the first
+       character, [len] will be [0]. *)
+ 
+-  val take_while1 : (char -> bool) -> (bigstring -> off:int -> len:int -> 'a) -> 'a t
++  val take_while1 : (char -> bool) @ p -> (bigstring -> off:int -> len:int -> 'a @ p) @ p -> 'a t
+   (** [take_while1 check f] accepts input into the parser's interal buffer as
+       long as [check] returns [true] then calls [f buffer ~off ~len].  [buffer]
+       is the parser's internal buffer.  [off] is the offset from the start of
+@@ -516,7 +519,7 @@ module Unsafe : sig
+       This parser requires that [f] return [true] for at least one character of
+       input, and will fail otherwise. *)
+ 
+-  val take_till : (char -> bool) -> (bigstring -> off:int -> len:int -> 'a) -> 'a t
++  val take_till : (char -> bool) @ p -> (bigstring -> off:int -> len:int -> 'a @ p) @ p -> 'a t
+   (** [take_till check f] accepts input into the parser's interal buffer as
+       long as [check] returns [false] then calls [f buffer ~off ~len].  [buffer]
+       is the parser's internal buffer.  [off] is the offset from the start of
+@@ -526,7 +529,7 @@ module Unsafe : sig
+       This parser does not fail. If [check] returns [true] on the first
+       character, [len] will be [0]. *)
+ 
+-  val peek : int -> (bigstring -> off:int -> len:int -> 'a) -> 'a t
++  val peek : int -> (bigstring -> off:int -> len:int -> 'a @ p) @ p -> 'a t
+   (** [peek n ~f] accepts exactly [n] characters and calls [f buffer ~off ~len]
+       with [len = n]. If there is not enough input, it will fail.
+ 
+@@ -542,7 +545,7 @@ module Consume : sig
+     | All
+ end
+ 
+-val parse_bigstring : consume:Consume.t -> 'a t -> bigstring -> ('a, string) result
++val parse_bigstring : consume:Consume.t -> 'a t -> bigstring -> ('a, string) result @ c
+ 
+ (** [parse_bigstring ~consume t bs] runs [t] on [bs]. The parser will receive
+     an [`Eof] after all of [bs] has been consumed. Passing {!Prefix} in the
+@@ -554,7 +557,7 @@ val parse_bigstring : consume:Consume.t -> 'a t -> bigstring -> ('a, string) res
+     {!module:Buffered} and {!module:Unbuffered} modules below. *)
+ 
+ 
+-val parse_string : consume:Consume.t -> 'a t -> string -> ('a, string) result
++val parse_string : consume:Consume.t -> 'a t -> string -> ('a, string) result @ c
+ (** [parse_string ~consume t bs] runs [t] on [bs]. The parser will receive an
+     [`Eof] after all of [bs] has been consumed. Passing {!Prefix} in the
+     [consume] argument allows the parse to successfully complete without
+@@ -590,7 +593,7 @@ module Buffered : sig
+ 
+   type 'a state =
+     | Partial of ([ input | `Eof ] -> 'a state) (** The parser requires more input. *)
+-    | Done    of unconsumed * 'a (** The parser succeeded. *)
++    | Done    of unconsumed * 'a @@ c (** The parser succeeded. *)
+     | Fail    of unconsumed * string list * string (** The parser failed. *)
+ 
+   val parse : ?initial_buffer_size:int -> 'a t -> 'a state
+@@ -605,12 +608,12 @@ module Buffered : sig
+       parser is in a [Fail] or [Done] state, in which case the [input] will be
+       copied into the state's buffer for later use by the caller. *)
+ 
+-  val state_to_option : 'a state -> 'a option
++  val state_to_option : 'a state -> 'a option @ c
+   (** [state_to_option state] returns [Some v] if the parser is in the
+       [Done (bs, v)] state and [None] otherwise. This function has no effect on
+       the current state of the parser. *)
+ 
+-  val state_to_result : 'a state -> ('a, string) result
++  val state_to_result : 'a state -> ('a, string) result @ c
+   (** [state_to_result state] returns [Ok v] if the parser is in the [Done (bs, v)]
+       state and [Error msg] if it is in the [Fail] or [Partial] state.
+ 
+@@ -648,7 +651,7 @@ module Unbuffered : sig
+ 
+   type 'a state =
+     | Partial of 'a partial (** The parser requires more input. *)
+-    | Done    of int * 'a (** The parser succeeded, consuming specified bytes. *)
++    | Done    of int * 'a @@ c (** The parser succeeded, consuming specified bytes. *)
+     | Fail    of int * string list * string (** The parser failed, consuming specified bytes. *)
+   and 'a partial =
+     { committed : int
+@@ -665,13 +668,13 @@ module Unbuffered : sig
+   val parse : 'a t -> 'a state
+   (** [parse t] runs [t] and await input if needed. *)
+ 
+-  val state_to_option : 'a state -> 'a option
++  val state_to_option : 'a state -> 'a option @ c
+ 
+   (** [state_to_option state] returns [Some v] if the parser is in the
+       [Done (bs, v)] state and [None] otherwise. This function has no effect on the
+       current state of the parser. *)
+ 
+-  val state_to_result : 'a state -> ('a, string) result
++  val state_to_result : 'a state -> ('a, string) result @ c
+   (** [state_to_result state] returns [Ok v] if the parser is in the
+       [Done (bs, v)] state and [Error msg] if it is in the [Fail] or [Partial]
+       state.
+@@ -686,3 +689,6 @@ end
+ 
+ val pos : int t
+ val available : int t
++]
++
++module Portable = Angstrom__portable
+index f458471..f223ab2 100644
+--- a/lib/buffering.mli
++++ b/lib/buffering.mli
+@@ -1,4 +1,6 @@
+-type t
++@@ portable
++
++type t : mutable_data
+ 
+ val create : int -> t
+ val of_bigstring : off:int -> len:int -> Bigstringaf.t -> t
+index 5bb5c70..d35a221 100644
+--- a/lib/exported_state.ml
++++ b/lib/exported_state.ml
+@@ -1,6 +1,7 @@
++module%template [@mode c = (contended, uncontended)] Internal = struct
+ type 'a state =
+   | Partial of 'a partial
+-  | Done    of int * 'a
++  | Done    of int * 'a @@ c
+   | Fail    of int * string list * string
+ 
+ and 'a partial =
+@@ -20,3 +21,4 @@ let state_to_result x = match x with
+   | Done(_, v)          -> Ok v
+   | Partial _           -> Error "incomplete input"
+   | Fail(_, marks, err) -> Error (fail_to_string marks err)
++end
+index 0355d36..1130996 100644
+--- a/lib/input.ml
++++ b/lib/input.ml
+@@ -30,6 +30,7 @@
+     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+     POSSIBILITY OF SUCH DAMAGE.
+   ----------------------------------------------------------------------------*)
++module%template [@mode p = (portable, nonportable)] Internal = struct
+ 
+ type t =
+   { mutable parser_committed_bytes : int
+@@ -109,3 +110,4 @@ let count_while t pos ~f =
+ let commit t pos =
+   t.parser_committed_bytes <- pos
+ ;;
++end
+index cc9cc4a..e668f87 100644
+--- a/lib/input.mli
++++ b/lib/input.mli
+@@ -31,6 +31,9 @@
+     POSSIBILITY OF SUCH DAMAGE.
+   ----------------------------------------------------------------------------*)
+ 
++@@ portable
++
++module%template [@mode p = (portable, nonportable)] Internal : sig @@ p
+ (** An [Input.t] represents a series of buffers, of which we only have access
+     to one, and a pointer to how much has been committed, which is in the
+     current buffer.
+@@ -59,7 +62,7 @@
+     All [int] position arguments should be relative to the beginning of the
+     whole input. *)
+ 
+-type t
++type t : mutable_data
+ 
+ val create : Bigstringaf.t -> off:int -> len:int -> committed_bytes:int -> t
+ 
+@@ -81,8 +84,9 @@ val unsafe_get_int64_be : t -> int -> int64
+ 
+ val count_while : t -> int -> f:(char -> bool) -> int
+ 
+-val apply : t -> int -> int -> f:(Bigstringaf.t -> off:int -> len:int -> 'a) -> 'a
++val apply : t -> int -> int -> f:(Bigstringaf.t -> off:int -> len:int -> 'a @ p) -> 'a @ p
+ 
+ val commit : t -> int -> unit
+ 
+ val invariant : t -> unit
++end
+index 7afcc2a..9b80a4b 100644
+--- a/lib/parser.ml
++++ b/lib/parser.ml
+@@ -1,22 +1,30 @@
++[%%template
++[@@@mode p = nonportable, c = uncontended]
++
++open struct
++  module Input = Input.Internal[@mode p]
++  module Exported_state = Exported_state.Internal[@mode c]
++end
++
+ module State = struct
+   type 'a t =
+     | Partial of 'a partial
+     | Lazy    of 'a t Lazy.t
+-    | Done    of int * 'a
++    | Done    of int * 'a @@ c
+     | Fail    of int * string list * string
+ 
+   and 'a partial =
+     { committed : int
+-    ; continue  : Bigstringaf.t -> off:int -> len:int -> More.t -> 'a t }
++    ; continue  : Bigstringaf.t -> off:int -> len:int -> More.t -> 'a t}
+ 
+ end
+ type 'a with_state = Input.t ->  int -> More.t -> 'a
+ 
+ type 'a failure = (string list -> string -> 'a State.t) with_state
+-type ('a, 'r) success = ('a -> 'r State.t) with_state
++type ('a, 'r) success = ('a @ p c -> 'r State.t) with_state
+ 
+-type 'a t =
+-  { run : 'r. ('r failure -> ('a, 'r) success -> 'r State.t) with_state }
++type 'a t : value mod p contended =
++  { run : 'r. ('r failure -> ('a, 'r) success -> 'r State.t) with_state @@ p}
+ 
+ let fail_k    input pos _ marks msg =
+   State.Fail(pos - Input.client_committed_bytes input, marks, msg)
+@@ -35,7 +43,11 @@ let rec to_exported_state = function
+   | State.Lazy x -> to_exported_state (Lazy.force x)
+ 
+ let parse p =
+-  let input = Input.create Bigstringaf.empty ~committed_bytes:0 ~off:0 ~len:0 in
++  let empty =
++    Base.Portability_hacks.magic_uncontended__promise_deeply_immutable
++      Bigstringaf.empty
++  in
++  let input = Input.create empty ~committed_bytes:0 ~off:0 ~len:0 in
+   to_exported_state (p.run input 0 Incomplete fail_k succeed_k)
+ 
+ let parse_bigstring p input =
+@@ -59,16 +71,16 @@ module Monad = struct
+       p.run input pos more fail succ'
+     }
+ 
+-  let (>>|) p f =
++  let (>>|) p (f : _ @ p c -> _ @ p c) =
+     { run = fun input pos more fail succ ->
+       let succ' input' pos' more' v = succ input' pos' more' (f v) in
+       p.run input pos more fail succ'
+     }
+ 
+-  let (<$>) f m =
++  let (<$>) (f : _ @ p c -> _ @ p c) m =
+     m >>| f
+ 
+-  let (<*>) f m =
++  let (<*>) (f : (_ @ p c -> _ @ p c) t) m =
+     (* f >>= fun f -> m >>| f *)
+     { run = fun input pos more fail succ ->
+       let succ0 input0 pos0 more0 f =
+@@ -77,10 +89,10 @@ module Monad = struct
+       in
+       f.run input pos more fail succ0 }
+ 
+-  let lift f m =
++  let lift (f : _ @ p c -> _ @ p c) m =
+     f <$> m
+ 
+-  let lift2 f m1 m2 =
++  let lift2 (f : _ @ p c -> _ @ p c -> _ @ p c) (m1 : _ t) (m2 : _ t) =
+     { run = fun input pos more fail succ ->
+       let succ1 input1 pos1 more1 m1 =
+         let succ2 input2 pos2 more2 m2 = succ input2 pos2 more2 (f m1 m2) in
+@@ -88,7 +100,7 @@ module Monad = struct
+       in
+       m1.run input pos more fail succ1 }
+ 
+-  let lift3 f m1 m2 m3 =
++  let lift3 (f : _ @ p c -> _ @ p c -> _ @ p c -> _ @ p c) m1 m2 m3 =
+     { run = fun input pos more fail succ ->
+       let succ1 input1 pos1 more1 m1 =
+         let succ2 input2 pos2 more2 m2 =
+@@ -99,7 +111,7 @@ module Monad = struct
+       in
+       m1.run input pos more fail succ1 }
+ 
+-  let lift4 f m1 m2 m3 m4 =
++  let lift4 (f : _ @ p c -> _ @ p c -> _ @ p c -> _ @ p c -> _ @ p c) m1 m2 m3 m4 =
+     { run = fun input pos more fail succ ->
+       let succ1 input1 pos1 more1 m1 =
+         let succ2 input2 pos2 more2 m2 =
+@@ -137,7 +149,7 @@ module Choice = struct
+       p.run input pos more fail' succ
+     }
+ 
+-  let (<|>) p q =
++  let (<|>) (p : _ t) (q : _ t) =
+     { run = fun input pos more fail succ ->
+       let fail' input' pos' more' marks msg =
+         (* The only two constructors that introduce new failure continuations are
+@@ -171,3 +183,4 @@ module Monad_use_for_debugging = struct
+   let ( *>) a b = a >>= fun _ -> b
+   let (<* ) a b = a >>= fun x -> b >>| fun _ -> x
+ end
++]

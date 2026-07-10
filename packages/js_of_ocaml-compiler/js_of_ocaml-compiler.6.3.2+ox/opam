@@ -1,0 +1,178 @@
+opam-version: "2.0"
+version: "6.3.2+ox"
+name: "js_of_ocaml-compiler"
+synopsis: "Compiler from OCaml bytecode to JavaScript"
+description:
+  "Js_of_ocaml is a compiler from OCaml bytecode to JavaScript. It makes it possible to run pure OCaml programs in JavaScript environment like browsers and Node.js"
+maintainer: "Ocsigen team <dev@ocsigen.org>"
+authors: "Ocsigen team <dev@ocsigen.org>"
+license: [
+  "GPL-2.0-or-later" "LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception"
+]
+homepage: "https://ocsigen.org/js_of_ocaml/latest/manual/overview"
+doc: "https://ocsigen.org/js_of_ocaml/latest/manual/overview"
+bug-reports: "https://github.com/ocsigen/js_of_ocaml/issues"
+depends: [
+  "dune"                {>= "3.17.0"}
+  "ocaml"               {>= "4.13" & < "5.5"}
+  "num"                 {with-test}
+  "ppx_expect"          {>= "v0.16.1" & with-test}
+  "ppxlib"              {>= "0.33.0" & < "0.36.0"}
+  "ocaml-compiler-libs" {>= "v0.12.4" & >= "v0.11.0"}
+  "re"                  {with-test & >= "1.8.0"}
+  "cmdliner"            {>= "2.0"}
+  "sedlex"              {>= "3.6"}
+  "qcheck"              {with-test}
+  "menhir"
+  "menhirLib"
+  "menhirSdk"
+  "yojson"              {>= "1.7.0" & < "3.0.0"}
+  "odoc"                {with-doc}
+]
+depopts: ["ocamlfind"]
+conflicts: [
+  "ocamlfind" {< "1.5.1"}
+  "js_of_ocaml" {< "3.0"}
+  "oxcaml-compiler" {< "5.2.0minus39"}
+]
+build: [
+  ["dune" "build" "-p" name "-j" jobs "@install" "@doc" {with-doc}]
+  [
+    "cmdliner"
+    "install"
+    "tool-support"
+    "--update-opam-install=%{_:name}%.install"
+    "_build/install/default/bin/js_of_ocaml" {os-family != "windows"}
+    "_build/install/default/bin/js_of_ocaml.exe:js_of_ocaml"
+      {os-family = "windows"}
+    "_build/cmdliner-install"
+  ]
+  [
+    "cmdliner"
+    "install"
+    "tool-support"
+    "--update-opam-install=%{_:name}%.install"
+    "_build/install/default/bin/jsoo_minify" {os-family != "windows"}
+    "_build/install/default/bin/jsoo_minify.exe:jsoo_minify"
+      {os-family = "windows"}
+    "_build/cmdliner-install"
+  ]
+]
+dev-repo: "git+https://github.com/ocsigen/js_of_ocaml.git"
+x-commit-hash: "f5fe45b83cd0ba477c2abbc9cda92f2ef51a6fa4"
+x-maintenance-intent: ["(latest)"]
+url {
+  src:
+    "https://github.com/ocsigen/js_of_ocaml/archive/930c6b7f4126eff48cef94d5dd30d1078821eb62.tar.gz"
+  checksum:
+    "sha256=eefd6a0e2156e6f3980a09b85833c1497d64d993266a3ed3ee9a546f475d1415"
+}
+patches: [
+  "dune.patch"
+  "js_of_ocaml-gh2212-draft.patch"
+  "js_of_ocaml-internal-obj-changes.patch"
+  "js_of_ocaml-fix-build_fs.patch"
+  "js_of_ocaml-iarray-primitives.patch"
+  "js_of_ocaml-important-config-changes.patch"
+  "wasm_of_ocaml-bring-back-eval.patch"
+  "js_of_ocaml-revert_9c15703872_behavior_changing_rewrite_of_float_to_bits.patch"
+  "js_of_ocaml-stop_evaluating_caml_int64_bits_of_float_to_avoid_breaking_float_u.patch"
+  "js_of_ocaml-safepoint-friendly-array-init.patch"
+  "js_of_ocaml-cmdliner-compat.patch"
+  "js_of_ocaml-disable-ref-unboxing.patch"
+  "js_of_ocaml-runtime-bug-fixes.patch"
+  "js_of_ocaml-ppx-js-ghost-location.patch"
+  "js_of_ocaml-comment-unused.patch"
+  "js_of_ocaml-caml_max_domain_count.patch"
+  "js_of_ocaml-block-index-primitives.patch"
+  "js_of_ocaml-stdlib-float32-abstract.patch"
+  "js_of_ocaml-gc-compact-after-bytecode-read.patch"
+  "js_of_ocaml-test-oxcaml-compat.patch"
+  "js_of_ocaml-unboxed-indexing-small-ints.patch"
+]
+extra-files: [
+  [
+    "dune.patch"
+    "sha256=3815586228347f32a551098f6fe5ab4751afdac2d65a1812d9134f85e85d8072"
+  ]
+  [
+    "js_of_ocaml-gh2212-draft.patch"
+    "sha256=ff6ab33b6b02820b7b813eb2826ed0f547ec1bb7b33d6eb6181fc2c15df2e777"
+  ]
+  [
+    "js_of_ocaml-internal-obj-changes.patch"
+    "sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  ]
+  [
+    "js_of_ocaml-fix-build_fs.patch"
+    "sha256=abaa404bf23a77cf1badfe30ab9fcc13c6fb0446a81fa10b0962ed1ba9005d6a"
+  ]
+  [
+    "js_of_ocaml-iarray-primitives.patch"
+    "sha256=6f7805c3876229168ac8b023783c75226bf57e1a2bc2ded04d0adb9e46def515"
+  ]
+  [
+    "js_of_ocaml-important-config-changes.patch"
+    "sha256=eeb46aea8e0f0d2232b47f32a8a1d60237626637304431847e60316424daadd3"
+  ]
+  [
+    "wasm_of_ocaml-bring-back-eval.patch"
+    "sha256=c413d9617e1122a9fdad8f1f63859bdf9f17a8440f78bdfbaecc432bae580fac"
+  ]
+  [
+    "js_of_ocaml-revert_9c15703872_behavior_changing_rewrite_of_float_to_bits.patch"
+    "sha256=2016f780ab5b23266a0c470d334bfc1d727f04e6aac38672ee1afb5a3cd6b506"
+  ]
+  [
+    "js_of_ocaml-stop_evaluating_caml_int64_bits_of_float_to_avoid_breaking_float_u.patch"
+    "sha256=684ee4b48b2fd213c7cbb64c38ba96d6a28a4ef19ccdfa753b924ef13588a824"
+  ]
+  [
+    "js_of_ocaml-safepoint-friendly-array-init.patch"
+    "sha256=1f34c9d6b0944a1df644405a0ad7e58ad09afc4dac38cbc360d65f99dfc48ace"
+  ]
+  [
+    "js_of_ocaml-cmdliner-compat.patch"
+    "sha256=37c5c259254e389f2900a99cb578d8cbc50bc58ccd553c5efd3f8f7f0278034d"
+  ]
+  [
+    "js_of_ocaml-disable-ref-unboxing.patch"
+    "sha256=28aabe137d74c432e510dd1f5b124f353904f9184e3c92980bcbfd47e8f15944"
+  ]
+  [
+    "js_of_ocaml-runtime-bug-fixes.patch"
+    "sha256=7acba80b1e7583d2b4512259e56f139e42f9492bbe6863497001615055400c0e"
+  ]
+  [
+    "js_of_ocaml-ppx-js-ghost-location.patch"
+    "sha256=150df4dce5218497b0fbbeb3680679f5674278dc61e2c23ddacee678c3a1ed59"
+  ]
+  [
+    "js_of_ocaml-comment-unused.patch"
+    "sha256=2962cb2c7c7be588393aa748c554a8b509f9878a18c42b6ebe90ac335f4004f9"
+  ]
+  [
+    "js_of_ocaml-caml_max_domain_count.patch"
+    "sha256=d6f84a0b844653ee6de73ef4423d47d53dea71dde2567e165240c4f6d6efca94"
+  ]
+  [
+    "js_of_ocaml-block-index-primitives.patch"
+    "sha256=de76476e0982a6afcf194ae60e4dba5f90bc102cc4970fca843ac62ba3ed165d"
+  ]
+  [
+    "js_of_ocaml-stdlib-float32-abstract.patch"
+    "sha256=d0469781fc2bba214d5fd595b4e1b9eac548eb6415a5a2b50d4359c12b26cbcd"
+  ]
+  [
+    "js_of_ocaml-gc-compact-after-bytecode-read.patch"
+    "sha256=bbfda8cc7436ba6cd1bb7ced949782cd4014674ede82e13d0d255c4a2a2d7022"
+  ]
+  [
+    "js_of_ocaml-test-oxcaml-compat.patch"
+    "sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  ]
+  [
+    "js_of_ocaml-unboxed-indexing-small-ints.patch"
+    "sha256=37c2460a6314a38d9f547d8f15fb8b8ecd0af2880b0ed846fe398d1e4bd9f27e"
+  ]
+]

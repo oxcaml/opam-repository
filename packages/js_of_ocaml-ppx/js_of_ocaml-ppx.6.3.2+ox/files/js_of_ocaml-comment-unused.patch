@@ -1,0 +1,11 @@
+--- a/compiler/lib-runtime-files/gen/gen.ml
++++ b/compiler/lib-runtime-files/gen/gen.ml
+@@ -54,7 +54,7 @@
+ 
+ let () =
+   Js_of_ocaml_compiler.Warning.werror := true;
+-  Js_of_ocaml_compiler.Warning.enable `Unused_js_variable;
++  (*= Js_of_ocaml_compiler.Warning.enable `Unused_js_variable; *)
+   Js_of_ocaml_compiler.Config.set_target `JavaScript;
+   let () = set_binary_mode_out stdout true in
+   match Array.to_list Sys.argv with

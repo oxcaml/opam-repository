@@ -119,5 +119,5 @@ extra-files: [
   ]
 ]
 conflicts: [
-  "oxcaml-compiler" {< "5.2.0minus38"}
+  "oxcaml-compiler" {!= "5.2.0minus38"}
 ]
