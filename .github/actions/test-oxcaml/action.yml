@@ -116,4 +116,4 @@ runs:
 
     - name: Install non-JS (overridden) packages
       shell: bash
-      run: opam install $(find packages -name opam | sed -ne 's|packages/\([^/]*\)/.*+ox.*|\1|p' | sort -u | grep -Fvxf <(sed -e "/^$RUNNER_OS:/d" -e 's/^[^:]*://' .github/actions/test-oxcaml/broken-packages.txt; opam list --installed --short))
+      run: opam install $(find packages -name opam | sed -ne 's|packages/\([^/]*\)/.*+ox.*|\1|p' | sort -u | grep -Fvxf <(sed -e "/^$RUNNER_OS:/d" -e 's/^[^:]*://' .github/actions/test-oxcaml/broken-packages.txt; opam list --color=never --installed --short))
