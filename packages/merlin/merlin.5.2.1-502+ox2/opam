@@ -27,7 +27,7 @@ conflicts: [
   "oxcaml-compiler" {< "5.2.0minus39" | >= "5.2.0minus40"}
 ]
 build: [
-  ["sh" "-exc" "cd external/merlin && dune build -p %{name}% -j %{jobs}% @install && cp %{name}%.install ../.."]
+  ["sh" "-exc" "cd external/merlin && dune build -p %{name}% -j %{jobs}% @install && cp %{name}%.install ../.. && ln -sfn external/merlin/_build ../../_build"]
   ["sh" "-exc" "cd external/merlin && dune runtest -p %{name}% -j %{jobs}%"] {with-test}
 ]
 post-messages:

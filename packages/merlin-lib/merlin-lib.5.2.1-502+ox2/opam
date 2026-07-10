@@ -21,7 +21,7 @@ depends: [
   "menhirSdk" {>= "20201216" & <= "20240715"}
 ]
 build: [
-  ["sh" "-exc" "cd external/merlin && dune build -p %{name}% -j %{jobs}% @install && cp %{name}%.install ../.."]
+  ["sh" "-exc" "cd external/merlin && dune build -p %{name}% -j %{jobs}% @install && cp %{name}%.install ../.. && ln -sfn external/merlin/_build ../../_build"]
 ]
 dev-repo: "git+https://github.com/ocaml/merlin.git"
 x-commit-hash: "f10f14fb514ccb9035fc899961cc24c2958bcba6"
