@@ -68,3 +68,9 @@ url {
 conflicts: [
   "oxcaml-compiler" {< "5.2.0minus31"}
 ]
+patches: [
+  "split_n-unboxed-tuple.patch" {oxcaml-compiler:version >= "5.2.0minus39"}
+]
+extra-files: [
+  ["split_n-unboxed-tuple.patch" "sha256=310808000525ad0fce0fc95119112607fbb4c2f708d83194caf3ccd2cfe74c8e"]
+]
