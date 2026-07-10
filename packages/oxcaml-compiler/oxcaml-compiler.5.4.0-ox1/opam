@@ -104,11 +104,11 @@ extra-source "write-config.sh" {
 }
 url {
   src:
-    "https://github.com/oxcaml/oxcaml/archive/refs/tags/5.2.0-ox1.tar.gz"
+    "https://github.com/oxcaml/oxcaml/archive/refs/tags/5.4.0-ox1.tar.gz"
   # OxCaml releases are not immutable - if this tag is moved, update the SHA in
   # the install section above
   checksum:
-    "sha256=d5558cd419c8d46bdc958064cb97f963d1ea793866414c025906ec15033512ed"
+    "sha256=62c63f043f903fe01e5c2bcfd42a454272bae5c53632bd7d78eaca80bc20aaa3"
 }
 patches: ["ignore-opam.patch"]
 extra-files: [
