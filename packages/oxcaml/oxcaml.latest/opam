@@ -11,7 +11,7 @@ depends: [
   # that a new release which forgets to update this package is not installable.
   # The slightly generous bound allows for downstream forks to extend the
   # version number further.
-  "oxcaml-compiler" {>= "5.2.0minus39~" & < "5.4.0-ox2~"}
+  "oxcaml-compiler" {>= "5.2.0minus39~" & < "5.4.0-ox3~"}
 ]
 install: [
   ["sh" "./write-config.sh" name "-v" "release:string" oxcaml-compiler:release "-v" "commit:string" oxcaml-compiler:commit]
