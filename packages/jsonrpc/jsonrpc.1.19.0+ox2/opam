@@ -35,18 +35,8 @@ x-opam-repository-commit-hash-at-time-of-archiving:
   "08d8c16c16dc6b23a5278b06dff0ac6c7a217356"
 x-reason-for-archiving: ["maintenance-intent"]
 url {
-  src:
-    "https://github.com/oxcaml/ocaml-lsp/archive/0fa22477f4aa957b04f398bb71b4f8c407ad5499.tar.gz"
-  checksum:
-    "sha256=7a9243fc57ed3d6275463719c65cb50f687be095aea3b75ef1bb57f7633382d2"
+  src: "git+https://github.com/oxcaml/ocaml-lsp.git#5.2.0minus-39"
 }
-patches: ["5.2.0minus-39-compat.patch"]
-extra-files: [
-  [
-    "5.2.0minus-39-compat.patch"
-    "sha256=56209b84bdc0cf15277f477ec03415230e8eaf5a6e2e9661ca83e6a5ba89c6a0"
-  ]
-]
 conflicts: [
   "oxcaml-compiler" {< "5.2.0minus39" | >= "5.2.0minus40"}
 ]
