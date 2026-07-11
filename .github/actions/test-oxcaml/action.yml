@@ -111,7 +111,7 @@ runs:
         opam list
         # utop, sherlodoc and odoc are broken since minus38
         # ocamlformat is not coinstallable with js_of_ocaml in minus39
-        opam install merlin ocaml-lsp-server parallel concurrent core_unix js_of_ocaml-toplevel bonsai_term wasm_of_ocaml-compiler ${{ inputs.additional-test-packages }}
+        opam install merlin ocaml-lsp-server parallel concurrent core_unix js_of_ocaml-toplevel bonsai_term ${{ inputs.additional-test-packages }}
         opam list
 
     - name: Install non-JS (overridden) packages
