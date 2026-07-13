@@ -9,4 +9,4 @@ authors: "David Allsopp"
 license: "CC0-1.0+"
 homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
-depends: "oxcaml-angstrom" {post} | "oxcaml-angstrom-patches" {post} | "oxcaml-cmarkit" {post} & "oxcaml-compiler" {post & < "5.2.0minus40"} | "oxcaml-cmarkit-patches" {post} & "oxcaml-compiler" {post & < "5.2.0minus40"} | "oxcaml-alcotest" {post} & "oxcaml-compiler" {post & < "5.2.0minus31"} | "oxcaml-alcotest-patches" {post} & "oxcaml-compiler" {post & < "5.2.0minus31"}
+depends: "oxcaml-angstrom" {post} | "oxcaml-angstrom-patches" {post} | "oxcaml-cmarkit" {post} & "oxcaml-compiler" {post & < "5.4.0-ox1"} | "oxcaml-cmarkit-patches" {post} & "oxcaml-compiler" {post & < "5.4.0-ox1"} | "oxcaml-alcotest" {post} & "oxcaml-compiler" {post & < "5.2.0minus31"} | "oxcaml-alcotest-patches" {post} & "oxcaml-compiler" {post & < "5.2.0minus31"}

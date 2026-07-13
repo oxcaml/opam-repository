@@ -33,7 +33,7 @@ for entry in *; do
               case $entry in
                 angstrom|faraday)
                   # TODO Patches aren't working, so disable them for now
-                  echo "5.2.0minus40:$entry";;
+                  echo "5.4.0-ox1:$entry";;
                 cmarkit|extlib|omd|yojson)
                   echo "5.2.0minus31:$entry";;
                 *)

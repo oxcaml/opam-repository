@@ -10,6 +10,8 @@ conflicts: "oxcaml-odoc"
 depends: [
   ("oxcaml-ojs" {post} | "oxcaml-ojs-patches" {post})
   "oxcaml" {post}
-  "odoc" {build & = "3.2.0+ox2"}
+  "odoc" {build & (
+            = "3.2.0+ox2"
+          )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

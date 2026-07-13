@@ -10,6 +10,8 @@ conflicts: "oxcaml-sherlodoc"
 depends: [
   ("oxcaml-spawn" {post} | "oxcaml-spawn-patches" {post})
   "oxcaml" {post}
-  "sherlodoc" {build & = "3.2.0+ox2"}
+  "sherlodoc" {build & (
+                 = "3.2.0+ox2"
+               )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

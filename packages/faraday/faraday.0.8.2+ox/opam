@@ -40,4 +40,4 @@ extra-files: [
     "sha256=a635d9378c1e3a43ee8c900a0b9734bd88309a2c5556830ea1e0b8b1ed15176a"
   ]
 ]
-conflicts: "oxcaml-compiler" {< "5.2.0minus40"}
+conflicts: "oxcaml-compiler" {< "5.4.0-ox1"}
