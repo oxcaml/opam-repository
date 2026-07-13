@@ -36,7 +36,7 @@ depends: [
 ]
 available: arch != "x86_32"
 conflicts: [
-  "oxcaml-compiler" {< "5.2.0minus39"}
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
 ]
 synopsis:
   "A ppx that takes in css strings and produces a module for accessing the unique names defined within"

@@ -19,7 +19,7 @@ depends: [
 ]
 available: arch != "x86_32"
 conflicts: [
-  "oxcaml-compiler" {< "5.2.0minus39"}
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
 ]
 synopsis:
   "[Heterogeneous_list] is a list that can contain arbitrary, mixed types as elements. A bit like a Python list."

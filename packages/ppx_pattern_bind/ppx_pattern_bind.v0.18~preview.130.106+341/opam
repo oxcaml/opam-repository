@@ -21,7 +21,7 @@ depends: [
 ]
 available: arch != "x86_32"
 conflicts: [
-  "oxcaml-compiler" {< "5.2.0minus39"}
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
 ]
 synopsis: "A ppx for writing fast incremental bind nodes in a pattern match"
 description: """

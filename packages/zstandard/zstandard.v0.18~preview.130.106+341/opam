@@ -22,7 +22,7 @@ depends: [
   "integers"
 ]
 conflicts: [
-  "oxcaml-compiler" {< "5.2.0minus39"}
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
 ]
 synopsis: "OCaml bindings to Zstandard"
 description: """

@@ -17,7 +17,7 @@ depends: [
   "owee"  {>= "0.4"}
 ]
 conflicts: [
-  "oxcaml-compiler" {< "5.2.0minus39"}
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
 ]
 synopsis: "USDT probes for OCaml: command line tool"
 description: """

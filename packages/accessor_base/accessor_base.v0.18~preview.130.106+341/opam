@@ -22,7 +22,7 @@ depends: [
 ]
 available: arch != "x86_32"
 conflicts: [
-  "oxcaml-compiler" {< "5.2.0minus39"}
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
 ]
 synopsis: "Accessors for Base types, for use with the Accessor library"
 description: """
