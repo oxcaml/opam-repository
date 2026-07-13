@@ -1,0 +1,36 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/janestreet_cpuid"
+bug-reports: "https://github.com/janestreet/janestreet_cpuid/issues"
+dev-repo: "git+https://github.com/janestreet/janestreet_cpuid.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/janestreet_cpuid/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"       {>= "5.1.0"}
+  "core"        {= "v0.18~preview.130.106+341"}
+  "core_kernel" {= "v0.18~preview.130.106+341"}
+  "ppx_jane"    {= "v0.18~preview.130.106+341"}
+  "dune"        {>= "3.17.0"}
+]
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis:
+  "A library for parsing CPU capabilities out of the `cpuid` instruction."
+description: """
+Supports a broad swath of Intel CPU capabilities and a more limited subset of AMD CPU
+capabilities.
+"""
+available: (arch = "x86_64" | arch = "arm64") & os = "linux"
+url {
+  src:
+    "https://github.com/janestreet/janestreet_cpuid/archive/e86768c8215061521f31cdf0273c1c28d83e90ab.tar.gz"
+  checksum:
+    "sha256=aced0a49cca10171e9d2cca7637931ecf8ff21e18534fb35ed889f27c9eb9358"
+}

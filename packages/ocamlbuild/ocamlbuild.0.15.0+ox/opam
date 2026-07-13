@@ -17,6 +17,7 @@ depends: [
 conflicts: [
   "base-ocamlbuild"
   "ocamlfind" {< "1.6.2"}
+  "relocatable"
 ]
 build: [
   [

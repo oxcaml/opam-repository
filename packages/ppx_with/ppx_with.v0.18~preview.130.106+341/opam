@@ -1,0 +1,34 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_with"
+bug-reports: "https://github.com/janestreet/ppx_with/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_with.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_with/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"       {>= "5.1.0"}
+  "base"        {= "v0.18~preview.130.106+341"}
+  "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+  "dune"        {>= "3.17.0"}
+  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "A ppx writer for consisely building scoped operations"
+description: """
+A ppx rewriter for building scoped operations, which must do cleanup or similar work
+     after a main body, while maintaining readability.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_with/archive/fb8e18626e7751b4863653725938e297f17f05e3.tar.gz"
+  checksum:
+    "sha256=dd5d61114dbcbf7a8a4cdf534ce180d416967808ea4ae42616fa884126affe12"
+}

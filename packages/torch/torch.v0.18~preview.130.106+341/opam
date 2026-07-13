@@ -1,0 +1,51 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/torch"
+bug-reports: "https://github.com/janestreet/torch/issues"
+dev-repo: "git+https://github.com/janestreet/torch.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/torch/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"               {>= "5.1.0"}
+  "base"                {= "v0.18~preview.130.106+341"}
+  "core"                {= "v0.18~preview.130.106+341"}
+  "core_unix"           {= "v0.18~preview.130.106+341"}
+  "ppx_bench"           {= "v0.18~preview.130.106+341"}
+  "ppx_c_bindings"      {= "v0.18~preview.130.106+341"}
+  "ppx_expect"          {= "v0.18~preview.130.106+341"}
+  "ppx_inline_test"     {= "v0.18~preview.130.106+341"}
+  "ppx_jane"            {= "v0.18~preview.130.106+341"}
+  "ppx_let"             {= "v0.18~preview.130.106+341"}
+  "ppx_module_timer"    {= "v0.18~preview.130.106+341"}
+  "ppx_string"          {= "v0.18~preview.130.106+341"}
+  "stdio"               {= "v0.18~preview.130.106+341"}
+  "vec"                 {= "v0.18~preview.130.106+341"}
+  "ctypes"              {>= "0.18.0"}
+  "ctypes-foreign"      {>= "0.18.0"}
+  "dune"                {>= "3.17.0"}
+  "dune-configurator"
+  "ocaml-compiler-libs" {>= "v0.11.0"}
+]
+depopts: ["libtorch"]
+available: arch != "x86_32"
+conflicts: [
+  "libtorch" {< "2.3.0" | >= "2.4.0"}
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "Torch bindings for OCaml"
+description: """
+The ocaml-torch project provides some OCaml bindings for the Torch library.
+This brings to OCaml NumPy-like tensor computations with GPU acceleration and
+tape-based automatic differentiation.
+"""
+url {
+  src:
+    "https://github.com/janestreet/torch/archive/aa55b14cc44f065ec70849e008f170b9cd3a0199.tar.gz"
+  checksum:
+    "sha256=4ea5c941684a24e8e43795263af891f32d3512a7b05cf095eae786ab0eca7692"
+}

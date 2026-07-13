@@ -1,0 +1,34 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ocaml-probes"
+bug-reports: "https://github.com/janestreet/ocaml-probes/issues"
+dev-repo: "git+https://github.com/janestreet/ocaml-probes.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ocaml-probes/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml" {>= "5.1.0"}
+  "dune"  {>= "3.17.0"}
+  "owee"  {>= "0.4"}
+]
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "USDT probes for OCaml: command line tool"
+description: """
+A tool for controlling user-space statically-defined tracing probes for OCaml.
+Experimental.
+"""
+depexts: ["linux-headers"] {os-family = "alpine"}
+available: (arch = "x86_64" | arch = "arm64") & os = "linux"
+url {
+  src:
+    "https://github.com/janestreet/ocaml-probes/archive/901093d77242028ddd522378156f2cc6901ed132.tar.gz"
+  checksum:
+    "sha256=fca1fc51c208274c3bf96b4ab98819b2500fd1e74e93a6024df5bc6f717bb1a1"
+}

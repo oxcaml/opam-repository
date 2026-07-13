@@ -1,0 +1,76 @@
+--- a/compiler/bin-js_of_ocaml/compile.ml
++++ b/compiler/bin-js_of_ocaml/compile.ml
+@@ -414,10 +414,14 @@
+   | (`Stdin | `File _) as bytecode ->
+       let kind, ic, close_ic, include_dirs =
+         match bytecode with
+-        | `Stdin -> Parse_bytecode.from_channel stdin, stdin, (fun () -> ()), include_dirs
++        | `Stdin ->
++            let res = Parse_bytecode.from_channel stdin in
++            Gc.compact ();
++            res, stdin, (fun () -> ()), include_dirs
+         | `File fn ->
+             let ch = open_in_bin fn in
+             let res = Parse_bytecode.from_channel ch in
++            Gc.compact ();
+             let include_dirs = Filename.dirname fn :: include_dirs in
+             res, ch, (fun () -> close_in ch), include_dirs
+       in
+@@ -441,6 +445,7 @@
+               ~debug:need_debug
+               ic
+           in
++          Gc.compact ();
+           if times () then Format.eprintf "  parsing: %a@." Timer.print t1;
+           output_gen
+             ~write_shape:false
+@@ -481,6 +486,7 @@
+               cmo
+               ic
+           in
++          Gc.compact ();
+           if times () then Format.eprintf "  parsing: %a@." Timer.print t1;
+           output_gen
+             ~write_shape:true
+@@ -546,6 +552,7 @@
+                   cmo
+                   ic
+               in
++              Gc.compact ();
+               if times ()
+               then
+                 Format.eprintf
+@@ -585,6 +592,7 @@
+                       cmo
+                       ic
+                   in
++                  Gc.compact ();
+                   if times ()
+                   then
+                     Format.eprintf
+--- a/compiler/bin-wasm_of_ocaml/compile.ml
++++ b/compiler/bin-wasm_of_ocaml/compile.ml
+@@ -543,6 +543,7 @@
+        in
+        let ch = open_in_bin input_file in
+        let res = Parse_bytecode.from_channel ch in
++       Gc.compact ();
+        let include_dirs = Filename.dirname input_file :: include_dirs in
+        res, ch, (fun () -> close_in ch), include_dirs
+      in
+@@ -557,6 +558,7 @@
+            cmo
+            ic
+        in
++       Gc.compact ();
+        let cmi_files =
+          if include_cmis
+          then
+@@ -621,6 +623,7 @@
+              ~debug:need_debug
+              ic
+          in
++         Gc.compact ();
+          if times () then Format.eprintf "  parsing: %a@." Timer.print t1;
+          let embedded_files =
+            let cmi_files =

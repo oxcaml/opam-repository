@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/sexp_type"
+bug-reports: "https://github.com/janestreet/sexp_type/issues"
+dev-repo: "git+https://github.com/janestreet/sexp_type.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/sexp_type/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.1.0"}
+  "basement" {= "v0.18~preview.130.106+341"}
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "Sexp type"
+description: """
+The definition of `Sexp.t` and `Sexp_grammar.t`.
+"""
+url {
+  src:
+    "https://github.com/janestreet/sexp_type/archive/98c8ea4b9a7866bbd05069b020a12f273e96c915.tar.gz"
+  checksum:
+    "sha256=b0d3a7773555cfaf59482ed8759c8b9a99fb3dac39022989cc076d17fc6b6618"
+}

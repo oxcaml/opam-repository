@@ -1,0 +1,31 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/hardcaml_template_project"
+bug-reports: "https://github.com/janestreet/hardcaml_template_project/issues"
+dev-repo: "git+https://github.com/janestreet/hardcaml_template_project.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/hardcaml_template_project/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml" {>= "5.1.0"}
+  "dune"  {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "Simple starter project for hardcaml development"
+description: """
+A simple starter project including a hardcaml design, testbench, and RTL generation.
+"""
+url {
+  src:
+    "https://github.com/janestreet/hardcaml_template_project/archive/da6f7b8a7eff7bbf02f128b20ab5484a5ced12ff.tar.gz"
+  checksum:
+    "sha256=d5d6a0b88217855ede257c4e2e154ae7d919663c8dfd91a8611bf7dac754c6b1"
+}

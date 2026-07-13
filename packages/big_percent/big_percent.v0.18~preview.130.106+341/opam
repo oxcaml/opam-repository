@@ -1,0 +1,35 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/big_percent"
+bug-reports: "https://github.com/janestreet/big_percent/issues"
+dev-repo: "git+https://github.com/janestreet/big_percent.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/big_percent/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.1.0"}
+  "bignum"   {= "v0.18~preview.130.106+341"}
+  "core"     {= "v0.18~preview.130.106+341"}
+  "ppx_jane" {= "v0.18~preview.130.106+341"}
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis:
+  "An arbitrary-precision scale factor, not bounded between 0% and 100%."
+description: """
+Big_percent is like Core.Percent but arbitrary-precision, backed by Bignum.
+"""
+url {
+  src:
+    "https://github.com/janestreet/big_percent/archive/cff2d6cd8d08b01ff06e30815500a98dcbcb7973.tar.gz"
+  checksum:
+    "sha256=7ac5f5a3ca53983e421f8e5a55fc08285a03866fa9f0a5e34a95797682d75e81"
+}

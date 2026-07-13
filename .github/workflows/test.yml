@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+      - 5.2.0minus39
   pull_request:
   schedule:
     - cron: "30 0 * * *"
@@ -33,11 +34,16 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v4
 
+      # GCC 16 issue - fixed upstream, but not yet released
+      - name: Disable wasm_of_ocaml-compiler on Arch
+        run: echo wasm_of_ocaml-compiler >> .github/actions/test-oxcaml/broken-packages.txt
+        if: matrix.image == 'archlinux:latest'
+
       - name: Run Test OxCaml action
         uses: ./.github/actions/test-oxcaml
         with:
-          ocaml-compiler: ocaml-variants.5.2.0+ox
           opam-disable-sandboxing: true
+          additional-test-packages: ${{ matrix.image != 'archlinux:latest' && 'wasm_of_ocaml-compiler' || '' }} strace_ui proctopus
 
   test-macos:
     strategy:
@@ -52,4 +58,4 @@ jobs:
       - name: Run Test OxCaml action
         uses: ./.github/actions/test-oxcaml
         with:
-          ocaml-compiler: ocaml-variants.5.2.0+ox
+          additional-test-packages: wasm_of_ocaml-compiler

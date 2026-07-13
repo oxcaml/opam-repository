@@ -13,6 +13,7 @@ depends: [
   "ppxlib" {build & (
               = "0.33.0+ox"
             | = "0.33.0+ox1"
+            | = "0.33.0+ox2"
             )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

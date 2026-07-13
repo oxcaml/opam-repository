@@ -1,0 +1,36 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/command_rpc"
+bug-reports: "https://github.com/janestreet/command_rpc/issues"
+dev-repo: "git+https://github.com/janestreet/command_rpc.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/command_rpc/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"       {>= "5.1.0"}
+  "async"       {= "v0.18~preview.130.106+341"}
+  "core"        {= "v0.18~preview.130.106+341"}
+  "core_kernel" {= "v0.18~preview.130.106+341"}
+  "core_unix"   {= "v0.18~preview.130.106+341"}
+  "ppx_jane"    {= "v0.18~preview.130.106+341"}
+  "dune"        {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis:
+  "Utilities for Versioned RPC communication with a child process over stdin and stdout"
+description: """
+"""
+url {
+  src:
+    "https://github.com/janestreet/command_rpc/archive/9133f9f5f8b262219d3c4e2f52f34fc7f78d8200.tar.gz"
+  checksum:
+    "sha256=c25328c95a476993e6b9682ffd243424d30503af84019e82c27987b9c026229c"
+}

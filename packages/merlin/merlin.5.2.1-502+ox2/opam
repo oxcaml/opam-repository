@@ -1,0 +1,90 @@
+opam-version: "2.0"
+version: "5.2.1-502+ox2"
+name: "merlin"
+synopsis:
+  "Editor helper, provides completion, typing and source browsing in Vim and Emacs"
+description:
+  "Merlin is an assistant for editing OCaml code. It aims to provide the features available in modern IDEs: error reporting, auto completion, source browsing and much more."
+maintainer: "defree@gmail.com"
+authors: "The Merlin team"
+license: "MIT"
+homepage: "https://github.com/ocaml/merlin"
+bug-reports: "https://github.com/ocaml/merlin/issues"
+depends: [
+  "ocaml"             {>= "5.2" & < "5.3"}
+  "dune"              {>= "3.0.0"}
+  "merlin-lib"        {= version}
+  "dot-merlin-reader" {= version}
+  "ocaml-index"       {>= "1.0" & post}
+  "yojson"            {>= "2.0.0"}
+  "conf-jq"           {with-test}
+  "ppxlib"            {with-test}
+  "alcotest"          {with-test}
+]
+conflicts: [
+  "seq" {!= "base"}
+  "base-effects"
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+build: [
+  ["sh" "-exc" "cd external/merlin && dune build -p %{name}% -j %{jobs}% @install && cp %{name}%.install ../.. && ln -sfn external/merlin/_build ../../_build"]
+  ["sh" "-exc" "cd external/merlin && dune runtest -p %{name}% -j %{jobs}%"] {with-test}
+]
+post-messages:
+  """\
+merlin installed.
+
+Quick setup for VIM
+-------------------
+Append this to your .vimrc to add merlin to vim's runtime-path:
+  let g:opamshare = substitute(system('opam var share'),'\\n$','','''')
+  execute "set rtp+=" . g:opamshare . "/merlin/vim"
+
+Also run the following line in vim to index the documentation:
+  :execute "helptags " . g:opamshare . "/merlin/vim/doc"
+
+Quick setup for EMACS
+-------------------
+Add opam emacs directory to your load-path by appending this to your .emacs:
+  (let ((opam-share (ignore-errors (car (process-lines "opam" "var" "share")))))
+   (when (and opam-share (file-directory-p opam-share))
+    ;; Register Merlin
+    (add-to-list 'load-path (expand-file-name "emacs/site-lisp" opam-share))
+    (autoload 'merlin-mode "merlin" nil t nil)
+    ;; Automatically start it in OCaml buffers
+    (add-hook 'tuareg-mode-hook 'merlin-mode t)
+    (add-hook 'caml-mode-hook 'merlin-mode t)
+    ;; Use opam switch to lookup ocamlmerlin binary
+    (setq merlin-command 'opam)
+    ;; To easily change opam switches within a given Emacs session, you can
+    ;; install the minor mode https://github.com/ProofGeneral/opam-switch-mode
+    ;; and use one of its "OPSW" menus.
+    ))
+Take a look at https://github.com/ocaml/merlin for more information
+
+Quick setup with opam-user-setup
+--------------------------------
+
+Opam-user-setup support Merlin.
+
+  $ opam user-setup install
+
+should take care of basic setup.
+See https://github.com/OCamlPro/opam-user-setup"""
+    {success & !user-setup:installed}
+dev-repo: "git+https://github.com/ocaml/merlin.git"
+x-commit-hash: "f10f14fb514ccb9035fc899961cc24c2958bcba6"
+url {
+  src:
+    "https://github.com/oxcaml/oxcaml/archive/f10f14fb514ccb9035fc899961cc24c2958bcba6.tar.gz"
+  checksum:
+    "sha256=23669e367d5f0ce021800456bdae3d4ff0e0d555a6c49cf1b60757dd0a212053"
+}
+patches: ["merlin-minus39-standalone.patch"]
+extra-files: [
+  [
+    "merlin-minus39-standalone.patch"
+    "sha256=037292031a2190b0b42907a00d94062a6b486be37fb99388a186ad927549a4f3"
+  ]
+]
+

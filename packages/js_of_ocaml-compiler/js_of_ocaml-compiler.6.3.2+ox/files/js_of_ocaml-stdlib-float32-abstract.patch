@@ -1,0 +1,50 @@
+--- a/compiler/lib/stdlib.ml
++++ b/compiler/lib/stdlib.ml
+@@ -359,17 +359,6 @@
+ module Float32 = struct
+   type t
+
+-  let of_float _ = assert false
+-
+-  let to_float _ = assert false
+-
+-  let of_string _ = assert false
+-end
+-[@@if not oxcaml]
+-
+-module Float32 = struct
+-  type t = float32
+-
+   external of_float : float -> t = "%float32offloat"
+
+   external to_float : t -> float = "%floatoffloat32"
+@@ -378,7 +367,6 @@
+      This is not equivalent to native code, which parses to 32 bits directly. *)
+   let of_string s = float_of_string s |> of_float
+ end
+-[@@if oxcaml]
+
+ module Bool = struct
+   include Bool
+--- a/compiler/lib/parse_bytecode.ml
++++ b/compiler/lib/parse_bytecode.ml
+@@ -479,8 +479,6 @@
+
+   let ident_native = ident_of_custom (Obj.repr 0n)
+
+-  let ident_f32 = ident_of_custom (Obj.repr 0.s) [@@if oxcaml]
+-
+   external is_null : Obj.t -> bool = "%is_null" [@@if oxcaml]
+
+   let is_null obj = is_null (Sys.opaque_identity obj) [@@if oxcaml]
+@@ -505,8 +503,8 @@
+       else if tag = Obj.custom_tag
+       then
+         match ident_of_custom x with
+-        | ((Some name) [@if oxcaml]) when same_ident name ident_f32 ->
+-            Float32 (Int64.bits_of_float ((Obj.magic x : float32) |> Float32.to_float))
++        | Some "_f32" ->
++            Float32 (Int64.bits_of_float ((Obj.magic x : Float32.t) |> Float32.to_float))
+         | Some name when same_ident name ident_32 ->
+             let i : int32 = Obj.magic x in
+             Int32 i

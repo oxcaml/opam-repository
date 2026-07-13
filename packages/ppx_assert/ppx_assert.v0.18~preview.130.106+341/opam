@@ -1,0 +1,37 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_assert"
+bug-reports: "https://github.com/janestreet/ppx_assert/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_assert.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_assert/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"         {>= "5.1.0"}
+  "base"          {= "v0.18~preview.130.106+341"}
+  "ppx_compare"   {= "v0.18~preview.130.106+341"}
+  "ppx_here"      {= "v0.18~preview.130.106+341"}
+  "ppx_sexp_conv" {= "v0.18~preview.130.106+341"}
+  "ppx_template"  {= "v0.18~preview.130.106+341"}
+  "dune"          {>= "3.17.0"}
+  "ppxlib"        {>= "0.33.0" & < "0.36.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "Assert-like extension nodes that raise useful errors on failure"
+description: """
+Part of the Jane Street's PPX rewriters collection.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_assert/archive/a79937e720ee65ab2c4ee61d6728b14588fb211e.tar.gz"
+  checksum:
+    "sha256=f12d380d59f5a0eb1cac7657c76b6ad68f45823c72939d2b44b4285fb106ecae"
+}

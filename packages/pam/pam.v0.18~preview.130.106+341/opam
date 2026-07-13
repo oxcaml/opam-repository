@@ -1,0 +1,38 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/pam"
+bug-reports: "https://github.com/janestreet/pam/issues"
+dev-repo: "git+https://github.com/janestreet/pam.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/pam/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.1.0"}
+  "core"     {= "v0.18~preview.130.106+341"}
+  "ppx_jane" {= "v0.18~preview.130.106+341"}
+  "conf-pam"
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "OCaml bindings for the Linux-PAM library"
+description: """
+This provides OCaml bindings for the Linux-PAM (Pluggable Authentication
+Modules for Linux) library. It allows OCaml programs to delegate
+authentication tasks to the Linux-PAM framework.
+"""
+depexts: [
+  ["pam-devel"] {os-family = "fedora"}
+]
+url {
+  src:
+    "https://github.com/janestreet/pam/archive/f87d8a08c7eac19729a712d51684e6aa9107898f.tar.gz"
+  checksum:
+    "sha256=b206a87bd5af26a38c5f7467bbd9529677017639c88e00bf2b91f1cc6932f8fe"
+}

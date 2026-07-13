@@ -1,0 +1,13 @@
+diff --git a/src/lib/otoml_base.ml b/src/lib/otoml_base.ml
+index 191de1634bf7..b77f73eb8683 100644
+--- a/src/lib/otoml_base.ml
++++ b/src/lib/otoml_base.ml
+@@ -569,7 +569,7 @@ module Make (N: TomlNumber) (D: TomlDate) = struct
+       in
+       let buf = Buffer.create 4096 in
+       let v = if force_table_arrays then _force_table_arrays v else v in
+-      let () = format_primitive settings (Buffer.add_string buf) v in
++      let () = format_primitive settings (fun s -> Buffer.add_string buf s) v in
+       Buffer.contents buf
+ 
+     let to_channel ?(indent_width=2) ?(indent_character=' ') ?(indent_subtables=false)

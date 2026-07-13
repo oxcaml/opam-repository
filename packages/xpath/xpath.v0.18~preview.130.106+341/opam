@@ -1,0 +1,36 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/xpath"
+bug-reports: "https://github.com/janestreet/xpath/issues"
+dev-repo: "git+https://github.com/janestreet/xpath.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/xpath/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"      {>= "5.1.0"}
+  "core"       {= "v0.18~preview.130.106+341"}
+  "ppx_jane"   {= "v0.18~preview.130.106+341"}
+  "simple_xml" {= "v0.18~preview.130.106+341"}
+  "angstrom"   {>= "0.15.0"}
+  "dune"       {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "A library for dealing with XPath 1.0."
+description: """
+This library contains a type definition for XPATHs, as well as way to
+    serialize it, deserialize it, and run it on an XML document.
+  
+"""
+url {
+  src:
+    "https://github.com/janestreet/xpath/archive/df31235f5f06d9cde24bcca049b296e8ee4711d3.tar.gz"
+  checksum:
+    "sha256=ebd53bd0008517ad1f91fcdc364d2360ffe3f0ddd49674e0dcdf6fe79c2564a3"
+}

@@ -1,0 +1,40 @@
+opam-version: "2.0"
+version: "1.1+ox2"
+name: "ocaml-index"
+synopsis: "A tool that indexes value usages from cmt files"
+description:
+  "ocaml-index should integrate with the build system to index codebase and allow tools such as Merlin to perform project-wide occurrences queries."
+maintainer: "ulysse@tarides.com"
+authors: "ulysse@tarides.com"
+license: "MIT"
+homepage: "https://github.com/ocaml/merlin"
+bug-reports: "https://github.com/ocaml/merlin/issues"
+depends: [
+  "dune"       {>= "3.0"}
+  "ocaml"      {>= "5.2"}
+  "merlin-lib" {= "5.2.1-502+ox2"}
+  "yojson"     {< "3.0.0"}
+  "odoc"       {with-doc}
+  "alcotest"   {with-test}
+]
+build: [
+  ["sh" "-exc" "cd external/merlin && dune build -p %{name}% -j %{jobs}% @install && cp %{name}%.install ../.. && ln -sfn external/merlin/_build ../../_build"]
+]
+dev-repo: "git+https://github.com/ocaml/merlin.git"
+x-commit-hash: "f10f14fb514ccb9035fc899961cc24c2958bcba6"
+url {
+  src:
+    "https://github.com/oxcaml/oxcaml/archive/f10f14fb514ccb9035fc899961cc24c2958bcba6.tar.gz"
+  checksum:
+    "sha256=23669e367d5f0ce021800456bdae3d4ff0e0d555a6c49cf1b60757dd0a212053"
+}
+patches: ["merlin-minus39-standalone.patch"]
+extra-files: [
+  [
+    "merlin-minus39-standalone.patch"
+    "sha256=037292031a2190b0b42907a00d94062a6b486be37fb99388a186ad927549a4f3"
+  ]
+]
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]

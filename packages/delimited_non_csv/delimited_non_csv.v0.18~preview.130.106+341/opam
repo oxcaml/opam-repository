@@ -1,0 +1,38 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/delimited_non_csv"
+bug-reports: "https://github.com/janestreet/delimited_non_csv/issues"
+dev-repo: "git+https://github.com/janestreet/delimited_non_csv.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/delimited_non_csv/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"             {>= "5.1.0"}
+  "async"             {= "v0.18~preview.130.106+341"}
+  "core"              {= "v0.18~preview.130.106+341"}
+  "core_extended"     {= "v0.18~preview.130.106+341"}
+  "delimited_parsing" {= "v0.18~preview.130.106+341"}
+  "ppx_jane"          {= "v0.18~preview.130.106+341"}
+  "dune"              {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis:
+  "Parsing of character-separated (without quoting) and fixed-width values"
+description: """
+Delimited_non_csv provides parsers for non-CSV-like delimited formats, including
+character-separated values without quoting and fixed-width positional records.
+"""
+url {
+  src:
+    "https://github.com/janestreet/delimited_non_csv/archive/becef09ef2482ba31d6642e7c0ad70cc63ba5646.tar.gz"
+  checksum:
+    "sha256=24760bc6936d13fe693659d43745a1dceab185a2cba83374a618b05d047343ed"
+}

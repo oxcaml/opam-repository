@@ -1,0 +1,36 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/am_running_how_js"
+bug-reports: "https://github.com/janestreet/am_running_how_js/issues"
+dev-repo: "git+https://github.com/janestreet/am_running_how_js.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/am_running_how_js/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"           {>= "5.1.0"}
+  "core"            {= "v0.18~preview.130.106+341"}
+  "ppx_jane"        {= "v0.18~preview.130.106+341"}
+  "dune"            {>= "3.17.0"}
+  "js_of_ocaml"     {>= "6.0.0"}
+  "js_of_ocaml-ppx" {>= "6.0.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis:
+  "A library for determining the js_of_ocaml environment that an OCaml program is running in."
+description: """
+A library for determining the js_of_ocaml environment that an OCaml program is running in.
+"""
+url {
+  src:
+    "https://github.com/janestreet/am_running_how_js/archive/59c43a895d1b64b70d7a9adb026e98385810187f.tar.gz"
+  checksum:
+    "sha256=a8ddd4afc388225e7cccd713ca7fcb3de1cda5b30d99632458e9c49eec955dac"
+}

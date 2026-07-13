@@ -1,0 +1,41 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/redis-async"
+bug-reports: "https://github.com/janestreet/redis-async/issues"
+dev-repo: "git+https://github.com/janestreet/redis-async.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/redis-async/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"       {>= "5.1.0"}
+  "async"       {= "v0.18~preview.130.106+341"}
+  "bignum"      {= "v0.18~preview.130.106+341"}
+  "core"        {= "v0.18~preview.130.106+341"}
+  "core_kernel" {= "v0.18~preview.130.106+341"}
+  "ppx_jane"    {= "v0.18~preview.130.106+341"}
+  "dune"        {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "Redis client for Async applications"
+description: """
+A client library for Redis versions 6 and higher.
+
+Provides a strongly-typed API with transparent (de)serialization for application-defined
+types.
+
+Supports client tracking and internally uses the RESP3 protocol. 
+"""
+url {
+  src:
+    "https://github.com/janestreet/redis-async/archive/56ed115ca8255114b09c2e3e0b7b844fccb07f4b.tar.gz"
+  checksum:
+    "sha256=74395df68c8dbefb9c1abfe2ae10f4ae13c97c2f6bd6c50109a2028340575c8f"
+}

@@ -13,6 +13,7 @@ depends: [
   "dot-merlin-reader" {build & (
                          = "5.2.1-502+ox"
                        | = "5.2.1-502+ox1"
+                       | = "5.2.1-502+ox2"
                        )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

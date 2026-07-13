@@ -1,0 +1,38 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/versioned_polling_state_rpc"
+bug-reports:
+  "https://github.com/janestreet/versioned_polling_state_rpc/issues"
+dev-repo: "git+https://github.com/janestreet/versioned_polling_state_rpc.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/versioned_polling_state_rpc/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"             {>= "5.1.0"}
+  "async_rpc_kernel"  {= "v0.18~preview.130.106+341"}
+  "babel"             {= "v0.18~preview.130.106+341"}
+  "core"              {= "v0.18~preview.130.106+341"}
+  "polling_state_rpc" {= "v0.18~preview.130.106+341"}
+  "ppx_jane"          {= "v0.18~preview.130.106+341"}
+  "dune"              {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis:
+  "Helper functions for creating stable/versioned `Polling_state_rpc.t`s with babel."
+description: """
+Helper functions for creating stable/versioned `Polling_state_rpc.t`s with babel.
+"""
+url {
+  src:
+    "https://github.com/janestreet/versioned_polling_state_rpc/archive/adfeb35bcf34da36a801d4215f5e32256ed8e74e.tar.gz"
+  checksum:
+    "sha256=88432b54bb3139e3bfcc6bc38b5c660c637d84981a586b2bff676154fb8f21aa"
+}

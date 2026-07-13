@@ -1,0 +1,33 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/username_kernel"
+bug-reports: "https://github.com/janestreet/username_kernel/issues"
+dev-repo: "git+https://github.com/janestreet/username_kernel.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/username_kernel/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"        {>= "5.1.0"}
+  "core"         {= "v0.18~preview.130.106+341"}
+  "ppx_template" {= "v0.18~preview.130.106+341"}
+  "dune"         {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "An identifier for a user"
+description: """
+A string representation for a user, typically a UNIX username
+"""
+url {
+  src:
+    "https://github.com/janestreet/username_kernel/archive/bc403d4b7c6802d1b51d368646cd007faec471b7.tar.gz"
+  checksum:
+    "sha256=0da4d39fae0b1fe0514c04b77d4de7e11af9b65b610a76561d3780881d5027a5"
+}

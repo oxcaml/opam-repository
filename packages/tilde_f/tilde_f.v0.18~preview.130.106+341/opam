@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/tilde_f"
+bug-reports: "https://github.com/janestreet/tilde_f/issues"
+dev-repo: "git+https://github.com/janestreet/tilde_f.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/tilde_f/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.1.0"}
+  "base"     {= "v0.18~preview.130.106+341"}
+  "ppx_jane" {= "v0.18~preview.130.106+341"}
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "Provides a let-syntax for continuation-passing style."
+description: """
+Provides a let-syntax for continuation-passing style.
+"""
+url {
+  src:
+    "https://github.com/janestreet/tilde_f/archive/2930f95299f0305c3ac25a26c42230552a0f9840.tar.gz"
+  checksum:
+    "sha256=82ef04a2128ca2c57b2812241f454901059e6f7689e8f81ecb45d66fc5627ddb"
+}

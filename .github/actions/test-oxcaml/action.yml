@@ -1,14 +1,14 @@
 ---
 name: Setup OxCaml with a predefined set of opam packages
 inputs:
-  ocaml-compiler:
-    description: The OCaml compiler switch to install
-    required: true
-
   opam-disable-sandboxing:
     description: Disable the opam sandboxing feature.
     required: false
     default: "false"
+  additional-test-packages:
+    description: Extra opam packages to install (space-separated).
+    required: false
+    default: ""
 
 runs:
   using: "composite"
@@ -50,11 +50,9 @@ runs:
     - name: Get hash of the ocaml-variant opam file
       id: hash-opam-file
       shell: bash
-      env:
-        OCAML_COMPILER: ${{ inputs.ocaml-compiler }}
       run: |
         set -e
-        OPAM_FILE="packages/ocaml-variants/${OCAML_COMPILER}/opam"
+        OPAM_FILE="packages/oxcaml/oxcaml.latest/opam"
 
         if command -v sha256sum >/dev/null 2>&1; then
           COMMAND="sha256sum"
@@ -68,21 +66,53 @@ runs:
         HASH=$($COMMAND "$OPAM_FILE" | awk '{print $1}')
         echo "hash=${HASH}" >> "$GITHUB_OUTPUT"
 
-    - uses: ocaml/setup-ocaml@v3.3.5
+    # setup-ocaml creates the local switch as _opam inside $GITHUB_WORKSPACE. If the
+    # oxcaml repository points there too (oxcaml: .), opam 2.5's local-repo update copies
+    # the whole tree -- including _opam's symlinks -- and its symlink-rejecting differ
+    # fails with "Symlinks are unsupported" once a cache makes the update incremental.
+    # Copy the workspace to a directory outside it to avoid this. This runs straight after
+    # checkout and before setup-ocaml restores any cache, so the workspace contains only
+    # the checked-out files (no _opam, no _build, no symlinks); the copy stays clean
+    # because setup-ocaml puts _opam in $GITHUB_WORKSPACE, not in our copy.
+    #
+    # We emit the destination as a step output rather than referencing ${{ runner.temp }}
+    # in opam-repositories: inside a container job (self-hosted runner) the runner.temp
+    # *expression* yields the host path, but $RUNNER_TEMP (and the path opam sees) is the
+    # container path. Emitting the path the copy actually used keeps both sides in sync.
+    - name: Stage a clean copy of the oxcaml repository
+      id: stage-oxcaml
+      shell: bash
+      run: |
+        set -e
+        dest="$RUNNER_TEMP/oxcaml-repo"
+        mkdir -p "$dest"
+        cp -a "$GITHUB_WORKSPACE/." "$dest/"
+        # Harmless to opam (it ignores VCS dirs), but avoids copying a large .git on
+        # runners where actions/checkout does use git.
+        rm -rf "$dest/.git"
+        echo "path=$dest" >> "$GITHUB_OUTPUT"
+
+    - uses: ocaml/setup-ocaml@v3
       with:
         cache-prefix: ${{ steps.hash-opam-file.outputs.hash }}
-        ocaml-compiler: ${{ inputs.ocaml-compiler }}
+        ocaml-compiler: oxcaml.latest
         opam-pin: false
         opam-disable-sandboxing: ${{ inputs.opam-disable-sandboxing }}
         opam-repositories: |
-          oxcaml: .
+          oxcaml: ${{ steps.stage-oxcaml.outputs.path }}
           default: https://github.com/ocaml/opam-repository.git
 
     - name: Install common opam packages
       shell: bash
       run: |
         opam --version
+        opam switch invariant
         opam repository list
         opam list
-        opam install ocamlformat merlin ocaml-lsp-server utop parallel concurrent core_unix js_of_ocaml bonsai_term odoc sherlodoc
+        # utop, is broken since minus38
+        opam install ocamlformat merlin ocaml-lsp-server parallel concurrent core_unix js_of_ocaml-toplevel bonsai_term odoc sherlodoc ${{ inputs.additional-test-packages }}
         opam list
+
+    - name: Install non-JS (overridden) packages
+      shell: bash
+      run: opam install $(find packages -name opam | sed -ne 's|packages/\([^/]*\)/.*+ox.*|\1|p' | sort -u | grep -Fvxf <(sed -e "/^$RUNNER_OS:/d" -e 's/^[^:]*://' .github/actions/test-oxcaml/broken-packages.txt; opam list --color=never --installed --short))

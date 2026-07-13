@@ -1,0 +1,35 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_for_loop"
+bug-reports: "https://github.com/janestreet/ppx_for_loop/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_for_loop.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_for_loop/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"       {>= "5.1.0"}
+  "base"        {= "v0.18~preview.130.106+341"}
+  "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+  "unboxed"     {= "v0.18~preview.130.106+341"}
+  "dune"        {>= "3.17.0"}
+  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "For-loop syntax that supports unboxed numbers."
+description: """
+ppx_for_loop is a ppx rewriter that allows one to write `for` loops indexed by unboxed numbers.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_for_loop/archive/d5fb4b9405e628b7779afa37b20347be9a687af6.tar.gz"
+  checksum:
+    "sha256=1473443f9e6db887b83ed48f41537e8b535a8232280f7d1ea1b4488ba45d17b4"
+}

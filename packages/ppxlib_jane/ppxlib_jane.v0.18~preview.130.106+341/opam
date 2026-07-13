@@ -1,0 +1,32 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppxlib_jane"
+bug-reports: "https://github.com/janestreet/ppxlib_jane/issues"
+dev-repo: "git+https://github.com/janestreet/ppxlib_jane.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppxlib_jane/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"      {>= "5.1.0"}
+  "dune"       {>= "3.17.0"}
+  "ppxlib_ast" {>= "0.33.0" & < "0.36.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "Utilities for working with Jane Street AST constructs"
+description: """
+Part of the Jane Street's PPX rewriters collection.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppxlib_jane/archive/52e90008fbdc22fc0f880aa827faf10257a9b2a6.tar.gz"
+  checksum:
+    "sha256=b93e2b145410c48aefa2aa29d9c5310689dcaf1ab25693ecedc4d6444270d3ea"
+}

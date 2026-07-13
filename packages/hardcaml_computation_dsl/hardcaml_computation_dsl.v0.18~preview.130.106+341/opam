@@ -1,0 +1,50 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/hardcaml_computation_dsl"
+bug-reports: "https://github.com/janestreet/hardcaml_computation_dsl/issues"
+dev-repo: "git+https://github.com/janestreet/hardcaml_computation_dsl.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/hardcaml_computation_dsl/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                    {>= "5.1.0"}
+  "bignum"                   {= "v0.18~preview.130.106+341"}
+  "core"                     {= "v0.18~preview.130.106+341"}
+  "expect_test_helpers_base" {= "v0.18~preview.130.106+341"}
+  "expect_test_helpers_core" {= "v0.18~preview.130.106+341"}
+  "hardcaml"                 {= "v0.18~preview.130.106+341"}
+  "hardcaml_axi"             {= "v0.18~preview.130.106+341"}
+  "hardcaml_circuits"        {= "v0.18~preview.130.106+341"}
+  "hardcaml_fixed_point"     {= "v0.18~preview.130.106+341"}
+  "hardcaml_step_testbench"  {= "v0.18~preview.130.106+341"}
+  "hardcaml_test_harness"    {= "v0.18~preview.130.106+341"}
+  "hardcaml_waveterm"        {= "v0.18~preview.130.106+341"}
+  "n_ary"                    {= "v0.18~preview.130.106+341"}
+  "ppx_hardcaml"             {= "v0.18~preview.130.106+341"}
+  "ppx_jane"                 {= "v0.18~preview.130.106+341"}
+  "re2"                      {= "v0.18~preview.130.106+341"}
+  "dune"                     {>= "3.17.0"}
+  "zarith"                   {>= "1.11"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "Hardcaml computation DSL."
+description: """
+The Hardcaml computation DSL, which allows for describing a graph of fixed-precision
+   arithmetic computations using built-in helper functions. It automatically aligns
+   pipelines for functional correctness and tracks any overflows or other computational
+   errors.
+"""
+url {
+  src:
+    "https://github.com/janestreet/hardcaml_computation_dsl/archive/b95881e5d97c999f9e5b28b23a7c5aa3c9dd5edd.tar.gz"
+  checksum:
+    "sha256=9311d63dc4f82586e4dedaa812ec886836fc574f84a8fe38651e278b567be8aa"
+}

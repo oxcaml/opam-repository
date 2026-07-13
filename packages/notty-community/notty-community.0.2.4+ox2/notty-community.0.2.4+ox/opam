@@ -1,0 +1,179 @@
+opam-version: "2.0"
+version: "0.2.4+ox"
+name: "notty-community"
+synopsis: "Declaring terminals"
+description: """\
+Notty is a declarative terminal library for OCaml structured around a notion
+of composable images. It tries to abstract away the basic terminal
+programming model, providing something simpler and more expressive.
+
+This is a branch from the original notty, maintained by the community."""
+maintainer: [
+  "Ali Caglayan <alizter@gmail.com>"
+  "Antonin Décimo <antonin@tarides.com>"
+  "Romain Calascibetta <romain.calascibetta@gmail.com>"
+]
+authors: "David Kaloper <dk505@cam.ac.uk>"
+license: "ISC"
+homepage: "https://github.com/ocaml-community/notty-community"
+bug-reports: "https://github.com/ocaml-community/notty-community/issues"
+depends: [
+  "dune"  {>= "3.17.0"}
+  "ocaml" {>= "4.08.0"}
+  "cppo"  {build & >= "1.1.0"}
+  "uutf"  {>= "1.0.2"}
+  "uucp"  {with-dev-setup}
+  "lwt"   {with-test}
+"base"
+"portable"
+"portable_lockfree_htbl"
+"ppx_jane"
+  "odoc"  {with-doc}
+]
+depopts: ["lwt"]
+conflicts: [
+  "lwt" {< "2.6.0"}
+]
+available: os != "win32"
+build: [
+  ["dune" "subst"] {dev}
+  [
+    "dune"
+    "build"
+    "-p"
+    name
+    "-j"
+    jobs
+    "@install"
+    "@runtest" {with-test}
+    "@doc" {with-doc}
+  ]
+]
+dev-repo: "git+https://github.com/ocaml-community/notty-community.git"
+url {
+  src:
+    "https://github.com/ocaml-community/notty-community/releases/download/v0.2.4/notty-community-0.2.4.tar.gz"
+  checksum: [
+    "md5=b8cb51edb37d28d9d53e98ac52848677"
+    "sha512=8922a190a412790285603ba7ab37f9f58202d9406ebc9e6d3329189eac7fda5c25316264c27b6f7decb8f25f0d78801873b9f16c40e90f020e2c06ab9d058686"
+  ]
+}
+patches: [
+  "notty-disable_unsafe_multidomain.patch"
+  "notty-use_correct_newline_escape_code_and_stop_clearing_the_last_text_element_of_a_line.patch"
+  "notty-different_kinds_of_cursors.patch"
+  "notty-use_newline_instead_of_cursor_nextline_for_emacs_support.patch"
+  "notty-expose_fast_tty_width.patch"
+  "notty-do_not_send_clear_eol_on_full_lines.patch"
+  "notty-ctrl_backspace.patch"
+  "notty-reset-cursor-on-release.patch"
+  "notty-line_based_diffing_and_patching.patch"
+  "notty-defensively-ignore-corrupted-x10-vscode-mouse-codes.patch"
+  "notty-portabilize_notty_unix.patch"
+  "notty-add_href_support.patch"
+  "notty-default_color.patch"
+  "notty-set_save_and_restore_title.patch"
+  "notty-synchronized_output.patch"
+  "notty-expose-Text.graphemes.patch"
+  "notty-vs16_makes_characters_look_like_emojis.patch"
+  "notty-expose_operation_intermediate_representation.patch"
+  "notty-dynamic_mouse_reporting.patch"
+  "notty-hover_events.patch"
+  "notty-tail_recursive_concatm.patch"
+  "dune.patch"
+  "lwt.patch"
+]
+extra-files: [
+  [
+    "notty-disable_unsafe_multidomain.patch"
+    "sha256=80af0d0d1772a9d7181a24e87d707907086850eaf2c1cbe28eb8305172646c61"
+  ]
+  [
+    "notty-use_correct_newline_escape_code_and_stop_clearing_the_last_text_element_of_a_line.patch"
+    "sha256=d801821c1b8cd4b249c962c5c102a8c09db5368bc7c5938feccadf3eaf9ebb16"
+  ]
+  [
+    "notty-different_kinds_of_cursors.patch"
+    "sha256=1ce4625287de1ed7852cecdfa9c5daeaf166238b52f7f98f621a5c2cec1a8b65"
+  ]
+  [
+    "notty-use_newline_instead_of_cursor_nextline_for_emacs_support.patch"
+    "sha256=53c678d537954fff1217f6a3e4f89b85455a82502aaedc640cae731cfd0585fe"
+  ]
+  [
+    "notty-expose_fast_tty_width.patch"
+    "sha256=fdc57d05f2b1ecba561e777f32b6fb21c84f74e61b948106ea9ee48e6c9fb045"
+  ]
+  [
+    "notty-do_not_send_clear_eol_on_full_lines.patch"
+    "sha256=1d66250374a5208bb7c2a3ca14177dcf87da430c3c4300c1c6e44b6b77673bea"
+  ]
+  [
+    "notty-ctrl_backspace.patch"
+    "sha256=7ca07dabd2ecc8b44b6ac444961deec52eb248557ff286477df5251eda357e34"
+  ]
+  [
+    "notty-reset-cursor-on-release.patch"
+    "sha256=bef646ee860a485825e5d4a303210bbc23a9f98fa06da3fd627c01cf1bf31575"
+  ]
+  [
+    "notty-line_based_diffing_and_patching.patch"
+    "sha256=62376e21d09a85b37fe80423083826dfd12b71dae15226c1fffd42aa12548d97"
+  ]
+  [
+    "notty-defensively-ignore-corrupted-x10-vscode-mouse-codes.patch"
+    "sha256=a087414c543e480eee1d3bb45349b693e6018943a90cb3e952e93ab4b2035b31"
+  ]
+  [
+    "notty-portabilize_notty_unix.patch"
+    "sha256=3ea480fafc7777b2f060b366afa9198072705aeae7b4505311efd289a887bf1a"
+  ]
+  [
+    "notty-add_href_support.patch"
+    "sha256=2c0fafcbcbd5994774c1bedee1ce25d3d71990d7c149ce4248d1aab1277ede7b"
+  ]
+  [
+    "notty-default_color.patch"
+    "sha256=6fd41656ba6c55498122898b845efd430b4aa695b5ba8b0b788c42d394254f56"
+  ]
+  [
+    "notty-set_save_and_restore_title.patch"
+    "sha256=bbb4bf0e73bcfa795c93495a7149f7ee8f54b6c33d666d9d79dfefdd51ddec5b"
+  ]
+  [
+    "notty-synchronized_output.patch"
+    "sha256=e78bf6ec740279bc822db4490ed6679a19e7910028837c262fcb48a99d42fd92"
+  ]
+  [
+    "notty-expose-Text.graphemes.patch"
+    "sha256=2ac7a79b9e9ed1c2c61799902b91d310fd171358bd614bd2b6e5bbd838eac2f3"
+  ]
+  [
+    "notty-vs16_makes_characters_look_like_emojis.patch"
+    "sha256=c13b73bacc99d6288e217296c7de29953a4a2648ab966419382ecba8f03b920e"
+  ]
+  [
+    "notty-expose_operation_intermediate_representation.patch"
+    "sha256=6788fbf3fc8f93d9bc68b01c8262af60c2850730e2a28db3f5806cf95166eb7e"
+  ]
+  [
+    "notty-dynamic_mouse_reporting.patch"
+    "sha256=a6a51e9351bde5317bbb9e9bcd6c524ca2b5e2e18eb29b87d299782186fd8103"
+  ]
+  [
+    "notty-hover_events.patch"
+    "sha256=30e3bab1d558a84844e88c93b18ca38e3001ed82bac41a6d32d34bf1622cb954"
+  ]
+  [
+    "notty-tail_recursive_concatm.patch"
+    "sha256=a08cf622b43eff3f96a67e0566eb3acc504fb488a0325a0c4778d502b6e35eff"
+  ]
+  [
+    "dune.patch"
+    "sha256=0c8ff250019a910256f1f4993de5c52bbaa8c6a38723fa5462d1acd12d38ec8c"
+  ]
+  [
+    "lwt.patch"
+    "sha256=bf322ab32307d3b8acfe289e3db6c353d2e7cd4781bf924d0d2fc864298a2565"
+  ]
+]

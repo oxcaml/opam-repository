@@ -1,0 +1,41 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/unstring"
+bug-reports: "https://github.com/janestreet/unstring/issues"
+dev-repo: "git+https://github.com/janestreet/unstring.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/unstring/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                    {>= "5.2.0"}
+  "base"                     {= "v0.18~preview.130.106+341"}
+  "core"                     {= "v0.18~preview.130.106+341"}
+  "core_kernel"              {= "v0.18~preview.130.106+341"}
+  "expect_test_helpers_core" {= "v0.18~preview.130.106+341"}
+  "heterogeneous_list"       {= "v0.18~preview.130.106+341"}
+  "ppx_jane"                 {= "v0.18~preview.130.106+341"}
+  "ppx_quick_test"           {= "v0.18~preview.130.106+341"}
+  "vec"                      {= "v0.18~preview.130.106+341"}
+  "dune"                     {>= "3.17.0"}
+  "ppxlib"                   {>= "0.33.0" & < "0.36.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis:
+  "Typeful, composable string parsers with explicit ambiguity handling"
+description: """
+Unstring is a library for building low-effort, typeful, composable string parsers.
+Includes a PPX for deriving parsers from format strings and type definitions.
+"""
+url {
+  src:
+    "https://github.com/janestreet/unstring/archive/5119cf3f0397ef5c911fdf29849b1393b35615dd.tar.gz"
+  checksum:
+    "sha256=208469a1e1048815131e177eccb1b7976d452abd37715d5d3fd1a0961ab7063a"
+}

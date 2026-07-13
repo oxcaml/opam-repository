@@ -1,0 +1,38 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/hardcaml_circuits"
+bug-reports: "https://github.com/janestreet/hardcaml_circuits/issues"
+dev-repo: "git+https://github.com/janestreet/hardcaml_circuits.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/hardcaml_circuits/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                {>= "5.1.0"}
+  "base"                 {= "v0.18~preview.130.106+341"}
+  "bignum"               {= "v0.18~preview.130.106+341"}
+  "hardcaml"             {= "v0.18~preview.130.106+341"}
+  "hardcaml_fixed_point" {= "v0.18~preview.130.106+341"}
+  "ppx_hardcaml"         {= "v0.18~preview.130.106+341"}
+  "ppx_jane"             {= "v0.18~preview.130.106+341"}
+  "stdio"                {= "v0.18~preview.130.106+341"}
+  "dune"                 {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "Hardcaml Circuits"
+description: """
+A small library of useful/interesting Hardcaml circuits.
+"""
+url {
+  src:
+    "https://github.com/janestreet/hardcaml_circuits/archive/e925ca6408b8b89ad181e8d8e3920d9b087367e9.tar.gz"
+  checksum:
+    "sha256=c588432a99bcae6d5d3cd7838ee9109c51bfdd588eb897fe2c287ab8672e1754"
+}

@@ -1,0 +1,22 @@
+--- a/src/notty.ml
++++ b/src/notty.ml
+@@ -17,10 +17,15 @@
+ and is_ascii x = x < 0x80
+ 
+ let rec concatm z (@) xs =
+-  let rec accum (@) = function
+-    | []|[_] as xs -> xs
+-    | a::b::xs -> (a @ b) :: accum (@) xs in
+-  match xs with [] -> z | [x] -> x | xs -> concatm z (@) (accum (@) xs)
++  (* [accum] is tail-recursive: it pairs adjacent elements, accumulating the combined
++     pairs in [acc] in reverse order, then reverses the result before returning. The
++     original implementation used a non-tail-recursive [(a @ b) :: accum (@) xs] which
++     overflowed the stack for sufficiently long lists. *)
++  let rec accum (@) acc = function
++    | [] -> List.rev acc
++    | [x] -> List.rev (x :: acc)
++    | a::b::xs -> accum (@) ((a @ b) :: acc) xs in
++  match xs with [] -> z | [x] -> x | xs -> concatm z (@) (accum (@) [] xs)
+ 
+ let rec linspcm z (@) x n f = match n with
+   | 0 -> z

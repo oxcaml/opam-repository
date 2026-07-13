@@ -1,0 +1,47 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/numeric_string"
+bug-reports: "https://github.com/janestreet/numeric_string/issues"
+dev-repo: "git+https://github.com/janestreet/numeric_string.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/numeric_string/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.1.0"}
+  "base"     {= "v0.18~preview.130.106+341"}
+  "ppx_jane" {= "v0.18~preview.130.106+341"}
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis:
+  "A comparison function for strings that sorts numeric fragments of strings according to their numeric value, so that e.g. \"abc2\" < \"abc10\"."
+description: """
+A comparison function (and assorted sets / maps / etc.) for strings
+that sorts numeric fragments of strings according to their numeric
+value, so that e.g. "abc2" < "abc10".
+
+People often call this "natural sort", and link to this:
+
+https://blog.codinghorror.com/sorting-for-humans-natural-sort-order/
+
+which links to a few other posts about the matter. Sometimes it's
+called "alphanum sort" or "human sort" or something. "Numeric string
+compare" is chosen as the name that gets closest to expressing what it
+actually does (to me, "natural sort" sounds like something that might
+include a different treatment of case, special handling of whitespace
+or punctuation, etc.)
+"""
+url {
+  src:
+    "https://github.com/janestreet/numeric_string/archive/2dee2c48c8b0525c8adfd175c8eef902c22e832b.tar.gz"
+  checksum:
+    "sha256=ae227f40934abbc996530fe3d389c270f5ac233b50556b292d78171756ae07e4"
+}

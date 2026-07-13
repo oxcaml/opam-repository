@@ -1,0 +1,10 @@
+--- a/src/longident.ml
++++ b/src/longident.ml
+@@ -4,6 +4,7 @@ module T = struct
+   type t = longident = Lident of string | Ldot of t * string | Lapply of t * t
+ 
+   let compare : t -> t -> int = Poly.compare
++  let compare__local : t @ local -> t @ local -> int = Poly.compare__local
+ 
+   let is_normal_ident_char = function
+     | 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '\'' -> true

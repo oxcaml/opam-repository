@@ -1,0 +1,65 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/skyline"
+bug-reports: "https://github.com/janestreet/skyline/issues"
+dev-repo: "git+https://github.com/janestreet/skyline.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/skyline/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                    {>= "5.2.0"}
+  "am_running_how_js"        {= "v0.18~preview.130.106+341"}
+  "async_kernel"             {= "v0.18~preview.130.106+341"}
+  "base"                     {= "v0.18~preview.130.106+341"}
+  "bonsai"                   {= "v0.18~preview.130.106+341"}
+  "bonsai_web"               {= "v0.18~preview.130.106+341"}
+  "bonsai_web_components"    {= "v0.18~preview.130.106+341"}
+  "bonsai_web_test"          {= "v0.18~preview.130.106+341"}
+  "browser"                  {= "v0.18~preview.130.106+341"}
+  "core"                     {= "v0.18~preview.130.106+341"}
+  "core_kernel"              {= "v0.18~preview.130.106+341"}
+  "expect_test_helpers_base" {= "v0.18~preview.130.106+341"}
+  "expectable"               {= "v0.18~preview.130.106+341"}
+  "fuzzy_match"              {= "v0.18~preview.130.106+341"}
+  "incr_map"                 {= "v0.18~preview.130.106+341"}
+  "incremental"              {= "v0.18~preview.130.106+341"}
+  "patdiff"                  {= "v0.18~preview.130.106+341"}
+  "ppx_bin_and_sexp_digest"  {= "v0.18~preview.130.106+341"}
+  "ppx_css"                  {= "v0.18~preview.130.106+341"}
+  "ppx_delta_types"          {= "v0.18~preview.130.106+341"}
+  "ppx_embed_file"           {= "v0.18~preview.130.106+341"}
+  "ppx_here"                 {= "v0.18~preview.130.106+341"}
+  "ppx_html"                 {= "v0.18~preview.130.106+341"}
+  "ppx_jane"                 {= "v0.18~preview.130.106+341"}
+  "ppx_loc"                  {= "v0.18~preview.130.106+341"}
+  "ppx_pattern_bind"         {= "v0.18~preview.130.106+341"}
+  "ppx_quick_test"           {= "v0.18~preview.130.106+341"}
+  "ppx_stable_witness"       {= "v0.18~preview.130.106+341"}
+  "ppx_with"                 {= "v0.18~preview.130.106+341"}
+  "textutils"                {= "v0.18~preview.130.106+341"}
+  "toplayer"                 {= "v0.18~preview.130.106+341"}
+  "virtual_dom"              {= "v0.18~preview.130.106+341"}
+  "dune"                     {>= "3.17.0"}
+  "gen_js_api"               {>= "1.0.8"}
+  "js_of_ocaml"              {>= "6.0.0"}
+  "js_of_ocaml-ppx"          {>= "6.0.0"}
+  "omd"                      {>= "2.0.0~alpha4"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "A Bonsai web component library."
+description: """
+A Bonsai web component library.
+"""
+url {
+  src:
+    "https://github.com/janestreet/skyline/archive/b0434b3b92d3ce1ae23aca29fe9c5f1e7b8fef0b.tar.gz"
+  checksum:
+    "sha256=0c4b3b1ca8dd7a7d81813dc78657dd4e9ceb2f3896e728d6be5974b66eee97b0"
+}

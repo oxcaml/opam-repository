@@ -1,0 +1,96 @@
+--- a/lib/faraday.ml
++++ b/lib/faraday.ml
+@@ -41,7 +41,11 @@ type 'a iovec =
+ 
+ exception Dequeue_empty
+ 
+-module Deque(T:sig type t val sentinel : t end) : sig
++module Deque(T:sig @@ portable
++    type t
++
++    val sentinel : unit -> t
++  end) : sig @@ portable
+   type elem = T.t
+ 
+   type t
+@@ -51,22 +55,27 @@ module Deque(T:sig type t val sentinel : t end) : sig
+   val is_empty : t -> bool
+ 
+   val enqueue : elem -> t -> unit
++
+   val dequeue_exn : t -> elem
++  (** [dequeue_exn t] raises [Dequeue_empty] if [is_empty t] *)
++
+   val enqueue_front : elem -> t -> unit
+ 
+   val map_to_list : t -> f:(elem -> 'b) -> 'b list
+ end = struct
++
+   type elem = T.t
+ 
+   type t =
+     { mutable elements : elem array
+     ; mutable front    : int
+-    ; mutable back     : int }
+-
+-  let sentinel = T.sentinel
++    ; mutable back     : int
++    ; sentinel         : elem
++    }
+ 
+   let create size =
+-    { elements = Array.make size sentinel; front = 0; back = 0 }
++    let sentinel = T.sentinel () in
++    { elements = Array.make size sentinel; front = 0; back = 0 ; sentinel }
+ 
+   let is_empty t =
+     t.front = t.back
+@@ -78,10 +87,10 @@ end = struct
+         (* Shift everything to the front of the array and then clear out
+          * dangling pointers to elements from their previous locations. *)
+         Array.blit t.elements t.front t.elements 0 len;
+-        Array.fill t.elements len t.front sentinel
++        Array.fill t.elements len t.front t.sentinel
+       end else begin
+         let old  = t.elements in
+-        let new_ = Array.(make (2 * length old) sentinel) in
++        let new_ = Array.(make (2 * length old) t.sentinel) in
+         Array.blit old t.front new_ 0 len;
+         t.elements <- new_
+       end;
+@@ -99,7 +108,7 @@ end = struct
+       raise_notrace Dequeue_empty
+     else
+       let result = Array.unsafe_get t.elements t.front in
+-      Array.unsafe_set t.elements t.front sentinel;
++      Array.unsafe_set t.elements t.front t.sentinel;
+       t.front <- t.front + 1;
+       result
+ 
+@@ -146,7 +155,8 @@ type Flushed_reason.t +=
+ 
+ module Buffers = Deque(struct
+   type t = bigstring iovec
+-  let sentinel =
++
++  let sentinel () =
+     let deadbeef = "\222\173\190\239" in
+     let len      = String.length deadbeef in
+     let buffer   = Bigstringaf.create len in
+@@ -155,7 +165,7 @@ module Buffers = Deque(struct
+ end)
+ module Flushes = Deque(struct
+   type t = int * (Flushed_reason.t -> unit)
+-  let sentinel = 0, fun _ -> ()
++  let sentinel () = 0, fun _ -> ()
+ end)
+ 
+ type t =
+--- a/lib/faraday.mli
++++ b/lib/faraday.mli
+@@ -1,3 +1,5 @@
++@@ portable
++
+ (*----------------------------------------------------------------------------
+     Copyright (c) 2016 Inhabited Type LLC.
+ 

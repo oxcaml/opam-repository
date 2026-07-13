@@ -1,0 +1,35 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/async_interactive"
+bug-reports: "https://github.com/janestreet/async_interactive/issues"
+dev-repo: "git+https://github.com/janestreet/async_interactive.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/async_interactive/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"     {>= "5.1.0"}
+  "async"     {= "v0.18~preview.130.106+341"}
+  "core"      {= "v0.18~preview.130.106+341"}
+  "core_unix" {= "v0.18~preview.130.106+341"}
+  "ppx_jane"  {= "v0.18~preview.130.106+341"}
+  "dune"      {>= "3.17.0"}
+  "spawn"     {>= "v0.15"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.2.0minus39" | >= "5.4.0-ox1"}
+]
+synopsis: "Utilities for building simple command-line based user interfaces"
+description: """
+"""
+url {
+  src:
+    "https://github.com/janestreet/async_interactive/archive/541312b1e34bb2a0002464e2236ea45f99b6c303.tar.gz"
+  checksum:
+    "sha256=0d2bf703c4dae160f858289ceafeaf662f66a520d41569180e409e6d9f1a3608"
+}
