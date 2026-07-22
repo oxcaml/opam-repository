@@ -101,6 +101,7 @@ runs:
         opam-repositories: |
           oxcaml: ${{ steps.stage-oxcaml.outputs.path }}
           default: https://github.com/ocaml/opam-repository.git
+          mdx-2.6.0-temp: git+https://github.com/avsm/opam-repository.git#release-mdx-2.6.0
 
     - name: Install common opam packages
       shell: bash
