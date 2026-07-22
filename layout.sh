@@ -69,6 +69,8 @@ for entry in $(sort -t: -k1,1V -k2,2r overrides); do
               # These packages are only patched from a given version in OxCaml - the older versions don't (necessarily) require patches
               chrome-trace|dune-action-plugin|dune-build-info|dune-glob|dune-private-libs|dune-rpc-lwt|dune-site|xdg)
                 constraint=' {>= "3.21.0"}';;
+              mdx)
+                constraint=' {< "2.6.0"}';;
               *)
                 constraint=''
             esac
