@@ -9,7 +9,5 @@ ocamlformat
 ocamlformat-lib
 # Broken since 5.2.0minus31
 ppx_deriving
-# Broken since 5.2.0minus38
-utop
 # eio_linux can only install on Linux
 Linux:eio_linux

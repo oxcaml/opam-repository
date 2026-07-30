@@ -109,8 +109,7 @@ runs:
         opam switch invariant
         opam repository list
         opam list
-        # utop, is broken since minus38
-        opam install ocamlformat merlin ocaml-lsp-server parallel concurrent core_unix js_of_ocaml-toplevel bonsai_term odoc sherlodoc ${{ inputs.additional-test-packages }}
+        opam install ocamlformat merlin ocaml-lsp-server utop parallel concurrent core_unix js_of_ocaml-toplevel bonsai_term odoc sherlodoc ${{ inputs.additional-test-packages }}
         opam list
 
     - name: Install non-JS (overridden) packages
