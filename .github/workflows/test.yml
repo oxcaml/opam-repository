@@ -19,10 +19,10 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu:24.04, debian:bookworm]
-        os: [ubuntu_x64_8_cores, ubuntu_arm64_8_core]
+        os: [warp-ubuntu-latest-x64-8x, warp-ubuntu-latest-arm64-8x]
         include:
           - image: archlinux:latest
-            os: ubuntu_x64_8_cores
+            os: warp-ubuntu-latest-x64-8x
     runs-on: ${{ matrix.os }}
     container:
       image: ${{ matrix.image }}
@@ -58,4 +58,4 @@ jobs:
       - name: Run Test OxCaml action
         uses: ./.github/actions/test-oxcaml
         with:
-          additional-test-packages: wasm_of_ocaml-compiler
+          additional-rptest-packages: wasm_of_ocaml-compiler
