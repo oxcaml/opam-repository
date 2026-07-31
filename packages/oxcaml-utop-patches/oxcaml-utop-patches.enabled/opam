@@ -13,6 +13,7 @@ depends: [
   "utop" {build & (
             = "2.16.0+ox"
           | = "2.16.0+ox1"
+          | = "2.16.0+ox2"
           )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
