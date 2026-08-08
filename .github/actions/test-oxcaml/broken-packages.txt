@@ -1,7 +1,5 @@
 # ocaml-variants is of course not actually broken!
 ocaml-variants
-# Broken since 5.2.0minus31
-mdx
 # Not co-installable with stdune 3.22+
 ocaml-lsp-server
 # ocamlformat-lib is broken since 5.2.0minus39
