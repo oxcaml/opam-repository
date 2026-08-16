@@ -1,0 +1,18 @@
+Backport of https://github.com/ocsigen/js_of_ocaml/pull/2371
+
+Dune 3.24 renders `deps` variables as "./foo.wat" rather than "foo.wat"
+(ocaml/dune#15156), so chopping the ".wat" suffix yields the module name
+"./foo", which wasmoo_link_wasm does not accept. Taking the basename first
+works with either path representation.
+
+--- a/runtime/wasm/args.ml
++++ b/runtime/wasm/args.ml
+@@ -1,4 +1,7 @@
+ let () =
+   for i = 1 to Array.length Sys.argv - 1 do
+-    Format.printf "%s:%s@." (Filename.chop_suffix Sys.argv.(i) ".wat") Sys.argv.(i)
++    Format.printf
++      "%s:%s@."
++      (Filename.chop_suffix (Filename.basename Sys.argv.(i)) ".wat")
++      Sys.argv.(i)
+   done
