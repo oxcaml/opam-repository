@@ -67,8 +67,17 @@ for entry in $(sort -t: -k1,1V -k2,2r overrides); do
             mkdir -p "oxcaml-$entry/oxcaml-$entry.guard"
             case $entry in
               # These packages are only patched from a given version in OxCaml - the older versions don't (necessarily) require patches
+              # Dune and its libraries no longer require patches from 3.24.2
               chrome-trace|dune-action-plugin|dune-build-info|dune-glob|dune-private-libs|dune-rpc-lwt|dune-site|xdg)
-                constraint=' {>= "3.21.0"}';;
+                constraint=' {>= "3.21.0" & < "3.24.2"}';;
+              dune|dune-configurator|dune-rpc|dyn|fs-io|ocamlc-loc|ordering|stdune|top-closure)
+                constraint=' {< "3.24.2"}';;
+              # eio no longer requires patches from 1.4
+              eio|eio_linux|eio_main|eio_posix)
+                constraint=' {< "1.4"}';;
+              # mdx no longer requires patches from 2.6.0
+              mdx)
+                constraint=' {< "2.6.0"}';;
               *)
                 constraint=''
             esac

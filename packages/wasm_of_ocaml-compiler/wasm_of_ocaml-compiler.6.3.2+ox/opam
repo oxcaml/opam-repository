@@ -70,6 +70,7 @@ patches: [
   "js_of_ocaml-test-oxcaml-compat.patch"
   "js_of_ocaml-unboxed-indexing-small-ints.patch"
   "dune.patch"
+  "wasm_of_ocaml-args-basename.patch"
 ]
 extra-files: [
   [
@@ -155,5 +156,9 @@ extra-files: [
   [
     "dune.patch"
     "sha256=3815586228347f32a551098f6fe5ab4751afdac2d65a1812d9134f85e85d8072"
+  ]
+  [
+    "wasm_of_ocaml-args-basename.patch"
+    "sha256=e07878aa7e5fc992c23dac3885099a6d531d4b964f8b545a6a5fa2b2e3d66ee6"
   ]
 ]
