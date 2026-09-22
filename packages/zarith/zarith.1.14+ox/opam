@@ -55,4 +55,3 @@ unboxed integers, for speed and space economy."""
 url {
   src: "git+https://github.com/avsm/zarith.git#oxcaml"
 } 
-conflicts: "oxcaml-compiler" {> "5.2.0minus-38"}
