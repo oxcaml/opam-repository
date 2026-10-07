@@ -1,6 +1,6 @@
 --- a/src/notty.ml
 +++ b/src/notty.ml
-@@ -539,7 +539,7 @@
+@@ -552,7 +552,7 @@
  
    let ansi = {
        skip    = (fun n b -> b <| "\x1b[0m"; Buffer.add_chars b ' ' n)

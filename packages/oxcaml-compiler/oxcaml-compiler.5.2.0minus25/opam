@@ -112,7 +112,7 @@ patches: ["ignore-opam.patch"]
 extra-files: [
   [
     "ignore-opam.patch"
-    "sha256=6ece96cd3f06c3ed90f768bf63659266a670e5be0b2302354a2d0e87629ba049"
+    "sha256=708550198f8ffd8cae88079ac45cdd9893012ddac464a1886ae16598311d66ba"
   ]
 ]
 conflicts: [

@@ -92,7 +92,7 @@
  }
 
  //FP literals can be written using the hexadecimal
-@@ -103,18 +146,24 @@
+@@ -107,18 +150,24 @@
  }
 
  //Provides: caml_int64_float_of_bits const
@@ -125,7 +125,7 @@
  }
 
  //Provides: caml_nextafter_float const
-@@ -135,10 +184,11 @@
+@@ -143,10 +192,11 @@
  }
 
  //Provides: caml_int32_float_of_bits const
@@ -140,7 +140,7 @@
  }
 
  //Provides: caml_classify_float const
-@@ -186,11 +236,12 @@
+@@ -194,11 +244,12 @@
    return x;
  }
  //Provides: caml_frexp_float const

@@ -55,10 +55,10 @@ patches: ["uutf-locals.patch" "uutf-portable.patch"]
 extra-files: [
   [
     "uutf-locals.patch"
-    "sha256=cf3a0969653b405ad165312dfa6ef9038fe087ac9dd070f4b27bf4790e84e0ce"
+    "sha256=9608bf0cf599003d823f26ee97bdfa7980135a06544e7729e0983b9f94be87bb"
   ]
   [
     "uutf-portable.patch"
-    "sha256=06130fcb93a61add6f7f0ca80d6a220c5e9f24568da5bd6f60f975f67417e5c9"
+    "sha256=844cb8f2c3679f59eab3a8140ad42ac176acdb08fb2f33136ebd1cdb84f0b528"
   ]
 ]

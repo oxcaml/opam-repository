@@ -1,7 +1,6 @@
 --- a/runtime/js/obj.js
 +++ b/runtime/js/obj.js
-@@ -124,5 +124,6 @@
-
+@@ -125,4 +125,5 @@
  //Provides: caml_obj_dup mutable (mutable)
  function caml_obj_dup(x) {
 +  if (x === null) return null;

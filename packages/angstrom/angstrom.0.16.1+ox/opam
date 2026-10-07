@@ -40,7 +40,7 @@ patches: ["oxcaml.patch"]
 extra-files: [
   [
     "oxcaml.patch"
-    "sha256=06586dcb84c1261dda97ba02ec51323557e5cab7f07f1dbcfae63913a82c6527"
+    "sha256=15e73314f8e38a72dfb9ad18793fc91637f6d37840c85e3942808c5cb54b290f"
   ]
 ]
 conflicts: "oxcaml-compiler" {< "5.4.0-ox1"}

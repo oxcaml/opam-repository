@@ -1,6 +1,6 @@
 --- a/runtime/js/domain.js
 +++ b/runtime/js/domain.js
-@@ -126,6 +126,12 @@
+@@ -188,6 +188,12 @@
    return 1;
  }
  
@@ -15,7 +15,7 @@
  //Version: >= 5.03
 --- a/runtime/wasm/domain.wat
 +++ b/runtime/wasm/domain.wat
-@@ -178,6 +178,10 @@
+@@ -238,6 +238,10 @@
        (param (ref eq)) (result (ref eq))
        (ref.i31 (i32.const 1)))
  

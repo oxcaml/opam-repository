@@ -59,7 +59,7 @@ patches: [
 extra-files: [
   [
     "zarith-abs.patch"
-    "sha256=0e8ac23bfd2846424eb2a5c9116cdf8c62d3b4e56f318347886ca7431d8c195e"
+    "sha256=74606d449c9a179523494c1bf682ebf996da4a1f160780ac2f40d09a4ca4e6f7"
   ]
   [
     "zarith-gc.patch"
@@ -67,7 +67,7 @@ extra-files: [
   ]
   [
     "zarith-local.patch"
-    "sha256=d2f7f6481c5b061bd8b022672bcf6bd9f25cd6f6f1b30c80a16cd2d02751589b"
+    "sha256=827a280c6829e30d987929c3d30d652b58af1ddcd89e4bf38552fc6017b9e2fb"
   ]
   [
     "zarith-portability.patch"

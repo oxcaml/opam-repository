@@ -1,6 +1,6 @@
 --- a/src/notty.ml
 +++ b/src/notty.ml
-@@ -494,7 +494,8 @@
+@@ -497,7 +497,8 @@
    let (&) op1 op2 buf = op1 buf; op2 buf
  
    type cursor =
@@ -10,7 +10,7 @@
      | `Bar_blinking
      | `Block
      | `Block_blinking
-@@ -560,6 +561,7 @@
+@@ -563,6 +564,7 @@
      ; cursor_kind = (fun kind b -> 
                        let n =
                          match kind with
@@ -18,7 +18,7 @@
                          | `Bar -> "6"
                          | `Bar_blinking -> "5"
                          | `Block -> "2"
-@@ -894,6 +896,8 @@
+@@ -897,6 +899,8 @@
      | None        -> cap.cursvis false
      | Some (w, h, cursor_kind) -> cap.cursvis true & cursat0 cap w h & cap.cursor_kind cursor_kind
  
@@ -27,7 +27,7 @@
    let create ~mouse ~bpaste cap = {
        cap
      ; curs  = None
-@@ -908,6 +912,7 @@
+@@ -911,6 +915,7 @@
      if t.dead then false else
        ( emit t ( t.cap.altscr false & t.cap.cursvis true &
                   t.cap.mouse false & t.cap.bpaste false );
@@ -49,7 +49,7 @@
      | `Block_blinking
 --- a/src-unix/notty_unix.mli
 +++ b/src-unix/notty_unix.mli
-@@ -74,7 +74,8 @@
+@@ -75,7 +75,8 @@
        Useful if the output might have become garbled. *)
  
    type cursor :=

@@ -71,7 +71,7 @@ patches: [
 extra-files: [
   [
     "dune.patch"
-    "sha256=3815586228347f32a551098f6fe5ab4751afdac2d65a1812d9134f85e85d8072"
+    "sha256=dce82bc9dda71ce0522957674207f1a6de97bacad0767bf5762621027d72f6bc"
   ]
   [
     "js_of_ocaml-internal-obj-changes.patch"
@@ -79,15 +79,15 @@ extra-files: [
   ]
   [
     "js_of_ocaml-fix-build_fs.patch"
-    "sha256=abaa404bf23a77cf1badfe30ab9fcc13c6fb0446a81fa10b0962ed1ba9005d6a"
+    "sha256=6ed77044b3003ccfc6a815cf080cc9d2ef92bf0b7b8fbac419bc46d92d63a898"
   ]
   [
     "js_of_ocaml-iarray-primitives.patch"
-    "sha256=6f7805c3876229168ac8b023783c75226bf57e1a2bc2ded04d0adb9e46def515"
+    "sha256=5e4e3709a2bae87a8543fd2048525e47b9a3d7ba7081959e7cf3bb8e4b7e6ba9"
   ]
   [
     "js_of_ocaml-important-config-changes.patch"
-    "sha256=eeb46aea8e0f0d2232b47f32a8a1d60237626637304431847e60316424daadd3"
+    "sha256=e3b4d1ef50b2bfd828b7a787c864d0a940994d9dec7fcab0e7afdd604f0c3abd"
   ]
   [
     "js_of_ocaml-wasm-temp-differences.patch"
@@ -95,7 +95,7 @@ extra-files: [
   ]
   [
     "wasm_of_ocaml-bring-back-eval.patch"
-    "sha256=c413d9617e1122a9fdad8f1f63859bdf9f17a8440f78bdfbaecc432bae580fac"
+    "sha256=8c6c9bad8b241bed7c84021ab9a84b7aac1f14cbb556bfd4cc7ca1827e47240b"
   ]
   [
     "js_of_ocaml-int64-of-string-sign-only.patch"
@@ -103,7 +103,7 @@ extra-files: [
   ]
   [
     "js_of_ocaml-safepoint-friendly-array-init.patch"
-    "sha256=1f34c9d6b0944a1df644405a0ad7e58ad09afc4dac38cbc360d65f99dfc48ace"
+    "sha256=74946a81b2ee0f508adce4c44f145ccfa7a221ab237c3f9359db2e79329d064b"
   ]
   [
     "js_of_ocaml-dom-defaultPrevented.patch"
@@ -111,11 +111,11 @@ extra-files: [
   ]
   [
     "js_of_ocaml-oxcaml_effect_prims.patch"
-    "sha256=b741d0f7f26f7d6bc254f8e2a337352c44fdc0f6192689de35b03f1dc2750ed9"
+    "sha256=b6a64079059880118b46195b665cc175ef70afce306dfc54364a90a0e34d7967"
   ]
   [
     "js_of_ocaml-cmdliner-compat.patch"
-    "sha256=85ea67298ed223600c3c3c1bf78090504fe3f33718bdc9e9970b0117d33bd82e"
+    "sha256=4e689f375e1b5d1559548dccfd13cfd019971dba990a0988e94bf359bca3a47c"
   ]
   [
     "js_of_ocaml-disable-ref-unboxing.patch"
@@ -135,7 +135,7 @@ extra-files: [
   ]
   [
     "js_of_ocaml-shape-recursion-workaround.patch"
-    "sha256=1a2f24bbd89b63b48a2770e23030604a6a3f08129fab1a7420d8f02636197597"
+    "sha256=9ceea04f512b5de19792db0fbc7f2c5a771a4e4ef0dc1b2146c51e608c8630e3"
   ]
   [
     "js_of_ocaml-reinterpret-i64-i63.patch"

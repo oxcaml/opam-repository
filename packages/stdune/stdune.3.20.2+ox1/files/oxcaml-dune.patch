@@ -12,8 +12,7 @@ diff --git a/otherlibs/configurator/src/v1.ml b/otherlibs/configurator/src/v1.ml
 index 1234567..abcdefg 100644
 --- a/otherlibs/configurator/src/v1.ml
 +++ b/otherlibs/configurator/src/v1.ml
-@@ -134,12 +134,12 @@ module Process = struct
-     let prog_command_line = command_line prog args in
+@@ -135,11 +135,11 @@ module Process = struct
      logf t "run: %s" prog_command_line;
      let n = gen_id t in
 -    let create_process =
@@ -41,7 +40,7 @@ diff --git a/otherlibs/stdune/src/string.ml b/otherlibs/stdune/src/string.ml
 index 1234567..abcdefg 100644
 --- a/otherlibs/stdune/src/string.ml
 +++ b/otherlibs/stdune/src/string.ml
-@@ -45,7 +45,7 @@ let uppercase = uppercase_ascii
+@@ -44,7 +44,7 @@ let uppercase = uppercase_ascii
  let lowercase = lowercase_ascii
  let index = index_opt
 -let index_from = index_from_opt

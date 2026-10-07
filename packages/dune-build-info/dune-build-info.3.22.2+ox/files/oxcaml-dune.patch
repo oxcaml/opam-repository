@@ -12,7 +12,7 @@ diff --git a/otherlibs/stdune/src/string.ml b/otherlibs/stdune/src/string.ml
 index 1234567..abcdefg 100644
 --- a/otherlibs/stdune/src/string.ml
 +++ b/otherlibs/stdune/src/string.ml
-@@ -45,7 +45,7 @@ let uppercase = uppercase_ascii
+@@ -116,7 +116,7 @@ let uppercase = uppercase_ascii
  let lowercase = lowercase_ascii
  let index = index_opt
 -let index_from = index_from_opt
@@ -26,7 +26,7 @@ diff --git a/src/dune_rules/merlin/merlin.ml b/src/dune_rules/merlin/merlin.ml
 index 1234567..abcdefg 100644
 --- a/src/dune_rules/merlin/merlin.ml
 +++ b/src/dune_rules/merlin/merlin.ml
-@@ -301,6 +301,6 @@ let comment_body = [^ '\n' '\r']*
+@@ -314,6 +314,6 @@ let comment_body = [^ '\n' '\r']*
      let b = Buffer.create 256 in
      let printf = Printf.bprintf b in
 -    let print = Buffer.add_string b in
@@ -38,7 +38,7 @@ diff --git a/src/dune_sexp/lexer.mll b/src/dune_sexp/lexer.mll
 index 1234567..abcdefg 100644
 --- a/src/dune_sexp/lexer.mll
 +++ b/src/dune_sexp/lexer.mll
-@@ -129,7 +129,7 @@ let comment_body = [^ '\n' '\r']*
+@@ -127,7 +127,7 @@ let comment_body = [^ '\n' '\r']*
          state := Template (v::parts)
 
 -    let add_text   = Buffer.add_string text_buf

@@ -1,6 +1,6 @@
 --- a/compiler/lib-wasm/gc_target.ml
 +++ b/compiler/lib-wasm/gc_target.ml
-@@ -698,16 +698,63 @@
+@@ -731,16 +731,63 @@
      let* ty = Type.float_type in
      wasm_struct_get ty (wasm_cast ty e) 0
 
@@ -78,7 +78,7 @@
      }
 
    let label_index context pc =
-@@ -1204,12 +1205,14 @@
+@@ -1748,12 +1749,14 @@
          if tag = 254
          then
            Memory.allocate_float_array
@@ -93,7 +93,7 @@
              ~tag
              (expression_list (fun x -> load_and_box ctx x) (Array.to_list a))
      | Field (y, n, Non_float) -> Memory.field (load_and_box ctx y) n
-@@ -1510,6 +1513,11 @@
+@@ -2140,6 +2143,11 @@
        ((pc, _) as cont)
        cloc
        acc =
@@ -105,7 +105,7 @@
      let return_type =
        match name_opt with
        | Some f -> Typing.return_type ctx.types f
-@@ -1819,6 +1827,7 @@
+@@ -2463,6 +2471,7 @@
        ; blocks = p.blocks
        ; closures
        ; global_context

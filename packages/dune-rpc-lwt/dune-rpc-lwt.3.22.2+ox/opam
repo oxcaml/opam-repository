@@ -38,6 +38,6 @@ patches: ["oxcaml-dune.patch"]
 extra-files: [
   [
     "oxcaml-dune.patch"
-    "sha256=69613942664345cf55f666f71cd5cbd0c6e5acfb38e0400553bd887364b997e2"
+    "sha256=a0aa8cc6650611cd0209d1e5e9a0a6461191094e37fbe4862a218a9c1a1019f7"
   ]
 ]

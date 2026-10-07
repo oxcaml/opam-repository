@@ -1,6 +1,6 @@
 --- a/runtime/wasm/jslib.wat
 +++ b/runtime/wasm/jslib.wat
-@@ -6,6 +6,7 @@
+@@ -22,6 +22,7 @@
     (import "bindings" "identity" (func $to_int32 (param anyref) (result i32)))
     (import "bindings" "identity" (func $from_int32 (param i32) (result anyref)))
     (import "bindings" "from_bool" (func $from_bool (param i32) (result anyref)))
@@ -8,7 +8,7 @@
     (import "bindings" "get"
        (func $get (param (ref extern)) (param anyref) (result anyref)))
     (import "bindings" "set"
-@@ -113,6 +114,18 @@
+@@ -128,6 +129,18 @@
        (ref.i31 (call $strict_equals
                    (call $unwrap (local.get 0)) (call $unwrap (local.get 1)))))
 
@@ -29,9 +29,9 @@
 
 --- a/runtime/wasm/runtime.js
 +++ b/runtime/wasm/runtime.js
-@@ -149,6 +149,7 @@
-     instanceof: (x, y) => x instanceof y,
+@@ -241,6 +241,7 @@
      typeof: (x) => typeof x,
+     // biome-ignore lint/suspicious/noDoubleEquals: ..
      equals: (x, y) => x == y,
 +    eval: (x) => eval("("+x+")"),
      strict_equals: (x, y) => x === y,

@@ -33,7 +33,7 @@
 --- a/compiler/lib/shape.mli
 +++ b/compiler/lib/shape.mli
 @@ -30,9 +30,7 @@
-
+ 
  val of_string : string -> t
 
 -val equal : t -> t -> bool
@@ -41,7 +41,7 @@
  val merge : t -> t -> t
 
  module Store : sig
-
+   val set : name:string -> t -> unit
 --- a/compiler/lib/driver.ml
 +++ b/compiler/lib/driver.ml
 @@ -133,9 +133,10 @@
@@ -70,7 +70,7 @@
        in
 --- a/compiler/lib/flow.ml
 +++ b/compiler/lib/flow.ml
-@@ -465,7 +465,7 @@
+@@ -467,7 +467,7 @@
  let the_shape_of ~return_values ~pure info x =
    let rec loop info x acc : Shape.t =
      if Var.Set.mem x acc
@@ -79,7 +79,7 @@
      else
        let acc = Var.Set.add x acc in
        get_approx
-@@ -476,16 +476,16 @@
+@@ -478,16 +478,16 @@
            | None -> (
                match info.info_defs.(Var.idx x) with
                | Expr (Block (_, a, _, Immutable)) ->
@@ -99,7 +99,7 @@
                          else
                            let first = Var.Set.choose set in
                            Var.Set.fold
-@@ -495,28 +495,28 @@
+@@ -497,28 +497,28 @@
                              set
                              (loop info first acc)
                    in
@@ -298,7 +298,7 @@
 --- a/compiler/lib/specialize.ml
 +++ b/compiler/lib/specialize.ml
 @@ -37,8 +37,8 @@
-
+ 
  let specialize_apply opt_count shape update_def =
    let rec loop x f args shape loc (acc, free_pc, extra) =
 -    match (shape : Shape.t) with
@@ -306,7 +306,7 @@
      | Top | Block _ -> Let (x, Apply { f; args; exact = false }) :: acc, free_pc, extra
      | Function { arity; res; _ } ->
          let nargs = List.length args in
-
+         if arity = nargs
 --- a/compiler/lib/shape.ml
 +++ b/compiler/lib/shape.ml
 @@ -42,7 +42,9 @@
@@ -460,7 +460,7 @@
              | Function _ | Block _ -> Some s)
 --- a/compiler/lib/flow.ml
 +++ b/compiler/lib/flow.ml
-@@ -462,65 +462,209 @@
+@@ -464,65 +464,209 @@
          y
    | _ -> None
 
@@ -798,7 +798,7 @@
              let s = shape x in
 --- a/compiler/lib/flow.ml
 +++ b/compiler/lib/flow.ml
-@@ -524,7 +524,7 @@
+@@ -526,7 +526,7 @@
        PFunction
          { arity; pure; res_vars = Var.Set.empty; res_shapes = Shape.Set.singleton res }
 
@@ -807,7 +807,7 @@
    let cache = Var.Hashtbl.create 17 in
    let set_cache = ref VarSetShapeSetMap.empty in
    let eval_var_cache = Var.Hashtbl.create 17 in
-@@ -612,10 +612,13 @@
+@@ -614,10 +614,13 @@
      | None -> (
          match info.Info.info_defs.(Var.idx x) with
          | Expr (Block (_, a, _, Immutable)) ->
@@ -835,7 +835,7 @@
    -> Info.t
    -> Code.Var.t
    -> Shape.t
-
+ (** Returns a function [get] where [get x] computes the shape of
 --- a/compiler/lib/driver.ml
 +++ b/compiler/lib/driver.ml
 @@ -64,8 +64,14 @@
@@ -876,7 +876,7 @@
        in
 --- a/compiler/lib/flow.ml
 +++ b/compiler/lib/flow.ml
-@@ -667,7 +667,8 @@
+@@ -669,7 +669,8 @@
          Var.Hashtbl.replace cache x s;
          s
    in

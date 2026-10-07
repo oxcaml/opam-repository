@@ -104,9 +104,7 @@
        let prim_args' =
 --- a/compiler/lib/generate.ml
 +++ b/compiler/lib/generate.ml
-@@ -1662,5 +1662,5 @@
-             in
-             return e
+@@ -1664,3 +1664,3 @@
          | Extern "caml_alloc_dummy_function", _ -> assert false
 -        | Extern ("%resume" | "%perform" | "%reperform"), _ ->
 +        | Extern ("%resume" | "%perform" | "%reperform" | "%with_stack" | "%with_stack_bind"), _ ->

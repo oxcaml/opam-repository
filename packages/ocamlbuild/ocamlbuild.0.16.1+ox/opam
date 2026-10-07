@@ -46,6 +46,6 @@ patches: ["flambda2.patch"]
 extra-files: [
   [
     "flambda2.patch"
-    "sha256=d9a4c6425c8b56ea6a878661abc5704810a73003fd76b97073b9f998619dce8a"
+    "sha256=1d01fe91e79423e76fc1d63ff41a5a34245bc21186ef062dde6d2d4e1b9bd4b6"
   ]
 ]

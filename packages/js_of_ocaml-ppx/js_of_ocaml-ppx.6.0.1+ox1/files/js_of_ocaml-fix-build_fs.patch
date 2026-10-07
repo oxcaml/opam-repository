@@ -16,7 +16,7 @@
    }
 --- a/runtime/js/fs.js
 +++ b/runtime/js/fs.js
-@@ -318,7 +318,7 @@
+@@ -320,7 +320,7 @@
  //Provides: caml_fs_init
  //Requires: jsoo_create_file
  function caml_fs_init() {
@@ -25,8 +25,7 @@
    if (tmp) {
      for (var i = 0; i < tmp.length; i++) {
        jsoo_create_file(tmp[i].name, tmp[i].content);
-@@ -326,5 +326,6 @@
-   }
+@@ -329,4 +329,5 @@
    globalThis.jsoo_create_file = jsoo_create_file;
    globalThis.jsoo_fs_tmp = [];
 +  globalThis.caml_fs_tmp = [];

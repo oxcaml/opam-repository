@@ -35,7 +35,7 @@
  end
  
  module I = struct
-@@ -517,7 +517,7 @@
+@@ -520,7 +520,7 @@
  
    type t = {
      skip    : int -> op
@@ -44,7 +44,7 @@
    ; newline : op
    ; clreol  : op
    ; cursvis : bool -> op
-@@ -536,7 +536,19 @@
+@@ -539,7 +539,19 @@
  
    let sts = [ ";1"; ";3"; ";4"; ";5"; ";7" ]
  
@@ -65,7 +65,7 @@
      buf <| "\x1b[0";
      let rgb888 buf x =
        buf <! A.r x; buf <. ';'; buf <! A.g x; buf <. ';'; buf <! A.b x in
-@@ -559,7 +571,12 @@
+@@ -562,7 +574,12 @@
            | (0, _) | (_, []) -> ()
            | (_, x::xs) -> if f land 1 > 0 then buf <| x; go (f lsr 1) xs in
          go st sts );
@@ -79,7 +79,7 @@
  
    let ansi = {
        skip    = (fun n b -> b <| "\x1b[0m"; Buffer.add_chars b ' ' n)
-@@ -606,12 +623,12 @@
+@@ -609,12 +626,12 @@
      ; clreol  = no0
      ; cursvis = no1
      ; cursor_kind = no1
@@ -94,7 +94,7 @@
    let cursat0 cap w h = cap.cursat (max w 0 + 1) (max h 0 + 1)
  end
  
-@@ -621,7 +638,7 @@
+@@ -624,7 +641,7 @@
    open Operation
  
    let skip_op cap buf n = cap.skip n buf
@@ -103,7 +103,7 @@
  
    let rec line ~screen_width ~line_width cap buf = function
    | End              
-@@ -637,7 +654,7 @@
+@@ -640,7 +657,7 @@
  
    let rec lines ~screen_width cap buf = function
      []      -> ()
@@ -112,7 +112,7 @@
    | ln::lns -> line ~screen_width ~line_width:0 cap buf ln; cap.newline buf; lines ~screen_width cap buf lns
  
  
-@@ -650,7 +667,7 @@
+@@ -653,7 +670,7 @@
    let rec lines_diffed ~screen_width cap buf = function
      []      -> ()
    | [ln]    ->

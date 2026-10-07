@@ -1,6 +1,6 @@
 --- a/src/notty.ml
 +++ b/src/notty.ml
-@@ -606,19 +606,25 @@
+@@ -609,19 +609,25 @@
    let skip_op cap buf n = cap.skip n buf
    let text_op cap buf a x = cap.sgr a buf; Text.to_buffer buf x
  

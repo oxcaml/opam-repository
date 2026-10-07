@@ -1,6 +1,6 @@
 --- a/compiler/lib-wasm/generate.ml
 +++ b/compiler/lib-wasm/generate.ml
-@@ -1531,7 +1531,7 @@
+@@ -2155,7 +2155,7 @@
          | Cond (_, (pc1, _), (pc2, _)) when pc' = pc1 && pc' = pc2 -> true
          | _ -> Structure.is_merge_node g pc'
        in
@@ -9,7 +9,7 @@
          let block = Addr.Map.find pc ctx.blocks in
          let* () = translate_instrs ctx context block.body in
          translate_node_within
-@@ -1548,8 +1548,20 @@
+@@ -2172,8 +2172,20 @@
        in
        if Structure.is_loop_header g pc
        then
@@ -32,7 +32,7 @@
      and translate_node_within ~result_typ ~fall_through ~pc ~l ~context =
        match l with
        | pc' :: rem ->
-@@ -1845,6 +1857,7 @@
+@@ -2471,6 +2483,7 @@
          functions
      in
      global_context.init_code <- [];

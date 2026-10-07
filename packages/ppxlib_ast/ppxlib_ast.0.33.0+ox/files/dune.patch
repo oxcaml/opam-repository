@@ -84,7 +84,7 @@
    (cinaps (and :with-test (>= v0.12.1))))
 --- a/src/dune
 +++ b/src/dune
-@@ -28,12 +28,12 @@
+@@ -31,12 +31,12 @@
   (targets ast_pattern_generated.ml)
   (deps gen/gen_ast_pattern.exe)
   (action
@@ -193,4 +193,4 @@
 +(package
   (name ppxlib)
   (depends
-   ocaml
+   (ocaml (and (and (>= 4.04.1) (< 5.2.0)) (<> 5.1.0~alpha1)))

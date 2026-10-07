@@ -50,7 +50,7 @@ patches: ["oxcaml-yojson.patch"]
 extra-files: [
   [
     "oxcaml-yojson.patch"
-    "sha256=368596133ceb1bbc23e034ce474f2954bf4329e61dbc60446a24ce23750f18aa"
+    "sha256=3982e97317555a8d4930a2c137b2ef83c8c41a69f57e511776f8351a0d90937a"
   ]
 ]
 conflicts: [

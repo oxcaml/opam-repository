@@ -1,6 +1,6 @@
 --- a/src/notty.ml
 +++ b/src/notty.ml
-@@ -1040,6 +1040,8 @@
+@@ -1043,6 +1043,8 @@
      ; previous_lines = None
      }
  
@@ -11,7 +11,7 @@
        ( emit t ( t.cap.altscr false & t.cap.cursvis true &
 --- a/src/notty.mli
 +++ b/src/notty.mli
-@@ -641,6 +641,14 @@
+@@ -670,6 +670,14 @@
    val release : t -> bool
    val output  : t -> Buffer.t -> unit
  
