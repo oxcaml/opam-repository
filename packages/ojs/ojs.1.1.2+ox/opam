@@ -40,7 +40,7 @@ patches: [
 extra-files: [
   [
     "gen-js-api+js_of_ocaml-globalThis.patch"
-    "sha256=7828fe1796e89139bbfe38e9fdf6b0d959d15bf4e9762f24bfe3749de409398d"
+    "sha256=5ab8dc6a8a90b18400ec6a8ec0325a050285669c5a9ff12fc5b1eb6ba2de8636"
   ]
   [
     "gen-js-api+ppx-driver+gen_js_api_ppx_driver.ml.patch"

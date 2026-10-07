@@ -1,6 +1,6 @@
 --- a/compiler/lib-runtime-files/gen/gen.ml
 +++ b/compiler/lib-runtime-files/gen/gen.ml
-@@ -54,7 +54,7 @@
+@@ -50,7 +50,7 @@
  
  let () =
    Js_of_ocaml_compiler.Warning.werror := true;

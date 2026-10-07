@@ -1,6 +1,6 @@
 --- a/runtime/js/array.js
 +++ b/runtime/js/array.js
-@@ -198,6 +198,16 @@
+@@ -201,6 +201,16 @@
    return b;
  }
 
@@ -19,7 +19,7 @@
  function caml_make_vect(len, init) {
 --- a/runtime/wasm/array.wat
 +++ b/runtime/wasm/array.wat
-@@ -293,4 +293,13 @@
+@@ -483,4 +483,13 @@
                 (struct.get $float 0 (ref.cast (ref $float) (local.get $v)))
                 (local.get $len))))
        (ref.i31 (i32.const 0)))

@@ -1,6 +1,6 @@
 --- a/compiler/lib/eval.ml
 +++ b/compiler/lib/eval.ml
-@@ -285,7 +285,8 @@
+@@ -311,7 +311,8 @@
            Some (Int (Targetint.of_int32_truncate (Int64.to_int32 i)))
        | "caml_nativeint_of_int", [ Int i ] -> nativeint (Targetint.to_int32 i)
        (* int64 *)

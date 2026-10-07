@@ -35,7 +35,7 @@
        ; "caml_ba_uint8_set32", (`Mutator, [ Value; Int Normalized; Int32 ], Value)
 --- b/compiler/lib/specialize_js.ml
 +++ a/compiler/lib/specialize_js.ml
-@@ -301,14 +301,20 @@
+@@ -302,14 +302,20 @@
  let getters =
    indexing_primitives
      [ "caml_array_get"
@@ -56,7 +56,7 @@
      ; "caml_ba_uint8_get16"
      ; "caml_ba_uint8_get32"
      ; "caml_ba_uint8_get64"
-@@ -318,10 +324,12 @@
+@@ -319,10 +325,12 @@
  let setters =
    indexing_primitives
      [ "caml_array_set"
@@ -162,7 +162,7 @@
  function caml_bytes_set16(s, i, i16) {
 --- b/runtime/wasm/bigarray.wat
 +++ a/runtime/wasm/bigarray.wat
-@@ -2215,6 +2215,25 @@
+@@ -2232,6 +2232,25 @@
                 (br $loop))))
        (return (i32.const 0)))
  
@@ -188,7 +188,7 @@
     (func (export "caml_ba_uint8_get16")
        (param $vba (ref eq)) (param $i i32) (result i32)
        (local $ba (ref $bigarray))
-@@ -2263,6 +2282,23 @@
+@@ -2280,6 +2299,23 @@
        (call $dv_get_i64_unaligned
           (local.get $view) (local.get $i) (i32.const 1)))
  

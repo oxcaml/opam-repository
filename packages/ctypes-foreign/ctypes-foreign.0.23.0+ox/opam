@@ -56,6 +56,6 @@ patches: ["bigarray.patch"]
 extra-files: [
   [
     "bigarray.patch"
-    "sha256=c5d59b4624382cd61ff8da5c9ec3153ada0880efc43fbb2a20491984bd509a3e"
+    "sha256=fc2d9f0af9d5cf924759158114636b13b054d4066ac43cac7ee0548be0cc6a9c"
   ]
 ]

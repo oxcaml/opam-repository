@@ -61,6 +61,6 @@ patches: ["oxcaml-cmarkit.patch"]
 extra-files: [
   [
     "oxcaml-cmarkit.patch"
-    "sha256=ff0f82ffc4b594968e573943dd0653a7ef9230e2fad5286db702effd48ebd80e"
+    "sha256=ca7b257b1c8c2aa384486be4749dd632593e77d7867318f539bba2e44de8a0b2"
   ]
 ]

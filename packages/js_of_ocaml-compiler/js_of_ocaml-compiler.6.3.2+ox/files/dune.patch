@@ -2,7 +2,7 @@ diff --git a/compiler/lib/dune b/compiler/lib/dune
 index b03e41bd..23a20394 100644
 --- a/compiler/lib/dune
 +++ b/compiler/lib/dune
-@@ -15,7 +16,7 @@
+@@ -11,7 +11,7 @@
   (flags
    (:standard -w -7-37 -safe-string))
   (preprocess
@@ -22,8 +22,8 @@ index f3d0f4c3..2cc128fd 100644
 - (libraries compiler-libs.common ppxlib)
 + (libraries compiler-libs.common ppxlib ppxlib_jane)
   (preprocess
-   (pps ppxlib.metaquot)))
-
+   (pps ppx_optcomp_light ppxlib.metaquot)))
+ 
 diff --git a/ppx/ppx_js/lib_internal/dune b/ppx/ppx_js/lib_internal/dune
 index d888f72b..aa92f071 100644
 --- a/ppx/ppx_js/lib_internal/dune
@@ -35,7 +35,7 @@ index d888f72b..aa92f071 100644
 + (libraries compiler-libs.common ppxlib ppxlib_jane)
   (kind ppx_rewriter)
   (preprocess
-   (pps ppxlib.metaquot)))
+   (pps ppx_optcomp_light ppxlib.metaquot)))
 
 diff --git a/dune-project b/dune-project
 --- a/dune-project
@@ -48,4 +48,4 @@ diff --git a/dune-project b/dune-project
 +  (cmdliner (>= 1.1.0))
    (sedlex (>= 3.3))
    (qcheck :with-test)
-   menhir
+   (menhir (>= 20180523))

@@ -89,35 +89,35 @@ extra-files: [
   ]
   [
     "notty-use_correct_newline_escape_code_and_stop_clearing_the_last_text_element_of_a_line.patch"
-    "sha256=c7d0520d54dd1ef31ad9ba7617ee14e721747a370f032fe5fd990d10d29aa38c"
+    "sha256=d801821c1b8cd4b249c962c5c102a8c09db5368bc7c5938feccadf3eaf9ebb16"
   ]
   [
     "notty-different_kinds_of_cursors.patch"
-    "sha256=542de513fb251b39cb966d57c212af83c1e397cadd53269bfcd83e80a1bb833d"
+    "sha256=1ce4625287de1ed7852cecdfa9c5daeaf166238b52f7f98f621a5c2cec1a8b65"
   ]
   [
     "notty-use_newline_instead_of_cursor_nextline_for_emacs_support.patch"
-    "sha256=086c946882270ba33305f6b4f11917757be36061ce28c041d04428023682f6e4"
+    "sha256=53c678d537954fff1217f6a3e4f89b85455a82502aaedc640cae731cfd0585fe"
   ]
   [
     "notty-expose_fast_tty_width.patch"
-    "sha256=7ceb153d99dbab34b14a5dbabb31a7c45eeaaea86605e561d875443491b08b04"
+    "sha256=fdc57d05f2b1ecba561e777f32b6fb21c84f74e61b948106ea9ee48e6c9fb045"
   ]
   [
     "notty-do_not_send_clear_eol_on_full_lines.patch"
-    "sha256=8c917c686ec312a61e5beba2cf3e6342e8ace5eef4e10a50a2b918ce394b50c0"
+    "sha256=1d66250374a5208bb7c2a3ca14177dcf87da430c3c4300c1c6e44b6b77673bea"
   ]
   [
     "notty-ctrl_backspace.patch"
-    "sha256=9a854a48a148883850a5e69529076a6c5998396146730bd92ebc1be0764187ad"
+    "sha256=7ca07dabd2ecc8b44b6ac444961deec52eb248557ff286477df5251eda357e34"
   ]
   [
     "notty-reset-cursor-on-release.patch"
-    "sha256=b460326841b528ba706c9292559770b6e65c81b8e09fa34b5d2d693cd4ebad9c"
+    "sha256=bef646ee860a485825e5d4a303210bbc23a9f98fa06da3fd627c01cf1bf31575"
   ]
   [
     "notty-line_based_diffing_and_patching.patch"
-    "sha256=3a2becbec99cbf932efa69e632acdb3e1ce98ef0c75352edafa4a29d14eba245"
+    "sha256=62376e21d09a85b37fe80423083826dfd12b71dae15226c1fffd42aa12548d97"
   ]
   [
     "notty-defensively-ignore-corrupted-x10-vscode-mouse-codes.patch"
@@ -125,11 +125,11 @@ extra-files: [
   ]
   [
     "notty-portabilize_notty_unix.patch"
-    "sha256=6d9dbf2a122bd0eb723514bda4b13c988591e1b0625872d44a096caf6982f440"
+    "sha256=3ea480fafc7777b2f060b366afa9198072705aeae7b4505311efd289a887bf1a"
   ]
   [
     "notty-add_href_support.patch"
-    "sha256=2a19f31a3ac1212b565d6fd09244ebde81a53c958eaa432ca90681e140f0099c"
+    "sha256=2c0fafcbcbd5994774c1bedee1ce25d3d71990d7c149ce4248d1aab1277ede7b"
   ]
   [
     "notty-default_color.patch"
@@ -137,11 +137,11 @@ extra-files: [
   ]
   [
     "notty-set_save_and_restore_title.patch"
-    "sha256=bbb4bf0e73bcfa795c93495a7149f7ee8f54b6c33d666d9d79dfefdd51ddec5b"
+    "sha256=d06a1295645e89caf8fefb71bf7e58f4288139e0ac5c54c217ceb1571738e141"
   ]
   [
     "notty-synchronized_output.patch"
-    "sha256=e78bf6ec740279bc822db4490ed6679a19e7910028837c262fcb48a99d42fd92"
+    "sha256=82f89e90af5e7d1fed40f7a0aa23d85bb22b6d26fc056e0bd9d3be3cfb359f89"
   ]
   [
     "notty-expose-Text.graphemes.patch"
@@ -157,11 +157,11 @@ extra-files: [
   ]
   [
     "notty-dynamic_mouse_reporting.patch"
-    "sha256=883150741961a07cff7a238c4c4ab6c1c3fe5d559887bcc4e4099a29aa164757"
+    "sha256=c146959cff82b9457224d4fa13b070be77c70a711cfd1321f2cf136fdfc38e37"
   ]
   [
     "notty-hover_events.patch"
-    "sha256=a95b68a0e3fca32c933f9af477de1eac1fb8836730fa15d1b0423cf8ec9d001e"
+    "sha256=6967f7b05415f93622ff54764a5f8ee7f506730758a04ddf5fdab6751f09d84f"
   ]
   [
     "dune.patch"

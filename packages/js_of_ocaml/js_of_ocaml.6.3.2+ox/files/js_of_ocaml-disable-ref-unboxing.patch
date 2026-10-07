@@ -1,6 +1,6 @@
 --- a/compiler/lib/driver.ml
 +++ b/compiler/lib/driver.ml
-@@ -216,7 +216,6 @@
+@@ -219,7 +219,6 @@
  let round profile : 'a -> 'a =
    print
    +> tailcall

@@ -2,7 +2,7 @@ diff --git a/lib/write.ml b/lib/write.ml
 index 1234567..abcdefg 100644
 --- a/lib/write.ml
 +++ b/lib/write.ml
-@@ -201,9 +201,9 @@ let write_std_float ob x;
+@@ -200,9 +200,9 @@ let write_std_float ob x;
    Buffer.contents ob
 
 

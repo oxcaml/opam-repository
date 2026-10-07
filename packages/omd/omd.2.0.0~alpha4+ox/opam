@@ -61,11 +61,11 @@ patches: [
 extra-files: [
   [
     "omd-fix-infinite-recursion-bug.patch"
-    "sha256=18edcc7126b84b101ed22768c6f62f7887956ff7f4fc0756d9b116d00505f8cb"
+    "sha256=f199ec394dce7fed915a3ad10fc6f9a7a54a285cc773d3ffe3ec569ce0ec7aad"
   ]
   [
     "omd-fix-link-parsed-as-text-bug.patch"
-    "sha256=50a4e520a67741be1b97d4bfe657985e2f17fb09ae85f7abefec001770a1c912"
+    "sha256=6ad9c1a5269c5efd8dd27c81770c96980524578d06739f9bca189da17e5dbde2"
   ]
 ]
 conflicts: [

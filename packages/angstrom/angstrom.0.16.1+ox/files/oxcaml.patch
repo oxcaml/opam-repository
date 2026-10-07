@@ -84,7 +84,7 @@ index 241d052..a936ca9 100644
  
  let take_till f =
    take_while (fun c -> not (f c))
-@@ -567,8 +582,8 @@ let consume_with p f =
+@@ -573,8 +588,8 @@ let consume_with p f =
      p.run input pos more fail succ'
    }
  
@@ -95,7 +95,7 @@ index 241d052..a936ca9 100644
  
  let both a b = lift2 (fun a b -> a, b) a b
  let map t ~f = t >>| f
-@@ -741,3 +756,6 @@ let parse_string ~consume p s =
+@@ -747,3 +762,6 @@ let parse_string ~consume p s =
    let bs  = Bigstringaf.create len in
    Bigstringaf.unsafe_blit_from_string s ~src_off:0 bs ~dst_off:0 ~len;
    parse_bigstring ~consume p bs

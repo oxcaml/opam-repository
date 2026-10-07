@@ -163,7 +163,7 @@
  
    type paste = [ `Start | `End ]
  
-@@ -977,7 +980,7 @@
+@@ -949,7 +952,7 @@
            | ('M', (#button as b), false) -> Some (`Press b)
            | ('M', #button, true)         -> Some `Drag
            | ('m', #button, false)        -> Some `Release
@@ -172,7 +172,7 @@
            | _                            -> None
          ) >>| fun e -> `Mouse (e, (x - 1, y - 1), mods)
  
-@@ -988,8 +991,7 @@
+@@ -960,8 +963,7 @@
            | (#button as b, false) -> Some (`Press b)
            | (#button     , true ) -> Some `Drag
            | (`ALL        , false) -> Some `Release
@@ -182,7 +182,7 @@
          ) >>| fun e -> `Mouse (e, (x - 1, y - 1), mods)
  
      | CSI ("",[200],'~') -> Some (`Paste `Start)
-@@ -1042,6 +1044,8 @@
+@@ -1013,6 +1015,8 @@
    ; mutable dim   : (int * int)
    ; mutable image : I.t
    ; mutable dead  : bool
@@ -191,7 +191,7 @@
    ; mutable previous_lines : Operation.t list option
    }
  
-@@ -1060,23 +1064,41 @@
+@@ -1032,23 +1036,41 @@
  
    let reset_cursor cap = cap.cursvis true & cap.cursor_kind `Default
  
@@ -237,7 +237,7 @@
          emit t (reset_cursor t.cap);
          t.dead <- true; true )
  
-@@ -1087,7 +1109,7 @@
+@@ -1059,7 +1081,7 @@
        t.cap.sync_start &
        cursor t.cap None &
        cursat0 t.cap 0 0 &

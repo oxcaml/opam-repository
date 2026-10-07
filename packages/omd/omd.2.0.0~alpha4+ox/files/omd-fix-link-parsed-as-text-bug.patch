@@ -1,6 +1,6 @@
 --- a/src/parser.ml
 +++ b/src/parser.ml
-@@ -1890,5 +1890,5 @@
+@@ -1872,5 +1872,5 @@
                loop ~seen_link acc st
          in
 -        aux ~seen_link [] acc

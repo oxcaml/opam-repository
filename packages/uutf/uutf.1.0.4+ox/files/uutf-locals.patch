@@ -1,6 +1,6 @@
 --- a/src/uutf.ml
 +++ b/src/uutf.ml
-@@ -719,7 +719,7 @@ module String = struct
+@@ -718,7 +718,7 @@ module String = struct
      | `UTF_16LE d -> `UTF_16LE, (d = `BOM)
  
    type 'a folder =
@@ -11,7 +11,7 @@
      let rec loop acc f s i last =
 --- a/src/uutf.mli
 +++ b/src/uutf.mli
-@@ -325,12 +325,12 @@ module String : sig
+@@ -329,12 +329,12 @@ module String : sig
      {b Note.} Initial {{:http://unicode.org/glossary/#byte_order_mark}BOM}s
      are also folded over. *)
  
@@ -27,7 +27,7 @@
    (** [fold_utf_8 f a s ?pos ?len ()] is
        [f (] ... [(f (f a pos u]{_0}[) j]{_1}[ u]{_1}[)] ... [)] ... [)
        j]{_n}[ u]{_n}
-@@ -339,7 +339,7 @@ module String : sig
+@@ -343,7 +343,7 @@ module String : sig
        long. The default value for [pos] is [0] and [len] is
        [String.length s - pos]. *)
  
@@ -36,7 +36,7 @@
    (** [fold_utf_16be f a s ?pos ?len ()] is
        [f (] ... [(f (f a pos u]{_0}[) j]{_1}[ u]{_1}[)] ... [)] ... [)
        j]{_n}[ u]{_n}
-@@ -348,7 +348,7 @@ module String : sig
+@@ -352,7 +352,7 @@ module String : sig
        long. The default value for [pos] is [0] and [len] is
        [String.length s - pos]. *)
  

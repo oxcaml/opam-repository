@@ -29,7 +29,7 @@
      loop empty (Some 0)
 --- a/src/parser.ml
 +++ b/src/parser.ml
-@@ -23,6 +23,10 @@
+@@ -22,6 +22,10 @@
  (** Raised when a parser fails, used for control flow rather than error
      handling *)
  
@@ -40,7 +40,7 @@
  (** Stateful parser combinators *)
  module P : sig
    type state
-@@ -966,9 +970,16 @@
+@@ -965,9 +969,16 @@
  
    let rec parse_emph = function
      | (Emph (pre, _, q1, n1) as x1) :: xs when is_opener x1 ->
@@ -60,7 +60,7 @@
                (* At this point we have an openener followed by a closer. Both are of the same style (either * or _) *)
                if (is_opener x2 || is_closer x1) && not (is_emph_match n1 n2)
                then
-@@ -987,9 +998,10 @@
+@@ -986,9 +997,10 @@
                   *)
                  match find_next_emph xs1 with
                  | Some (_, _, _, n3) when is_emph_match n3 n2 ->
@@ -74,7 +74,7 @@
                else
                  let xs =
                    if n1 >= 2 && n2 >= 2 then
-@@ -1010,7 +1022,7 @@
+@@ -1009,7 +1021,7 @@
                    else r
                  in
                  parse_emph r
@@ -83,7 +83,7 @@
                (*
                 This case happens when we encounter a second opener delimiter. We look ahead for the next closer,
                 and if the next closer is of the same style, we can match them together.
-@@ -1029,12 +1041,12 @@
+@@ -1028,12 +1040,12 @@
                  | None -> false
                  | Some (_, _, q3, _) -> q2 = q3
                in
@@ -100,7 +100,7 @@
      | x :: xs -> x :: parse_emph xs
      | [] -> []
  
-@@ -1883,7 +1895,8 @@
+@@ -1882,7 +1894,8 @@
          junk st;
          Buffer.add_char buf c;
          loop ~seen_link acc st

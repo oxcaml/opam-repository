@@ -2,7 +2,7 @@ diff --git a/Makefile b/Makefile
 index 3039625..1344f79 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -412,10 +412,22 @@ endif
+@@ -417,10 +417,22 @@ endif
 
  # The generic rules
 

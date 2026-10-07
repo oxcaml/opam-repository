@@ -106,7 +106,7 @@
  end
 --- a/src-unix/notty_unix.mli
 +++ b/src-unix/notty_unix.mli
-@@ -130,7 +130,7 @@
+@@ -131,7 +131,7 @@
        listeners without conflicting with the rest of the machinery. *)
    module Winch : sig
  
@@ -115,7 +115,7 @@
      (** [add fd f] registers a [SIGWINCH] handler. Every time the signal is
          delivered, [f] is called with the current size of the tty backing [fd].
          If [fd] is not a tty, [f] is never called.
-@@ -213,7 +213,7 @@
+@@ -214,7 +214,7 @@
  
    val cap_for_fd        : Unix.file_descr -> Cap.t
    val setup_tcattr      : nosig:bool -> Unix.file_descr -> [ `Revert of (unit -> unit) ]

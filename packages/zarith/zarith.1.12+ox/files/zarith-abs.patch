@@ -1,6 +1,6 @@
 --- a/q.ml
 +++ b/q.ml
-@@ -303,8 +303,7 @@ let neg x =
+@@ -299,8 +299,7 @@ let neg x =
     neg -inf = inf
   *)
  

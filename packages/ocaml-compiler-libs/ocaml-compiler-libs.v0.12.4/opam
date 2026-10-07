@@ -37,4 +37,4 @@ url {
 }
 x-commit-hash: "8cd12f18bb7171c2b67d661868c4271fae528d93"
 patches: ["read_cma.patch"]
-extra-files: [ ["read_cma.patch" "md5=d8c73cfb994e22c3a235f45cf09511bd"] ]
+extra-files: [ ["read_cma.patch" "md5=1e77aa7533db75d511295e2b72dffb06"] ]

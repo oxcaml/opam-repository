@@ -70,7 +70,7 @@
        & info [ "ofs" ] ~docs:filesystem_section ~docv:"FILE" ~doc)
    in
    let effects =
-@@ -454,11 +454,11 @@
+@@ -447,11 +447,11 @@
        ^ "One can refer to path relative to Findlib packages with "
        ^ "the syntax '+pkg_name/file.js'"
      in
@@ -84,7 +84,7 @@
    in
    let noruntime =
      let doc = "Do not include the standard runtime." in
-@@ -488,7 +488,7 @@
+@@ -481,7 +481,7 @@
    in
    let sourcemap_root =
      let doc = "root dir for source map." in
@@ -93,7 +93,7 @@
    in
    let toplevel =
      let doc =
-@@ -526,13 +526,13 @@
+@@ -519,13 +519,13 @@
    let include_dirs =
      let doc = "Add [$(docv)] to the list of include directories." in
      Arg.(
@@ -109,7 +109,7 @@
        & info [ "file" ] ~docs:filesystem_section ~docv:"FILE" ~doc)
    in
    let fs_external =
-@@ -560,7 +560,7 @@
+@@ -553,7 +553,7 @@
      let doc = "Output the filesystem to [$(docv)]." in
      Arg.(
        value

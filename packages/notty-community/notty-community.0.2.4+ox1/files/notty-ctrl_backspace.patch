@@ -1,6 +1,6 @@
 --- a/src/notty.ml
 +++ b/src/notty.ml
-@@ -734,7 +734,8 @@
+@@ -766,7 +766,8 @@
      | Uchar u -> Some (`Key (`Uchar u, []))
  
      | C0 '\x1b'        -> key `Escape []

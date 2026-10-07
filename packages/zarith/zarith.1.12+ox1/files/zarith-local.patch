@@ -1,6 +1,6 @@
 --- a/q.ml
 +++ b/q.ml
-@@ -16,8 +16,8 @@
+@@ -17,8 +17,8 @@
   *)
 
  type t = {
@@ -46,7 +46,7 @@
 
 --- a/q.mli
 +++ b/q.mli
-@@ -21,8 +21,8 @@
+@@ -22,8 +22,8 @@
  (** {1 Types} *)
 
  type t = {
@@ -184,8 +184,8 @@
  (** [of_substring_base base s ~pos ~len] is the same as [of_string_base
      base (String.sub s pos len)]
 @@ -611,7 +611,7 @@ external to_bits: t -> string = "ml_z_to_bits"
-    The sign is not stored in the string.
- *)
+     The sign is not stored in the string.
+  *)
 
 -external of_bits: string -> t = "ml_z_of_bits"
 +external of_bits: string @ local -> t = "ml_z_of_bits"
