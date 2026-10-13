@@ -8,6 +8,32 @@ index 123c5cfd7b..de31c9177f 100644
  
  val find_opt : f:('a -> bool) -> 'a t -> 'a option
  val equal : ('a -> 'a -> bool) -> 'a t -> 'a t -> bool
+diff --git a/otherlibs/stdune/src/option.ml b/otherlibs/stdune/src/option.ml
+index 93ecc45..b1267bd 100644
+--- a/otherlibs/stdune/src/option.ml
++++ b/otherlibs/stdune/src/option.ml
+@@ -1,6 +1,4 @@
+-type 'a t = 'a option =
+-  | None
+-  | Some of 'a
++type 'a t = 'a option
+ 
+ module O = struct
+   let ( >>| ) t f =
+diff --git a/otherlibs/stdune/src/option.mli b/otherlibs/stdune/src/option.mli
+index bd6a0c4..5f9e0d9 100644
+--- a/otherlibs/stdune/src/option.mli
++++ b/otherlibs/stdune/src/option.mli
+@@ -1,8 +1,6 @@
+ (** Optional values *)
+ 
+-type 'a t = 'a option =
+-  | None
+-  | Some of 'a
++type 'a t = 'a option
+ 
+ module O : sig
+   val ( >>| ) : 'a t -> ('a -> 'b) -> 'b t
 diff --git a/otherlibs/stdune/src/string.ml b/otherlibs/stdune/src/string.ml
 index 1234567..abcdefg 100644
 --- a/otherlibs/stdune/src/string.ml
