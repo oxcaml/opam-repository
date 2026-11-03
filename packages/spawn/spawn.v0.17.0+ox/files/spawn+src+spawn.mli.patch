@@ -1,0 +1,23 @@
+--- a/src/spawn.mli
++++ b/src/spawn.mli
+@@ -1,8 +1,8 @@
++@@ portable
++
+ (** Mini spawn library *)
+ 
+-(** Note: on Unix, spawn uses vfork by default. It has been tested, but if you
+-    believe this is causing a problem in your application, you can change this
+-    default at runtime by setting the environment variable [SPAWN_USE_FORK]. *)
++(** Note: on Unix, spawn uses vfork by default. It has been tested, but if you believe this is causing a problem in your application, you can change this default at runtime by setting the environment variable [SPAWN_USE_FORK]. *)
+ 
+ module Working_dir : sig
+   type t =
+@@ -36,7 +36,7 @@
+   (** Representation of the second parameter to [setpgid]. If a value of this
+       type is provided to [spawn], the child will immediately set its pgid
+       accordingly. *)
+-  type t
++  type t : immediate
+ 
+   (** Sets the child's pgid to the same as its process id. Equivalent to calling
+       [setpgid(0, 0)]. *)

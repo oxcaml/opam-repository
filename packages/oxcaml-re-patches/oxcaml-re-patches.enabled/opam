@@ -12,6 +12,7 @@ depends: [
   "oxcaml" {post}
   "re" {build & (
           = "1.14.0+ox"
+        | = "1.14.0+ox1"
         )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

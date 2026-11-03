@@ -1,0 +1,2047 @@
+diff --git a/lib/angstrom.ml b/lib/angstrom.ml
+--- a/lib/angstrom.ml
++++ b/lib/angstrom.ml
+@@ -62,6 +62,11 @@
+ include Parser.Monad
+ include Parser.Choice
+ 
++module%template [@modality p = (portable, nonportable)] Operators = struct
++  include Monad.Operators [@modality p]
++  include Choice [@modality p]
++end
++
+ module Buffered = struct
+   type unconsumed = Buffering.unconsumed =
+     { buf : bigstring
+@@ -191,6 +196,7 @@
+   { run = fun input pos more _fail succ ->
+     succ input (pos + len) more (Input.apply input pos len ~f)
+   }
++[@@mode p = (portable, nonportable)]
+ 
+ let unsafe_apply_opt len ~f =
+   { run = fun input pos more fail succ ->
+@@ -206,6 +212,7 @@
+     else
+       let succ' input' pos' more' () = p.run input' pos' more' fail succ in
+       ensure_suspended n input pos more fail succ' }
++[@@mode p = (portable, nonportable)]
+ 
+ (** END: getting input *)
+ 
+@@ -222,6 +229,7 @@
+   }
+ 
+ let end_of_input =
++  let open Operators [@mode portable] in
+   at_end_of_input
+   >>= function
+     | true  -> return ()
+@@ -234,7 +242,7 @@
+     let p =
+       { run = fun input pos more _fail succ -> succ input (pos + n) more () }
+     in
+-    ensure n p
++    (ensure [@mode portable]) n p
+ 
+ let pos =
+   { run = fun input pos more _fail succ -> succ input pos more pos }
+@@ -254,6 +262,7 @@
+   { run = fun input pos more fail succ ->
+     let succ' input' _ more' v = succ input' pos more' v in
+     p.run input pos more fail succ' }
++[@@mode p = (portable, nonportable)]
+ 
+ let peek_char =
+   { run = fun input pos more _fail succ ->
+@@ -294,6 +303,7 @@
+         else Printf.ksprintf (fail input' pos' more' []) "satisfy: %C" c
+       in
+       ensure_suspended 1 input pos more fail succ' }
++[@@mode p = (portable, nonportable)]
+ 
+ let char c =
+   let p =
+@@ -302,7 +312,7 @@
+       then succ input (pos + 1) more c
+       else fail input pos more [] (Printf.sprintf "char %C" c) }
+   in
+-  ensure 1 p
++  (ensure [@mode portable]) 1 p
+ 
+ let not_char (c : char) =
+   let p =
+@@ -312,14 +322,14 @@
+       then succ input (pos + 1) more c'
+       else fail input pos more [] (Printf.sprintf "not char %C" c) }
+   in
+-  ensure 1 p
++  (ensure [@mode portable]) 1 p
+ 
+ let any_char =
+   let p =
+     { run = fun input pos more _fail succ ->
+       succ input (pos + 1) more (Input.unsafe_get_char input pos)  }
+   in
+-  ensure 1 p
++  (ensure [@mode portable]) 1 p
+ 
+ let int8 i =
+   let p =
+@@ -329,7 +339,7 @@
+       then succ input (pos + 1) more c
+       else fail input pos more [] (Printf.sprintf "int8 %d" i) }
+   in
+-  ensure 1 p
++  (ensure [@mode portable]) 1 p
+ 
+ let any_uint8 =
+   let p =
+@@ -337,7 +347,7 @@
+       let c = Input.unsafe_get_char input pos in
+       succ input (pos + 1) more (Char.code c) }
+   in
+-  ensure 1 p
++  (ensure [@mode portable]) 1 p
+ 
+ let any_int8 =
+   (* https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtendRisky *)
+@@ -347,7 +357,10 @@
+       let c = Input.unsafe_get_char input pos in
+       succ input (pos + 1) more ((Char.code c lsl s) asr s) }
+   in
+-  ensure 1 p
++  (ensure [@mode portable]) 1 p
++
++[%%template
++[@@@mode.default p = (portable, nonportable)]
+ 
+ let skip f =
+   let p =
+@@ -356,7 +369,7 @@
+       then succ input (pos + 1) more ()
+       else fail input pos more [] "skip" }
+   in
+-  ensure 1 p
++  (ensure [@mode p]) 1 p
+ 
+ let rec count_while ~init ~f ~with_buffer =
+   { run = fun input pos more fail succ ->
+@@ -369,7 +382,7 @@
+     then succ input (pos + init') more (Input.apply input pos init' ~f:with_buffer)
+     else
+       let succ' input' pos' more' =
+-        (count_while ~init:init' ~f ~with_buffer).run input' pos' more' fail succ
++        ((count_while [@mode p]) ~init:init' ~f ~with_buffer).run input' pos' more' fail succ
+       and fail' input' pos' more' =
+         succ input' (pos' + init') more' (Input.apply input' pos' init' ~f:with_buffer)
+       in
+@@ -388,7 +401,7 @@
+       then fail input pos more [] "count_while1"
+       else
+         let succ' input' pos' more' =
+-          (count_while1 ~f ~with_buffer).run input' pos' more' fail succ
++          ((count_while1 [@mode p]) ~f ~with_buffer).run input' pos' more' fail succ
+         and fail' input' pos' more' =
+           fail input' pos' more' [] "count_while1"
+         in
+@@ -397,18 +410,19 @@
+     then succ input (pos + len) more (Input.apply input pos len ~f:with_buffer)
+     else
+       let succ' input' pos' more' =
+-        (count_while ~init:len ~f ~with_buffer).run input' pos' more' fail succ
++        ((count_while [@mode p]) ~init:len ~f ~with_buffer).run input' pos' more' fail succ
+       and fail' input' pos' more' =
+         succ input' (pos' + len) more' (Input.apply input' pos' len ~f:with_buffer)
+       in
+       prompt input pos fail' succ'
+   }
++]
+ 
+-let string_ f s =
++let string_gen ~f ~ok s =
+   (* XXX(seliopou): Inefficient. Could check prefix equality to short-circuit
+    * the io. *)
+   let len = String.length s in
+-  ensure  len (unsafe_apply_opt len ~f:(fun buffer ~off ~len ->
++  (ensure [@mode portable]) len (unsafe_apply_opt len ~f:(fun buffer ~off ~len ->
+     let i = ref 0 in
+     while !i < len && Char.equal (f (Bigstringaf.unsafe_get buffer (off + !i)))
+                                  (f (String.unsafe_get s !i))
+@@ -416,14 +430,17 @@
+       incr i
+     done;
+     if len = !i
+-    then Ok (Bigstringaf.substring buffer ~off ~len)
++    then Ok (ok buffer ~off ~len)
+     else Error "string"))
+ 
++let string_ f s = string_gen ~f ~ok:Bigstringaf.substring s
+ let string s    = string_ (fun x -> x) s
++let string_ignored s = string_gen ~f:(fun x -> x) ~ok:(fun _ ~off:_ ~len:_ -> ()) s
+ let string_ci s = string_ Char.lowercase_ascii s
+ 
+ let skip_while f =
+-  count_while ~init:0 ~f ~with_buffer:(fun _ ~off:_ ~len:_ -> ())
++  (count_while [@mode p]) ~init:0 ~f ~with_buffer:(fun _ ~off:_ ~len:_ -> ())
++[@@mode p = (portable, nonportable)]
+ 
+ let bigstringaf_substring s ~off ~len =
+   Bigstringaf.substring s ~off ~len
+@@ -436,50 +453,84 @@
+   then fail "take: n < 0"
+   else
+     let n = max n 0 in
+-    ensure n (unsafe_apply n ~f:bigstringaf_substring)
++    (ensure [@mode portable]) n ((unsafe_apply [@mode portable]) n ~f:bigstringaf_substring)
+ 
+ let take_bigstring n =
+   if n < 0
+   then fail "take_bigstring: n < 0"
+   else
+     let n = max n 0 in
+-    ensure n (unsafe_apply n ~f:bigstringaf_copy)
++    (ensure [@mode portable]) n ((unsafe_apply [@mode portable]) n ~f:bigstringaf_copy)
++
++[%%template
++[@@@mode.default p = (portable, nonportable)]
+ 
+ let take_bigstring_while f =
+-  count_while ~init:0 ~f ~with_buffer:bigstringaf_copy
++  (count_while [@mode p]) ~init:0 ~f ~with_buffer:bigstringaf_copy
+ 
+ let take_bigstring_while1 f =
+-  count_while1 ~f ~with_buffer:bigstringaf_copy
++  (count_while1 [@mode p]) ~f ~with_buffer:bigstringaf_copy
+ 
+ let take_bigstring_till f =
+-  take_bigstring_while (fun c -> not (f c))
++  (take_bigstring_while [@mode p]) (fun c -> not (f c))
++]
+ 
+ let peek_string n =
+-  unsafe_lookahead (take n)
++  (unsafe_lookahead [@mode portable]) (take n)
++
++[%%template
++[@@@mode.default p = (portable, nonportable)]
+ 
+ let take_while f =
+-  count_while ~init:0 ~f ~with_buffer:bigstringaf_substring
++  (count_while [@mode p]) ~init:0 ~f ~with_buffer:bigstringaf_substring
+ 
+ let take_while1 f =
+-  count_while1 ~f ~with_buffer:bigstringaf_substring
++  (count_while1 [@mode p]) ~f ~with_buffer:bigstringaf_substring
+ 
+ let take_till f =
+-  take_while (fun c -> not (f c))
++  (take_while [@mode p]) (fun c -> not (f c))
+ 
+-let choice ?(failure_msg="no more choices") ps =
+-  List.fold_right (<|>) ps (fail failure_msg)
++let rec choice ?(failure_msg="no more choices") ps =
++  let open Operators [@mode p] in
++  match ps with
++  | []      -> fail failure_msg
++  | hd :: tl -> hd <|> (choice [@mode p]) ~failure_msg tl
++]
+ 
+ let notset = { run = fun _buf _pos _more _fail _succ -> failwith "Angstrom.fix_direct not set" }
+ 
+-let fix_direct f =
++let fix_direct f : _ t @ p =
+   let rec p = ref notset
+   and r = { run = fun buf pos more fail succ ->
+     (!p).run buf pos more fail succ }
+   in
+   p := f r;
+   r
++[@@mode p = nonportable]
++
++let fix_direct f : _ t @ p =
++  let r p =
++    { run =
++        (fun buf pos more fail succ ->
++          (Base.Portable_lazy.force p).run buf pos more fail succ)
++    }
++  in
++  let p = Base.Portable_lazy.from_fun_fixed (fun p -> f (r p)) in
++  r p
++[@@mode p = portable]
++
++let fix_lazy ~max_steps:_ f : _ t @ p =
++  let r p =
++    { run =
++        (fun buf pos more fail succ ->
++          State.Lazy (lazy ((Base.Portable_lazy.force p).run buf pos more fail succ)))
++    }
++  in
++  let p = Base.Portable_lazy.from_fun_fixed (fun p -> f (r p)) in
++  r p
++[@@mode p = portable]
+ 
+-let fix_lazy ~max_steps f =
++let fix_lazy ~max_steps f : _ t @ p =
+   let steps = ref max_steps in
+   let rec p = lazy (f r)
+   and r = { run = fun buf pos more fail succ ->
+@@ -493,64 +544,94 @@
+           }
+   in
+   r
++[@@mode p = nonportable]
+ 
+-let fix = match Sys.backend_type with
+-  | Native -> fix_direct
+-  | Bytecode -> fix_direct
+-  | Other _ -> fun f -> fix_lazy ~max_steps:20 f
++let cons x xs = x :: xs
++let return__cocontended = return__cocontended
+ 
+-let option x p =
+-  p <|> return x
++let empty_list : type a. a list t @ portable =
++  { run = fun input pos more _fail succ -> succ input pos more [] }
+ 
+-let cons x xs = x :: xs
++let unit = (return [@mode portable]) ()
+ 
+-let rec list ps =
+-  match ps with
+-  | []    -> return []
+-  | p::ps -> lift2 cons p (list ps)
++include%template struct
++  [@@@mode p = (portable, nonportable)]
+ 
+-let count n p =
+-  if n < 0
+-  then fail "count: n < 0"
+-  else
+-    let rec loop = function
+-      | 0 -> return []
+-      | n -> lift2 cons p (loop (n - 1))
+-    in
+-    loop n
++  let fix = match Sys.backend_type with
++    | Native -> fix_direct [@mode p]
++    | Bytecode -> fix_direct [@mode p]
++    | Other _ -> fun f -> (fix_lazy [@mode p]) ~max_steps:20 f
+ 
+-let many p =
+-  fix (fun m ->
+-    (lift2 cons p m) <|> return [])
+-
+-let many1 p =
+-  lift2 cons p (many p)
+-
+-let many_till p t =
+-  fix (fun m ->
+-    (t *> return []) <|> (lift2 cons p m))
+-
+-let sep_by1 s p =
+-  fix (fun m ->
+-    lift2 cons p ((s *> m) <|> return []))
+-
+-let sep_by s p =
+-  (lift2 cons p ((s *> sep_by1 s p) <|> return [])) <|> return []
+-
+-let skip_many p =
+-  fix (fun m ->
+-      ((p >>| fun _ -> true) <|> return false) >>= function
+-      | true -> m
+-      | false -> return ()
+-    )
++  open Operators [@mode p]
+ 
+-let skip_many1 p =
+-  p *> skip_many p
++  let option x p =
++    p <|> return x
++
++  let rec list : type a. a t list @ p -> a list t @ p = function
++    | []    -> empty_list
++    | p::ps -> lift2 cons p (list ps)
++
++  let count n p =
++    if n < 0
++    then fail "count: n < 0"
++    else
++      let rec loop = function
++        | 0 -> empty_list
++        | n -> lift2 cons p (loop (n - 1))
++      in
++      loop n
++
++  let many p =
++    fix (fun m ->
++      (lift2 cons p m) <|> empty_list)
++
++  let many1 p =
++    lift2 cons p (many p)
++
++  let many_till p t =
++    fix (fun m ->
++      (t *> empty_list) <|> (lift2 cons p m))
++
++  let sep_by1 s p =
++    fix (fun m ->
++      lift2 cons p ((s *> m) <|> empty_list))
++
++  let sep_by s p =
++    (lift2 cons p ((s *> sep_by1 s p) <|> empty_list)) <|> empty_list
++
++  let skip_many p =
++    fix (fun m ->
++        ((p >>| fun _ -> true) <|> return false) >>= function
++        | true -> m
++        | false -> unit
++      )
++
++  let skip_many1 p =
++    p *> skip_many p
++
++  [@@@mode.default p = p]
++
++  let fix = fix
++  let option = option
++  let list = list
++  let count = count
++  let many = many
++  let many1 = many1
++  let many_till = many_till
++  let sep_by1 = sep_by1
++  let sep_by = sep_by
++  let skip_many = skip_many
++  let skip_many1 = skip_many1
++end
+ 
+ let end_of_line =
+-  (char '\n' *> return ()) <|> (string "\r\n" *> return ()) <?> "end_of_line"
++  let open Operators [@mode portable] in
++  (char '\n' *> unit) <|> (string "\r\n" *> unit) <?> "end_of_line"
++
++[%%template
++[@@@mode.default (p, c) = ((portable, contended), (nonportable, uncontended))]
+ 
+-let scan_ state f ~with_buffer =
++let scan_ (type state : value mod c) (state : state) f ~with_buffer : _ t @ p =
+   { run = fun input pos more fail succ ->
+     let state = ref state in
+     let parser =
+@@ -564,14 +645,16 @@
+     parser.run input pos more fail succ }
+ 
+ let scan state f =
+-  scan_ state f ~with_buffer:Bigstringaf.substring
++  (scan_ [@mode p]) state f ~with_buffer:Bigstringaf.substring
+ 
+ let scan_state state f =
+-  scan_ state f ~with_buffer:(fun _ ~off:_ ~len:_ -> ())
++  let open Operators [@mode p] in
++  (scan_ [@mode p]) state f ~with_buffer:(fun _ ~off:_ ~len:_ -> ())
+   >>| fun ((), state) -> state
+ 
+ let scan_string state f =
+-  scan state f >>| fst
++  let open Operators [@mode p] in
++  (scan [@mode p]) state f >>| fst
+ 
+ let consume_with p f =
+   { run = fun input pos more fail succ ->
+@@ -588,37 +671,44 @@
+     p.run input pos more fail succ'
+   }
+ 
+-let consumed           p = consume_with p bigstringaf_substring
+-let consumed_bigstring p = consume_with p bigstringaf_copy
++let consumed           p = (consume_with [@mode p]) p bigstringaf_substring
++let consumed_bigstring p = (consume_with [@mode p]) p bigstringaf_copy
+ 
+-let both a b = lift2 (fun a b -> a, b) a b
+-let map t ~f = t >>| f
+-let bind t ~f = t >>= f
+-let map2 a b ~f = lift2 f a b
+-let map3 a b c ~f = lift3 f a b c
+-let map4 a b c d ~f = lift4 f a b c d
++let both a b = (lift2 [@mode p]) (fun a b -> a, b) a b
++let map t ~f = let open Operators [@mode p] in t >>| f
++let bind t ~f = let open Operators [@mode p] in t >>= f
++let map2 a b ~f = (lift2 [@mode p]) f a b
++let map3 a b c ~f = (lift3 [@mode p]) f a b c
++let map4 a b c d ~f = (lift4 [@mode p]) f a b c d
+ 
+ module Let_syntax = struct
++  open Operators [@mode p]
++
+   let return = return
+   let ( >>| ) = ( >>| )
+   let ( >>= ) = ( >>= )
+ 
+   module Let_syntax = struct
+     let return = return
+-    let map = map
+-    let bind = bind
+-    let both = both
+-    let map2 = map2
+-    let map3 = map3
+-    let map4 = map4
++    let map = (map [@mode p])
++    let bind = (bind [@mode p])
++    let both = (both [@mode p])
++    let map2 = (map2 [@mode p])
++    let map3 = (map3 [@mode p])
++    let map4 = (map4 [@mode p])
+   end
+-end
++end]
+ 
+ let ( let+ ) = ( >>| )
+ let ( let* ) = ( >>= )
+ let ( and+ ) = both
+ 
+ module BE = struct
++  open struct
++    let ensure = (ensure [@mode portable])
++    let unsafe_apply = (unsafe_apply [@mode portable])
++  end
++
+   (* XXX(seliopou): The pattern in both this module and [LE] are a compromise
+    * between efficiency and code reuse. By inlining [ensure] you can recover
+    * about 2 nanoseconds on average. That may add up in certain applications.
+@@ -675,6 +765,11 @@
+ end
+ 
+ module LE = struct
++  open struct
++    let ensure = (ensure [@mode portable])
++    let unsafe_apply = (unsafe_apply [@mode portable])
++  end
++
+   let int16 n =
+     let bytes = 2 in
+     let p =
+@@ -725,22 +820,24 @@
+     ensure 8 (unsafe_apply 8 ~f:(fun bs ~off ~len:_ -> Int64.float_of_bits (Bigstringaf.unsafe_get_int64_le bs off)))
+ end
+ 
+-module Unsafe = struct
++module%template Unsafe = struct
++  [@@@mode.default (p, c) = ((nonportable, uncontended), (portable, contended))]
++
+   let take n f =
+     let n = max n 0 in
+-    ensure n (unsafe_apply n ~f)
++    (ensure [@mode p]) n ((unsafe_apply [@mode p]) n ~f)
+ 
+   let peek n f =
+-    unsafe_lookahead (take n f)
++    (unsafe_lookahead [@mode p]) ((take [@mode p]) n f)
+ 
+   let take_while check f =
+-    count_while ~init:0 ~f:check ~with_buffer:f
++    (count_while [@mode p]) ~init:0 ~f:check ~with_buffer:f
+ 
+   let take_while1 check f =
+-    count_while1 ~f:check ~with_buffer:f
++    (count_while1 [@mode p]) ~f:check ~with_buffer:f
+ 
+   let take_till check f =
+-    take_while (fun c -> not (check c)) f
++    (take_while [@mode p]) (fun c -> not (check c)) f
+ end
+ 
+ module Consume = struct
+@@ -764,4 +861,85 @@
+   parse_bigstring ~consume p bs
+ ]
+ 
+-module Portable = Angstrom__portable
++module%template Portable = struct
++  [@@@mode p = portable, c = contended]
++
++  type nonrec 'a t = 'a t
++
++  module Operators = Operators [@mode p]
++  module Let_syntax = Let_syntax [@mode p]
++  include Operators
++
++  module Unsafe = struct
++    open Unsafe
++
++    let take = (take [@mode p])
++    let take_while = (take_while [@mode p])
++    let take_while1 = (take_while1 [@mode p])
++    let take_till = (take_till [@mode p])
++    let peek = (peek [@mode p])
++  end
++
++  let parse_bigstring = parse_bigstring
++  let parse_string = parse_string
++  let peek_char = peek_char
++  let peek_char_fail = peek_char_fail
++  let peek_string = peek_string
++  let char = char
++  let not_char = not_char
++  let any_char = any_char
++  let satisfy = (satisfy [@mode p])
++  let string = string
++  let string_ignored = string_ignored
++  let string_ci = string_ci
++  let skip = (skip [@mode p])
++  let skip_while = (skip_while [@mode p])
++  let take = take
++  let take_while = (take_while [@mode p])
++  let take_while1 = (take_while1 [@mode p])
++  let take_till = (take_till [@mode p])
++  let consumed = (consumed [@mode p])
++  let take_bigstring = take_bigstring
++  let take_bigstring_while = (take_bigstring_while [@mode p])
++  let take_bigstring_while1 = (take_bigstring_while1 [@mode p])
++  let take_bigstring_till = (take_bigstring_till [@mode p])
++  let consumed_bigstring = (consumed_bigstring [@mode p])
++  let advance = advance
++  let end_of_line = end_of_line
++  let at_end_of_input = at_end_of_input
++  let end_of_input = end_of_input
++  let scan = (scan [@mode p])
++  let scan_state = (scan_state [@mode p])
++  let scan_string = (scan_string [@mode p])
++
++  module BE = BE
++  module LE = LE
++
++  let int8 = int8
++  let any_uint8 = any_uint8
++  let any_int8 = any_int8
++  let pos = pos
++  let available = available
++  let option = (option [@mode p])
++  let list = (list [@mode p])
++  let count = (count [@mode p])
++  let many = (many [@mode p])
++  let many1 = (many1 [@mode p])
++  let many_till = (many_till [@mode p])
++  let sep_by = (sep_by [@mode p])
++  let sep_by1 = (sep_by1 [@mode p])
++  let skip_many = (skip_many [@mode p])
++  let skip_many1 = (skip_many1 [@mode p])
++  let fix = (fix [@mode p])
++  let fix_lazy = (fix_lazy [@mode p])
++  let choice = (choice [@mode p])
++  let commit = commit
++  let return = (return [@mode cc]) [@@mode cc = cocontended]
++  let fail = fail
++  let bind = (bind [@mode p])
++  let both = (both [@mode p])
++  let map = (map [@mode p])
++  let map2 = (map2 [@mode p])
++  let map3 = (map3 [@mode p])
++  let map4 = (map4 [@mode p])
++end
+diff --git a/lib/angstrom.mli b/lib/angstrom.mli
+--- a/lib/angstrom.mli
++++ b/lib/angstrom.mli
+@@ -1,3 +1,5 @@
++@@ portable
++
+ (*----------------------------------------------------------------------------
+     Copyright (c) 2016 Inhabited Type LLC.
+ 
+@@ -32,8 +34,6 @@
+   ----------------------------------------------------------------------------*)
+ 
+ [%%template:
+-[@@@mode p = nonportable, c = uncontended]
+-
+ (** Parser combinators built for speed and memory-efficiency.
+ 
+     Angstrom is a parser-combinator library that provides monadic and
+@@ -47,171 +47,181 @@
+     reusable parsers suitable for high-performance applications. *)
+ 
+ 
+-type +'a t : value mod c p
++type +'a t : value mod contended
+ (** A parser for values of type ['a]. *)
+ 
+ 
+ type bigstring = Bigstringaf.t
+ 
++[%%template:
++[@@@mode.default (p, c) = ((portable, contended), (nonportable, uncontended))]
++[@@@kind k = value mod c]
++
+ (** {2 Basic parsers} *)
+ 
+-val peek_char : char option t
++val peek_char : char option t [@@mode]
+ (** [peek_char] accepts any char and returns it, or returns [None] if the end
+     of input has been reached.
+ 
+     This parser does not advance the input. Use it for lookahead. *)
+ 
+-val peek_char_fail : char t
++val peek_char_fail : char t [@@mode]
+ (** [peek_char_fail] accepts any char and returns it. If end of input has been
+     reached, it will fail.
+ 
+     This parser does not advance the input. Use it for lookahead. *)
+ 
+-val peek_string : int -> string t
++val peek_string : int -> string t @ portable [@@mode]
+ (** [peek_string n] accepts exactly [n] characters and returns them as a
+     string. If there is not enough input, it will fail.
+ 
+     This parser does not advance the input. Use it for lookahead. *)
+ 
+-val char : char -> char t
++val char : char -> char t @ portable [@@mode]
+ (** [char c] accepts [c] and returns it. *)
+ 
+-val not_char : char -> char t
++val not_char : char -> char t @ portable [@@mode]
+ (** [not_char] accepts any character that is not [c] and returns the matched
+     character. *)
+ 
+-val any_char : char t
++val any_char : char t [@@mode]
+ (** [any_char] accepts any character and returns it. *)
+ 
+-val satisfy : (char -> bool) @ p -> char t
++val satisfy : (char -> bool) @ p -> char t @ p
+ (** [satisfy f] accepts any character for which [f] returns [true] and
+     returns the accepted character. In the case that none of the parser
+     succeeds, then the parser will fail indicating the offending
+     character. *)
+ 
+-val string : string -> string t
++val string : string -> string t @ portable [@@mode]
+ (** [string s] accepts [s] exactly and returns it. *)
+ 
+-val string_ci : string -> string t
++val string_ignored : string -> unit t @ portable [@@mode]
++(** [string_ignored s] accepts [s] exactly and returns [unit]. It is
++    semantically equivalent to [string s *> return unit], but does not
++    allocate the string. *)
++
++val string_ci : string -> string t @ portable [@@mode]
+ (** [string_ci s] accepts [s], ignoring case, and returns the matched string,
+     preserving the case of the original input. *)
+ 
+-val skip : (char -> bool) @ p -> unit t
++val skip : (char -> bool) @ p -> unit t @ p
+ (** [skip f] accepts any character for which [f] returns [true] and discards
+     the accepted character. [skip f] is equivalent to [satisfy f] but discards
+     the accepted character. *)
+ 
+-val skip_while : (char -> bool) @ p -> unit t
++val skip_while : (char -> bool) @ p -> unit t @ p
+ (** [skip_while f] accepts input as long as [f] returns [true] and discards
+     the accepted characters. *)
+ 
+-val take : int -> string t
++val take : int -> string t @ portable [@@mode]
+ (** [take n] accepts exactly [n] characters of input and returns them as a
+     string. *)
+ 
+-val take_while : (char -> bool) @ p -> string t
++val take_while : (char -> bool) @ p -> string t @ p
+ (** [take_while f] accepts input as long as [f] returns [true] and returns the
+     accepted characters as a string.
+ 
+     This parser does not fail. If [f] returns [false] on the first character,
+     it will return the empty string. *)
+ 
+-val take_while1 : (char -> bool) @ p -> string t
++val take_while1 : (char -> bool) @ p -> string t @ p
+ (** [take_while1 f] accepts input as long as [f] returns [true] and returns the
+     accepted characters as a string.
+ 
+     This parser requires that [f] return [true] for at least one character of
+     input, and will fail otherwise. *)
+ 
+-val take_till : (char -> bool) @ p -> string t
++val take_till : (char -> bool) @ p -> string t @ p
+ (** [take_till f] accepts input as long as [f] returns [false] and returns the
+     accepted characters as a string.
+ 
+     This parser does not fail. If [f] returns [true] on the first character, it
+     will return the empty string. *)
+ 
+-val consumed : _ t -> string t
++val consumed : _ t @ p -> string t @ p
+ (** [consumed p] runs [p] and returns the contents that were consumed during the
+     parsing as a string *)
+ 
+-val take_bigstring : int -> bigstring t
++val take_bigstring : int -> bigstring t @ portable [@@mode]
+ (** [take_bigstring n] accepts exactly [n] characters of input and returns them
+     as a newly allocated bigstring. *)
+ 
+-val take_bigstring_while : (char -> bool) @ p -> bigstring t
++val take_bigstring_while : (char -> bool) @ p -> bigstring t @ p
+ (** [take_bigstring_while f] accepts input as long as [f] returns [true] and
+     returns the accepted characters as a newly allocated bigstring.
+ 
+     This parser does not fail. If [f] returns [false] on the first character,
+     it will return the empty bigstring. *)
+ 
+-val take_bigstring_while1 : (char -> bool) @ p -> bigstring t
++val take_bigstring_while1 : (char -> bool) @ p -> bigstring t @ p
+ (** [take_bigstring_while1 f] accepts input as long as [f] returns [true] and
+     returns the accepted characters as a newly allocated bigstring.
+ 
+     This parser requires that [f] return [true] for at least one character of
+     input, and will fail otherwise. *)
+ 
+-val take_bigstring_till : (char -> bool) @ p -> bigstring t
++val take_bigstring_till : (char -> bool) @ p -> bigstring t @ p
+ (** [take_bigstring_till f] accepts input as long as [f] returns [false] and
+     returns the accepted characters as a newly allocated bigstring.
+ 
+     This parser does not fail. If [f] returns [true] on the first character, it
+     will return the empty bigstring. *)
+ 
+-val consumed_bigstring : _ t -> bigstring t
++val consumed_bigstring : _ t @ p -> bigstring t @ p
+ (** [consumed p] runs [p] and returns the contents that were consumed during the
+     parsing as a bigstring *)
+ 
+-val advance : int -> unit t
++val advance : int -> unit t @ portable [@@mode]
+ (** [advance n] advances the input [n] characters, failing if the remaining
+     input is less than [n]. *)
+ 
+-val end_of_line : unit t
++val end_of_line : unit t [@@mode]
+ (** [end_of_line] accepts either a line feed [\n], or a carriage return
+     followed by a line feed [\r\n] and returns unit. *)
+ 
+-val at_end_of_input : bool t
++val at_end_of_input : bool t [@@mode]
+ (** [at_end_of_input] returns whether the end of the end of input has been
+     reached. This parser always succeeds. *)
+ 
+-val end_of_input : unit t
++val end_of_input : unit t [@@mode]
+ (** [end_of_input] succeeds if all the input has been consumed, and fails
+     otherwise. *)
+ 
+-val scan : 'state -> ('state -> char -> 'state option) -> (string * 'state) t
++val scan : ('state : k). 'state @ p -> ('state -> char -> 'state option) @ p -> (string * 'state) t @ p
+ (** [scan init f] consumes until [f] returns [None]. Returns the final state
+     before [None] and the accumulated string *)
+ 
+-val scan_state : 'state -> ('state -> char -> 'state option) -> 'state t
++val scan_state : ('state : k). 'state @ p -> ('state -> char -> 'state option) @ p -> 'state t @ p
+ (** [scan_state init f] is like {!scan} but only returns the final state before
+     [None]. Much more efficient than {!scan}. *)
+ 
+-val scan_string : 'state -> ('state -> char -> 'state option) -> string t
++val scan_string : ('state : k). 'state @ p -> ('state -> char -> 'state option) @ p -> string t @ p
+ (** [scan_string init f] is like {!scan} but discards the final state and returns
+     the accumulated string. *)
+ 
+-val int8 : int -> int t
++val int8 : int -> int t @ portable [@@mode]
+ (** [int8 i] accepts one byte that matches the lower-order byte of [i] and
+     returns unit. *)
+ 
+-val any_uint8 : int t
++val any_uint8 : int t [@@mode]
+ (** [any_uint8] accepts any byte and returns it as an unsigned int8. *)
+ 
+-val any_int8 : int t
++val any_int8 : int t [@@mode]
+ (** [any_int8] accepts any byte and returns it as a signed int8. *)
++]
+ 
+ (** Big endian parsers *)
+ module BE : sig
+-  val int16 : int   -> unit t
++  val int16 : int   -> unit t @ portable
+   (** [int16 i] accept two bytes that match the two lower order bytes of [i]
+       and returns unit. *)
+ 
+-  val int32 : int32 -> unit t
++  val int32 : int32 -> unit t @ portable
+   (** [int32 i] accept four bytes that match the four bytes of [i]
+       and returns unit. *)
+ 
+-  val int64 : int64 -> unit t
++  val int64 : int64 -> unit t @ portable
+   (** [int64 i] accept eight bytes that match the eight bytes of [i] and
+       returns unit. *)
+ 
+@@ -235,16 +245,16 @@
+ 
+ (** Little endian parsers *)
+ module LE : sig
+-  val int16 : int   -> unit t
++  val int16 : int   -> unit t @ portable
+   (** [int16 i] accept two bytes that match the two lower order bytes of [i]
+       and returns unit. *)
+ 
+-  val int32 : int32 -> unit t
++  val int32 : int32 -> unit t @ portable
+   (** [int32 i] accept four bytes that match the four bytes of [i]
+       and returns unit. *)
+ 
+-  val int64 : int64 -> unit t
+-  (** [int32 i] accept eight bytes that match the eight bytes of [i] and
++  val int64 : int64 -> unit t @ portable
++  (** [int64 i] accept eight bytes that match the eight bytes of [i] and
+       returns unit. *)
+ 
+   val any_int16 : int t
+@@ -267,48 +277,52 @@
+ end
+ 
+ 
++[%%template:
++[@@@mode.default (p, c) = ((nonportable, uncontended), (portable, contended))]
++[@@@kind k = value mod c]
++
+ (** {2 Combinators} *)
+ 
+-val option : 'a @ p -> 'a t -> 'a t
++val option : ('a : k). 'a @ p -> 'a t @ p -> 'a t @ p
+ (** [option v p] runs [p], returning the result of [p] if it succeeds and [v]
+     if it fails. *)
+ 
+ 
+-val both : 'a t -> 'b t -> ('a * 'b) t
++val both : 'a t @ p -> 'b t @ p -> ('a * 'b) t @ p
+ (** [both p q] runs [p] followed by [q] and returns both results in a tuple *)
+ 
+-val list : 'a t list -> 'a list t
++val list : 'a t list @ p -> 'a list t @ p
+ (** [list ps] runs each [p] in [ps] in sequence, returning a list of results of
+     each [p]. *)
+ 
+-val count : int -> 'a t -> 'a list t
++val count : int -> 'a t @ p -> 'a list t @ p
+ (** [count n p] runs [p] [n] times, returning a list of the results. *)
+ 
+-val many : 'a t -> 'a list t
++val many : 'a t @ p -> 'a list t @ p
+ (** [many p] runs [p] {i zero} or more times and returns a list of results from
+     the runs of [p]. *)
+ 
+-val many1 : 'a t -> 'a list t
++val many1 : 'a t @ p -> 'a list t @ p
+ (** [many1 p] runs [p] {i one} or more times and returns a list of results from
+     the runs of [p]. *)
+ 
+-val many_till : 'a t -> _ t -> 'a list t
++val many_till : 'a t @ p -> _ t @ p -> 'a list t @ p
+ (** [many_till p e] runs parser [p] {i zero} or more times until action [e]
+     succeeds and returns the list of result from the runs of [p]. *)
+ 
+-val sep_by : _ t -> 'a t -> 'a list t
++val sep_by : _ t @ p -> 'a t @ p -> 'a list t @ p
+ (** [sep_by s p] runs [p] {i zero} or more times, interspersing runs of [s] in between. *)
+ 
+-val sep_by1 : _ t -> 'a t -> 'a list t
++val sep_by1 : _ t @ p -> 'a t @ p -> 'a list t @ p
+ (** [sep_by1 s p] runs [p] {i one} or more times, interspersing runs of [s] in between. *)
+ 
+-val skip_many : _ t -> unit t
++val skip_many : _ t @ p -> unit t @ p
+ (** [skip_many p] runs [p] {i zero} or more times, discarding the results. *)
+ 
+-val skip_many1 : _ t -> unit t
++val skip_many1 : _ t @ p -> unit t @ p
+ (** [skip_many1 p] runs [p] {i one} or more times, discarding the results. *)
+ 
+-val fix : ('a t -> 'a t) @ p -> 'a t
++val fix : ('a t @ p -> 'a t @ p) @ p -> 'a t @ p
+ (** [fix f] computes the fixpoint of [f] and runs the resultant parser. The
+     argument that [f] receives is the result of [fix f], which [f] must use,
+     paradoxically, to define [fix f].
+@@ -359,25 +373,25 @@
+     chunks, which is important for Js_of_ocaml due to the lack of tailrec
+     optimizations for CPS-style tail calls. When compiling for Js_of_ocaml,
+     [fix] itself is defined as [fix_lazy ~max_steps:20]. *)
+-val fix_lazy : max_steps:int -> ('a t -> 'a t) -> 'a t
++val fix_lazy : max_steps:int -> ('a t @ p -> 'a t @ p) @ p -> 'a t @ p
+ 
+ (** {2 Alternatives} *)
+ 
+-val (<|>) : 'a t -> 'a t -> 'a t
++val (<|>) : 'a t -> 'a t -> 'a t [@@mode]
+ (** [p <|> q] runs [p] and returns the result if succeeds. If [p] fails, then
+     the input will be reset and [q] will run instead. *)
+ 
+-val choice : ?failure_msg:string -> 'a t list -> 'a t
++val choice : ?failure_msg:string -> 'a t list @ p -> 'a t @ p
+ (** [choice ?failure_msg ts] runs each parser in [ts] in order until one
+     succeeds and returns that result. In the case that none of the parser
+     succeeds, then the parser will fail with the message [failure_msg], if
+     provided, or a much less informative message otherwise. *)
+ 
+-val (<?>) : 'a t -> string -> 'a t
++val (<?>) : 'a t -> string -> 'a t [@@mode]
+ (** [p <?> name] associates [name] with the parser [p], which will be reported
+     in the case of failure. *)
+ 
+-val commit : unit t
++val commit : unit t [@@mode]
+ (** [commit] prevents backtracking beyond the current position of the input,
+     allowing the manager of the input buffer to reuse the preceding bytes for
+     other purposes.
+@@ -392,41 +406,48 @@
+ 
+ (** {2 Monadic/Applicative interface} *)
+ 
+-val return : 'a @ p -> 'a t
++val return : ('a : k). 'a @ p -> 'a t @ p
+ (** [return v] creates a parser that will always succeed and return [v] *)
+ 
+-val fail : string -> _ t
++val return : (unit -> 'a) @ portable -> 'a t @ portable [@@mode cocontended]
++(** [(return[@mode cocontended]) f] creates a parser that will always succeed
++    and return [f ()].
++
++    It has a less restrictive type than [return[@mode portable]], but requires
++    allocating the closure [f]. *)
++
++val fail : string -> _ t @ portable [@@mode]
+ (** [fail msg] creates a parser that will always fail with the message [msg] *)
+ 
+-val (>>=) : 'a t -> ('a @ p c -> 'b t) @ p -> 'b t
++val (>>=) : 'a t -> ('a -> 'b t) -> 'b t [@@mode]
+ (** [p >>= f] creates a parser that will run [p], pass its result to [f], run
+     the parser that [f] produces, and return its result. *)
+ 
+-val bind : 'a t -> f:('a @ p c -> 'b t) @ p -> 'b t
++val bind : 'a t @ p -> f:('a -> 'b t) @ p -> 'b t @ p
+ (** [bind] is a prefix version of [>>=] *)
+ 
+-val (>>|) : 'a t -> ('a @ p c -> 'b @ p) @ p -> 'b t
++val (>>|) : 'a t -> ('a -> 'b) -> 'b t [@@mode]
+ (** [p >>| f] creates a parser that will run [p], and if it succeeds with
+     result [v], will return [f v] *)
+ 
+-val (<*>) : ('a @ p c -> 'b @ p c) t -> 'a t -> 'b t
++val (<*>) : ('a -> 'b) t -> 'a t -> 'b t [@@mode]
+ (** [f <*> p] is equivalent to [f >>= fun f -> p >>| f]. *)
+ 
+-val (<$>) : ('a @ p c -> 'b @ p c) @ p -> 'a t -> 'b t
++val (<$>) : ('a -> 'b) -> 'a t -> 'b t [@@mode]
+ (** [f <$> p] is equivalent to [p >>| f] *)
+ 
+-val ( *>) : _ t -> 'a t -> 'a t
++val ( *>) : _ t -> 'a t -> 'a t [@@mode]
+ (** [p *> q] runs [p], discards its result and then runs [q], and returns its
+     result. *)
+ 
+-val (<* ) : 'a t -> _ t -> 'a t
++val (<* ) : 'a t -> _ t -> 'a t [@@mode]
+ (** [p <* q] runs [p], then runs [q], discards its result, and returns the
+     result of [p]. *)
+ 
+-val lift : ('a @ p c -> 'b @ p c) @ p -> 'a t -> 'b t
+-val lift2 : ('a @ p c -> 'b @ p c -> 'c @ p c) @ p -> 'a t -> 'b t -> 'c t
+-val lift3 : ('a @ p c -> 'b @ p c -> 'c @ p c -> 'd @ p c) @ p -> 'a t -> 'b t -> 'c t -> 'd t
+-val lift4 : ('a @ p c -> 'b @ p c -> 'c @ p c -> 'd @ p c -> 'e @ p c) @ p -> 'a t -> 'b t -> 'c t -> 'd t -> 'e t
++val lift : ('a -> 'b) @ p -> 'a t @ p -> 'b t @ p
++val lift2 : ('a -> 'b -> 'c) @ p -> 'a t @ p -> 'b t @ p -> 'c t @ p
++val lift3 : ('a -> 'b -> 'c -> 'd) @ p -> 'a t @ p -> 'b t @ p -> 'c t @ p -> 'd t @ p
++val lift4 : ('a -> 'b -> 'c -> 'd -> 'e) @ p -> 'a t @ p -> 'b t @ p -> 'c t @ p -> 'd t @ p -> 'e t @ p
+ (** The [liftn] family of functions promote functions to the parser monad.
+     For any of these functions, the following equivalence holds:
+ 
+@@ -444,33 +465,33 @@
+     Even with the partial application, it will be more efficient than the
+     applicative implementation. *)
+ 
+-val map : 'a t -> f:('a @ p c -> 'b @ p c) @ p -> 'b t
+-val map2 : 'a t -> 'b t -> f:('a @ p c -> 'b @ p c -> 'c @ p c) @ p -> 'c t
+-val map3 : 'a t -> 'b t -> 'c t -> f:('a @ p c -> 'b @ p c -> 'c @ p c -> 'd @ p c) @ p -> 'd t
+-val map4 : 'a t -> 'b t -> 'c t -> 'd t -> f:('a @ p c -> 'b @ p c -> 'c @ p c -> 'd @ p c -> 'e @ p c) @ p -> 'e t
++val map : 'a t @ p -> f:('a -> 'b) @ p -> 'b t @ p
++val map2 : 'a t @ p -> 'b t @ p -> f:('a -> 'b -> 'c) @ p -> 'c t @ p
++val map3 : 'a t @ p -> 'b t @ p -> 'c t @ p -> f:('a -> 'b -> 'c -> 'd) @ p -> 'd t @ p
++val map4 : 'a t @ p -> 'b t @ p -> 'c t @ p -> 'd t @ p -> f:('a -> 'b -> 'c -> 'd -> 'e) @ p -> 'e t @ p
+ (** The [mapn] family of functions are just like [liftn], with a slightly
+     different interface. *)
+ 
+ (** The [Let_syntax] module is intended to be used with the [ppx_let]
+     pre-processor, and just contains copies of functions described elsewhere. *)
+ module Let_syntax : sig
+-  val return : 'a @ p -> 'a t
+-  val ( >>| ) : 'a t -> ('a @ p c -> 'b @ p c) @ p -> 'b t
+-  val ( >>= ) : 'a t -> ('a @ p c -> 'b t) @ p -> 'b t
++  val return : ('a : k). 'a @ p -> 'a t @ p
++  val ( >>| ) : 'a t @ p -> ('a -> 'b) @ p -> 'b t @ p
++  val ( >>= ) : 'a t @ p -> ('a -> 'b t) @ p -> 'b t @ p
+ 
+   module Let_syntax : sig
+-    val return : 'a @ p -> 'a t
+-    val map : 'a t -> f:('a @ p c -> 'b @ p c) @ p -> 'b t
+-    val bind : 'a t -> f:('a @ p c -> 'b t) @ p -> 'b t
+-    val both : 'a t -> 'b t -> ('a * 'b) t
+-    val map2 : 'a t -> 'b t -> f:('a @ p c -> 'b @ p c -> 'c @ p c) @ p -> 'c t
+-    val map3 : 'a t -> 'b t -> 'c t -> f:('a @ p c -> 'b @ p c -> 'c @ p c -> 'd @ p c) @ p -> 'd t
+-    val map4 : 'a t -> 'b t -> 'c t -> 'd t -> f:('a @ p c -> 'b @ p c -> 'c @ p c -> 'd @ p c -> 'e @ p c) @ p -> 'e t
++    val return : ('a : k). 'a @ p -> 'a t @ p
++    val map : 'a t @ p -> f:('a -> 'b) @ p -> 'b t @ p
++    val bind : 'a t @ p -> f:('a -> 'b t) @ p -> 'b t @ p
++    val both : 'a t @ p -> 'b t @ p -> ('a * 'b) t @ p
++    val map2 : 'a t @ p -> 'b t @ p -> f:('a -> 'b -> 'c) @ p -> 'c t @ p
++    val map3 : 'a t @ p -> 'b t @ p -> 'c t @ p -> f:('a -> 'b -> 'c -> 'd) @ p -> 'd t @ p
++    val map4 : 'a t @ p -> 'b t @ p -> 'c t @ p -> 'd t @ p -> f:('a -> 'b -> 'c -> 'd -> 'e) @ p -> 'e t @ p
+   end
+-end
++end]
+ 
+-val ( let+ ) : 'a t -> ('a @ p c -> 'b @ p c) @ p -> 'b t
+-val ( let* ) : 'a t -> ('a @ p c -> 'b t) @ p -> 'b t
++val ( let+ ) : 'a t -> ('a -> 'b) -> 'b t
++val ( let* ) : 'a t -> ('a -> 'b t) -> 'b t
+ val ( and+ ) : 'a t -> 'b t -> ('a * 'b) t
+ 
+ (** Unsafe Operations on Angstrom's Internal Buffer
+@@ -491,15 +512,16 @@
+     If the input buffer callback functions do not do any of these things, then
+     the client may consider their use safe. *)
+ module Unsafe : sig
++  [@@@mode.default (p, c) = ((nonportable, uncontended), (portable, contended))]
+ 
+-  val take : int -> (bigstring -> off:int -> len:int -> 'a @ p) @ p -> 'a t
++  val take : int -> (bigstring -> off:int -> len:int -> 'a) @ p -> 'a t @ p
+   (** [take n f] accepts exactly [n] characters of input into the parser's
+       internal buffer then calls [f buffer ~off ~len].  [buffer] is the
+       parser's internal buffer.  [off] is the offset from the start of [buffer]
+       containing the requested content.  [len] is the length of the requested
+       content.  [len] is guaranteed to be equal to [n]. *)
+ 
+-  val take_while : (char -> bool) @ p -> (bigstring -> off:int -> len:int -> 'a @ p) @ p -> 'a t
++  val take_while : (char -> bool) @ p -> (bigstring -> off:int -> len:int -> 'a) @ p -> 'a t @ p
+   (** [take_while check f] accepts input into the parser's interal buffer as
+       long as [check] returns [true] then calls [f buffer ~off ~len].  [buffer]
+       is the parser's internal buffer.  [off] is the offset from the start of
+@@ -509,7 +531,7 @@
+       This parser does not fail. If [check] returns [false] on the first
+       character, [len] will be [0]. *)
+ 
+-  val take_while1 : (char -> bool) @ p -> (bigstring -> off:int -> len:int -> 'a @ p) @ p -> 'a t
++  val take_while1 : (char -> bool) @ p -> (bigstring -> off:int -> len:int -> 'a) @ p -> 'a t @ p
+   (** [take_while1 check f] accepts input into the parser's interal buffer as
+       long as [check] returns [true] then calls [f buffer ~off ~len].  [buffer]
+       is the parser's internal buffer.  [off] is the offset from the start of
+@@ -519,7 +541,7 @@
+       This parser requires that [f] return [true] for at least one character of
+       input, and will fail otherwise. *)
+ 
+-  val take_till : (char -> bool) @ p -> (bigstring -> off:int -> len:int -> 'a @ p) @ p -> 'a t
++  val take_till : (char -> bool) @ p -> (bigstring -> off:int -> len:int -> 'a) @ p -> 'a t @ p
+   (** [take_till check f] accepts input into the parser's interal buffer as
+       long as [check] returns [false] then calls [f buffer ~off ~len].  [buffer]
+       is the parser's internal buffer.  [off] is the offset from the start of
+@@ -529,7 +551,7 @@
+       This parser does not fail. If [check] returns [true] on the first
+       character, [len] will be [0]. *)
+ 
+-  val peek : int -> (bigstring -> off:int -> len:int -> 'a @ p) @ p -> 'a t
++  val peek : int -> (bigstring -> off:int -> len:int -> 'a) @ p -> 'a t @ p
+   (** [peek n ~f] accepts exactly [n] characters and calls [f buffer ~off ~len]
+       with [len = n]. If there is not enough input, it will fail.
+ 
+@@ -545,7 +567,7 @@
+     | All
+ end
+ 
+-val parse_bigstring : consume:Consume.t -> 'a t -> bigstring -> ('a, string) result @ c
++val parse_bigstring : consume:Consume.t -> 'a t -> bigstring -> ('a, string) result
+ 
+ (** [parse_bigstring ~consume t bs] runs [t] on [bs]. The parser will receive
+     an [`Eof] after all of [bs] has been consumed. Passing {!Prefix} in the
+@@ -557,7 +579,7 @@
+     {!module:Buffered} and {!module:Unbuffered} modules below. *)
+ 
+ 
+-val parse_string : consume:Consume.t -> 'a t -> string -> ('a, string) result @ c
++val parse_string : consume:Consume.t -> 'a t -> string -> ('a, string) result
+ (** [parse_string ~consume t bs] runs [t] on [bs]. The parser will receive an
+     [`Eof] after all of [bs] has been consumed. Passing {!Prefix} in the
+     [consume] argument allows the parse to successfully complete without
+@@ -593,7 +615,7 @@
+ 
+   type 'a state =
+     | Partial of ([ input | `Eof ] -> 'a state) (** The parser requires more input. *)
+-    | Done    of unconsumed * 'a @@ c (** The parser succeeded. *)
++    | Done    of unconsumed * 'a (** The parser succeeded. *)
+     | Fail    of unconsumed * string list * string (** The parser failed. *)
+ 
+   val parse : ?initial_buffer_size:int -> 'a t -> 'a state
+@@ -608,12 +630,12 @@
+       parser is in a [Fail] or [Done] state, in which case the [input] will be
+       copied into the state's buffer for later use by the caller. *)
+ 
+-  val state_to_option : 'a state -> 'a option @ c
++  val state_to_option : 'a state -> 'a option
+   (** [state_to_option state] returns [Some v] if the parser is in the
+       [Done (bs, v)] state and [None] otherwise. This function has no effect on
+       the current state of the parser. *)
+ 
+-  val state_to_result : 'a state -> ('a, string) result @ c
++  val state_to_result : 'a state -> ('a, string) result
+   (** [state_to_result state] returns [Ok v] if the parser is in the [Done (bs, v)]
+       state and [Error msg] if it is in the [Fail] or [Partial] state.
+ 
+@@ -651,7 +673,7 @@
+ 
+   type 'a state =
+     | Partial of 'a partial (** The parser requires more input. *)
+-    | Done    of int * 'a @@ c (** The parser succeeded, consuming specified bytes. *)
++    | Done    of int * 'a (** The parser succeeded, consuming specified bytes. *)
+     | Fail    of int * string list * string (** The parser failed, consuming specified bytes. *)
+   and 'a partial =
+     { committed : int
+@@ -668,13 +690,12 @@
+   val parse : 'a t -> 'a state
+   (** [parse t] runs [t] and await input if needed. *)
+ 
+-  val state_to_option : 'a state -> 'a option @ c
+-
++  val state_to_option : 'a state -> 'a option
+   (** [state_to_option state] returns [Some v] if the parser is in the
+       [Done (bs, v)] state and [None] otherwise. This function has no effect on the
+       current state of the parser. *)
+ 
+-  val state_to_result : 'a state -> ('a, string) result @ c
++  val state_to_result : 'a state -> ('a, string) result
+   (** [state_to_result state] returns [Ok v] if the parser is in the
+       [Done (bs, v)] state and [Error msg] if it is in the [Fail] or [Partial]
+       state.
+@@ -689,6 +710,527 @@
+ 
+ val pos : int t
+ val available : int t
+-]
+ 
+-module Portable = Angstrom__portable
++module Operators : Operators.S [@mode p] with type 'a t := 'a t
++[@@mode p = (portable, nonportable)]
++
++module Portable : sig
++  [@@@mode p = portable, c = contended]
++  [@@@kind k = value mod c]
++
++  type nonrec 'a t = 'a t
++
++  (** {2 Basic parsers} *)
++
++  (** [peek_char] accepts any char and returns it, or returns [None] if the end of input
++      has been reached.
++
++      This parser does not advance the input. Use it for lookahead. *)
++  val peek_char : char option t
++
++  (** [peek_char_fail] accepts any char and returns it. If end of input has been reached,
++      it will fail.
++
++      This parser does not advance the input. Use it for lookahead. *)
++  val peek_char_fail : char t
++
++  (** [peek_string n] accepts exactly [n] characters and returns them as a string. If
++      there is not enough input, it will fail.
++
++      This parser does not advance the input. Use it for lookahead. *)
++  val peek_string : int -> string t @ p
++
++  (** [char c] accepts [c] and returns it. *)
++  val char : char -> char t @ p
++
++  (** [not_char] accepts any character that is not [c] and returns the matched character. *)
++  val not_char : char -> char t @ p
++
++  (** [any_char] accepts any character and returns it. *)
++  val any_char : char t
++
++  (** [satisfy f] accepts any character for which [f] returns [true] and returns the
++      accepted character. In the case that none of the parser succeeds, then the parser
++      will fail indicating the offending character. *)
++  val satisfy : (char -> bool) @ p -> char t @ p
++
++  (** [string s] accepts [s] exactly and returns it. *)
++  val string : string -> string t @ p
++
++  (** [string_ignored s] accepts [s] exactly and returns [unit]. It is semantically
++      equivalent to [string s *> return unit], but does not allocate the string. *)
++  val string_ignored : string -> unit t @ p
++
++  (** [string_ci s] accepts [s], ignoring case, and returns the matched string, preserving
++      the case of the original input. *)
++  val string_ci : string -> string t @ p
++
++  (** [skip f] accepts any character for which [f] returns [true] and discards the
++      accepted character. [skip f] is equivalent to [satisfy f] but discards the accepted
++      character. *)
++  val skip : (char -> bool) @ p -> unit t @ p
++
++  (** [skip_while f] accepts input as long as [f] returns [true] and discards the accepted
++      characters. *)
++  val skip_while : (char -> bool) @ p -> unit t @ p
++
++  (** [take n] accepts exactly [n] characters of input and returns them as a string. *)
++  val take : int -> string t @ p
++
++  (** [take_while f] accepts input as long as [f] returns [true] and returns the accepted
++      characters as a string.
++
++      This parser does not fail. If [f] returns [false] on the first character, it will
++      return the empty string. *)
++  val take_while : (char -> bool) @ p -> string t @ p
++
++  (** [take_while1 f] accepts input as long as [f] returns [true] and returns the accepted
++      characters as a string.
++
++      This parser requires that [f] return [true] for at least one character of input, and
++      will fail otherwise. *)
++  val take_while1 : (char -> bool) @ p -> string t @ p
++
++  (** [take_till f] accepts input as long as [f] returns [false] and returns the accepted
++      characters as a string.
++
++      This parser does not fail. If [f] returns [true] on the first character, it will
++      return the empty string. *)
++  val take_till : (char -> bool) @ p -> string t @ p
++
++  (** [consumed p] runs [p] and returns the contents that were consumed during the parsing
++      as a string *)
++  val consumed : _ t @ p -> string t @ p
++
++  (** [take_bigstring n] accepts exactly [n] characters of input and returns them as a
++      newly allocated bigstring. *)
++  val take_bigstring : int -> bigstring t @ p
++
++  (** [take_bigstring_while f] accepts input as long as [f] returns [true] and returns the
++      accepted characters as a newly allocated bigstring.
++
++      This parser does not fail. If [f] returns [false] on the first character, it will
++      return the empty bigstring. *)
++  val take_bigstring_while : (char -> bool) @ p -> bigstring t @ p
++
++  (** [take_bigstring_while1 f] accepts input as long as [f] returns [true] and returns
++      the accepted characters as a newly allocated bigstring.
++
++      This parser requires that [f] return [true] for at least one character of input, and
++      will fail otherwise. *)
++  val take_bigstring_while1 : (char -> bool) @ p -> bigstring t @ p
++
++  (** [take_bigstring_till f] accepts input as long as [f] returns [false] and returns the
++      accepted characters as a newly allocated bigstring.
++
++      This parser does not fail. If [f] returns [true] on the first character, it will
++      return the empty bigstring. *)
++  val take_bigstring_till : (char -> bool) @ p -> bigstring t @ p
++
++  (** [consumed p] runs [p] and returns the contents that were consumed during the parsing
++      as a bigstring *)
++  val consumed_bigstring : _ t @ p -> bigstring t @ p
++
++  (** [advance n] advances the input [n] characters, failing if the remaining input is
++      less than [n]. *)
++  val advance : int -> unit t @ p
++
++  (** [end_of_line] accepts either a line feed [\n], or a carriage return followed by a
++      line feed [\r\n] and returns unit. *)
++  val end_of_line : unit t
++
++  (** [at_end_of_input] returns whether the end of the end of input has been reached. This
++      parser always succeeds. *)
++  val at_end_of_input : bool t
++
++  (** [end_of_input] succeeds if all the input has been consumed, and fails otherwise. *)
++  val end_of_input : unit t
++
++  (** [scan init f] consumes until [f] returns [None]. Returns the final state before
++      [None] and the accumulated string *)
++  val scan
++    : ('state : k).
++    'state @ p -> ('state -> char -> 'state option) @ p -> (string * 'state) t @ p
++
++  (** [scan_state init f] is like {!scan} but only returns the final state before [None].
++      Much more efficient than {!scan}. *)
++  val scan_state
++    : ('state : k).
++    'state @ p -> ('state -> char -> 'state option) @ p -> 'state t @ p
++
++  (** [scan_string init f] is like {!scan} but discards the final state and returns the
++      accumulated string. *)
++  val scan_string
++    : ('state : k).
++    'state @ p -> ('state -> char -> 'state option) @ p -> string t @ p
++
++  (** [int8 i] accepts one byte that matches the lower-order byte of [i] and returns unit. *)
++  val int8 : int -> int t @ p
++
++  (** [any_uint8] accepts any byte and returns it as an unsigned int8. *)
++  val any_uint8 : int t
++
++  (** [any_int8] accepts any byte and returns it as a signed int8. *)
++  val any_int8 : int t
++
++  (** Big endian parsers *)
++  module BE : sig
++    (** [int16 i] accept two bytes that match the two lower order bytes of [i] and returns
++        unit. *)
++    val int16 : int -> unit t @ p
++
++    (** [int32 i] accept four bytes that match the four bytes of [i] and returns unit. *)
++    val int32 : int32 -> unit t @ p
++
++    (** [int64 i] accept eight bytes that match the eight bytes of [i] and returns unit. *)
++    val int64 : int64 -> unit t @ p
++
++    val any_int16 : int t
++    val any_int32 : int32 t
++
++    (** [any_intN] reads [N] bits and interprets them as big endian signed integers. *)
++    val any_int64 : int64 t
++
++    (** [any_uint16] reads [16] bits and interprets them as a big endian unsigned integer. *)
++    val any_uint16 : int t
++
++    (** [any_float] reads 32 bits and interprets them as a big endian floating point
++        value. *)
++    val any_float : float t
++
++    (** [any_double] reads 64 bits and interprets them as a big endian floating point
++        value. *)
++    val any_double : float t
++  end
++
++  (** Little endian parsers *)
++  module LE : sig
++    (** [int16 i] accept two bytes that match the two lower order bytes of [i] and returns
++        unit. *)
++    val int16 : int -> unit t @ p
++
++    (** [int32 i] accept four bytes that match the four bytes of [i] and returns unit. *)
++    val int32 : int32 -> unit t @ p
++
++    (** [int64 i] accept eight bytes that match the eight bytes of [i] and returns unit. *)
++    val int64 : int64 -> unit t @ p
++
++    val any_int16 : int t
++    val any_int32 : int32 t
++
++    (** [any_intN] reads [N] bits and interprets them as little endian signed integers. *)
++    val any_int64 : int64 t
++
++    (** [uint16] reads [16] bits and interprets them as a little endian unsigned integer. *)
++    val any_uint16 : int t
++
++    (** [any_float] reads 32 bits and interprets them as a little endian floating point
++        value. *)
++    val any_float : float t
++
++    (** [any_double] reads 64 bits and interprets them as a little endian floating point
++        value. *)
++    val any_double : float t
++  end
++
++  (** {2 Combinators} *)
++
++  (** [option v p] runs [p], returning the result of [p] if it succeeds and [v] if it
++      fails. *)
++  val option : ('a : k). 'a @ p -> 'a t @ p -> 'a t @ p
++
++  (** [both p q] runs [p] followed by [q] and returns both results in a tuple *)
++  val both : 'a t @ p -> 'b t @ p -> ('a * 'b) t @ p
++
++  (** [list ps] runs each [p] in [ps] in sequence, returning a list of results of each
++      [p]. *)
++  val list : 'a t list @ p -> 'a list t @ p
++
++  (** [count n p] runs [p] [n] times, returning a list of the results. *)
++  val count : int -> 'a t @ p -> 'a list t @ p
++
++  (** [many p] runs [p] {i zero} or more times and returns a list of results from the runs
++      of [p]. *)
++  val many : 'a t @ p -> 'a list t @ p
++
++  (** [many1 p] runs [p] {i one} or more times and returns a list of results from the runs
++      of [p]. *)
++  val many1 : 'a t @ p -> 'a list t @ p
++
++  (** [many_till p e] runs parser [p] {i zero} or more times until action [e] succeeds and
++      returns the list of result from the runs of [p]. *)
++  val many_till : 'a t @ p -> _ t @ p -> 'a list t @ p
++
++  (** [sep_by s p] runs [p] {i zero} or more times, interspersing runs of [s] in between. *)
++  val sep_by : _ t @ p -> 'a t @ p -> 'a list t @ p
++
++  (** [sep_by1 s p] runs [p] {i one} or more times, interspersing runs of [s] in between. *)
++  val sep_by1 : _ t @ p -> 'a t @ p -> 'a list t @ p
++
++  (** [skip_many p] runs [p] {i zero} or more times, discarding the results. *)
++  val skip_many : _ t @ p -> unit t @ p
++
++  (** [skip_many1 p] runs [p] {i one} or more times, discarding the results. *)
++  val skip_many1 : _ t @ p -> unit t @ p
++
++  (** [fix f] computes the fixpoint of [f] and runs the resultant parser. The argument
++      that [f] receives is the result of [fix f], which [f] must use, paradoxically, to
++      define [fix f].
++
++      [fix] is useful when constructing parsers for inductively-defined types such as
++      sequences, trees, etc. Consider for example the implementation of the {!many}
++      combinator defined in this library:
++
++      {[
++        let many p = fix (fun m -> cons <$> p <*> m <|> return [])
++      ]}
++
++      [many p] is a parser that will run [p] zero or more times, accumulating the result
++      of every run into a list, returning the result. It's defined by passing [fix] a
++      function. This function assumes its argument [m] is a parser that behaves exactly
++      like [many p]. You can see this in the expression comprising the left hand side of
++      the alternative operator [<|>]. This expression runs the parser [p] followed by the
++      parser [m], and after which the result of [p] is cons'd onto the list that [m]
++      produces. The right-hand side of the alternative operator provides a base case for
++      the combinator: if [p] fails and the parse cannot proceed, return an empty list.
++
++      Another way to illustrate the uses of [fix] is to construct a JSON parser. Assuming
++      that parsers exist for the basic types such as [false], [true], [null], strings, and
++      numbers, the question then becomes how to define a parser for objects and arrays?
++      Both contain values that are themselves JSON values, so it seems as though it's
++      impossible to write a parser that will accept JSON objects and arrays before writing
++      a parser for JSON values as a whole.
++
++      This is the exact situation that [fix] was made for. By defining the parsers for
++      arrays and objects within the function that you pass to [fix], you will gain access
++      to a parser that you can use to parse JSON values, the very parser you are defining!
++
++      {[
++        let json =
++          fix (fun json ->
++            let arr = char '[' *> sep_by (char ',') json <* char ']' in
++            let obj = char '{' *> ... json ... <* char '}' in
++            choice [str; num; arr json, ...])
++      ]} *)
++  val fix : ('a t @ p -> 'a t @ p) @ p -> 'a t @ p
++
++  (** [fix_lazy] is like [fix], but after the function reaches [max_steps] deep, it wraps
++      up the remaining computation and yields back to the root of the parsing loop where
++      it continues from there.
++
++      This is an effective way to break up the stack trace into more managable chunks,
++      which is important for Js_of_ocaml due to the lack of tailrec optimizations for
++      CPS-style tail calls. When compiling for Js_of_ocaml, [fix] itself is defined as
++      [fix_lazy ~max_steps:20]. *)
++  val fix_lazy : max_steps:int -> ('a t @ p -> 'a t @ p) @ p -> 'a t @ p
++
++  (** {2 Alternatives} *)
++
++  (** [choice ?failure_msg ts] runs each parser in [ts] in order until one succeeds and
++      returns that result. In the case that none of the parser succeeds, then the parser
++      will fail with the message [failure_msg], if provided, or a much less informative
++      message otherwise. *)
++  val choice : ?failure_msg:string -> 'a t list @ p -> 'a t @ p
++
++  (** [commit] prevents backtracking beyond the current position of the input, allowing
++      the manager of the input buffer to reuse the preceding bytes for other purposes.
++
++      The {!module:Unbuffered} parsing interface will report directly to the caller the
++      number of bytes committed to the when returning a {!Unbuffered.state.Partial} state,
++      allowing the caller to reuse those bytes for any purpose. The {!module:Buffered}
++      will keep track of the region of committed bytes in its internal buffer and reuse
++      that region to store additional input when necessary. *)
++  val commit : unit t
++
++  (** {2 Monadic/Applicative interface} *)
++
++  (** [return v] creates a parser that will always succeed and return [v] *)
++  val return : ('a : k). 'a @ p -> 'a t @ p
++
++  (** [(return[@mode cocontended]) f] creates a parser that will always succeed and return
++      [f ()].
++
++      It has a less restrictive type than [return], but requires allocating the closure
++      [f]. *)
++  val return : (unit -> 'a) @ p -> 'a t @ p
++  [@@mode cocontended]
++
++  (** [fail msg] creates a parser that will always fail with the message [msg] *)
++  val fail : string -> _ t @ p
++
++  include Operators_intf.S [@mode portable] with type 'a t := 'a t
++
++  (** [bind] is a prefix version of [>>=] *)
++  val bind : 'a t @ p -> f:('a -> 'b t) @ p -> 'b t @ p
++
++  val lift : ('a -> 'b) @ p -> 'a t @ p -> 'b t @ p
++  val lift2 : ('a -> 'b -> 'c) @ p -> 'a t @ p -> 'b t @ p -> 'c t @ p
++  val lift3 : ('a -> 'b -> 'c -> 'd) @ p -> 'a t @ p -> 'b t @ p -> 'c t @ p -> 'd t @ p
++
++  (** The [liftn] family of functions promote functions to the parser monad. For any of
++      these functions, the following equivalence holds:
++
++      {[
++        liftn f p1 ... pn = f <$> p1 <*> ... <*> pn
++      ]}
++
++      These functions are more efficient than using the applicative interface directly,
++      mostly in terms of memory allocation but also in terms of speed. Prefer them over
++      the applicative interface, even when the arity of the function to be lifted exceeds
++      the maximum [n] for which there is an implementation for [liftn]. In other words, if
++      [f] has an arity of [5] but only [lift4] is provided, do the following:
++
++      {[
++        lift4 f m1 m2 m3 m4 <*> m5
++      ]}
++
++      Even with the partial application, it will be more efficient than the applicative
++      implementation. *)
++  val lift4
++    :  ('a -> 'b -> 'c -> 'd -> 'e) @ p
++    -> 'a t @ p
++    -> 'b t @ p
++    -> 'c t @ p
++    -> 'd t @ p
++    -> 'e t @ p
++
++  val map : 'a t @ p -> f:('a -> 'b) @ p -> 'b t @ p
++  val map2 : 'a t @ p -> 'b t @ p -> f:('a -> 'b -> 'c) @ p -> 'c t @ p
++  val map3 : 'a t @ p -> 'b t @ p -> 'c t @ p -> f:('a -> 'b -> 'c -> 'd) @ p -> 'd t @ p
++
++  (** The [mapn] family of functions are just like [liftn], with a slightly different
++      interface. *)
++  val map4
++    :  'a t @ p
++    -> 'b t @ p
++    -> 'c t @ p
++    -> 'd t @ p
++    -> f:('a -> 'b -> 'c -> 'd -> 'e) @ p
++    -> 'e t @ p
++
++  (** The [Let_syntax] module is intended to be used with the [ppx_let] pre-processor, and
++      just contains copies of functions described elsewhere. *)
++  module Let_syntax : sig
++    val return : ('a : k). 'a @ p -> 'a t @ p
++    val ( >>| ) : 'a t @ p -> ('a -> 'b) @ p -> 'b t @ p
++    val ( >>= ) : 'a t @ p -> ('a -> 'b t) @ p -> 'b t @ p
++
++    module Let_syntax : sig
++      val return : ('a : k). 'a @ p -> 'a t @ p
++      val map : 'a t @ p -> f:('a -> 'b) @ p -> 'b t @ p
++      val bind : 'a t @ p -> f:('a -> 'b t) @ p -> 'b t @ p
++      val both : 'a t @ p -> 'b t @ p -> ('a * 'b) t @ p
++      val map2 : 'a t @ p -> 'b t @ p -> f:('a -> 'b -> 'c) @ p -> 'c t @ p
++
++      val map3
++        :  'a t @ p
++        -> 'b t @ p
++        -> 'c t @ p
++        -> f:('a -> 'b -> 'c -> 'd) @ p
++        -> 'd t @ p
++
++      val map4
++        :  'a t @ p
++        -> 'b t @ p
++        -> 'c t @ p
++        -> 'd t @ p
++        -> f:('a -> 'b -> 'c -> 'd -> 'e) @ p
++        -> 'e t @ p
++    end
++  end
++
++  (** Unsafe Operations on Angstrom's Internal Buffer
++
++      These functions are considered {b unsafe} as they expose the input buffer to client
++      code without any protections against modification, or leaking references. They are
++      exposed to support performance-sensitive parsers that want to avoid allocation at
++      all costs. Client code should take care to write the input buffer callback functions
++      such that they:
++
++      - do not modify the input buffer {i outside} of the range [\[off, off + len)];
++      - do not modify the input buffer {i inside} of the range [\[off, off + len)] if the
++        parser might backtrack; and
++      - do not return any direct or indirect references to the input buffer.
++
++      If the input buffer callback functions do not do any of these things, then the
++      client may consider their use safe. *)
++  module Unsafe : sig
++    (** [take n f] accepts exactly [n] characters of input into the parser's internal
++        buffer then calls [f buffer ~off ~len]. [buffer] is the parser's internal buffer.
++        [off] is the offset from the start of [buffer] containing the requested content.
++        [len] is the length of the requested content. [len] is guaranteed to be equal to
++        [n]. *)
++    val take : int -> (bigstring -> off:int -> len:int -> 'a) @ p -> 'a t @ p
++
++    (** [take_while check f] accepts input into the parser's interal buffer as long as
++        [check] returns [true] then calls [f buffer ~off ~len]. [buffer] is the parser's
++        internal buffer. [off] is the offset from the start of [buffer] containing the
++        requested content. [len] is the length of the content matched by [check].
++
++        This parser does not fail. If [check] returns [false] on the first character,
++        [len] will be [0]. *)
++    val take_while
++      :  (char -> bool) @ p
++      -> (bigstring -> off:int -> len:int -> 'a) @ p
++      -> 'a t @ p
++
++    (** [take_while1 check f] accepts input into the parser's interal buffer as long as
++        [check] returns [true] then calls [f buffer ~off ~len]. [buffer] is the parser's
++        internal buffer. [off] is the offset from the start of [buffer] containing the
++        requested content. [len] is the length of the content matched by [check].
++
++        This parser requires that [f] return [true] for at least one character of input,
++        and will fail otherwise. *)
++    val take_while1
++      :  (char -> bool) @ p
++      -> (bigstring -> off:int -> len:int -> 'a) @ p
++      -> 'a t @ p
++
++    (** [take_till check f] accepts input into the parser's interal buffer as long as
++        [check] returns [false] then calls [f buffer ~off ~len]. [buffer] is the parser's
++        internal buffer. [off] is the offset from the start of [buffer] containing the
++        requested content. [len] is the length of the content matched by [check].
++
++        This parser does not fail. If [check] returns [true] on the first character, [len]
++        will be [0]. *)
++    val take_till
++      :  (char -> bool) @ p
++      -> (bigstring -> off:int -> len:int -> 'a) @ p
++      -> 'a t @ p
++
++    (** [peek n ~f] accepts exactly [n] characters and calls [f buffer ~off ~len] with
++        [len = n]. If there is not enough input, it will fail.
++
++        This parser does not advance the input. Use it for lookahead. *)
++    val peek : int -> (bigstring -> off:int -> len:int -> 'a) @ p -> 'a t @ p
++  end
++
++  val parse_bigstring : consume:Consume.t -> 'a t -> bigstring -> ('a, string) result
++
++  (** [parse_bigstring ~consume t bs] runs [t] on [bs]. The parser will receive an [`Eof]
++      after all of [bs] has been consumed. Passing {!Prefix} in the [consume] argument
++      allows the parse to successfully complete without reaching eof. To require the
++      parser to reach eof, pass {!All} in the [consume] argument.
++
++      For use-cases requiring that the parser be fed input incrementally, see the
++      {!module:Buffered} and {!module:Unbuffered} modules below. *)
++
++  (** [parse_string ~consume t bs] runs [t] on [bs]. The parser will receive an [`Eof]
++      after all of [bs] has been consumed. Passing {!Prefix} in the [consume] argument
++      allows the parse to successfully complete without reaching eof. To require the
++      parser to reach eof, pass {!All} in the [consume] argument.
++
++      For use-cases requiring that the parser be fed input incrementally, see the
++      {!module:Buffered} and {!module:Unbuffered} modules below. *)
++  val parse_string : consume:Consume.t -> 'a t -> string -> ('a, string) result
++
++  (** {2 Expert Parsers}
++
++      For people that know what they're doing. If you want to use them, read the code. No
++      further documentation will be provided. *)
++
++  val pos : int t
++  val available : int t
++
++  module Operators : Operators_intf.S [@mode p] with type 'a t := 'a t
++end]
+diff --git a/lib/operators.ml b/lib/operators.ml
+new file mode 100644
+--- /dev/null
++++ b/lib/operators.ml
+@@ -0,0 +1 @@
++include Operators_intf
+diff --git a/lib/operators.mli b/lib/operators.mli
+new file mode 100644
+--- /dev/null
++++ b/lib/operators.mli
+@@ -0,0 +1 @@
++include Operators_intf.Operators (** @inline *)
+diff --git a/lib/operators_intf.ml b/lib/operators_intf.ml
+new file mode 100644
+--- /dev/null
++++ b/lib/operators_intf.ml
+@@ -0,0 +1,57 @@
++[%%template
++[@@@mode.default (p, c) = ((portable, contended), (nonportable, uncontended))]
++[@@@kind k = value mod c]
++
++module type Choice = sig
++  type 'a t
++
++  (** [p <|> q] runs [p] and returns the result if succeeds. If [p] fails, then
++      the input will be reset and [q] will run instead. *)
++  val ( <|> ) : 'a t @ p -> 'a t @ p -> 'a t @ p
++
++  (** [p <?> name] associates [name] with the parser [p], which will be reported
++      in the case of failure. *)
++  val ( <?> ) : 'a t @ p -> string -> 'a t @ p
++end
++
++module type Monad = sig
++  type 'a t
++
++  val ( >>= ) : 'a t @ p-> ('a -> 'b t) @ p -> 'b t @ p
++  (** [p >>= f] creates a parser that will run [p], pass its result to [f], run
++      the parser that [f] produces, and return its result. *)
++
++  val ( >>| ) : 'a t @ p -> ('a -> 'b) @ p -> 'b t @ p
++  (** [p >>| f] creates a parser that will run [p], and if it succeeds with
++      result [v], will return [f v] *)
++
++  val ( <*> ) : ('a -> 'b) t @ p -> 'a t @ p -> 'b t @ p
++  (** [f <*> p] is equivalent to [f >>= fun f -> p >>| f]. *)
++
++  val ( <$> ) : ('a -> 'b) @ p -> 'a t @ p -> 'b t @ p
++  (** [f <$> p] is equivalent to [p >>| f] *)
++
++  val ( *> ) : 'b t @ p -> 'a t @ p -> 'a t @ p
++  (** [p *> q] runs [p], discards its result and then runs [q], and returns
++      its result. *)
++
++  val ( <* ) : 'a t @ p -> 'b t @ p -> 'a t @ p
++  (** [p <* q] runs [p], then runs [q], discards its result, and returns the
++      result of [p]. *)
++end
++
++
++module type S = sig
++  type 'a t
++  include Choice [@mode p] with type 'a t := 'a t
++  include Monad [@mode p] with type 'a t := 'a t
++end
++]
++
++module type%template Operators = sig @@ portable
++  [@@@mode.default p = (nonportable, portable)]
++
++  module type Choice = Choice [@mode p]
++  module type Monad = Monad [@mode p]
++  module type S = S [@mode p]
++end
+diff --git a/lib/parser.ml b/lib/parser.ml
+--- a/lib/parser.ml
++++ b/lib/parser.ml
+@@ -25,6 +25,7 @@
+ 
+ type 'a t : value mod p contended =
+   { run : 'r. ('r failure -> ('a, 'r) success -> 'r State.t) with_state @@ p}
++  [@@unboxed]
+ 
+ let fail_k    input pos _ marks msg =
+   State.Fail(pos - Input.client_committed_bytes input, marks, msg)
+@@ -55,101 +56,126 @@
+   Exported_state.state_to_result (to_exported_state (p.run input 0 Complete fail_k succeed_k))
+ 
+ module Monad = struct
+-  let return v =
++  let return (type v) (f : (unit -> v) @ portable) : v t @ portable =
++    { run = fun input pos more _fail succ ->
++      succ input pos more (f ())
++    }
++  [@@mode _ = cocontended]
++
++  let return (type v : value mod c) (v : v) : v t @ p =
+     { run = fun input pos more _fail succ ->
+       succ input pos more v
+     }
++  [@@mode (p, c) = ((nonportable, uncontended), (portable, contended))]
+ 
+-  let fail msg =
++  let fail msg : _ t @ portable =
+     { run = fun input pos more fail _succ ->
+       fail input pos more [] msg
+     }
+ 
+-  let (>>=) p f =
+-    { run = fun input pos more fail succ ->
+-      let succ' input' pos' more' v = (f v).run input' pos' more' fail succ in
+-      p.run input pos more fail succ'
+-    }
+-
+-  let (>>|) p (f : _ @ p c -> _ @ p c) =
+-    { run = fun input pos more fail succ ->
+-      let succ' input' pos' more' v = succ input' pos' more' (f v) in
+-      p.run input pos more fail succ'
+-    }
+-
+-  let (<$>) (f : _ @ p c -> _ @ p c) m =
+-    m >>| f
+-
+-  let (<*>) (f : (_ @ p c -> _ @ p c) t) m =
+-    (* f >>= fun f -> m >>| f *)
+-    { run = fun input pos more fail succ ->
+-      let succ0 input0 pos0 more0 f =
+-        let succ1 input1 pos1 more1 m = succ input1 pos1 more1 (f m) in
+-        m.run input0 pos0 more0 fail succ1
+-      in
+-      f.run input pos more fail succ0 }
+-
+-  let lift (f : _ @ p c -> _ @ p c) m =
+-    f <$> m
+-
+-  let lift2 (f : _ @ p c -> _ @ p c -> _ @ p c) (m1 : _ t) (m2 : _ t) =
+-    { run = fun input pos more fail succ ->
+-      let succ1 input1 pos1 more1 m1 =
+-        let succ2 input2 pos2 more2 m2 = succ input2 pos2 more2 (f m1 m2) in
+-        m2.run input1 pos1 more1 fail succ2
+-      in
+-      m1.run input pos more fail succ1 }
+-
+-  let lift3 (f : _ @ p c -> _ @ p c -> _ @ p c -> _ @ p c) m1 m2 m3 =
+-    { run = fun input pos more fail succ ->
+-      let succ1 input1 pos1 more1 m1 =
+-        let succ2 input2 pos2 more2 m2 =
+-          let succ3 input3 pos3 more3 m3 =
+-            succ input3 pos3 more3 (f m1 m2 m3) in
+-          m3.run input2 pos2 more2 fail succ3 in
+-        m2.run input1 pos1 more1 fail succ2
+-      in
+-      m1.run input pos more fail succ1 }
+-
+-  let lift4 (f : _ @ p c -> _ @ p c -> _ @ p c -> _ @ p c -> _ @ p c) m1 m2 m3 m4 =
+-    { run = fun input pos more fail succ ->
+-      let succ1 input1 pos1 more1 m1 =
+-        let succ2 input2 pos2 more2 m2 =
+-          let succ3 input3 pos3 more3 m3 =
+-            let succ4 input4 pos4 more4 m4 =
+-              succ input4 pos4 more4 (f m1 m2 m3 m4) in
+-            m4.run input3 pos3 more3 fail succ4 in
+-          m3.run input2 pos2 more2 fail succ3 in
+-        m2.run input1 pos1 more1 fail succ2
+-      in
+-      m1.run input pos more fail succ1 }
+-
+-  let ( *>) a b =
+-    (* a >>= fun _ -> b *)
+-    { run = fun input pos more fail succ ->
+-      let succ' input' pos' more' _ = b.run input' pos' more' fail succ in
+-      a.run input pos more fail succ'
+-    }
+-
+-  let (<* ) a b =
+-    (* a >>= fun x -> b >>| fun _ -> x *)
+-    { run = fun input pos more fail succ ->
+-      let succ0 input0 pos0 more0 x =
+-        let succ1 input1 pos1 more1 _ = succ input1 pos1 more1 x in
+-        b.run input0 pos0 more0 fail succ1
+-      in
+-      a.run input pos more fail succ0 }
++  module Operators = struct
++    let (>>=) p f : _ t @ p =
++      { run = fun input pos more fail succ ->
++        let succ' input' pos' more' v = (f v).run input' pos' more' fail succ in
++        p.run input pos more fail succ'
++      }
++
++    let (>>|) p f : _ t @ p =
++      { run = fun input pos more fail succ ->
++        let succ' input' pos' more' v = succ input' pos' more' (f v) in
++        p.run input pos more fail succ'
++      }
++
++    let (<$>) f m : _ t @ p =
++      m >>| f
++
++    let (<*>) f m : _ t @ p =
++      (* f >>= fun f -> m >>| f *)
++      { run = fun input pos more fail succ ->
++        let succ0 input0 pos0 more0 f =
++          let succ1 input1 pos1 more1 m = succ input1 pos1 more1 (f m) in
++          m.run input0 pos0 more0 fail succ1
++        in
++        f.run input pos more fail succ0 }
++
++    let lift f m : _ t @ p =
++      f <$> m
++
++    let lift2 f (m1 : _ t) (m2 : _ t) : _ t @ p =
++      { run = fun input pos more fail succ ->
++        let succ1 input1 pos1 more1 m1 =
++          let succ2 input2 pos2 more2 m2 = succ input2 pos2 more2 (f m1 m2) in
++          m2.run input1 pos1 more1 fail succ2
++        in
++        m1.run input pos more fail succ1 }
++
++    let lift3 f m1 m2 m3 : _ t @ p =
++      { run = fun input pos more fail succ ->
++        let succ1 input1 pos1 more1 m1 =
++          let succ2 input2 pos2 more2 m2 =
++            let succ3 input3 pos3 more3 m3 =
++              succ input3 pos3 more3 (f m1 m2 m3) in
++            m3.run input2 pos2 more2 fail succ3 in
++          m2.run input1 pos1 more1 fail succ2
++        in
++        m1.run input pos more fail succ1 }
++
++    let lift4 f m1 m2 m3 m4 : _ t @ p =
++      { run = fun input pos more fail succ ->
++        let succ1 input1 pos1 more1 m1 =
++          let succ2 input2 pos2 more2 m2 =
++            let succ3 input3 pos3 more3 m3 =
++              let succ4 input4 pos4 more4 m4 =
++                succ input4 pos4 more4 (f m1 m2 m3 m4) in
++              m4.run input3 pos3 more3 fail succ4 in
++            m3.run input2 pos2 more2 fail succ3 in
++          m2.run input1 pos1 more1 fail succ2
++        in
++        m1.run input pos more fail succ1 }
++
++    let ( *>) a b : _ t @ p =
++      (* a >>= fun _ -> b *)
++      { run = fun input pos more fail succ ->
++        let succ' input' pos' more' _ = b.run input' pos' more' fail succ in
++        a.run input pos more fail succ'
++      }
++
++    let (<* ) a b : _ t @ p =
++      (* a >>= fun x -> b >>| fun _ -> x *)
++      { run = fun input pos more fail succ ->
++        let succ0 input0 pos0 more0 x =
++          let succ1 input1 pos1 more1 _ = succ input1 pos1 more1 x in
++          b.run input0 pos0 more0 fail succ1
++        in
++        a.run input pos more fail succ0 }
++
++    let return = (return [@mode p])
++  end
++  [@@modality (p, c) = ((portable, contended), (nonportable, uncontended))]
++
++  include Operators
++
++  include%template struct
++    [@@@mode.default p = portable]
++
++    open Operators [@mode p]
++
++    let lift = lift
++    let lift2 = lift2
++    let lift3 = lift3
++    let lift4 = lift4
++  end
+ end
+ 
+ module Choice = struct
+-  let (<?>) p mark =
++  let (<?>) p mark : _ t @ p =
+     { run = fun input pos more fail succ ->
+       let fail' input' pos' more' marks msg =
+         fail input' pos' more' (mark::marks) msg in
+       p.run input pos more fail' succ
+     }
+ 
+-  let (<|>) (p : _ t) (q : _ t) =
++  let (<|>) (p : _ t) (q : _ t) : _ t @ p =
+     { run = fun input pos more fail succ ->
+       let fail' input' pos' more' marks msg =
+         (* The only two constructors that introduce new failure continuations are
+@@ -164,6 +190,7 @@
+       p.run input pos more fail' succ
+     }
+ end
++[@@modality p = (portable, nonportable)]
+ 
+ module Monad_use_for_debugging = struct
+   let return = Monad.return

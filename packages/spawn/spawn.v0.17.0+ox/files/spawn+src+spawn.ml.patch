@@ -1,0 +1,45 @@
+--- a/src/spawn.ml
++++ b/src/spawn.ml
+@@ -1,6 +1,6 @@
+ open StdLabels
+ 
+-external is_osx : unit -> bool = "spawn_is_osx" [@@noalloc]
++external is_osx : unit -> bool @@ portable = "spawn_is_osx" [@@noalloc]
+ 
+ let is_osx = is_osx ()
+ 
+@@ -42,7 +42,7 @@
+       s
+ ;;
+ 
+-module type Env = sig
++module type Env = sig @@ portable
+   type t
+ 
+   val of_list : string list -> t
+@@ -99,7 +99,7 @@
+   -> use_vfork:bool
+   -> setpgid:int option
+   -> sigprocmask:(Unix.sigprocmask_command * int list) option
+-  -> int
++  -> int @@ portable
+   = "spawn_unix_byte" "spawn_unix"
+ 
+ external spawn_windows
+@@ -110,7 +110,7 @@
+   -> stdin:Unix.file_descr
+   -> stdout:Unix.file_descr
+   -> stderr:Unix.file_descr
+-  -> int
++  -> int @@ portable
+   = "spawn_windows_byte" "spawn_windows"
+ 
+ let maybe_quote f =
+@@ -182,6 +182,6 @@
+   backend ~env ~cwd ~prog ~argv ~stdin ~stdout ~stderr ~use_vfork ~setpgid ~sigprocmask
+ ;;
+ 
+-external safe_pipe : unit -> Unix.file_descr * Unix.file_descr = "spawn_pipe"
++external safe_pipe : unit -> Unix.file_descr * Unix.file_descr @@ portable = "spawn_pipe"
+ 
+ let safe_pipe = if Sys.win32 then fun () -> Unix.pipe ~cloexec:true () else safe_pipe

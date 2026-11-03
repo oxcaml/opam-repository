@@ -1,0 +1,35 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/tmux"
+bug-reports: "https://github.com/janestreet/tmux/issues"
+dev-repo: "git+https://github.com/janestreet/tmux.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/tmux/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"           {>= "5.2.0"}
+  "async"           {= "v0.18~preview.133.03+642"}
+  "core"            {= "v0.18~preview.133.03+642"}
+  "core_unix"       {= "v0.18~preview.133.03+642"}
+  "jane_term_types" {= "v0.18~preview.133.03+642"}
+  "ppx_jane"        {= "v0.18~preview.133.03+642"}
+  "dune"            {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "Bindings for running a tmux session."
+description: """
+Bindings for running a tmux session.
+"""
+url {
+  src:
+    "https://github.com/janestreet/tmux/archive/73196122357c8c30f971baff8da642e676967eb5.tar.gz"
+  checksum:
+    "sha256=dd5abe8818d6ae673ad0cd37f4ffca1be1b005735dda586440c391098e3a4c01"
+}

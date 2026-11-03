@@ -1,0 +1,35 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/base_stubs"
+bug-reports: "https://github.com/janestreet/base_stubs/issues"
+dev-repo: "git+https://github.com/janestreet/base_stubs.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/base_stubs/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"             {>= "5.1.0"}
+  "dune"              {>= "3.17.0"}
+  "dune-configurator"
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "C, JavaScript, and Wasm stubs for Base"
+description: """
+
+Base_stubs contains the C, JavaScript, and Wasm stubs that Base relies on.
+It is split out of Base so that it can be depended on directly without pulling in
+the rest of Base.
+"""
+url {
+  src:
+    "https://github.com/janestreet/base_stubs/archive/13173cbff7367e6c99aab16614694bdd33a84236.tar.gz"
+  checksum:
+    "sha256=e05290ec05056fae796f2337d0b83a0d5c4e40f71d77c3b3a2ae8dcfaad70fa8"
+}

@@ -1,0 +1,35 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_sorted"
+bug-reports: "https://github.com/janestreet/ppx_sorted/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_sorted.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_sorted/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"               {>= "5.2.0"}
+  "ocaml_parser"        {= "v0.18~preview.133.03+642"}
+  "ppx_helpers"         {= "v0.18~preview.133.03+642"}
+  "dune"                {>= "3.17.0"}
+  "ocaml-compiler-libs" {>= "v0.11.0"}
+  "ppxlib"              {>= "0.39.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "Ppx rewriter for keeping data-like OCaml code sorted"
+description: """
+This ppx rewriter validates that annotated lists, variant constructors, record fields, match cases, and bindings are sorted, and emits dune corrections when they are not.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_sorted/archive/dbcd20d69d471cd1f82a06e07c4e9535e4760fd1.tar.gz"
+  checksum:
+    "sha256=6c6401722a774ba9b033802cde8e6163f3cd460e6bbd1e90a94b601178c03010"
+}

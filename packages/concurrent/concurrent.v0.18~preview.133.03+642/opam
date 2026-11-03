@@ -1,0 +1,40 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/concurrent"
+bug-reports: "https://github.com/janestreet/concurrent/issues"
+dev-repo: "git+https://github.com/janestreet/concurrent.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/concurrent/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"             {>= "5.2.0"}
+  "async_kernel"      {= "v0.18~preview.133.03+642"}
+  "await"             {= "v0.18~preview.133.03+642"}
+  "await_in_async"    {= "v0.18~preview.133.03+642"}
+  "base"              {= "v0.18~preview.133.03+642"}
+  "concurrent_kernel" {= "v0.18~preview.133.03+642"}
+  "core"              {= "v0.18~preview.133.03+642"}
+  "io"                {= "v0.18~preview.133.03+642"}
+  "ppx_jane"          {= "v0.18~preview.133.03+642"}
+  "dune"              {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "Abstract interface to concurrency in OxCaml"
+description: """
+[Concurrent] is a library that provides an abstract interface to concurrency in
+    OxCaml, with multiple implementations for different concurrent schedulers.
+"""
+url {
+  src:
+    "https://github.com/janestreet/concurrent/archive/dcf72aa5f90f757418757c32e022e8e28dae5239.tar.gz"
+  checksum:
+    "sha256=f43b32d4027f8417d93049fd72ba6e743294d3ef47eb3bb4f45a488080934719"
+}

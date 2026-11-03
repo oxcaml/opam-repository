@@ -1,0 +1,36 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/unboxed_indexing"
+bug-reports: "https://github.com/janestreet/unboxed_indexing/issues"
+dev-repo: "git+https://github.com/janestreet/unboxed_indexing.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/unboxed_indexing/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"             {>= "5.2.0"}
+  "base"              {= "v0.18~preview.133.03+642"}
+  "core"              {= "v0.18~preview.133.03+642"}
+  "ppx_jane"          {= "v0.18~preview.133.03+642"}
+  "ppx_string_dedent" {= "v0.18~preview.133.03+642"}
+  "unboxed"           {= "v0.18~preview.133.03+642"}
+  "dune"              {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "Index containers using unboxed numbers."
+description: """
+unboxed_indexing exposes OxCaml compiler functionality for indexing into containers using unboxed numbers and retrieving unboxed data.
+"""
+url {
+  src:
+    "https://github.com/janestreet/unboxed_indexing/archive/8761279d969f4f10a308ab04b77c9859b4dc3566.tar.gz"
+  checksum:
+    "sha256=06378eca57a697a0997f5221fd54cf9c1cfc6576d6583b882bee0da4545ebb71"
+}

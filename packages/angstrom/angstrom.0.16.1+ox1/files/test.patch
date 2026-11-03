@@ -1,0 +1,28 @@
+--- a/lib_test/test_angstrom.ml
++++ b/lib_test/test_angstrom.ml
+@@ -216,9 +216,9 @@
+ end
+ let little_endian =
+   let module E = Endian(struct
+-    let set_int16  = Bigstringaf.unsafe_set_int16_le
+-    let set_int32  = Bigstringaf.unsafe_set_int32_le
+-    let set_int64  = Bigstringaf.unsafe_set_int64_le
++    let set_int16 bs off v = Bigstringaf.unsafe_set_int16_le bs off v
++    let set_int32 bs off v = Bigstringaf.unsafe_set_int32_le bs off v
++    let set_int64 bs off v = Bigstringaf.unsafe_set_int64_le bs off v
+ 
+     let set_float  bs off f = Bigstringaf.unsafe_set_int32_le bs off (Int32.bits_of_float f)
+     let set_double bs off d = Bigstringaf.unsafe_set_int64_le bs off (Int64.bits_of_float d)
+@@ -227,9 +227,9 @@
+ 
+ let big_endian =
+   let module E = Endian(struct
+-    let set_int16  = Bigstringaf.unsafe_set_int16_be
+-    let set_int32  = Bigstringaf.unsafe_set_int32_be
+-    let set_int64  = Bigstringaf.unsafe_set_int64_be
++    let set_int16 bs off v = Bigstringaf.unsafe_set_int16_be bs off v
++    let set_int32 bs off v = Bigstringaf.unsafe_set_int32_be bs off v
++    let set_int64 bs off v = Bigstringaf.unsafe_set_int64_be bs off v
+ 
+     let set_float  bs off f = Bigstringaf.unsafe_set_int32_be bs off (Int32.bits_of_float f)
+     let set_double bs off d = Bigstringaf.unsafe_set_int64_be bs off (Int64.bits_of_float d)

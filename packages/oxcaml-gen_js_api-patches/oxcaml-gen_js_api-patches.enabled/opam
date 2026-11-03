@@ -12,6 +12,7 @@ depends: [
   "oxcaml" {post}
   "gen_js_api" {build & (
                   = "1.1.2+ox"
+                | = "1.1.7+ox"
                 )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

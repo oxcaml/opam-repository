@@ -12,6 +12,7 @@ depends: [
   "oxcaml" {post}
   "faraday" {build & (
                = "0.8.2+ox"
+             | = "0.8.2+ox1"
              )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

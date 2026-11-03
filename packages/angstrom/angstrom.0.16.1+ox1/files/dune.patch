@@ -1,0 +1,12 @@
+--- a/lib/dune
++++ b/lib/dune
+@@ -1,6 +1,6 @@
+ (library
+  (name angstrom)
+  (public_name angstrom)
+- (libraries bigstringaf)
+- (flags :standard -safe-string)
+- (preprocess future_syntax))
++ (libraries bigstringaf base)
++ (flags :standard -safe-string -w -60)
++ (preprocess (pps ppx_template)))

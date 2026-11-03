@@ -35,6 +35,7 @@ build: [
 conflicts: [
   "lwt" {= "6.0.0~alpha00"}
   "lwt" {= "6.0.0-beta01"}
+  "oxcaml-compiler" {>= "5.4.0-ox7"}
 ]
 dev-repo: "git+https://github.com/ocsigen/lwt.git"
 x-maintenance-intent: ["(latest)"]

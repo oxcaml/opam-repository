@@ -1,0 +1,40 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_inline_functor"
+bug-reports: "https://github.com/janestreet/ppx_inline_functor/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_inline_functor.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_inline_functor/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"        {>= "5.2.0"}
+  "base"         {= "v0.18~preview.133.03+642"}
+  "ppx_helpers"  {= "v0.18~preview.133.03+642"}
+  "ppx_jane"     {= "v0.18~preview.133.03+642"}
+  "ppx_template" {= "v0.18~preview.133.03+642"}
+  "dune"         {>= "3.17.0"}
+  "ppxlib"       {>= "0.39.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "Syntactic \"inlining\" for functor applications"
+description: """
+
+This preprocessor syntactically "inlines" functor applications. It is designed for use in
+`Ox`, which heavily uses functors for abstracting over similar shapes in modules like
+`Ptr` and `Ptr.Ext`, but must guarantee that everything --- including functions defined
+deep within the stack of functor arguments --- is thoroughly inlined.
+"""
+url {
+  src:
+    "https://github.com/janestreet/ppx_inline_functor/archive/ea49e11c8f087c24df00c8f545552b79f4bd357d.tar.gz"
+  checksum:
+    "sha256=e47c6c7e285a04adee5342949a51b2e8386432bfe1a328448fab0fb28795480e"
+}

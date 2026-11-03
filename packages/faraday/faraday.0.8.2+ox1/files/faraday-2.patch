@@ -1,0 +1,78 @@
+diff --git a/lib/faraday.ml b/lib/faraday.ml
+--- a/lib/faraday.ml
++++ b/lib/faraday.ml
+@@ -160,7 +160,7 @@ module Buffers = Deque(struct
+     let deadbeef = "\222\173\190\239" in
+     let len      = String.length deadbeef in
+     let buffer   = Bigstringaf.create len in
+-    String.iteri (Bigstringaf.unsafe_set buffer) deadbeef;
++    String.iteri (fun i c -> Bigstringaf.unsafe_set buffer i c) deadbeef;
+     { buffer; off = 0; len }
+ end)
+ module Flushes = Deque(struct
+@@ -267,7 +267,7 @@ let ensure_space t len =
+     t.scheduled_pos <- 0
+   end
+ 
+-let write_gen t ~length ~blit ?(off=0) ?len a =
++let write_gen t ~length ~blit ?(off=0) ?len (a @ local) =
+   writable_exn t;
+   let len =
+     match len with
+@@ -281,17 +281,17 @@ let write_gen t ~length ~blit ?(off=0) ?
+ let write_string =
+   let length   = String.length in
+   let blit     = Bigstringaf.unsafe_blit_from_string in
+-  fun t ?off ?len a -> write_gen t ~length ~blit ?off ?len a
++  fun t ?off ?len (a @ local) -> write_gen t ~length ~blit ?off ?len a
+ 
+ let write_bytes =
+   let length = Bytes.length in
+   let blit   = Bigstringaf.unsafe_blit_from_bytes in
+-  fun t ?off ?len a -> write_gen t ~length ~blit ?off ?len a
++  fun t ?off ?len (a @ local) -> write_gen t ~length ~blit ?off ?len a
+ 
+ let write_bigstring =
+   let length = Bigstringaf.length in
+   let blit   = Bigstringaf.unsafe_blit in
+-  fun t ?off ?len a -> write_gen t ~length ~blit ?off ?len a
++  fun t ?off ?len (a @ local) -> write_gen t ~length ~blit ?off ?len a
+ 
+ let write_char t c =
+   writable_exn t;
+diff --git a/lib/faraday.mli b/lib/faraday.mli
+--- a/lib/faraday.mli
++++ b/lib/faraday.mli
+@@ -82,26 +82,26 @@ val of_bigstring : bigstring -> t
+     use it for the current and subsequent writes. The old buffer will be
+     garbage collected once all of its contents have been {!flush}ed. *)
+ 
+-val write_string : t -> ?off:int -> ?len:int -> string -> unit
++val write_string : t -> ?off:int -> ?len:int -> string @ local -> unit
+ (** [write_string t ?off ?len str] copies [str] into the serializer's
+     internal buffer. *)
+ 
+-val write_bytes : t -> ?off:int -> ?len:int -> Bytes.t -> unit
++val write_bytes : t -> ?off:int -> ?len:int -> Bytes.t @ local -> unit
+ (** [write_bytes t ?off ?len bytes] copies [bytes] into the serializer's
+     internal buffer. It is safe to modify [bytes] after this call returns. *)
+ 
+-val write_bigstring : t -> ?off:int -> ?len:int -> bigstring -> unit
++val write_bigstring : t -> ?off:int -> ?len:int -> bigstring @ local -> unit
+ (** [write_bigstring t ?off ?len bigstring] copies [bigstring] into the
+     serializer's internal buffer. It is safe to modify [bigstring] after this
+     call returns.  *)
+ 
+ val write_gen
+   :  t
+-  -> length:('a -> int)
+-  -> blit:('a -> src_off:int -> bigstring -> dst_off:int -> len:int -> unit)
++  -> length:('a @ local -> int)
++  -> blit:('a @ local -> src_off:int -> bigstring -> dst_off:int -> len:int -> unit)
+   -> ?off:int
+   -> ?len:int
+-  -> 'a -> unit
++  -> 'a @ local -> unit
+ (** [write_gen t ~length ~blit ?off ?len x] copies [x] into the serializer's
+     internal buffer using the provided [length] and [blit] operations.
+     See {!Bigstring.blit} for documentation of the arguments. *)

@@ -1,0 +1,34 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/fastdom"
+bug-reports: "https://github.com/janestreet/fastdom/issues"
+dev-repo: "git+https://github.com/janestreet/fastdom.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/fastdom/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"       {>= "5.1.0"}
+  "core"        {= "v0.18~preview.133.03+642"}
+  "core_kernel" {= "v0.18~preview.133.03+642"}
+  "ppx_jane"    {= "v0.18~preview.133.03+642"}
+  "dune"        {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis:
+  "A library that enables batching reads and writes in a way that prevents layout thrashing in the web"
+description: """
+`fastdom` takes inspiration from the JavaScript library of the same name. It reduces layout thrashing by batching reads and writes to the DOM.
+"""
+url {
+  src:
+    "https://github.com/janestreet/fastdom/archive/1ad08a911e26daf9ea7e490fcad830ffc7aa01c6.tar.gz"
+  checksum:
+    "sha256=54dcb991c37844f3ec42f65744f1dd0704d7f998717bb5c4bda41fcf2527dd71"
+}

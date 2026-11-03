@@ -1,0 +1,66 @@
+diff --git a/lib/faraday.ml b/lib/faraday.ml
+--- a/lib/faraday.ml
++++ b/lib/faraday.ml
+@@ -51,11 +51,15 @@
+   val is_empty : t -> bool
+ 
+   val enqueue : elem -> t -> unit
++
+   val dequeue_exn : t -> elem
++  (** [dequeue_exn t] raises [Dequeue_empty] if [is_empty t] *)
++
+   val enqueue_front : elem -> t -> unit
+ 
+   val map_to_list : t -> f:(elem -> 'b) -> 'b list
+ end = struct
++
+   type elem = T.t
+ 
+   type t =
+@@ -176,12 +180,33 @@
+   | `Close
+   ]
+ 
++(* This value is odd since it's only useful when [> 1] if there's a bigstring
++   scheduled at some point. For the bytes written before and after,
++   that's [3] entries in the queue. *)
++let initial_scheduled_buffers_size = 3
++
++(* This value has been chosen under the assumption that in almost all use cases,
++   there will only be one thread of control writing to [t], and therefore only one
++   flush registered at any given time, which results in no [shift] calls. *)
++let initial_flushed_queue_size = 1
++
+ let of_bigstring buffer =
++  (* There are three ranges of the buffer that the code manipulates:
++
++     - [0, schedule_pos): bytes that are present as an iovec in [scheduled]. When bytes
++     are moved into [scheduled], [scheduled_pos] is updated to be [write_pos], while
++     [write_pos] remains unchanged.
++
++     - [scheduled_pos, write_pos): bytes that have not yet added to [scheduled].
++     Subsequent writes will start at [write_pos] and increment [write_pos] by the size of
++     the write.
++
++     - [write_pos, length buffer]: free bytes that can be used to store writes. *)
+   { buffer
+   ; write_pos       = 0
+   ; scheduled_pos   = 0
+-  ; scheduled       = Buffers.create 4
+-  ; flushed         = Flushes.create 1
++  ; scheduled       = Buffers.create initial_scheduled_buffers_size
++  ; flushed         = Flushes.create initial_flushed_queue_size
+   ; bytes_received  = 0
+   ; bytes_written   = 0
+   ; closed          = false
+@@ -364,7 +389,9 @@
+   t.closed
+ 
+ let pending_bytes t =
+-  (t.write_pos - t.scheduled_pos) + (t.bytes_received - t.bytes_written)
++  let unqueued_bytes = t.write_pos - t.scheduled_pos in
++  let queued_bytes   = t.bytes_received - t.bytes_written in
++  unqueued_bytes + queued_bytes
+ 
+ let has_pending_output t =
+   pending_bytes t <> 0

@@ -14,6 +14,7 @@ depends: [
            = "1.19.0+ox"
          | = "1.19.0+ox1"
          | = "1.19.0+ox2"
+         | = "1.24.0+ox"
          )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

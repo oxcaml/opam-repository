@@ -1,0 +1,33 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/native_witness"
+bug-reports: "https://github.com/janestreet/native_witness/issues"
+dev-repo: "git+https://github.com/janestreet/native_witness.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/native_witness/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "5.2.0"}
+  "ppx_jane" {= "v0.18~preview.133.03+642"}
+  "dune"     {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis:
+  "Type-level witness that the currently running environment is native"
+description: """
+Native_witness provides a type-level witness that the currently running environment is native (eg, not JavaScript)
+"""
+url {
+  src:
+    "https://github.com/janestreet/native_witness/archive/fd8906ef2266ad1c57372e78c5ff59a3f3bd7274.tar.gz"
+  checksum:
+    "sha256=951b9cef44d41efcd6611f1fb7f6d76dc03810b006d4b19f7d0496fbf2e11a3e"
+}

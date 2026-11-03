@@ -1,0 +1,39 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/concurrent_kernel"
+bug-reports: "https://github.com/janestreet/concurrent_kernel/issues"
+dev-repo: "git+https://github.com/janestreet/concurrent_kernel.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/concurrent_kernel/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"            {>= "5.2.0"}
+  "await"            {= "v0.18~preview.133.03+642"}
+  "base"             {= "v0.18~preview.133.03+642"}
+  "portable"         {= "v0.18~preview.133.03+642"}
+  "ppx_debug_assert" {= "v0.18~preview.133.03+642"}
+  "ppx_jane"         {= "v0.18~preview.133.03+642"}
+  "base-threads"
+  "dune"             {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "Core of the abstract interface to concurrency in OxCaml"
+description: """
+[Concurrent_kernel] is the core of [Concurrent], without [Concurrent.Io], so that
+    libraries which [Io] depends on can use it without creating a dependency cycle. It also
+    contains [Concurrent_in_thread], a systhread-based implementation.
+"""
+url {
+  src:
+    "https://github.com/janestreet/concurrent_kernel/archive/5aced629dc92e4b09078fd05739c761bf82f5d93.tar.gz"
+  checksum:
+    "sha256=492055b46804c44885aaeba30729781e6508c34dd54423eff2025996832c301c"
+}

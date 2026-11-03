@@ -1,0 +1,62 @@
+opam-version: "2.0"
+version: "1.14+ox"
+name: "zarith"
+synopsis:
+  "Implements arithmetic and logical operations over arbitrary-precision integers"
+description: """\
+The Zarith library implements arithmetic and logical operations over
+arbitrary-precision integers. It uses GMP to efficiently implement
+arithmetic over big integers. Small integers are represented as Caml
+unboxed integers, for speed and space economy."""
+maintainer: "Xavier Leroy <xavier.leroy@inria.fr>"
+authors: ["Antoine Miné" "Xavier Leroy" "Pascal Cuoq"]
+license: "LGPL-2.0-only WITH OCaml-LGPL-linking-exception"
+homepage: "https://github.com/ocaml/Zarith"
+bug-reports: "https://github.com/ocaml/Zarith/issues"
+depends: [
+  "ocaml"           {>= "4.07.0"}
+  "ocamlfind"       {>= "1.7.2"}
+  "conf-pkg-config"
+  "conf-gmp"
+]
+build: [
+  ["./configure"]
+  [make]
+]
+install: [make "install"]
+dev-repo: "git+https://github.com/ocaml/Zarith.git"
+url {
+  src: "https://github.com/ocaml/Zarith/archive/release-1.14.tar.gz"
+  checksum: [
+    "sha256=5db9dcbd939153942a08581fabd846d0f3f2b8c67fe68b855127e0472d4d1859"
+    "sha512=8a7f3e82dfa5699c8dda54dd5398c712f3ac4fe04f5208d43d8ba198fb8152de5f91cbb59c15c0a4ba010d4dfcc79f52e405bdd0abbf2798167e9e4216bcb3dd"
+  ]
+}
+x-maintenance-intent: ["(latest)"]
+patches: [
+  "zarith+src+q.ml.patch"
+  "zarith+src+q.mli.patch"
+  "zarith+src+z.ml.patch"
+  "zarith+src+z.mli.patch"
+]
+extra-files: [
+  [
+    "zarith+src+q.ml.patch"
+    "sha256=ffa29b3eadb003507997559e86c1c22776055f17357449ed7359c3852b735f78"
+  ]
+  [
+    "zarith+src+q.mli.patch"
+    "sha256=7408b28cf6a1cf9c5d4c22f8b806ef0b1447a2fb985bf6d317ec14f6c926d0b1"
+  ]
+  [
+    "zarith+src+z.ml.patch"
+    "sha256=c16178ca1cb1b8a7ace4aa7f817c0b6228d210849df8cc1445d53b44746eed0e"
+  ]
+  [
+    "zarith+src+z.mli.patch"
+    "sha256=fbccfc2bfe3c9b6a06f6e125980a0b137d039bda51c3fc2efd2ffe23ef3ae63f"
+  ]
+]
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox7"}
+]

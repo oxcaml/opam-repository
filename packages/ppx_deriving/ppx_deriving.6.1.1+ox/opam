@@ -34,5 +34,5 @@ url {
     "git+https://github.com/patricoferris/ppx_deriving.git#4cb09f54ff13e525804852190bfed8abb9267014"
 }
 conflicts: [
-  "oxcaml-compiler" {> "5.2.0minus25"}
+  "oxcaml-compiler" {> "5.2.0minus25" & < "5.4.0-ox1"}
 ]

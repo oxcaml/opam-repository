@@ -1,0 +1,51 @@
+opam-version: "2.0"
+version: "1.24.0+ox"
+synopsis: "OCaml Language Server Protocol implementation for oxcaml"
+depends: [
+  "dune"                      {>= "3.17.0"}
+  "ocaml"                     {>= "5.4" & < "5.5"}
+  "async"
+  "base"
+  "cmarkit"
+  "cppo"                      {build}
+  "core"
+  "core_unix"
+  "csexp"
+  "expect_test_helpers_async" {with-test}
+  "expect_test_helpers_core"  {with-test}
+  "file_path"
+  "merlin-lib"
+  "ocamlc-loc"
+  "odoc-parser"               {>= "2.0.0"}
+  "ppx_bin_prot"
+  "ppx_compare"
+  "ppx_enumerate"
+  "ppx_expect"                {with-test}
+  "ppx_here"
+  "ppx_jane"                  {with-test}
+  "ppx_js_style"
+  "ppx_let"
+  "ppx_log"
+  "ppx_sexp_conv"
+  "ppx_sexp_message"
+  "ppx_sexp_value"
+  "ppx_string"
+  "ppx_yojson_conv"
+  "re"                        {>= "1.8.0"}
+  "re2"
+  "spawn"                     {>= "v0.15"}
+  "uutf"                      {>= "1.0.2"}
+  "yojson"                    {>= "1.7.0" & < "3.0.0"}
+]
+build: [
+  ["dune" "build" "-p" "ocaml-lsp-server,jsonrpc,lsp" "@install"]
+]
+run-test: [
+  ["dune" "runtest" "-p" "ocaml-lsp-server,jsonrpc,lsp"]
+]
+url {
+  src: "https://github.com/oxcaml/ocaml-lsp/archive/5.4.0-ox9.tar.gz"
+  checksum:
+    "sha256=4325a7df52130d2fc749381612dc4176da76f977c175ef7a3aa30a98db3982bb"
+}
+

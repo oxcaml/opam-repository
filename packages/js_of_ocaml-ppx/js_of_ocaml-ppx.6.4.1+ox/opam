@@ -1,0 +1,38 @@
+opam-version: "2.0"
+version: "6.4.1+ox"
+synopsis: "Compiler from OCaml bytecode to JavaScript"
+description:
+  "Js_of_ocaml is a compiler from OCaml bytecode to JavaScript. It makes it possible to run pure OCaml programs in JavaScript environment like browsers and Node.js"
+maintainer: ["Ocsigen team <dev@ocsigen.org>"]
+authors: ["Ocsigen team <dev@ocsigen.org>"]
+license: [
+  "GPL-2.0-or-later" "LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception"
+]
+homepage: "https://ocsigen.org/js_of_ocaml/latest/js_of_ocaml/overview.html"
+doc: "https://ocsigen.org/js_of_ocaml/latest/js_of_ocaml/overview.html"
+bug-reports: "https://github.com/ocsigen/js_of_ocaml/issues"
+depends: [
+  "dune"        {>= "3.17.0"}
+  "ocaml"       {>= "4.13"}
+  "js_of_ocaml" {= version & >= "6.0.0"}
+  "ppxlib"      {>= "0.39.0"}
+  "num"         {with-test}
+  "re"          {>= "1.9.0" & with-test & >= "1.8.0"}
+  "odoc"        {with-doc}
+]
+dev-repo: "git+https://github.com/ocsigen/js_of_ocaml.git"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs "@install" "@doc" {with-doc}]
+]
+available: opam-version >= "2.1"
+x-subpath: "external/js_of_ocaml"
+url {
+  src:
+    "https://github.com/oxcaml/oxcaml/archive/a66ab3de9bd2d7a79db19fc8f680857f9458c424.tar.gz"
+  checksum:
+    "sha256=8327e654c2b58f9b8d957d1276d05b58347110c460487143d5bf50934bafa5ba"
+}
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox7"}
+]

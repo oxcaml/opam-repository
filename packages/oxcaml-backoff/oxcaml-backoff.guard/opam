@@ -9,6 +9,6 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: [ "oxcaml-backoff-patches" "backoff" ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
 depends: [
-  ("oxcaml-chrome-trace" {post} | "oxcaml-chrome-trace-patches" {post})
+  ("oxcaml-base64" {post} | "oxcaml-base64-patches" {post})
   "oxcaml" {post}
 ]

@@ -1,0 +1,35 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/hardcaml_persuade"
+bug-reports: "https://github.com/janestreet/hardcaml_persuade/issues"
+dev-repo: "git+https://github.com/janestreet/hardcaml_persuade.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/hardcaml_persuade/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"        {>= "5.1.0"}
+  "core"         {= "v0.18~preview.133.03+642"}
+  "hardcaml"     {= "v0.18~preview.133.03+642"}
+  "ppx_hardcaml" {= "v0.18~preview.133.03+642"}
+  "ppx_jane"     {= "v0.18~preview.133.03+642"}
+  "dune"         {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "Formal property syntax for Hardcaml"
+description: """
+Syntax and lowering utilities for writing Hardcaml formal properties as LTL and SVA.
+"""
+url {
+  src:
+    "https://github.com/janestreet/hardcaml_persuade/archive/4447a8ff76bae66966d07072adbb3048dcc695f3.tar.gz"
+  checksum:
+    "sha256=6e4688edf0d3afa31aace118e1ae0f7a943d6c74bde9167aac7423f265e750b4"
+}

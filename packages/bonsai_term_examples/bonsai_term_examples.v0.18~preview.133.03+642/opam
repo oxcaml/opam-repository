@@ -1,0 +1,48 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/bonsai_term_examples"
+bug-reports: "https://github.com/janestreet/bonsai_term_examples/issues"
+dev-repo: "git+https://github.com/janestreet/bonsai_term_examples.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/bonsai_term_examples/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                       {>= "5.1.0"}
+  "async"                       {= "v0.18~preview.133.03+642"}
+  "bonsai"                      {= "v0.18~preview.133.03+642"}
+  "bonsai_term"                 {= "v0.18~preview.133.03+642"}
+  "bonsai_term_components"      {= "v0.18~preview.133.03+642"}
+  "bonsai_term_devtools_kernel" {= "v0.18~preview.133.03+642"}
+  "bonsai_term_test"            {= "v0.18~preview.133.03+642"}
+  "bonsai_test"                 {= "v0.18~preview.133.03+642"}
+  "bonsai_web"                  {= "v0.18~preview.133.03+642"}
+  "core"                        {= "v0.18~preview.133.03+642"}
+  "core_unix"                   {= "v0.18~preview.133.03+642"}
+  "file_path"                   {= "v0.18~preview.133.03+642"}
+  "filesystem"                  {= "v0.18~preview.133.03+642"}
+  "ppx_expect"                  {= "v0.18~preview.133.03+642"}
+  "ppx_jane"                    {= "v0.18~preview.133.03+642"}
+  "dune"                        {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "Some examples for bonsai_term"
+description: """
+Bonsai_term is a library for building reusable TUI componetns and apps
+   inside an Incremental-style UI framework such as Bonsai_web, Incr_dom or
+   React. This library contains some examples that you can reference on how to
+   use `bonsai_term`.
+"""
+url {
+  src:
+    "https://github.com/janestreet/bonsai_term_examples/archive/fb98cbc8ea75fc774def9a4992bdbcb1fed56a2a.tar.gz"
+  checksum:
+    "sha256=80bc35ee66df368a29927f7e57ddb931d25edc282de357fd5694574e24bf9254"
+}

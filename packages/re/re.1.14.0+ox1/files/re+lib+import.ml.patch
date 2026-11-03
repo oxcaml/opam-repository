@@ -1,0 +1,8 @@
+--- a/lib/import.ml
++++ b/lib/import.ml
+@@ -22,3 +22,5 @@ module Int = struct
+ 
+   include Stdlib.Int
+ end
++
++include Iarray.O
