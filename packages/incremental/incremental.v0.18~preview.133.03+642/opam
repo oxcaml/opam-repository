@@ -38,3 +38,10 @@ url {
   checksum:
     "sha256=74ec81e398f46a7557909338b7435920c9cc2e48ae7589e9e0dba2b13d226d82"
 }
+patches: ["macos.patch"]
+extra-files: [
+  [
+    "macos.patch"
+    "sha256=78d61c8c8730923c407f13fe033eee823e82e2d40611714f57230f594861e1fd"
+  ]
+]

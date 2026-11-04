@@ -1,0 +1,11 @@
+--- a/src-debug/generate_debug_lib.sh
++++ b/src-debug/generate_debug_lib.sh
+@@ -9,7 +9,7 @@
+         incremental.*|incremental_intf*)
+             target=$(echo $b | sed -r 's/incremental/incremental_debug/')
+             rm -f $target
+-            sed <$b.tmp >$target -r 's/Incremental_intf/Incremental_debug_intf/g'
++            LC_ALL=C sed <$b.tmp >$target -r 's/Incremental_intf/Incremental_debug_intf/g'
+             ;;
+         *)
+             target=$b
