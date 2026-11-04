@@ -40,10 +40,14 @@ description: """
 `Io` is an interface library for direct-style I/O using the [Await] interface for
 blocking.
 """
-available: (arch = "x86_64" | arch = "arm64") & os = "linux"
+available: (arch = "x86_64" | arch = "arm64") & (os = "linux" | os = "macos")
 url {
   src:
     "https://github.com/janestreet/io/archive/854c66332ed73e98fcf8f18f199a323624ee47c0.tar.gz"
   checksum:
     "sha256=b91efc895ad7b177b3d93e15acbb0d79d3dcfb37ef5e3fbe43038db90afee75a"
 }
+patches: ["macos.patch"]
+extra-files: [
+  ["macos.patch" "sha256=35c0a703b87e433f40982fdab475dbe88da2f938fd5ac8afbf1d7ff3854a17ac"]
+]
