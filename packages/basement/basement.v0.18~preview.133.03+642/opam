@@ -31,3 +31,10 @@ url {
   checksum:
     "sha256=a0ebf647cf3331acfc746d2d659f29a5f623970de3b9fc59d38d92c0aadd79e8"
 }
+patches: ["fix-macos-include-order.patch"]
+extra-files: [
+  [
+    "fix-macos-include-order.patch"
+    "sha256=d7a23063258cc486291972fe2628b35fc1dc09effcd71eb8414ffd6bae742cf1"
+  ]
+]
