@@ -1,0 +1,117 @@
+--- a/src/common.h
++++ b/src/common.h
+@@ -32,6 +32,22 @@
+ #include <errno.h>
+ #endif
+ 
++#if defined(__APPLE__)
++/* renameat2 via renameatx_np; RENAME_WHITEOUT is unsupported (EINVAL) */
++#define SHEXP_RENAME_UNSUPPORTED 0x40000000
++
++static inline int renameat2(int olddir, const char *oldpath,
++                            int newdir, const char *newpath,
++                            unsigned int flags)
++{
++  if (flags & SHEXP_RENAME_UNSUPPORTED) {
++    errno = EINVAL;
++    return -1;
++  }
++  return renameatx_np(olddir, oldpath, newdir, newpath, flags);
++}
++#endif
++
+ extern int shexp_at_flag_table[];
+ extern int shexp_rename_flag_table[];
+ extern int shexp_open_flag_table[];
+--- a/src/posixat_stubs.c
++++ b/src/posixat_stubs.c
+@@ -26,8 +26,10 @@ CAMLprim value shexp_fd_info(value fd)
+ 
+ #else /* defined(_WIN32) */
+ 
++#if defined(__linux__)
+ #include <linux/openat2.h>
+ #include <sys/syscall.h>
++#endif
+ 
+ /* +-----------------------------------------------------------------+
+    | AT_FDCWD                                                        |
+@@ -79,6 +81,10 @@ int shexp_open_flag_table[] = {
+   O_PATH
+ };
+ 
++#ifndef AT_EMPTY_PATH
++#define AT_EMPTY_PATH 0
++#endif
++
+ int shexp_at_flag_table[] = {
+   AT_EACCESS,
+   AT_SYMLINK_FOLLOW,
+@@ -87,6 +93,21 @@ int shexp_at_flag_table[] = {
+   AT_EMPTY_PATH
+ };
+ 
++#if defined(__APPLE__)
++#define RENAME_EXCHANGE RENAME_SWAP
++#define RENAME_NOREPLACE RENAME_EXCL
++#define RENAME_WHITEOUT SHEXP_RENAME_UNSUPPORTED
++#endif
++#ifndef RENAME_EXCHANGE
++#define RENAME_EXCHANGE 0
++#endif
++#ifndef RENAME_NOREPLACE
++#define RENAME_NOREPLACE 0
++#endif
++#ifndef RENAME_WHITEOUT
++#define RENAME_WHITEOUT 0
++#endif
++
+ int shexp_rename_flag_table[] = {
+   RENAME_EXCHANGE,
+   RENAME_NOREPLACE,
+@@ -100,6 +121,22 @@ int shexp_access_permission_table[] = {
+   F_OK
+ };
+ 
++#ifndef RESOLVE_BENEATH
++#define RESOLVE_BENEATH 0
++#endif
++#ifndef RESOLVE_IN_ROOT
++#define RESOLVE_IN_ROOT 0
++#endif
++#ifndef RESOLVE_NO_MAGICLINKS
++#define RESOLVE_NO_MAGICLINKS 0
++#endif
++#ifndef RESOLVE_NO_SYMLINKS
++#define RESOLVE_NO_SYMLINKS 0
++#endif
++#ifndef RESOLVE_NO_XDEV
++#define RESOLVE_NO_XDEV 0
++#endif
++
+ int shexp_resolve_flag_table[] = {
+   RESOLVE_BENEATH,
+   RESOLVE_IN_ROOT,
+@@ -270,6 +307,15 @@ CAMLprim value shexp_fd_info(value fd)
+    | openat2                                                         |
+    +-----------------------------------------------------------------+ */
+ 
++#if !defined(__linux__)
++
++CAMLprim value shexp_openat2(value v_dir, value v_pathname, value v_open_how)
++{
++  unix_error(ENOSYS, "openat2", v_pathname);
++}
++
++#else
++
+ CAMLprim value shexp_openat2(value v_dir, value v_pathname, value v_open_how)
+ {
+   CAMLparam3(v_dir, v_pathname, v_open_how);
+@@ -302,4 +348,6 @@ CAMLprim value shexp_openat2(value v_dir, value v_pathname, value v_open_how)
+   CAMLreturn(Val_int(fd));
+ }
+ 
++#endif  /* !defined(__linux__) */
++
+ #endif  /* defined(_WIN32) */
