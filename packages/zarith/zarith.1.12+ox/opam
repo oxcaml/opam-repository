@@ -10,6 +10,7 @@ arithmetic over big integers. Small integers are represented as Caml
 unboxed integers, for speed and space economy."""
 maintainer: "Xavier Leroy <xavier.leroy@inria.fr>"
 authors: ["Antoine Miné" "Xavier Leroy" "Pascal Cuoq"]
+license: "LGPL-2.0-only WITH OCaml-LGPL-linking-exception"
 homepage: "https://github.com/ocaml/Zarith"
 bug-reports: "https://github.com/ocaml/Zarith/issues"
 depends: [
