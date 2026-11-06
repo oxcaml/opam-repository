@@ -6,6 +6,7 @@ on:
       - main
       - dev
       - 5.2.0minus39
+      - ox9-testing
   pull_request:
   schedule:
     - cron: "30 0 * * *"

@@ -1,0 +1,254 @@
+diff --git a/runtime/extern.c b/runtime/extern.c
+index 30521094a2..c983f4ed9c 100644
+--- a/runtime/extern.c
++++ b/runtime/extern.c
+@@ -55,19 +55,26 @@ struct extern_item { volatile value * v; mlsize_t count; };
+ 
+ /* Hash table to record already-marshaled objects and their positions */
+ 
+-struct object_position { value obj; uintnat pos; };
+-
+ /* The hash table uses open addressing, linear probing, and a redundant
+    representation:
+-   - a bitvector [present] records which entries of the table are occupied;
+-   - an array [entries] records (object, position) pairs for the entries
+-     that are occupied.
++   - a bitvector [present] records which slots of the table are occupied;
++   - an array [slots] records, for each occupied slot, the index of the
++     object in [objs];
++   - [objs] records the objects in insertion order, so that the index of
++     an object is also its position (the value of [obj_counter] when it
++     was recorded).
+    The bitvector is much smaller than the array (1/128th on 64-bit
+    platforms, 1/64th on 32-bit platforms), so it has better locality,
+    making it faster to determine that an object is not in the table.
+    Also, it makes it faster to empty or initialize a table: only the
+-   [present] bitvector needs to be filled with zeros, the [entries]
++   [present] bitvector needs to be filled with zeros, the [slots]
+    array can be left uninitialized.
++   Slots are 32 bits wide, and [objs] is dense, so the table costs
++   about 4 / load + 8 bytes per object instead of 16 / load, and growing
++   the table rebuilds the slots from [objs] without keeping the old
++   slots alive.
++   [data] is only used by [caml_obj_reachable_words], which associates
++   marks rather than positions to objects; it is allocated on demand.
+ */
+ 
+ struct position_table {
+@@ -76,7 +83,10 @@ struct position_table {
+   mlsize_t mask;                    /* mask == size - 1 */
+   mlsize_t threshold;               /* threshold == a fixed fraction of size */
+   uintnat * present;                /* [Bitvect_size(size)] */
+-  struct object_position * entries; /* [size]  */
++  uint32_t * slots;                 /* [size] */
++  value * objs;                     /* [capacity] */
++  uintnat * data;                   /* [capacity] or NULL */
++  mlsize_t capacity;                /* allocated length of objs and data */
+ };
+ 
+ #define Bits_word (8 * sizeof(uintnat))
+@@ -100,7 +110,8 @@ struct caml_extern_state {
+ 
+   /* Hash table to record already marshalled objects */
+   uintnat pos_table_present_init[Bitvect_size(POS_TABLE_INIT_SIZE)];
+-  struct object_position pos_table_entries_init[POS_TABLE_INIT_SIZE];
++  uint32_t pos_table_slots_init[POS_TABLE_INIT_SIZE];
++  value pos_table_objs_init[POS_TABLE_INIT_SIZE];
+   struct position_table pos_table;
+ 
+   /* To buffer the output */
+@@ -236,7 +247,10 @@ static void extern_init_position_table(struct caml_extern_state* s)
+   s->pos_table.mask = POS_TABLE_INIT_SIZE - 1;
+   s->pos_table.threshold = Threshold(POS_TABLE_INIT_SIZE);
+   s->pos_table.present = s->pos_table_present_init;
+-  s->pos_table.entries = s->pos_table_entries_init;
++  s->pos_table.slots = s->pos_table_slots_init;
++  s->pos_table.objs = s->pos_table_objs_init;
++  s->pos_table.data = NULL;
++  s->pos_table.capacity = POS_TABLE_INIT_SIZE;
+   memset(s->pos_table_present_init, 0,
+          Bitvect_size(POS_TABLE_INIT_SIZE) * sizeof(uintnat));
+ }
+@@ -248,11 +262,20 @@ static void extern_free_position_table(struct caml_extern_state* s)
+   if (s->extern_flags & NO_SHARING) return;
+   if (s->pos_table.present != s->pos_table_present_init) {
+     caml_stat_free(s->pos_table.present);
+-    caml_stat_free(s->pos_table.entries);
++    caml_stat_free(s->pos_table.slots);
+     /* Protect against repeated calls to extern_free_position_table */
+     s->pos_table.present = s->pos_table_present_init;
+-    s->pos_table.entries = s->pos_table_entries_init;
++    s->pos_table.slots = s->pos_table_slots_init;
++  }
++  if (s->pos_table.objs != s->pos_table_objs_init) {
++    caml_stat_free(s->pos_table.objs);
++    s->pos_table.objs = s->pos_table_objs_init;
++  }
++  if (s->pos_table.data != NULL) {
++    caml_stat_free(s->pos_table.data);
++    s->pos_table.data = NULL;
+   }
++  s->pos_table.capacity = POS_TABLE_INIT_SIZE;
+ }
+ 
+ /* Accessing bitvectors */
+@@ -274,7 +297,7 @@ static void extern_resize_position_table(struct caml_extern_state *s)
+   mlsize_t new_size, new_byte_size;
+   int new_shift;
+   uintnat * new_present;
+-  struct object_position * new_entries;
++  uint32_t * new_slots;
+   uintnat h;
+   struct position_table old = s->pos_table;
+ 
+@@ -288,15 +311,22 @@ static void extern_resize_position_table(struct caml_extern_state *s)
+     new_shift = old.shift - 1;
+   }
+   if (new_size == 0
+-      || caml_umul_overflow(new_size, sizeof(struct object_position),
+-                            &new_byte_size))
++      || caml_umul_overflow(new_size, sizeof(uint32_t), &new_byte_size))
+     extern_out_of_memory(s);
+-  new_entries = caml_stat_alloc_noexc(new_byte_size);
+-  if (new_entries == NULL) extern_out_of_memory(s);
++  /* The slots are rebuilt from [objs], so the old slots can be freed
++     before the new ones are allocated: the two never coexist. */
++  if (old.present != s->pos_table_present_init) {
++    caml_stat_free(old.present);
++    caml_stat_free(old.slots);
++    s->pos_table.present = s->pos_table_present_init;
++    s->pos_table.slots = s->pos_table_slots_init;
++  }
++  new_slots = caml_stat_alloc_noexc(new_byte_size);
++  if (new_slots == NULL) extern_out_of_memory(s);
+   new_present =
+     caml_stat_calloc_noexc(Bitvect_size(new_size), sizeof(uintnat));
+   if (new_present == NULL) {
+-    caml_stat_free(new_entries);
++    caml_stat_free(new_slots);
+     extern_out_of_memory(s);
+   }
+   s->pos_table.size = new_size;
+@@ -304,24 +334,61 @@ static void extern_resize_position_table(struct caml_extern_state *s)
+   s->pos_table.mask = new_size - 1;
+   s->pos_table.threshold = Threshold(new_size);
+   s->pos_table.present = new_present;
+-  s->pos_table.entries = new_entries;
++  s->pos_table.slots = new_slots;
+ 
+-  /* Insert every entry of the old table in the new table */
+-  for (uintnat i = 0; i < old.size; i++) {
+-    if (! bitvect_test(old.present, i)) continue;
+-    h = Hash(old.entries[i].obj, s->pos_table.shift);
++  /* Insert every recorded object in the new table */
++  for (uintnat i = 0; i < s->obj_counter; i++) {
++    h = Hash(s->pos_table.objs[i], new_shift);
+     while (bitvect_test(new_present, h)) {
+       h = (h + 1) & s->pos_table.mask;
+     }
+     bitvect_set(new_present, h);
+-    new_entries[h] = old.entries[i];
++    new_slots[h] = (uint32_t) i;
+   }
++}
+ 
+-  /* Free the old tables if they are not the initial ones */
+-  if (old.present != s->pos_table_present_init) {
+-    caml_stat_free(old.present);
+-    caml_stat_free(old.entries);
++/* Grow the arrays indexed by object position */
++
++static void extern_grow_objs(struct caml_extern_state *s)
++{
++  mlsize_t new_capacity = 2 * s->pos_table.capacity;
++  mlsize_t new_byte_size;
++  value * new_objs;
++
++  /* Slots are 32 bits wide */
++  if (new_capacity > (mlsize_t) 1 << 32
++      || caml_umul_overflow(new_capacity, sizeof(value), &new_byte_size))
++    extern_failwith(s, "output_value: too many objects");
++  if (s->pos_table.objs == s->pos_table_objs_init) {
++    new_objs = caml_stat_alloc_noexc(new_byte_size);
++    if (new_objs == NULL) extern_out_of_memory(s);
++    memcpy(new_objs, s->pos_table_objs_init,
++           POS_TABLE_INIT_SIZE * sizeof(value));
++  } else {
++    new_objs = caml_stat_resize_noexc(s->pos_table.objs, new_byte_size);
++    if (new_objs == NULL) extern_out_of_memory(s);
++  }
++  s->pos_table.objs = new_objs;
++  if (s->pos_table.data != NULL) {
++    uintnat * new_data =
++      caml_stat_resize_noexc(s->pos_table.data,
++                             new_capacity * sizeof(uintnat));
++    if (new_data == NULL) extern_out_of_memory(s);
++    s->pos_table.data = new_data;
+   }
++  s->pos_table.capacity = new_capacity;
++}
++
++/* Allocate the [data] array, initially mapping every object to its
++   position, when a different datum is associated to an object. */
++
++static void extern_alloc_data(struct caml_extern_state *s)
++{
++  uintnat * data =
++    caml_stat_alloc_noexc(s->pos_table.capacity * sizeof(uintnat));
++  if (data == NULL) extern_out_of_memory(s);
++  for (uintnat i = 0; i < s->obj_counter; i++) data[i] = i;
++  s->pos_table.data = data;
+ }
+ 
+ /* Determine whether the given object [obj] is in the hash table.
+@@ -338,9 +405,10 @@ Caml_inline int extern_lookup_position(struct caml_extern_state *s, value obj,
+       *h_out = h;
+       return 0;
+     }
+-    if (s->pos_table.entries[h].obj == obj) {
++    uintnat i = s->pos_table.slots[h];
++    if (s->pos_table.objs[i] == obj) {
+       *h_out = h;
+-      *pos_out = s->pos_table.entries[h].pos;
++      *pos_out = s->pos_table.data == NULL ? i : s->pos_table.data[i];
+       return 1;
+     }
+     h = (h + 1) & s->pos_table.mask;
+@@ -354,9 +422,13 @@ static void extern_record_location_with_data(struct caml_extern_state* s,
+                                              value obj, uintnat h, uintnat data)
+ {
+   if (s->extern_flags & NO_SHARING) return;
++  uintnat i = s->obj_counter;
++  if (i >= s->pos_table.capacity) extern_grow_objs(s);
++  s->pos_table.objs[i] = obj;
++  if (s->pos_table.data == NULL && data != i) extern_alloc_data(s);
++  if (s->pos_table.data != NULL) s->pos_table.data[i] = data;
+   bitvect_set(s->pos_table.present, h);
+-  s->pos_table.entries[h].obj = obj;
+-  s->pos_table.entries[h].pos = data;
++  s->pos_table.slots[h] = (uint32_t) i;
+   s->obj_counter++;
+   if (s->obj_counter >= s->pos_table.threshold)
+     extern_resize_position_table(s);
+@@ -376,7 +448,9 @@ static void extern_update_location_with_data(struct caml_extern_state* s,
+                                              uintnat h, uintnat data)
+ {
+   if (s->extern_flags & NO_SHARING) return;
+-  s->pos_table.entries[h].pos = data;
++  uintnat i = s->pos_table.slots[h];
++  if (s->pos_table.data == NULL) extern_alloc_data(s);
++  s->pos_table.data[i] = data;
+ }
+ 
+ /* To buffer the output */
+@@ -1354,8 +1428,8 @@ void add_to_field(value sizes, uintnat index, intnat x) {
+    without clearing the position table to share data between runs starting
+    from different roots. Identifiers must be positive integers.
+ 
+-   For each value node visited, we record its traversal status in the [pos] field
+-   of its entry in [position_table.entries]. The statuses are described in detail
++   For each value node visited, we record its traversal status as its datum
++   in [position_table.data]. The statuses are described in detail
+    in the [reachable_words_node_state] enum.
+ 
+    Returns the total size of elements marked, that is ones that are reachable
