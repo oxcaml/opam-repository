@@ -84,5 +84,5 @@ build: [
 ]
 x-maintenance-intent: ["(latest)"]
 url {
-  src: "git+https://github.com/avsm/odoc.git#oxcaml-5.4.0-ox9"
+  src: "git+https://github.com/avsm/odoc#oxcaml-5.4.0-ox9"
 }
