@@ -1,0 +1,36 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/unsafe_clear"
+bug-reports: "https://github.com/janestreet/unsafe_clear/issues"
+dev-repo: "git+https://github.com/janestreet/unsafe_clear.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/unsafe_clear/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                    {>= "5.2.0"}
+  "base"                     {= "v0.18~preview.133.03+642"}
+  "core"                     {= "v0.18~preview.133.03+642"}
+  "expect_test_helpers_core" {= "v0.18~preview.133.03+642"}
+  "ppx_jane"                 {= "v0.18~preview.133.03+642"}
+  "dune"                     {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis:
+  "Utilities for data structures that use arrays for backing memory, e.g. [Vec]"
+description: """
+Utilities for data structures that use arrays for backing memory, e.g. [Vec]
+"""
+url {
+  src:
+    "https://github.com/janestreet/unsafe_clear/archive/edde87a7516a79d2c3bc8c2cb490000c323c29dd.tar.gz"
+  checksum:
+    "sha256=d771ab66b05bb2f70e7c9e0caa94e10bcb7719607558a84a17ff9cffd7c3a3c7"
+}

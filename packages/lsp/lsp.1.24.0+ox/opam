@@ -1,0 +1,29 @@
+opam-version: "2.0"
+version: "1.24.0+ox"
+synopsis: "LSP protocol implementation in OCaml"
+depends: [
+  "dune"            {>= "3.17.0"}
+  "jsonrpc"         {= version & >= "1.18.0"}
+  "async"
+  "base"
+  "core"
+  "file_path"
+  "ppx_bin_prot"
+  "ppx_compare"
+  "ppx_js_style"
+  "ppx_let"
+  "ppx_sexp_conv"
+  "ppx_string"
+  "ppx_yojson_conv"
+  "uutf"            {>= "1.0.2"}
+  "yojson"          {>= "1.7.0" & < "3.0.0"}
+]
+build: [
+  ["dune" "build" "-p" name "@install"]
+]
+url {
+  src: "https://github.com/oxcaml/ocaml-lsp/archive/5.4.0-ox9.tar.gz"
+  checksum:
+    "sha256=4325a7df52130d2fc749381612dc4176da76f977c175ef7a3aa30a98db3982bb"
+}
+

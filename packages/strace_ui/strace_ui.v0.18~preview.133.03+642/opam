@@ -1,0 +1,43 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/strace_ui"
+bug-reports: "https://github.com/janestreet/strace_ui/issues"
+dev-repo: "git+https://github.com/janestreet/strace_ui.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/strace_ui/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                  {>= "5.2.0"}
+  "async"                  {= "v0.18~preview.133.03+642"}
+  "bonsai"                 {= "v0.18~preview.133.03+642"}
+  "bonsai_term"            {= "v0.18~preview.133.03+642"}
+  "bonsai_term_components" {= "v0.18~preview.133.03+642"}
+  "core"                   {= "v0.18~preview.133.03+642"}
+  "core_unix"              {= "v0.18~preview.133.03+642"}
+  "ppx_jane"               {= "v0.18~preview.133.03+642"}
+  "re2"                    {= "v0.18~preview.133.03+642"}
+  "vec"                    {= "v0.18~preview.133.03+642"}
+  "angstrom"               {>= "0.15.0"}
+  "dune"                   {>= "3.17.0"}
+  "notty-community"        {>= "0.2.4"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis:
+  "A Bonsai_term application for interactively viewing strace output."
+description: """
+A Bonsai_term application for interactively viewing strace output.
+"""
+url {
+  src:
+    "https://github.com/janestreet/strace_ui/archive/7f6273ec566f47a91bbac67b61f50be84549fb76.tar.gz"
+  checksum:
+    "sha256=a4f2160329d378deef4e08571073fe3b1da77a3c8b73419bbb0d9f0874dbd4f3"
+}

@@ -1,0 +1,64 @@
+--- a/in_uring/dune
++++ b/in_uring/dune
+@@ -1,4 +1,5 @@
+ (library
++ (enabled_if (= %{system} linux))
+  (name io_in_uring)
+  (public_name io.in_uring)
+  (libraries await core_kernel.caml_unix core core_unix file_path
+--- a/uring/bindings/constants/bin/dune
++++ b/uring/bindings/constants/bin/dune
+@@ -1,4 +1,5 @@
+ (executables
++ (enabled_if (= %{system} linux))
+  (modes byte exe)
+  (names io_uring_bindings_constants_print)
+  (libraries io_uring_bindings_constants)
+--- a/uring/bindings/constants/lib/dune
++++ b/uring/bindings/constants/lib/dune
+@@ -1,4 +1,5 @@
+ (library
++ (enabled_if (= %{system} linux))
+  (name io_uring_bindings_constants)
+  (public_name io.uring_bindings_constants)
+  (preprocess
+--- a/uring/bindings/dune
++++ b/uring/bindings/dune
+@@ -1,4 +1,5 @@
+ (library
++ (enabled_if (= %{system} linux))
+  (name io_uring_bindings)
+  (public_name io.uring_bindings)
+  (libraries base basement capsule core core_unix file_path filesystem.types
+@@ -17,6 +18,7 @@
+   (language c)))
+ 
+ (rule
++ (enabled_if (= %{system} linux))
+  (targets c_intf.ml)
+  (deps constants/bin/io_uring_bindings_constants_print.exe)
+  (action
+--- a/uring/shards/dune
++++ b/uring/shards/dune
+@@ -1,4 +1,5 @@
+ (library
++ (enabled_if (= %{system} linux))
+  (name io_uring_shards)
+  (public_name io.uring_shards)
+  (libraries await core_kernel.caml_unix core core_unix file_path
+--- a/vendor/liburing/src/dune
++++ b/vendor/liburing/src/dune
+@@ -1,4 +1,5 @@
+ (rule
++ (enabled_if (= %{system} linux))
+  (targets libliburing.a dllliburing.so setup.o queue.o syscall.o register.o
+    version.o)
+  (deps
+@@ -20,6 +21,7 @@
+      version.o))))
+ 
+ (install
++ (enabled_if (= %{system} linux))
+  (section doc)
+  (files
+   (../LICENSE as LICENSE.liburing)))

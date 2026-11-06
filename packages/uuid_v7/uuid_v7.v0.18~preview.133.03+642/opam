@@ -1,0 +1,35 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/uuid_v7"
+bug-reports: "https://github.com/janestreet/uuid_v7/issues"
+dev-repo: "git+https://github.com/janestreet/uuid_v7.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/uuid_v7/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"        {>= "5.2.0"}
+  "async_kernel" {= "v0.18~preview.133.03+642"}
+  "core"         {= "v0.18~preview.133.03+642"}
+  "core_kernel"  {= "v0.18~preview.133.03+642"}
+  "ppx_jane"     {= "v0.18~preview.133.03+642"}
+  "dune"         {>= "3.17.0"}
+  "zarith"       {>= "1.11"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "UUIDv7 generation, parsing, and encoding."
+description: """
+UUIDv7 generation, parsing, and encoding.
+"""
+url {
+  src:
+    "https://github.com/janestreet/uuid_v7/archive/37fa6ea52a046320b28373a7da30c071428d085e.tar.gz"
+  checksum:
+    "sha256=3da6babcb865e3017ca8456c8220e1f174c8d55509c95deb8669f4cead9c3fe8"
+}

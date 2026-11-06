@@ -8,13 +8,14 @@ homepage: "https://oxcaml.org"
 bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: "oxcaml-js_of_ocaml-ppx"
 depends: [
-  ("oxcaml-js_of_ocaml-toplevel" {post} | "oxcaml-js_of_ocaml-toplevel-patches" {post})
+  ("oxcaml-js_of_ocaml-runtime" {post} | "oxcaml-js_of_ocaml-runtime-patches" {post})
   "oxcaml" {post}
   "js_of_ocaml-ppx" {build & (
                        = "6.0.1+ox"
                      | = "6.0.1+ox1"
                      | = "6.0.1+ox2"
                      | = "6.3.2+ox"
+                     | = "6.4.1+ox"
                      )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

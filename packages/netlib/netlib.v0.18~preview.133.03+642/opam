@@ -1,0 +1,37 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/netlib"
+bug-reports: "https://github.com/janestreet/netlib/issues"
+dev-repo: "git+https://github.com/janestreet/netlib.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/netlib/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"             {>= "5.2.0"}
+  "async"             {= "v0.18~preview.133.03+642"}
+  "base"              {= "v0.18~preview.133.03+642"}
+  "core"              {= "v0.18~preview.133.03+642"}
+  "core_kernel"       {= "v0.18~preview.133.03+642"}
+  "core_unix"         {= "v0.18~preview.133.03+642"}
+  "ppx_int63_literal" {= "v0.18~preview.133.03+642"}
+  "ppx_jane"          {= "v0.18~preview.133.03+642"}
+  "dune"              {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "A collection of libraries relating to networking."
+description: """
+A collection of libraries relating to networking.
+"""
+url {
+  src:
+    "https://github.com/janestreet/netlib/archive/514112b9ca77c50503a9ad3d71b3a80f5df1501e.tar.gz"
+  checksum:
+    "sha256=140f17079fe7cee0d16a7742dc72f855d083205f6d68ba3cb362a9502a04b391"
+}

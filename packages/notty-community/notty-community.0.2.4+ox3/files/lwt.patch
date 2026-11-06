@@ -1,0 +1,52 @@
+--- a/src-lwt/notty_lwt.ml
++++ b/src-lwt/notty_lwt.ml
+@@ -43,7 +43,7 @@
+ 
+   let winches = lazy (
+     let c = Lwt_condition.create () in
+-    let `Revert _ = set_winch_handler (Lwt_condition.broadcast c) in
++    let `Revert _ = set_winch_handler (Base.Obj.magic_portable (Lwt_condition.broadcast c)) in
+     c
+   )
+ 
+@@ -106,12 +106,12 @@
+         |> Lwt_stream.map (fun dim -> `Resize dim)
+     else Lwt_stream.of_list []
+ 
+-  let create ?(dispose=true) ?(nosig=true) ?(mouse=true) ?(bpaste=true)
++  let create ?(dispose=true) ?(nosig=true) ?(mouse=true) ?(hover=false) ?(bpaste=true)
+              ?(input=Lwt_unix.stdin) ?(output=Lwt_unix.stdout) () =
+     let fd = Lwt_unix.unix_file_descr output in
+     let (stop, stopw) = Lwt.wait () in
+     let rec t = lazy {
+-        trm    = Tmachine.create ~mouse ~bpaste (cap_for_fd fd)
++        trm    = Tmachine.create ~mouse ~hover ~bpaste (cap_for_fd fd)
+       ; ochan  = Lwt_io.(of_fd ~mode:output) output
+       ; buf    = Buffer.create 4096
+       ; fds    = (input, output)
+--- a/src-lwt/notty_lwt.mli
++++ b/src-lwt/notty_lwt.mli
+@@ -26,6 +26,7 @@
+   val create : ?dispose:bool ->
+                ?nosig:bool ->
+                ?mouse:bool ->
++               ?hover:bool ->
+                ?bpaste:bool ->
+                ?input:Lwt_unix.file_descr ->
+                ?output:Lwt_unix.file_descr ->
+@@ -44,7 +44,14 @@
+ 
+   val image   : t -> image -> unit Lwt.t
+   val refresh : t -> unit Lwt.t
+-  val cursor  : t -> (int * int) option -> unit Lwt.t
++  val cursor  : t -> (int * int *
++         [ `Bar
++         | `Bar_blinking
++         | `Block
++         | `Block_blinking
++         | `Default
++         | `Underline
++         | `Underline_blinking ] ) option -> unit Lwt.t
+ 
+   (** {1 Events} *)
+ 

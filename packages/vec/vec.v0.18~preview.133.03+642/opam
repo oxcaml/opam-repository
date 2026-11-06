@@ -1,0 +1,35 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/vec"
+bug-reports: "https://github.com/janestreet/vec/issues"
+dev-repo: "git+https://github.com/janestreet/vec.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/vec/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"              {>= "5.2.0"}
+  "core"               {= "v0.18~preview.133.03+642"}
+  "ppx_for_loop"       {= "v0.18~preview.133.03+642"}
+  "ppx_jane"           {= "v0.18~preview.133.03+642"}
+  "ppx_stable_witness" {= "v0.18~preview.133.03+642"}
+  "unboxed"            {= "v0.18~preview.133.03+642"}
+  "dune"               {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "Growable array."
+description: """
+Growable array.
+"""
+url {
+  src:
+    "https://github.com/janestreet/vec/archive/eb692d9fdc9c8c697be1d4602c3b398bb1620894.tar.gz"
+  checksum:
+    "sha256=2c2d0ab74b817149b2a568e7b83d0a58e0b97d26113f53529430a8acddac3a33"
+}

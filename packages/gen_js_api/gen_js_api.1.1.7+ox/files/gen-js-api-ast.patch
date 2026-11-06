@@ -1,0 +1,14 @@
+--- a/ppx-lib/gen_js_api_ppx.ml
++++ b/ppx-lib/gen_js_api_ppx.ml
+@@ -2179,9 +2179,9 @@ let standalone () =
+   if !out = "" then out := Filename.chop_extension src ^ ".ml";
+   let oc = if !out = "-" then stdout else open_out !out in
+   let sg =
+-    Ocaml_common.Pparse.parse_interface
++    (Ocaml_common.Pparse.parse_interface
+       ~tool_name:"gen_js_iface"
+-      src |> Selected_ast.Of_ocaml.copy_signature
++      src).ast |> Selected_ast.Of_ocaml.copy_signature
+   in
+   let str = str_of_sg ~global_attrs:[] sg in
+   ignore (check_loc_mapper # signature sg);

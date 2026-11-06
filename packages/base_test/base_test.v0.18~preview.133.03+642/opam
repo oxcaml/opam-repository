@@ -1,0 +1,52 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/base_test"
+bug-reports: "https://github.com/janestreet/base_test/issues"
+dev-repo: "git+https://github.com/janestreet/base_test.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/base_test/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+run-test: [
+  ["dune" "runtest" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                    {>= "5.1.0"}
+  "base"                     {= "v0.18~preview.133.03+642"}
+  "base_quickcheck"          {= "v0.18~preview.133.03+642"}
+  "basement"                 {= "v0.18~preview.133.03+642"}
+  "bignum"                   {= "v0.18~preview.133.03+642"}
+  "core"                     {= "v0.18~preview.133.03+642"}
+  "expect_test_helpers_base" {= "v0.18~preview.133.03+642"}
+  "expectable"               {= "v0.18~preview.133.03+642"}
+  "portable"                 {= "v0.18~preview.133.03+642"}
+  "ppx_int63_literal"        {= "v0.18~preview.133.03+642"}
+  "ppx_jane"                 {= "v0.18~preview.133.03+642"}
+  "ppx_loc"                  {= "v0.18~preview.133.03+642"}
+  "ppx_quick_test"           {= "v0.18~preview.133.03+642"}
+  "sexp_grammar"             {= "v0.18~preview.133.03+642"}
+  "sexplib"                  {= "v0.18~preview.133.03+642"}
+  "stdio"                    {= "v0.18~preview.133.03+642"}
+  "unboxed"                  {= "v0.18~preview.133.03+642"}
+  "unique"                   {= "v0.18~preview.133.03+642"}
+  "dune"                     {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "Tests for Base"
+description: """
+Part of Jane Street's Core library
+Tests for the Base library.
+"""
+url {
+  src:
+    "https://github.com/janestreet/base_test/archive/eb46488bdf53c20046dc143dae1f89380d4611d7.tar.gz"
+  checksum:
+    "sha256=27aa756008a2e3ea807738e8746ec2bc2407e3347e34983fc699e31b16f96022"
+}

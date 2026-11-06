@@ -13,6 +13,7 @@ depends: [
   "lwt_ppx" {build & (
                = "5.9.1+ox"
              | = "6.0.0+ox"
+             | = "6.0.0+ox1"
              )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

@@ -1,0 +1,39 @@
+--- a/src/notty.ml
++++ b/src/notty.ml
+@@ -752,7 +752,35 @@
+ 
+   let rec demux =
+     let chr = Char.chr in function
+-    | 0x1b::0x5b::0x4d::a::b::c::xs -> Esc_M (a, b, c) :: demux xs
++    | 0x1b::0x5b::0x4d::args ->
++      (
++        (* NOTE: X10 Mouse codes [1], are empirically trucated in VS Code when switching
++           workspaces. This match statement drops truncated X10 Moused codes.
++
++           [1] https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Mouse-Tracking
++
++           X10 mouse codes are older, and can only represent small screens. (<96 columns / rows!)
++           
++           I've only observed these in the VS Code terminal.
++        *)
++        let in_range x = x >= 32 && x <= 32 + 94 in
++        match args with
++        | [] | [_] | [_ ; _] -> []
++        | (0x1b :: _) as rem -> demux rem
++        | (_ :: ((0x1b :: _) as rem)) -> demux rem
++        | (_ :: _ :: ((0x1b :: _) as rem)) -> demux rem
++        | _:: _ :: _ :: _unexpected_extra :: _ -> 
++          (* NOTE: We conservatively drop the entire packet if we see extra chars.
++             This has the rare potential of breaking if someone pastes mouse events. *)
++          []
++        | [ a; b; c] -> 
++          match in_range c && in_range c with
++          | true -> [Esc_M (a, b, c)]
++          | false -> 
++            (* NOTE: we conservatively drop the entire packet rather than attempt to
++               ambiguously interpret it. *)
++            []
++      )
+     | 0x1b::0x5b::xs | 0x9b::xs ->
+         let (r, xs) = csi xs |> Option.get (C1 '\x5b', xs) in r :: demux xs
+     | 0x1b::0x4f::x::xs | 0x8f::x::xs

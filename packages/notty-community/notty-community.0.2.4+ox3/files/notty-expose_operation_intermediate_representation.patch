@@ -1,0 +1,101 @@
+--- a/src/notty.ml
++++ b/src/notty.ml
+@@ -124,6 +124,9 @@
+           (if x2 = -1 then ix.(off + w - 1) else x2) - x1;
+         if x2 = -1 then Buffer.add_char buf dead
+ 
++  let to_string t =
++    Buffer.mkstring (fun buf -> to_buffer buf t)
++
+   let sub t x w =
+     let w1 = width t in
+     if w = 0 || x >= w1 then empty else
+@@ -245,6 +248,34 @@
+   let bg bg = { empty with bg = Set bg }
+   let st st = { empty with st }
+   let href ~url = { empty with url = Some url }
++
++  module Private = struct
++    let fg_color (t : t) =
++      match t.fg with
++      | Unset -> None
++      | Set c -> if c = default then None else Some c
++    ;;
++
++    let bg_color (t : t) =
++      match t.bg with
++      | Unset -> None
++      | Set c -> if c = default then None else Some c
++    ;;
++
++    let has_style (t : t) (style : style) =
++      (t.st land style) <> 0
++    ;;
++
++    let color_to_repr (c : color) =
++      if c = default
++      then `Default
++      else (
++        match tag c with
++        | 1 -> `Palette_index (i c)
++        | 2 -> `Rgb_888 (r c, g c, b c)
++        | tag -> invalid_arg "Notty.A.Private: unknown color tag %d" tag)
++    ;;
++  end
+ end
+ 
+ module I = struct
+--- a/src/notty.mli
++++ b/src/notty.mli
+@@ -172,6 +172,26 @@
+ 
+   val href : url:string -> attr
+   (** [href ~url] is [empty] with a clickable hyperlink to [url]. *)
++
++  (**/**)
++  module Private : sig
++    (** Return [None] when the corresponding attribute is unset or explicitly set to
++        [default]. *)
++    val fg_color : t -> color option
++    val bg_color : t -> color option
++
++    (** Query the raw style bitset. *)
++    val has_style : t -> style -> bool
++
++    (** Return a structured representation of a {!color}.
++
++        - [`Default] corresponds to {!default}
++        - [`Palette_index i] is an index in the 256-color palette (including the first 16 ANSI
++          colors)
++        - [`Rgb_888 (r, g, b)] is a truecolor (24-bit) value *)
++    val color_to_repr : color -> [ `Default | `Palette_index of int | `Rgb_888 of int * int * int ]
++  end
++  (**/**)
+ end
+ 
+ (** [I] is for image.
+@@ -613,6 +633,11 @@
+     These are private interfaces, prone to breakage. Don't use them. *)
+ 
+ module Text : sig
++  type t
++
++  val width : t -> int
++  val to_string : t -> string
++
+   val graphemes : string -> int array
+   (** [graphemes str] returns an index array mapping display column positions to byte
+       offsets in [str]. The array has length [display_width + 1], where the last element
+@@ -629,7 +654,11 @@
+ end
+ 
+ module Operation : sig
+-  type t
++  type t =
++    | End
++    | Skip of int * t
++    | Text of A.t * Text.t * t
++
+   val of_image : (int * int) -> int * int -> image -> t list
+ end
+ 

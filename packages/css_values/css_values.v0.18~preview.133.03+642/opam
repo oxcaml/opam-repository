@@ -1,0 +1,38 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/css_values"
+bug-reports: "https://github.com/janestreet/css_values/issues"
+dev-repo: "git+https://github.com/janestreet/css_values.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/css_values/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"           {>= "5.1.0"}
+  "core"            {= "v0.18~preview.133.03+642"}
+  "core_kernel"     {= "v0.18~preview.133.03+642"}
+  "jsonaf"          {= "v0.18~preview.133.03+642"}
+  "of_json"         {= "v0.18~preview.133.03+642"}
+  "ppx_jane"        {= "v0.18~preview.133.03+642"}
+  "ppx_jsonaf_conv" {= "v0.18~preview.133.03+642"}
+  "angstrom"        {>= "0.15.0"}
+  "dune"            {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "Typed representations of CSS values"
+description: """
+Typed representations of CSS values generated from machine-readable CSS specifications.
+"""
+url {
+  src:
+    "https://github.com/janestreet/css_values/archive/17bd2ecc643af3a3ebc903a11ae77eaecf565280.tar.gz"
+  checksum:
+    "sha256=f709721e806f76f47282c1ba4fdce5d25f1210cf983c7e65d6047e64c0817460"
+}

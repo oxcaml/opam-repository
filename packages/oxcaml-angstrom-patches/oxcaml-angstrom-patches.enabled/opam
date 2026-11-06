@@ -12,6 +12,7 @@ depends: [
   "oxcaml" {post}
   "angstrom" {build & (
                 = "0.16.1+ox"
+              | = "0.16.1+ox1"
               )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

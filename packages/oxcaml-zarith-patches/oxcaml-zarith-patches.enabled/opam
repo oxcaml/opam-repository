@@ -15,6 +15,7 @@ depends: [
             | = "1.12+ox2"
             | = "1.12+ox3"
             | = "1.14+ox"
+            | = "1.14+ox1"
             )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

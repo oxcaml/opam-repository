@@ -9,6 +9,6 @@ bug-reports: "https://github.com/oxcaml/opam-repository/issues"
 conflicts: [ "oxcaml-ctypes-foreign-patches" "ctypes-foreign" ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]
 depends: [
-  ("oxcaml-dot-merlin-reader" {post} | "oxcaml-dot-merlin-reader-patches" {post})
+  ("oxcaml-digestif" {post} | "oxcaml-digestif-patches" {post})
   "oxcaml" {post}
 ]

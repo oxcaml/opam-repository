@@ -1,0 +1,12 @@
+diff --git a/lib/angstrom.ml b/lib/angstrom.ml
+--- a/lib/angstrom.ml
++++ b/lib/angstrom.ml
+@@ -645,7 +645,7 @@
+     parser.run input pos more fail succ }
+ 
+ let scan state f =
+-  (scan_ [@mode p]) state f ~with_buffer:Bigstringaf.substring
++  (scan_ [@mode p]) state f ~with_buffer:(fun bigstring ~off ~len -> Bigstringaf.substring bigstring ~off ~len)
+ 
+ let scan_state state f =
+   let open Operators [@mode p] in

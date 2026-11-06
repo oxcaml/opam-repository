@@ -1,0 +1,53 @@
+opam-version: "2.0"
+version: "0.8.2+ox"
+name: "faraday"
+synopsis: "A library for writing fast and memory-efficient serializers"
+description: """\
+Faraday is a library for writing fast and memory-efficient serializers. Its
+core type and related operation gives the user fine-grained control over
+copying and allocation behavior while serializing user-defined types, and
+presents the output in a form that makes it possible to use vectorized write
+operations, such as the writev system call, or any other platform or
+application-specific output APIs."""
+maintainer: "Spiros Eliopoulos <spiros@inhabitedtype.com>"
+authors: "Spiros Eliopoulos <spiros@inhabitedtype.com>"
+license: "BSD-3-clause"
+homepage: "https://github.com/inhabitedtype/faraday"
+bug-reports: "https://github.com/inhabitedtype/faraday/issues"
+depends: [
+  "ocaml"       {>= "4.03.0"}
+  "dune"        {>= "3.17.0"}
+  "alcotest"    {with-test & >= "0.4.1"}
+  "bigstringaf" {>= "0.10.0+ox"}
+]
+build: [
+  ["dune" "subst"] {dev}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
+dev-repo: "git+https://github.com/inhabitedtype/faraday.git"
+url {
+  src: "https://github.com/inhabitedtype/faraday/archive/0.8.2.tar.gz"
+  checksum: [
+    "sha256=720ea90b39fd3ea7de6e8722330a25514e67306e94d4af41ad48d8a7cfa035c6"
+    "md5=307dccc4ea67ff0eeff394701d05bbe7"
+  ]
+}
+patches: ["faraday-0.patch" "faraday-1.patch" "faraday-2.patch"]
+extra-files: [
+  [
+    "faraday-0.patch"
+    "sha256=747a3001ac9a616825b8fddf1ce8357ec325b9ca6ae245170c286d317ade5c37"
+  ]
+  [
+    "faraday-1.patch"
+    "sha256=e656f14d9c3f78fe066a34b8a903dc5fcd85fa396058634f46372d34eb127f44"
+  ]
+  [
+    "faraday-2.patch"
+    "sha256=0064328a420f66527cca71f3889dec228551fd3a5f702859f98d5887442bf154"
+  ]
+]
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox7"}
+]

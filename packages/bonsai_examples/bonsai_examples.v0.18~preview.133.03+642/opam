@@ -1,0 +1,53 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/bonsai_examples"
+bug-reports: "https://github.com/janestreet/bonsai_examples/issues"
+dev-repo: "git+https://github.com/janestreet/bonsai_examples.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/bonsai_examples/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"               {>= "5.1.0"}
+  "async"               {= "v0.18~preview.133.03+642"}
+  "async_extra"         {= "v0.18~preview.133.03+642"}
+  "async_js"            {= "v0.18~preview.133.03+642"}
+  "async_kernel"        {= "v0.18~preview.133.03+642"}
+  "async_rpc_kernel"    {= "v0.18~preview.133.03+642"}
+  "async_rpc_websocket" {= "v0.18~preview.133.03+642"}
+  "base"                {= "v0.18~preview.133.03+642"}
+  "bonsai"              {= "v0.18~preview.133.03+642"}
+  "bonsai_web"          {= "v0.18~preview.133.03+642"}
+  "core"                {= "v0.18~preview.133.03+642"}
+  "core_kernel"         {= "v0.18~preview.133.03+642"}
+  "ocaml-embed-file"    {= "v0.18~preview.133.03+642"}
+  "ppx_jane"            {= "v0.18~preview.133.03+642"}
+  "virtual_dom"         {= "v0.18~preview.133.03+642"}
+  "cohttp"              {>= "2.5.6"}
+  "cohttp-async"        {>= "2.5.7" & < "3.0.0" | >= "5.1.1" & < "6.0.0"}
+  "dune"                {>= "3.17.0"}
+  "js_of_ocaml"         {>= "6.0.0"}
+  "js_of_ocaml-ppx"     {>= "6.0.0"}
+  "uri"                 {>= "3.0.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis:
+  "Examples for bonsai_web, a library for building dynamic webapps, using Js_of_ocaml"
+description: """
+A collection of bonsai_web examples. Bonsai is a library for building
+    reusable UI components inside an Incremental-style UI framework such as
+    Incr_dom or React. This repository contains its examples.
+"""
+url {
+  src:
+    "https://github.com/janestreet/bonsai_examples/archive/4c9f493de019e7dd7e0637d2b0860ce07aa43a19.tar.gz"
+  checksum:
+    "sha256=ee437c314326bedc09004dcd19624b90e0dc2341f5a83ae0ac65fa5fd81a5715"
+}

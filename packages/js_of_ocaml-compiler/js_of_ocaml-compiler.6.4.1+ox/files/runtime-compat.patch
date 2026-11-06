@@ -1,0 +1,25 @@
+--- a/HACKING.jst.md
++++ b/HACKING.jst.md
+@@ -42,6 +42,9 @@
+ Downstream packaging change: `lib/runtime` is its own package,
+ `js_of_ocaml-runtime`, instead of upstream's `js_of_ocaml-compiler.runtime`,
+ so that the `js_of_ocaml` library installs without the compiler library.
++`js_of_ocaml-compiler` still provides `js_of_ocaml-compiler.runtime`
++(`lib/runtime-compat`), an empty library that re-exports
++`js_of_ocaml-runtime`, so that code using upstream's name keeps working.
+ 
+ ## Test
+ 
+--- /dev/null
++++ b/lib/runtime-compat/dune
+@@ -0,0 +1,10 @@
++;; Upstream's name for the runtime library, which lives in the
++;; js_of_ocaml-runtime package here, so that code using
++;; js_of_ocaml-compiler.runtime keeps working.
++
++(library
++ (name jsoo_runtime_compat)
++ (public_name js_of_ocaml-compiler.runtime)
++ (modules)
++ (libraries
++  (re_export js_of_ocaml-runtime)))

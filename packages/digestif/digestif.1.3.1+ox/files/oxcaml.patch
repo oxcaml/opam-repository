@@ -1,0 +1,12 @@
+--- a/src/digestif_by.ml
++++ b/src/digestif_by.ml
+@@ -1,5 +1,9 @@
+ include Bytes
+ 
++(* OxCaml's [Bytes.blit] takes local arguments, so its type doesn't match the [~blit]
++   parameter of the src-ocaml [feed] functions. Eta-expanding it fixes that. *)
++let blit src src_off dst dst_off len = Bytes.blit src src_off dst dst_off len
++
+ external unsafe_get_32 : t -> int -> int32 = "%caml_bytes_get32u"
+ external unsafe_get_64 : t -> int -> int64 = "%caml_bytes_get64u"
+ 

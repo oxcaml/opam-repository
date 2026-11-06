@@ -1,0 +1,49 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/parallel"
+bug-reports: "https://github.com/janestreet/parallel/issues"
+dev-repo: "git+https://github.com/janestreet/parallel.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/parallel/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"                    {>= "5.2.0"}
+  "async"                    {= "v0.18~preview.133.03+642"}
+  "await"                    {= "v0.18~preview.133.03+642"}
+  "base"                     {= "v0.18~preview.133.03+642"}
+  "base_bigstring"           {= "v0.18~preview.133.03+642"}
+  "bignum"                   {= "v0.18~preview.133.03+642"}
+  "concurrent"               {= "v0.18~preview.133.03+642"}
+  "concurrent_kernel"        {= "v0.18~preview.133.03+642"}
+  "core"                     {= "v0.18~preview.133.03+642"}
+  "expect_test_helpers_core" {= "v0.18~preview.133.03+642"}
+  "handled_effect"           {= "v0.18~preview.133.03+642"}
+  "portable"                 {= "v0.18~preview.133.03+642"}
+  "portable_mpmc_queue"      {= "v0.18~preview.133.03+642"}
+  "portable_ws_deque"        {= "v0.18~preview.133.03+642"}
+  "ppx_jane"                 {= "v0.18~preview.133.03+642"}
+  "unboxed"                  {= "v0.18~preview.133.03+642"}
+  "unboxed_datatypes"        {= "v0.18~preview.133.03+642"}
+  "unique"                   {= "v0.18~preview.133.03+642"}
+  "vec"                      {= "v0.18~preview.133.03+642"}
+  "base-threads"
+  "dune"                     {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "OxCaml Parallelism"
+description: """
+ Parallelism infrastructure.
+"""
+url {
+  src:
+    "https://github.com/janestreet/parallel/archive/550bb00ac87f232d67d5849fdb2582fa843cf5ed.tar.gz"
+  checksum:
+    "sha256=cb7c1995ded43c384157efef05c9886457a1b40e3c2e0097b987f0d82c276336"
+}

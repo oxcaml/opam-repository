@@ -13,6 +13,7 @@ depends: [
   "ocaml-compiler-libs" {build & (
                            = "v0.12.4"
                          | = "v0.17.0+ox"
+                         | = "v0.17.0+ox1"
                          )}
 ]
 messages: ["WARNING! An older version of OxCaml is being installed" {oxcaml:version = "archived"}]

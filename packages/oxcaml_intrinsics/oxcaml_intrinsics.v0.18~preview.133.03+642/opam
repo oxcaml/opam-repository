@@ -1,0 +1,33 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/oxcaml_intrinsics"
+bug-reports: "https://github.com/janestreet/oxcaml_intrinsics/issues"
+dev-repo: "git+https://github.com/janestreet/oxcaml_intrinsics.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/oxcaml_intrinsics/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"            {>= "5.2.0"}
+  "ocaml_intrinsics" {= "v0.18~preview.133.03+642"}
+  "ppx_jane"         {= "v0.18~preview.133.03+642"}
+  "dune"             {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "Intrinsics for OxCaml"
+description: """
+Provides some compiler intrinsics for OxCaml.
+"""
+url {
+  src:
+    "https://github.com/janestreet/oxcaml_intrinsics/archive/978b5cd5c8fd967aa79b9298f202f29b9df98265.tar.gz"
+  checksum:
+    "sha256=43adcdb6c36acf77f943b9875f4bd484b38c2e2bce78bab21a22f729c1f49274"
+}

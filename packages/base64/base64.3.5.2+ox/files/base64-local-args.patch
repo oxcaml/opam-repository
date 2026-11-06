@@ -1,0 +1,10 @@
+--- a/src/base64.mli
++++ b/src/base64.mli
+@@ -115,6 +115,6 @@
+     way, we ensure to allocate only one time result. *)
+ 
+ val encode_exn :
+-  ?pad:bool -> ?alphabet:alphabet -> ?off:int -> ?len:int -> string -> string
++  ?pad:bool -> ?alphabet:alphabet -> ?off:int -> ?len:int -> string @ local -> string
+ (** Same as {!encode} but raises an invalid argument exception if we retrieve an
+     error. *)

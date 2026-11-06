@@ -1,0 +1,59 @@
+opam-version: "2.0"
+version: "0.29.0+ox"
+name: "ocamlformat"
+synopsis: "Auto-formatter for OCaml code"
+description: """\
+**ocamlformat** is a code formatter for OCaml. It comes with opinionated default settings but is also fully customizable to suit your coding style.
+
+- **Profiles:** ocamlformat offers profiles we predefined formatting configurations. Profiles include `default`, `ocamlformat`, `janestreet`.
+- **Configurable:** Users can change the formatting profile and configure every option in their `.ocamlformat` configuration file.
+- **Format Comments:** ocamlformat can format comments, docstrings, and even code blocks in your comments.
+- **RPC:** ocamlformat provides an RPC server that can be used by other tools to easily format OCaml Code."""
+maintainer: [
+  "Guillaume Petiot <guillaume@tarides.com>"
+  "Jules Aguillon <jules@j3s.fr>"
+  "Emile Trotignon <emile@tarides.com>"
+]
+authors: [
+  "Josh Berdine <jjb@fb.com>"
+  "Hugo Heuzard <hugo.heuzard@gmail.com>"
+  "Etienne Millon <etienne@tarides.com>"
+  "Guillaume Petiot <guillaume@tarides.com>"
+  "Jules Aguillon <jules@j3s.fr>"
+]
+license: ["MIT" "LGPL-2.1-only WITH OCaml-LGPL-linking-exception"]
+homepage: "https://github.com/ocaml-ppx/ocamlformat"
+bug-reports: "https://github.com/ocaml-ppx/ocamlformat/issues"
+depends: [
+  "ocaml"               {>= "4.08"}
+  "cmdliner"            {with-test = "false" & >= "1.1.0" | with-test & >= "1.2.0"}
+  "csexp"               {>= "1.4.0"}
+  "dune"                {>= "3.17.0"}
+  "dune"                {< "3.22" & with-test & >= "3.17.0"}
+  "ocamlformat-lib"     {= version}
+  "ocamlformat-rpc-lib" {with-test & = version}
+  "re"                  {>= "1.8.0"}
+  "odoc"                {with-doc}
+]
+build: [
+  ["dune" "subst"] {dev}
+  [
+    "dune"
+    "build"
+    "-p"
+    name
+    "-j"
+    jobs
+    "@install"
+    "@runtest" {with-test}
+    "@doc" {with-doc}
+  ]
+]
+dev-repo: "git+https://github.com/ocaml-ppx/ocamlformat.git"
+x-commit-hash: "195e470387ecdcfb0f9ce309b0d8d17807bde25d"
+url {
+  src: "https://github.com/oxcaml/ocamlformat/archive/5.4.0-ox9.tar.gz"
+  checksum:
+    "sha256=784a1705aaa1d6d1d3f838f27e76b88c5ed0365d09241c2a75275642a9c88c09"
+}
+

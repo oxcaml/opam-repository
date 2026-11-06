@@ -1,0 +1,78 @@
+--- a/src/base64.ml
++++ b/src/base64.ml
+@@ -19,7 +19,7 @@
+  *
+  *)
+ 
+-type alphabet = { emap : int array; dmap : int array }
++type alphabet : immutable_data = { emap : int iarray; dmap : int iarray }
+ 
+ type sub = string * int * int
+ 
+@@ -32,13 +32,13 @@
+ 
+ let unsafe_set_uint8 t off v = Bytes.unsafe_set t off (Char.chr v)
+ 
+-external unsafe_set_uint16 : bytes -> int -> int -> unit = "%caml_bytes_set16u"
++external unsafe_set_uint16 : bytes -> int -> int -> unit @@ portable = "%caml_bytes_set16u"
+   [@@noalloc]
+ 
+-external unsafe_get_uint16 : string -> int -> int = "%caml_string_get16u"
++external unsafe_get_uint16 : string -> int -> int @@ portable = "%caml_string_get16u"
+   [@@noalloc]
+ 
+-external swap16 : int -> int = "%bswap16" [@@noalloc]
++external swap16 : int -> int @@ portable = "%bswap16" [@@noalloc]
+ 
+ let none = -1
+ 
+@@ -54,12 +54,12 @@
+     Array.init (String.length alphabet) (fun i -> Char.code alphabet.[i]) in
+   let dmap = Array.make 256 none in
+   String.iteri (fun idx chr -> dmap.(Char.code chr) <- idx) alphabet ;
+-  { emap; dmap }
++  { emap = Iarray.of_array emap; dmap = Iarray.of_array dmap }
+ 
+-let length_alphabet { emap; _ } = Array.length emap
++let length_alphabet { emap; _ } = Iarray.length emap
+ 
+ let alphabet { emap; _ } =
+-  String.init (Array.length emap) (fun i -> Char.chr emap.(i))
++  String.init (Iarray.length emap) (fun i -> Char.chr (Iarray.get emap i))
+ 
+ let default_alphabet =
+   make_alphabet
+@@ -100,7 +100,7 @@
+     let n' = n // 3 * 4 in
+     let res = Bytes.create n' in
+ 
+-    let emap i = Array.unsafe_get emap i in
++    let emap i = Iarray.unsafe_get emap i in
+ 
+     let emit b1 b2 b3 i =
+       unsafe_set_be_uint16 res i
+@@ -205,7 +205,7 @@
+       set_uint8 res (j + 2) (x land 0xff) in
+ 
+     let dmap i =
+-      let x = Array.unsafe_get dmap i in
++      let x = Iarray.unsafe_get dmap i in
+       if x = none then raise Not_found ;
+       x in
+ 
+--- a/src/base64.mli
++++ b/src/base64.mli
+@@ -1,3 +1,4 @@
++@@ portable
+ (*
+  * Copyright (c) 2006-2009 Citrix Systems Inc.
+  * Copyright (c) 2010 Thomas Gazagnaire <thomas@gazagnaire.com>
+@@ -26,7 +27,7 @@
+ 
+     {e Release v3.5.2 - https://github.com/mirage/ocaml-base64} *)
+ 
+-type alphabet
++type alphabet : immutable_data
+ (** Type of alphabet. *)
+ 
+ type sub = string * int * int

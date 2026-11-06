@@ -1,0 +1,37 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/year_week"
+bug-reports: "https://github.com/janestreet/year_week/issues"
+dev-repo: "git+https://github.com/janestreet/year_week.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/year_week/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"              {>= "5.2.0"}
+  "base_quickcheck"    {= "v0.18~preview.133.03+642"}
+  "core"               {= "v0.18~preview.133.03+642"}
+  "ppx_jane"           {= "v0.18~preview.133.03+642"}
+  "ppx_sexp_digest"    {= "v0.18~preview.133.03+642"}
+  "ppx_stable_witness" {= "v0.18~preview.133.03+642"}
+  "ppx_trace_types"    {= "v0.18~preview.133.03+642"}
+  "dune"               {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "ISO 8601 year-week values."
+description: """
+Year_week provides an type for ISO 8601 week dates
+"""
+url {
+  src:
+    "https://github.com/janestreet/year_week/archive/391694d10cc41aa0f3dedc6d52740fa2eab9b6fb.tar.gz"
+  checksum:
+    "sha256=a6996ce31cabc58cbebc706059990b1372f4dd6c071891e1a783592215ad6ff7"
+}

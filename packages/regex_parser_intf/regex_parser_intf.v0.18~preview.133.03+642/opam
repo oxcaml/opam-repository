@@ -1,0 +1,31 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/regex_parser_intf"
+bug-reports: "https://github.com/janestreet/regex_parser_intf/issues"
+dev-repo: "git+https://github.com/janestreet/regex_parser_intf.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/regex_parser_intf/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml" {>= "5.1.0"}
+  "base"  {= "v0.18~preview.133.03+642"}
+  "dune"  {>= "3.17.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+]
+synopsis: "Interface shared by Re_parser and Re2.Parser"
+description: """
+"""
+url {
+  src:
+    "https://github.com/janestreet/regex_parser_intf/archive/8ca70692301a60ac5b928ebaec36a9dc97a57c73.tar.gz"
+  checksum:
+    "sha256=073d1ca294bc3aecd84440cd3e781e49ea5a05ba6f11b8652e65ad9d0a06e820"
+}

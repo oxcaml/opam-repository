@@ -1,0 +1,56 @@
+opam-version: "2.0"
+version: "6.0.0+ox"
+name: "lwt_ppx"
+synopsis:
+  "PPX syntax for Lwt, providing something similar to async/await from JavaScript"
+maintainer: [
+  "Raphaël Proust <code@bnwr.net>" "Anton Bachin <antonbachin@yahoo.com>"
+]
+authors: ["Jérôme Vouillon" "Jérémie Dimino"]
+license: "MIT"
+homepage: "https://github.com/ocsigen/lwt"
+doc: "https://ocsigen.org/lwt"
+bug-reports: "https://github.com/ocsigen/lwt/issues"
+depends: [
+  "dune"   {>= "3.17.0"}
+  "ocaml"  {>= "4.08"}
+  "ppxlib" {>= "0.39.0"}
+  "lwt"    {>= "6"}
+  "odoc"   {with-doc}
+]
+conflicts: [
+  "lwt" {= "6.0.0~alpha00"}
+  "lwt" {= "6.0.0-beta01"}
+  "oxcaml-compiler" {< "5.4.0-ox7"}
+]
+flags: avoid-version
+build: [
+  ["dune" "subst"] {dev}
+  [
+    "dune"
+    "build"
+    "-p"
+    name
+    "-j"
+    jobs
+    "@install"
+    "@runtest" {with-test}
+    "@doc" {with-doc}
+  ]
+]
+dev-repo: "git+https://github.com/ocsigen/lwt.git"
+url {
+  src: "https://github.com/ocsigen/lwt/archive/refs/tags/6.0.0.tar.gz"
+  checksum: [
+    "md5=8bfdd7b36a40fc715c48b3a9edccf324"
+    "sha512=6d2f4866e06601f9e7e43ac6378f05a3ea915c94548d5a6c96e2fb2adc2c6cff233ffa56862ca7be809c2d2114ed9335c22fb7d768adf7fae5460bb52de3f938"
+  ]
+}
+x-maintenance-intent: ["(latest)"]
+patches: ["diff.patch"]
+extra-files: [
+  [
+    "diff.patch"
+    "sha256=96e6d23e9217fd4b77719bc670864e0e2f6d2a956a9f71e4ac637e79c9d91b1b"
+  ]
+]

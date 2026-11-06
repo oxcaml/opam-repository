@@ -1,0 +1,22 @@
+--- a/src/blocking_sync.c
++++ b/src/blocking_sync.c
+@@ -1,6 +1,9 @@
+ 
+ #define CAML_INTERNALS
+ 
++#include "blocking_mutex.h"
++#include "blocking_condition.h"
++
+ #include "caml/fail.h"
+ #include "caml/alloc.h"
+ #include "caml/custom.h"
+@@ -9,9 +12,6 @@
+ #include "caml/sys.h"
+ #include "caml/signals.h"
+ 
+-#include "blocking_mutex.h"
+-#include "blocking_condition.h"
+-
+ // In native code, this weak symbol will be overridden when linked with threads.
+ // In bytecode, it will do nothing. We only use bytecode for jsoo internally, but this
+ // is a problem for upstream bytecode.

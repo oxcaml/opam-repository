@@ -1,0 +1,77 @@
+opam-version: "2.0"
+version: "6.4.1+ox"
+synopsis: "Compiler from OCaml bytecode to JavaScript"
+description:
+  "Js_of_ocaml is a compiler from OCaml bytecode to JavaScript. It makes it possible to run pure OCaml programs in JavaScript environment like browsers and Node.js"
+maintainer: ["Ocsigen team <dev@ocsigen.org>"]
+authors: ["Ocsigen team <dev@ocsigen.org>"]
+license: [
+  "GPL-2.0-or-later" "LGPL-2.1-or-later WITH OCaml-LGPL-linking-exception"
+]
+homepage: "https://ocsigen.org/js_of_ocaml/latest/js_of_ocaml/overview.html"
+doc: "https://ocsigen.org/js_of_ocaml/latest/js_of_ocaml/overview.html"
+bug-reports: "https://github.com/ocsigen/js_of_ocaml/issues"
+depends: [
+  "dune"                 {>= "3.17.0"}
+  "ocaml"                {>= "4.13" & < "5.7"}
+  "js_of_ocaml-runtime"  {= version}
+  "num"                  {with-test}
+  "out-channel-redirect" {with-test}
+  "ppxlib"               {>= "0.39.0"}
+  "ocaml-compiler-libs"  {>= "v0.12.4" & >= "v0.11.0"}
+  "re"                   {with-test & >= "1.8.0"}
+  "cmdliner"             {>= "2.0"}
+  "sedlex"               {>= "3.6"}
+  "qcheck"               {with-test}
+  "menhir"               {>= "20180523"}
+  "menhirLib"
+  "menhirSdk"
+  "yojson"               {>= "1.7.0" & < "3.0.0"}
+  "odoc"                 {with-doc}
+]
+depopts: ["ocamlfind"]
+conflicts: [
+  "ocamlfind" {< "1.5.1"}
+  "js_of_ocaml" {< "3.0"}
+  "oxcaml-compiler" {< "5.4.0-ox7"}
+]
+dev-repo: "git+https://github.com/ocsigen/js_of_ocaml.git"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs "@install" "@doc" {with-doc}]
+  [
+    "cmdliner"
+    "install"
+    "tool-support"
+    "--update-opam-install=%{_:name}%.install"
+    "_build/install/default/bin/js_of_ocaml" {os-family != "windows"}
+    "_build/install/default/bin/js_of_ocaml.exe:js_of_ocaml"
+      {os-family = "windows"}
+    "_build/cmdliner-install"
+  ]
+  [
+    "cmdliner"
+    "install"
+    "tool-support"
+    "--update-opam-install=%{_:name}%.install"
+    "_build/install/default/bin/jsoo_minify" {os-family != "windows"}
+    "_build/install/default/bin/jsoo_minify.exe:jsoo_minify"
+      {os-family = "windows"}
+    "_build/cmdliner-install"
+  ]
+]
+available: opam-version >= "2.1"
+x-subpath: "external/js_of_ocaml"
+url {
+  src:
+    "https://github.com/oxcaml/oxcaml/archive/a66ab3de9bd2d7a79db19fc8f680857f9458c424.tar.gz"
+  checksum:
+    "sha256=8327e654c2b58f9b8d957d1276d05b58347110c460487143d5bf50934bafa5ba"
+}
+patches: ["runtime-compat.patch"]
+extra-files: [
+  [
+    "runtime-compat.patch"
+    "sha256=3737bdf6bc5bd07e6e2c3e6af5d783a87d3df8aca619be8f8245b3a6d1f04c72"
+  ]
+]

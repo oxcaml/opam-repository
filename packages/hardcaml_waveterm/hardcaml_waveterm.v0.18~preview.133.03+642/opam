@@ -1,0 +1,50 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/hardcaml_waveterm"
+bug-reports: "https://github.com/janestreet/hardcaml_waveterm/issues"
+dev-repo: "git+https://github.com/janestreet/hardcaml_waveterm.git"
+doc:
+  "https://ocaml.janestreet.com/ocaml-core/latest/doc/hardcaml_waveterm/index.html"
+license: "MIT"
+x-maintenance-intent: ["(latest)"]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"           {>= "5.1.0"}
+  "async"           {= "v0.18~preview.133.03+642"}
+  "base"            {= "v0.18~preview.133.03+642"}
+  "bin_prot"        {= "v0.18~preview.133.03+642"}
+  "core"            {= "v0.18~preview.133.03+642"}
+  "core_unix"       {= "v0.18~preview.133.03+642"}
+  "hardcaml"        {= "v0.18~preview.133.03+642"}
+  "notty_async"     {= "v0.18~preview.133.03+642"}
+  "ppx_hardcaml"    {= "v0.18~preview.133.03+642"}
+  "ppx_jane"        {= "v0.18~preview.133.03+642"}
+  "stdio"           {= "v0.18~preview.133.03+642"}
+  "cryptokit"       {>= "1.16" & < "1.17"}
+  "dune"            {>= "3.17.0"}
+  "notty-community" {>= "0.2.4"}
+  "re"              {>= "1.8.0"}
+]
+available: arch != "x86_32"
+conflicts: [
+  "oxcaml-compiler" {< "5.4.0-ox9"}
+  "hardcaml-waveterm"
+]
+synopsis: "A terminal based digital waveform viewer for Hardcaml"
+description: """
+The hardcaml_waveterm library renders digital waveforms to unicode. Such
+waveforms can be used in expect tests or for debugging using the supplied
+interactive terminal application.
+
+The library is closely integrated with Hardcaml and can be easily attached
+to simulations.
+"""
+url {
+  src:
+    "https://github.com/janestreet/hardcaml_waveterm/archive/53bd6b0be7598d1b011d649bd01859aab441c130.tar.gz"
+  checksum:
+    "sha256=574df2083aceac67663b956fdf13551ab08e483ac0ec05495a4d2118b5ce9a40"
+}
