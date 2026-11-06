@@ -2,6 +2,5 @@
 ocaml-variants
 # temporarily broken
 sherlodoc
-odoc
 # eio_linux can only install on Linux
 Linux:eio_linux
