@@ -1,0 +1,3791 @@
+--- /dev/null
++++ b/kernel/src/slice_make_ext0.ml
+@@ -0,0 +1,628 @@
++open! Base
++open! Unboxed_datatypes
++open Slice_intf.Definitions
++
++[%%template
++[@@@kind_set.define
++  s_kinds_non_void_non_value
++  = ( base_non_value
++    , bits8
++    , bits16
++    , bits64 & bits64
++    , value_or_null & value_or_null
++    , value_or_null & bits64
++    , (_ : (_ : (value_or_null & bits64) & (value_or_null & bits64))) )]
++
++[@@@kind_set.define
++  s_kinds_non_void = (s_kinds_non_void_non_value, value_or_null, word & value_or_null)]
++
++[@@@kind_set.define s_kinds = (s_kinds_non_void, void)]
++
++[%%inline_functor
++module%template
++  [@kind ptr_kind = (bits64)]
++  [@mode v = read_write, v' = read]
++  Make
++    (Idx : Idx_intf.Definitions.Shared_i with type i := Isize.t)
++    (Ptr : sig
++       include
++         Ptr.Isize.S
++         [@kind ptr_kind] [@mode v]
++         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
++
++       [%%template:
++       [@@@kind.default k = s_kinds]
++       [@@@mode.default l = (global, local), v = (read_write, read, v, v')]
++
++       val unsafe_get : ('a : k). 'a t @ l v -> 'a @ l v @@ portable [@@zero_alloc]]
++     end)
++    (Addr : sig
++       type ('a : any) t : ptr_kind
++
++       include
++         Addr.S
++         [@kind ptr_kind] [@mode v]
++         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
++          and type ('a : any) ptr := 'a Ptr.t
++          and type ('a : any) t := 'a t
++     end) : sig
++  type ('a : any) t =
++    #{ ptr : 'a Ptr.t
++     ; len : Isize.t
++     }
++
++  include
++    With_i(Isize).S
++    [@kind ptr_kind] [@mode v]
++    with type ('a : any) ptr := 'a Ptr.t
++     and type ('a : any) addr := 'a Addr.t
++     and type ('a : any) t := 'a t
++end = struct
++  type ('a : any) t =
++    #{ ptr : 'a Ptr.t
++     ; len : Isize.t
++     }
++
++  open Isize.O
++
++  type ('a : k) t = 'a t [@@kind k = (s_kinds_non_void_non_value, void)]
++
++  let[@inline] check_pos_exn t ~pos = assert (pos >= #0n && pos < t.#len)
++
++  let[@inline] check_pos_len_exn t ~pos ~len =
++    (check_pos_exn [@inlined]) t ~pos;
++    assert (len >= #0n && len <= t.#len - pos)
++  ;;
++
++  let[@inline] length t = t.#len
++  let[@inline] is_empty t = length t = #0n
++
++  [%%template
++  [@@@mode.default l = (global, local), v = (read_write, read, write, v)]
++
++  let[@inline] of_addr addr =
++    #{ ptr = (Addr.to_ptr [@mode v]) addr; len = #1n }
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] ptr t = t.#ptr
++  let[@inline] unsafe_of_ptr ptr ~len = #{ ptr; len }
++
++  [@@@kind.default k = s_kinds_non_void]
++
++  let[@inline] unsafe_sub t ~pos ~len =
++    #{ ptr = (Ptr.advance [@kind k] [@mode l v] [@inlined]) t.#ptr ~by:pos; len }
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] unsafe_slice t ~start ~end_excl =
++    let len = end_excl - start in
++    (unsafe_sub [@kind k] [@mode l v] [@inlined]) t ~pos:start ~len [@exclave_if_local l]
++  ;;
++
++  let[@inline] sub t ~pos ~len =
++    (check_pos_len_exn [@inlined]) t ~pos ~len;
++    (unsafe_sub [@kind k] [@mode l v] [@inlined]) t ~pos ~len [@exclave_if_local l]
++  ;;
++
++  let[@inline] slice t ~start ~end_excl =
++    let len = end_excl - start in
++    (sub [@kind k] [@mode l v] [@inlined]) t ~pos:start ~len [@exclave_if_local l]
++  ;;
++
++  let[@inline] split_at (type a : k) (#{ ptr; len = t_len } : a t @ l v) i =
++    (let take = Isize.min t_len i in
++     let take = Isize.max #0n take in
++     let drop = t_len - take in
++     let drop_ptr = (Ptr.advance [@kind k] [@mode l v]) ptr ~by:take in
++     #(#{ ptr; len = take }, #{ ptr = drop_ptr; len = drop }))
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] prefix t ~len =
++    (let #(take, _) = (split_at [@kind k] [@mode l v] [@inlined]) t len in
++     take)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] drop_prefix t ~len =
++    (let #(_, drop) = (split_at [@kind k] [@mode l v] [@inlined]) t len in
++     drop)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] suffix (type a : k) (#{ ptr; len = t_len } : a t @ l v) ~len =
++    (let take = (Bool.select [@kind word]) (len > t_len) t_len len in
++     let pos = t_len - take in
++     #{ ptr = (Ptr.advance [@kind k] [@mode l v]) ptr ~by:pos; len = take })
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] drop_suffix (type a : k) (t : a t @ l v) ~len =
++    (let i = t.#len - len in
++     let #(keep, _) = (split_at [@kind k] [@mode l v] [@inlined]) t i in
++     keep)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let split_while
++    (type a : k)
++    (#{ ptr; len } as t : a t @ l v)
++    ~(f : a Addr.t @ l v -> bool)
++    =
++    if len <= #0n
++    then #(t, t)
++    else (
++      (let (T stop) =
++         (Ptr.advance [@kind k] [@mode l v]) ptr ~by:len |> Ptr.Destruct.idx
++       in
++       let rec split_while_loop p =
++         (if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) p)) true
++          then (
++            let p = (Ptr.advance [@kind k] [@mode l v]) p ~by:#1n in
++            let (T idx) = Ptr.Destruct.idx p in
++            if Idx.Raw_compare.(idx < stop) then split_while_loop p else p)
++          else p)
++         [@exclave_if_local l ~reasons:[ May_return_regional ]]
++       in
++       let end_ptr = (split_while_loop [@inlined]) ptr in
++       let (T start_idx) = Ptr.Destruct.idx ptr in
++       let (T end_idx) = Ptr.Destruct.idx end_ptr in
++       let taken = (Idx.raw_array_distance [@kind k]) ~from:start_idx ~to_:end_idx in
++       let rest = (Idx.raw_array_distance [@kind k]) ~from:end_idx ~to_:stop in
++       #(#{ ptr; len = taken }, #{ ptr = end_ptr; len = rest }))
++      [@exclave_if_local l ~reasons:[ May_return_regional ]])
++  ;;
++
++  let[@inline] take_while t ~f =
++    (let #(take, _) = (split_while [@kind k] [@mode l v] [@inlined]) t ~f in
++     take)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] drop_while t ~f =
++    (let #(_, drop) = (split_while [@kind k] [@mode l v] [@inlined]) t ~f in
++     drop)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds]
++  [@@@mode.default l = (global, local), v = (read_write, read, write, v)]
++
++  let[@inline] ptr_at t i =
++    (Ptr.advance [@kind k] [@mode l v] [@inlined]) t.#ptr ~by:i [@exclave_if_local l]
++  ;;
++
++  let[@inline] addr_at t i =
++    (check_pos_exn [@inlined]) t ~pos:i;
++    (Addr.unsafe_of_ptr [@mode v])
++      ((ptr_at [@kind k] [@mode l v] [@inlined]) t i)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds]
++  [@@@mode.default l = (global, local), v = (read_write, read, v, v')]
++
++  let[@inline] unsafe_get t i =
++    (Ptr.unsafe_get [@kind k] [@mode l v] [@inlined])
++      ((ptr_at [@kind k] [@mode l v] [@inlined]) t i)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] get t i =
++    ((addr_at [@kind k] [@mode l v] [@inlined]) t i
++     |> (Addr.to_ptr [@mode v])
++     |> (Ptr.unsafe_get [@kind k] [@mode l v] [@inlined]))
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds_non_void]
++  [@@@mode.default l = (global, local), v = (read_write, read, v, v')]
++
++  let split_first t =
++    if (is_empty [@inlined]) t
++    then
++      (Option_u.none [@kind (_ : (_ : ptr_kind & (ptr_kind & word)))] [@inlined hint]) ()
++    else (
++      (let x = (Addr.unsafe_of_ptr [@mode v]) t.#ptr in
++       let xs =
++         (unsafe_sub [@kind k] [@mode l v] [@inlined]) t ~pos:#1n ~len:(t.#len - #1n)
++       in
++       T #(Some, #(x, xs)))
++      [@exclave_if_local l ~reasons:[ May_return_regional ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds]
++  [@@@mode.default l = (global, local), v = (read_write, read)]
++
++  let[@inline available] compare compare_a x y =
++    let res = Isize.compare x.#len y.#len in
++    if Int.O.(res <> 0)
++    then res
++    else (
++      let rec loop i =
++        if i >= x.#len
++        then 0
++        else (
++          let res =
++            compare_a
++              ((unsafe_get [@kind k] [@mode l v] [@inlined]) x i)
++              ((unsafe_get [@kind k] [@mode l v] [@inlined]) y i)
++          in
++          if Int.O.(res <> 0) then res else loop (i + #1n))
++      in
++      loop #0n [@nontail])
++  ;;
++
++  let[@inline available] equal equal_a x y =
++    x.#len = y.#len
++    &&
++    let rec loop i =
++      i >= x.#len
++      || (equal_a
++            ((unsafe_get [@kind k] [@mode l v] [@inlined]) x i)
++            ((unsafe_get [@kind k] [@mode l v] [@inlined]) y i)
++          && loop (i + #1n))
++    in
++    loop #0n [@nontail]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds_non_void]
++  [@@@mode.default v = (read_write, read)]
++  [@@@alloc.default a @ l = (heap @ global, stack @ local)]
++
++  let[@inline available] sexp_of_t sexp_of_a t =
++    (let rec loop i acc =
++       if i > #0n
++       then (
++         let i = i - #1n in
++         loop
++           i
++           (sexp_of_a ((unsafe_get [@kind k] [@mode l v] [@inlined]) t i) :: acc)
++         [@exclave_if_stack a])
++       else acc
++     in
++     Sexp.List (loop t.#len []))
++    [@exclave_if_stack a]
++  ;;]
++
++  [%%template
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  type ('a : ptr_kind) v = { v : 'a @@ v } [@@unboxed]
++
++  [@@@mode.default la = (global, local), lb = (global, local)]
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@kind.default kb = (ka, value_or_null, word, bits64)]
++
++  let fold
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(init : b @ lb)
++    ~(f : (b @ lb -> a Addr.t @ la v -> b @ lb) @ local)
++    =
++    if len <= #0n
++    then init
++    else (
++      let (T stop) =
++        (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:len |> Ptr.Destruct.idx
++      in
++      (let mutable ptr = { v = ptr } in
++       let mutable acc = init in
++       while
++         let (T idx) = Ptr.Destruct.idx ptr.v in
++         Idx.Raw_compare.(idx < stop)
++       do
++         exclave_
++         acc <- f acc ((Addr.unsafe_of_ptr [@mode v]) ptr.v);
++         ptr <- { v = (Ptr.advance [@kind ka] [@mode la v]) ptr.v ~by:#1n }
++       done;
++       acc)
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;
++
++  let foldi
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(init : b @ lb)
++    ~(f : (Isize.t -> b @ lb -> a Addr.t @ la v -> b @ lb) @ local)
++    =
++    if len <= #0n
++    then init
++    else (
++      (let mutable i = #0n in
++       let mutable acc = init in
++       while i < len do
++         exclave_
++         let ptr = (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:i in
++         acc <- f i acc ((Addr.unsafe_of_ptr [@mode v]) ptr);
++         i <- i + #1n
++       done;
++       acc)
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@kind.default kb = (ka, value_or_null)]
++  [@@@mode.default la = (global, local), lb = (global, local)]
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  let find_map
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (a Addr.t @ la v -> (b Option_u.t[@kind kb]) @ lb v) @ local)
++    =
++    let open struct
++      external globalize_ptr_because_regional
++        : ('a : any).
++        'a Ptr.t @ local v -> 'a Ptr.t @ v
++        @@ stateless
++        = "%identity"
++    end in
++    if len <= #0n
++    then (Option_u.none [@kind kb] [@inlined]) ()
++    else (
++      (let (T stop) =
++         (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:len |> Ptr.Destruct.idx
++       in
++       let rec find_map_loop ptr =
++         (let b = f ((Addr.unsafe_of_ptr [@mode v]) ptr) in
++          if Bool.equal ((Option_u.is_some [@kind kb] [@inlined]) b) false
++          then (
++            let ptr = (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:#1n in
++            let (T idx) = Ptr.Destruct.idx ptr in
++            if Idx.Raw_compare.(idx < stop)
++            then (
++              let ptr =
++                (* Safe because [ptr] enters the loop [@ regional] but we have to demote
++                   it to [@ local] after [advance]; really, [advance] should still return
++                   it [@ regional]. *)
++                globalize_ptr_because_regional ptr
++              in
++              find_map_loop ptr)
++            else (Option_u.none [@kind kb] [@inlined]) ())
++          else b)
++         [@exclave_if_local lb ~reasons:[ May_return_local ]]
++       in
++       (find_map_loop [@inlined]) ptr [@nontail])
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@kind.default kb = (ka, value_or_null)]
++  [@@@mode.default la = (global, local), lb = (global, local)]
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  let find_mapi
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (Isize.t -> a Addr.t @ la v -> (b Option_u.t[@kind kb]) @ lb v) @ local)
++    =
++    if len <= #0n
++    then (Option_u.none [@kind kb] [@inlined]) ()
++    else (
++      (let rec find_mapi_loop i =
++         (let b =
++            f
++              i
++              ((Addr.unsafe_of_ptr [@mode v])
++                 ((Ptr.advance [@kind ka] [@mode la v]) ptr ~by:i))
++          in
++          if Bool.equal ((Option_u.is_some [@kind kb] [@inlined]) b) false
++          then (
++            let i = i + #1n in
++            if i < len then find_mapi_loop i else (Option_u.none [@kind kb] [@inlined]) ())
++          else b)
++         [@exclave_if_local lb ~reasons:[ May_return_local ]]
++       in
++       (find_mapi_loop [@inlined]) #0n [@nontail])
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@mode.default la = (global, local), v = (read_write, read, v, v')]
++
++  let find
++    (type a : ka)
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (a Addr.t @ la v -> bool) @ local)
++    =
++    if len <= #0n
++    then (Option_u.none [@kind ptr_kind] [@inlined hint]) ()
++    else (
++      (let (T stop) =
++         (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:len |> Ptr.Destruct.idx
++       in
++       let rec find_loop ptr =
++         (if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) ptr)) false
++          then (
++            let ptr = (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:#1n in
++            let (T idx) = Ptr.Destruct.idx ptr in
++            if Idx.Raw_compare.(idx < stop)
++            then find_loop ptr
++            else (Option_u.none [@kind ptr_kind] [@inlined hint]) ())
++          else T #(Some, (Addr.unsafe_of_ptr [@mode v]) ptr))
++         [@exclave_if_local la ~reasons:[ May_return_regional ]]
++       in
++       (find_loop [@inlined]) ptr [@nontail])
++      [@exclave_if_local la ~reasons:[ May_return_regional ]])
++  ;;
++
++  let findi
++    (type a : ka)
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (Isize.t -> a Addr.t @ la v -> bool) @ local)
++    =
++    if len <= #0n
++    then (Option_u.none [@kind ptr_kind] [@inlined hint]) ()
++    else (
++      (let rec findi_loop i =
++         (let a =
++            (Addr.unsafe_of_ptr [@mode v])
++              ((Ptr.advance [@kind ka] [@mode la v]) ptr ~by:i)
++          in
++          if Bool.equal (f i a) false
++          then (
++            let i = i + #1n in
++            if i < len
++            then findi_loop i
++            else (Option_u.none [@kind ptr_kind] [@inlined hint]) ())
++          else T #(Some, a))
++         [@exclave_if_local la ~reasons:[ May_return_regional ]]
++       in
++       (findi_loop [@inlined]) #0n [@nontail])
++      [@exclave_if_local la ~reasons:[ May_return_regional ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds_non_void]
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  let exists
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then false
++    else (
++      let (T stop) =
++        (Ptr.advance [@kind k] [@mode local v]) ptr ~by:len |> Ptr.Destruct.idx
++      in
++      let rec exists_loop ptr = exclave_
++        if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) ptr)) false
++        then (
++          let ptr = (Ptr.advance [@kind k] [@mode local v]) ptr ~by:#1n in
++          let (T idx) = Ptr.Destruct.idx ptr in
++          if Idx.Raw_compare.(idx < stop) then exists_loop ptr else false)
++        else true
++      in
++      (exists_loop [@inlined]) ptr [@nontail])
++  ;;
++
++  let existsi
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (Isize.t -> a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then false
++    else (
++      let rec existsi_loop i = exclave_
++        if Bool.equal
++             (f
++                i
++                ((Addr.unsafe_of_ptr [@mode v])
++                   ((Ptr.advance [@kind k] [@mode local v]) ptr ~by:i)))
++             false
++        then (
++          let i = i + #1n in
++          if i < len then existsi_loop i else false)
++        else true
++      in
++      (existsi_loop [@inlined]) #0n [@nontail])
++  ;;
++
++  let for_all
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then true
++    else (
++      let (T stop) =
++        (Ptr.advance [@kind k] [@mode local v]) ptr ~by:len |> Ptr.Destruct.idx
++      in
++      let rec for_all_loop ptr = exclave_
++        if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) ptr)) true
++        then (
++          let ptr = (Ptr.advance [@kind k] [@mode local v]) ptr ~by:#1n in
++          let (T idx) = Ptr.Destruct.idx ptr in
++          if Idx.Raw_compare.(idx < stop) then for_all_loop ptr else true)
++        else false
++      in
++      (for_all_loop [@inlined]) ptr [@nontail])
++  ;;
++
++  let for_alli
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (Isize.t -> a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then true
++    else (
++      let rec for_alli_loop i = exclave_
++        if Bool.equal
++             (f
++                i
++                ((Addr.unsafe_of_ptr [@mode v])
++                   ((Ptr.advance [@kind k] [@mode local v]) ptr ~by:i)))
++             true
++        then (
++          let i = i + #1n in
++          if i < len then for_alli_loop i else true)
++        else false
++      in
++      (for_alli_loop [@inlined]) #0n [@nontail])
++  ;;
++
++  let count t ~f =
++    (fold [@kind k word] [@mode local local v] [@inlined])
++      t
++      ~init:#0n
++      ~f:(fun [@inline] count a -> count + Isize.of_bool (f a))
++    [@nontail]
++  ;;
++
++  let counti t ~f =
++    (foldi [@kind k word] [@mode local local v] [@inlined])
++      t
++      ~init:#0n
++      ~f:(fun [@inline] i count a -> count + Isize.of_bool (f i a))
++    [@nontail]
++  ;;
++
++  [@@@mode.default l = (global, local)]
++
++  let iter t ~f =
++    (fold [@kind k value_or_null] [@mode l global v] [@inlined])
++      t
++      ~init:()
++      ~f:(fun [@inline] () a -> f a)
++    [@nontail]
++  ;;
++
++  let iteri t ~f =
++    (foldi [@kind k value_or_null] [@mode l global v] [@inlined])
++      t
++      ~init:()
++      ~f:(fun [@inline] i () a -> f i a)
++    [@nontail]
++  ;;]
++end
++
++module Slice_ext0 =
++  Make [@kind bits64] [@mode read_write read]
++    (Idx.Isize)
++    (struct
++      include Ptr.Isize.Ext
++
++      [%%template
++      [@@@kind.default k = s_kinds]
++      [@@@mode.default l = (global, local), v = (read_write, read)]
++
++      let[@inline] unsafe_get (type a : k) (t : a t @ l v) =
++        (Ptr.Isize.Ext.unsafe_get [@mode v]) t [@exclave_if_local l]
++      ;;]
++    end)
++    (Addr.Ext)]]
+--- /dev/null
++++ b/kernel/src/slice_make_ext_imm0.ml
+@@ -0,0 +1,628 @@
++open! Base
++open! Unboxed_datatypes
++open Slice_intf.Definitions
++
++[%%template
++[@@@kind_set.define
++  s_kinds_non_void_non_value
++  = ( base_non_value
++    , bits8
++    , bits16
++    , bits64 & bits64
++    , value_or_null & value_or_null
++    , value_or_null & bits64
++    , (_ : (_ : (value_or_null & bits64) & (value_or_null & bits64))) )]
++
++[@@@kind_set.define
++  s_kinds_non_void = (s_kinds_non_void_non_value, value_or_null, word & value_or_null)]
++
++[@@@kind_set.define s_kinds = (s_kinds_non_void, void)]
++
++[%%inline_functor
++module%template
++  [@kind ptr_kind = (bits64)]
++  [@mode v = immutable, v' = write]
++  Make
++    (Idx : Idx_intf.Definitions.Shared_i with type i := Isize.t)
++    (Ptr : sig
++       include
++         Ptr.Isize.S
++         [@kind ptr_kind] [@mode v]
++         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
++
++       [%%template:
++       [@@@kind.default k = s_kinds]
++       [@@@mode.default l = (global, local), v = (read_write, read, v, v')]
++
++       val unsafe_get : ('a : k). 'a t @ l v -> 'a @ l v @@ portable [@@zero_alloc]]
++     end)
++    (Addr : sig
++       type ('a : any) t : ptr_kind
++
++       include
++         Addr.S
++         [@kind ptr_kind] [@mode v]
++         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
++          and type ('a : any) ptr := 'a Ptr.t
++          and type ('a : any) t := 'a t
++     end) : sig
++  type ('a : any) t =
++    #{ ptr : 'a Ptr.t
++     ; len : Isize.t
++     }
++
++  include
++    With_i(Isize).S
++    [@kind ptr_kind] [@mode v]
++    with type ('a : any) ptr := 'a Ptr.t
++     and type ('a : any) addr := 'a Addr.t
++     and type ('a : any) t := 'a t
++end = struct
++  type ('a : any) t =
++    #{ ptr : 'a Ptr.t
++     ; len : Isize.t
++     }
++
++  open Isize.O
++
++  type ('a : k) t = 'a t [@@kind k = (s_kinds_non_void_non_value, void)]
++
++  let[@inline] check_pos_exn t ~pos = assert (pos >= #0n && pos < t.#len)
++
++  let[@inline] check_pos_len_exn t ~pos ~len =
++    (check_pos_exn [@inlined]) t ~pos;
++    assert (len >= #0n && len <= t.#len - pos)
++  ;;
++
++  let[@inline] length t = t.#len
++  let[@inline] is_empty t = length t = #0n
++
++  [%%template
++  [@@@mode.default l = (global, local), v = (read_write, read, write, v)]
++
++  let[@inline] of_addr addr =
++    #{ ptr = (Addr.to_ptr [@mode v]) addr; len = #1n }
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] ptr t = t.#ptr
++  let[@inline] unsafe_of_ptr ptr ~len = #{ ptr; len }
++
++  [@@@kind.default k = s_kinds_non_void]
++
++  let[@inline] unsafe_sub t ~pos ~len =
++    #{ ptr = (Ptr.advance [@kind k] [@mode l v] [@inlined]) t.#ptr ~by:pos; len }
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] unsafe_slice t ~start ~end_excl =
++    let len = end_excl - start in
++    (unsafe_sub [@kind k] [@mode l v] [@inlined]) t ~pos:start ~len [@exclave_if_local l]
++  ;;
++
++  let[@inline] sub t ~pos ~len =
++    (check_pos_len_exn [@inlined]) t ~pos ~len;
++    (unsafe_sub [@kind k] [@mode l v] [@inlined]) t ~pos ~len [@exclave_if_local l]
++  ;;
++
++  let[@inline] slice t ~start ~end_excl =
++    let len = end_excl - start in
++    (sub [@kind k] [@mode l v] [@inlined]) t ~pos:start ~len [@exclave_if_local l]
++  ;;
++
++  let[@inline] split_at (type a : k) (#{ ptr; len = t_len } : a t @ l v) i =
++    (let take = Isize.min t_len i in
++     let take = Isize.max #0n take in
++     let drop = t_len - take in
++     let drop_ptr = (Ptr.advance [@kind k] [@mode l v]) ptr ~by:take in
++     #(#{ ptr; len = take }, #{ ptr = drop_ptr; len = drop }))
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] prefix t ~len =
++    (let #(take, _) = (split_at [@kind k] [@mode l v] [@inlined]) t len in
++     take)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] drop_prefix t ~len =
++    (let #(_, drop) = (split_at [@kind k] [@mode l v] [@inlined]) t len in
++     drop)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] suffix (type a : k) (#{ ptr; len = t_len } : a t @ l v) ~len =
++    (let take = (Bool.select [@kind word]) (len > t_len) t_len len in
++     let pos = t_len - take in
++     #{ ptr = (Ptr.advance [@kind k] [@mode l v]) ptr ~by:pos; len = take })
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] drop_suffix (type a : k) (t : a t @ l v) ~len =
++    (let i = t.#len - len in
++     let #(keep, _) = (split_at [@kind k] [@mode l v] [@inlined]) t i in
++     keep)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let split_while
++    (type a : k)
++    (#{ ptr; len } as t : a t @ l v)
++    ~(f : a Addr.t @ l v -> bool)
++    =
++    if len <= #0n
++    then #(t, t)
++    else (
++      (let (T stop) =
++         (Ptr.advance [@kind k] [@mode l v]) ptr ~by:len |> Ptr.Destruct.idx
++       in
++       let rec split_while_loop p =
++         (if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) p)) true
++          then (
++            let p = (Ptr.advance [@kind k] [@mode l v]) p ~by:#1n in
++            let (T idx) = Ptr.Destruct.idx p in
++            if Idx.Raw_compare.(idx < stop) then split_while_loop p else p)
++          else p)
++         [@exclave_if_local l ~reasons:[ May_return_regional ]]
++       in
++       let end_ptr = (split_while_loop [@inlined]) ptr in
++       let (T start_idx) = Ptr.Destruct.idx ptr in
++       let (T end_idx) = Ptr.Destruct.idx end_ptr in
++       let taken = (Idx.raw_array_distance [@kind k]) ~from:start_idx ~to_:end_idx in
++       let rest = (Idx.raw_array_distance [@kind k]) ~from:end_idx ~to_:stop in
++       #(#{ ptr; len = taken }, #{ ptr = end_ptr; len = rest }))
++      [@exclave_if_local l ~reasons:[ May_return_regional ]])
++  ;;
++
++  let[@inline] take_while t ~f =
++    (let #(take, _) = (split_while [@kind k] [@mode l v] [@inlined]) t ~f in
++     take)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] drop_while t ~f =
++    (let #(_, drop) = (split_while [@kind k] [@mode l v] [@inlined]) t ~f in
++     drop)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds]
++  [@@@mode.default l = (global, local), v = (read_write, read, write, v)]
++
++  let[@inline] ptr_at t i =
++    (Ptr.advance [@kind k] [@mode l v] [@inlined]) t.#ptr ~by:i [@exclave_if_local l]
++  ;;
++
++  let[@inline] addr_at t i =
++    (check_pos_exn [@inlined]) t ~pos:i;
++    (Addr.unsafe_of_ptr [@mode v])
++      ((ptr_at [@kind k] [@mode l v] [@inlined]) t i)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds]
++  [@@@mode.default l = (global, local), v = (read_write, read, v, v')]
++
++  let[@inline] unsafe_get t i =
++    (Ptr.unsafe_get [@kind k] [@mode l v] [@inlined])
++      ((ptr_at [@kind k] [@mode l v] [@inlined]) t i)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] get t i =
++    ((addr_at [@kind k] [@mode l v] [@inlined]) t i
++     |> (Addr.to_ptr [@mode v])
++     |> (Ptr.unsafe_get [@kind k] [@mode l v] [@inlined]))
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds_non_void]
++  [@@@mode.default l = (global, local), v = (read_write, read, v, v')]
++
++  let split_first t =
++    if (is_empty [@inlined]) t
++    then
++      (Option_u.none [@kind (_ : (_ : ptr_kind & (ptr_kind & word)))] [@inlined hint]) ()
++    else (
++      (let x = (Addr.unsafe_of_ptr [@mode v]) t.#ptr in
++       let xs =
++         (unsafe_sub [@kind k] [@mode l v] [@inlined]) t ~pos:#1n ~len:(t.#len - #1n)
++       in
++       T #(Some, #(x, xs)))
++      [@exclave_if_local l ~reasons:[ May_return_regional ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds]
++  [@@@mode.default l = (global, local), v = (read_write, read)]
++
++  let[@inline available] compare compare_a x y =
++    let res = Isize.compare x.#len y.#len in
++    if Int.O.(res <> 0)
++    then res
++    else (
++      let rec loop i =
++        if i >= x.#len
++        then 0
++        else (
++          let res =
++            compare_a
++              ((unsafe_get [@kind k] [@mode l v] [@inlined]) x i)
++              ((unsafe_get [@kind k] [@mode l v] [@inlined]) y i)
++          in
++          if Int.O.(res <> 0) then res else loop (i + #1n))
++      in
++      loop #0n [@nontail])
++  ;;
++
++  let[@inline available] equal equal_a x y =
++    x.#len = y.#len
++    &&
++    let rec loop i =
++      i >= x.#len
++      || (equal_a
++            ((unsafe_get [@kind k] [@mode l v] [@inlined]) x i)
++            ((unsafe_get [@kind k] [@mode l v] [@inlined]) y i)
++          && loop (i + #1n))
++    in
++    loop #0n [@nontail]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds_non_void]
++  [@@@mode.default v = (read_write, read)]
++  [@@@alloc.default a @ l = (heap @ global, stack @ local)]
++
++  let[@inline available] sexp_of_t sexp_of_a t =
++    (let rec loop i acc =
++       if i > #0n
++       then (
++         let i = i - #1n in
++         loop
++           i
++           (sexp_of_a ((unsafe_get [@kind k] [@mode l v] [@inlined]) t i) :: acc)
++         [@exclave_if_stack a])
++       else acc
++     in
++     Sexp.List (loop t.#len []))
++    [@exclave_if_stack a]
++  ;;]
++
++  [%%template
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  type ('a : ptr_kind) v = { v : 'a @@ v } [@@unboxed]
++
++  [@@@mode.default la = (global, local), lb = (global, local)]
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@kind.default kb = (ka, value_or_null, word, bits64)]
++
++  let fold
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(init : b @ lb)
++    ~(f : (b @ lb -> a Addr.t @ la v -> b @ lb) @ local)
++    =
++    if len <= #0n
++    then init
++    else (
++      let (T stop) =
++        (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:len |> Ptr.Destruct.idx
++      in
++      (let mutable ptr = { v = ptr } in
++       let mutable acc = init in
++       while
++         let (T idx) = Ptr.Destruct.idx ptr.v in
++         Idx.Raw_compare.(idx < stop)
++       do
++         exclave_
++         acc <- f acc ((Addr.unsafe_of_ptr [@mode v]) ptr.v);
++         ptr <- { v = (Ptr.advance [@kind ka] [@mode la v]) ptr.v ~by:#1n }
++       done;
++       acc)
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;
++
++  let foldi
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(init : b @ lb)
++    ~(f : (Isize.t -> b @ lb -> a Addr.t @ la v -> b @ lb) @ local)
++    =
++    if len <= #0n
++    then init
++    else (
++      (let mutable i = #0n in
++       let mutable acc = init in
++       while i < len do
++         exclave_
++         let ptr = (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:i in
++         acc <- f i acc ((Addr.unsafe_of_ptr [@mode v]) ptr);
++         i <- i + #1n
++       done;
++       acc)
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@kind.default kb = (ka, value_or_null)]
++  [@@@mode.default la = (global, local), lb = (global, local)]
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  let find_map
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (a Addr.t @ la v -> (b Option_u.t[@kind kb]) @ lb v) @ local)
++    =
++    let open struct
++      external globalize_ptr_because_regional
++        : ('a : any).
++        'a Ptr.t @ local v -> 'a Ptr.t @ v
++        @@ stateless
++        = "%identity"
++    end in
++    if len <= #0n
++    then (Option_u.none [@kind kb] [@inlined]) ()
++    else (
++      (let (T stop) =
++         (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:len |> Ptr.Destruct.idx
++       in
++       let rec find_map_loop ptr =
++         (let b = f ((Addr.unsafe_of_ptr [@mode v]) ptr) in
++          if Bool.equal ((Option_u.is_some [@kind kb] [@inlined]) b) false
++          then (
++            let ptr = (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:#1n in
++            let (T idx) = Ptr.Destruct.idx ptr in
++            if Idx.Raw_compare.(idx < stop)
++            then (
++              let ptr =
++                (* Safe because [ptr] enters the loop [@ regional] but we have to demote
++                   it to [@ local] after [advance]; really, [advance] should still return
++                   it [@ regional]. *)
++                globalize_ptr_because_regional ptr
++              in
++              find_map_loop ptr)
++            else (Option_u.none [@kind kb] [@inlined]) ())
++          else b)
++         [@exclave_if_local lb ~reasons:[ May_return_local ]]
++       in
++       (find_map_loop [@inlined]) ptr [@nontail])
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@kind.default kb = (ka, value_or_null)]
++  [@@@mode.default la = (global, local), lb = (global, local)]
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  let find_mapi
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (Isize.t -> a Addr.t @ la v -> (b Option_u.t[@kind kb]) @ lb v) @ local)
++    =
++    if len <= #0n
++    then (Option_u.none [@kind kb] [@inlined]) ()
++    else (
++      (let rec find_mapi_loop i =
++         (let b =
++            f
++              i
++              ((Addr.unsafe_of_ptr [@mode v])
++                 ((Ptr.advance [@kind ka] [@mode la v]) ptr ~by:i))
++          in
++          if Bool.equal ((Option_u.is_some [@kind kb] [@inlined]) b) false
++          then (
++            let i = i + #1n in
++            if i < len then find_mapi_loop i else (Option_u.none [@kind kb] [@inlined]) ())
++          else b)
++         [@exclave_if_local lb ~reasons:[ May_return_local ]]
++       in
++       (find_mapi_loop [@inlined]) #0n [@nontail])
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@mode.default la = (global, local), v = (read_write, read, v, v')]
++
++  let find
++    (type a : ka)
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (a Addr.t @ la v -> bool) @ local)
++    =
++    if len <= #0n
++    then (Option_u.none [@kind ptr_kind] [@inlined hint]) ()
++    else (
++      (let (T stop) =
++         (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:len |> Ptr.Destruct.idx
++       in
++       let rec find_loop ptr =
++         (if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) ptr)) false
++          then (
++            let ptr = (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:#1n in
++            let (T idx) = Ptr.Destruct.idx ptr in
++            if Idx.Raw_compare.(idx < stop)
++            then find_loop ptr
++            else (Option_u.none [@kind ptr_kind] [@inlined hint]) ())
++          else T #(Some, (Addr.unsafe_of_ptr [@mode v]) ptr))
++         [@exclave_if_local la ~reasons:[ May_return_regional ]]
++       in
++       (find_loop [@inlined]) ptr [@nontail])
++      [@exclave_if_local la ~reasons:[ May_return_regional ]])
++  ;;
++
++  let findi
++    (type a : ka)
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (Isize.t -> a Addr.t @ la v -> bool) @ local)
++    =
++    if len <= #0n
++    then (Option_u.none [@kind ptr_kind] [@inlined hint]) ()
++    else (
++      (let rec findi_loop i =
++         (let a =
++            (Addr.unsafe_of_ptr [@mode v])
++              ((Ptr.advance [@kind ka] [@mode la v]) ptr ~by:i)
++          in
++          if Bool.equal (f i a) false
++          then (
++            let i = i + #1n in
++            if i < len
++            then findi_loop i
++            else (Option_u.none [@kind ptr_kind] [@inlined hint]) ())
++          else T #(Some, a))
++         [@exclave_if_local la ~reasons:[ May_return_regional ]]
++       in
++       (findi_loop [@inlined]) #0n [@nontail])
++      [@exclave_if_local la ~reasons:[ May_return_regional ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds_non_void]
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  let exists
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then false
++    else (
++      let (T stop) =
++        (Ptr.advance [@kind k] [@mode local v]) ptr ~by:len |> Ptr.Destruct.idx
++      in
++      let rec exists_loop ptr = exclave_
++        if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) ptr)) false
++        then (
++          let ptr = (Ptr.advance [@kind k] [@mode local v]) ptr ~by:#1n in
++          let (T idx) = Ptr.Destruct.idx ptr in
++          if Idx.Raw_compare.(idx < stop) then exists_loop ptr else false)
++        else true
++      in
++      (exists_loop [@inlined]) ptr [@nontail])
++  ;;
++
++  let existsi
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (Isize.t -> a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then false
++    else (
++      let rec existsi_loop i = exclave_
++        if Bool.equal
++             (f
++                i
++                ((Addr.unsafe_of_ptr [@mode v])
++                   ((Ptr.advance [@kind k] [@mode local v]) ptr ~by:i)))
++             false
++        then (
++          let i = i + #1n in
++          if i < len then existsi_loop i else false)
++        else true
++      in
++      (existsi_loop [@inlined]) #0n [@nontail])
++  ;;
++
++  let for_all
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then true
++    else (
++      let (T stop) =
++        (Ptr.advance [@kind k] [@mode local v]) ptr ~by:len |> Ptr.Destruct.idx
++      in
++      let rec for_all_loop ptr = exclave_
++        if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) ptr)) true
++        then (
++          let ptr = (Ptr.advance [@kind k] [@mode local v]) ptr ~by:#1n in
++          let (T idx) = Ptr.Destruct.idx ptr in
++          if Idx.Raw_compare.(idx < stop) then for_all_loop ptr else true)
++        else false
++      in
++      (for_all_loop [@inlined]) ptr [@nontail])
++  ;;
++
++  let for_alli
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (Isize.t -> a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then true
++    else (
++      let rec for_alli_loop i = exclave_
++        if Bool.equal
++             (f
++                i
++                ((Addr.unsafe_of_ptr [@mode v])
++                   ((Ptr.advance [@kind k] [@mode local v]) ptr ~by:i)))
++             true
++        then (
++          let i = i + #1n in
++          if i < len then for_alli_loop i else true)
++        else false
++      in
++      (for_alli_loop [@inlined]) #0n [@nontail])
++  ;;
++
++  let count t ~f =
++    (fold [@kind k word] [@mode local local v] [@inlined])
++      t
++      ~init:#0n
++      ~f:(fun [@inline] count a -> count + Isize.of_bool (f a))
++    [@nontail]
++  ;;
++
++  let counti t ~f =
++    (foldi [@kind k word] [@mode local local v] [@inlined])
++      t
++      ~init:#0n
++      ~f:(fun [@inline] i count a -> count + Isize.of_bool (f i a))
++    [@nontail]
++  ;;
++
++  [@@@mode.default l = (global, local)]
++
++  let iter t ~f =
++    (fold [@kind k value_or_null] [@mode l global v] [@inlined])
++      t
++      ~init:()
++      ~f:(fun [@inline] () a -> f a)
++    [@nontail]
++  ;;
++
++  let iteri t ~f =
++    (foldi [@kind k value_or_null] [@mode l global v] [@inlined])
++      t
++      ~init:()
++      ~f:(fun [@inline] i () a -> f i a)
++    [@nontail]
++  ;;]
++end
++
++module Slice_ext_imm0 =
++  Make [@kind bits64] [@mode immutable write]
++    (Idx.Isize.Imm)
++    (struct
++      include Ptr.Isize.Ext.Imm
++
++      [%%template
++      [@@@kind.default k = s_kinds]
++      [@@@mode.default l = (global, local), v = (read_write, read, write, immutable)]
++
++      let[@inline] unsafe_get (type a : k) (t : a t @ l v) =
++        (Ptr.Isize.Ext.Imm.unsafe_get [@mode v]) t [@exclave_if_local l]
++      ;;]
++    end)
++    (Addr.Ext.Imm)]]
+--- /dev/null
++++ b/kernel/src/slice_make_generic_external_mut.ml
+@@ -0,0 +1,309 @@
++open! Base
++open! Unboxed_datatypes
++open Slice_intf.Definitions
++
++[%%template
++[@@@kind_set.define
++  s_kinds_non_void_non_value
++  = ( base_non_value
++    , bits8
++    , bits16
++    , bits64 & bits64
++    , value_or_null & value_or_null
++    , value_or_null & bits64
++    , (_ : (_ : (value_or_null & bits64) & (value_or_null & bits64))) )]
++
++[@@@kind_set.define
++  s_kinds_non_void = (s_kinds_non_void_non_value, value_or_null, word & value_or_null)]
++
++[@@@kind_set.define s_kinds = (s_kinds_non_void, void)]
++
++module Slice_ext0 = Slice_make_ext0.Slice_ext0
++module Slice_ext_imm0 = Slice_make_ext_imm0.Slice_ext_imm0
++module Slice = Slice_make_slice.Slice
++module Slice_imm = Slice_make_slice_imm.Slice_imm
++
++[%%inline_functor
++module%template
++  [@mode v = (read_write, immutable)]
++  Make_generic
++    (Idx : sig
++       type ('a : value_or_null, 'b : any) t : bits64
++     end)
++    (Ptr : sig
++       module Ext : sig
++         type ('a : any) t : bits64
++       end
++
++       include
++         Ptr.Isize.Generic
++         [@mode v]
++         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
++          and type ('a : any) ext := 'a Ext.t
++     end)
++    (Addr : sig
++       type ('a : any) t : value_or_null & bits64
++
++       include
++         Addr.S
++         [@kind value_or_null & bits64] [@mode v]
++         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
++          and type ('a : any) ptr := 'a Ptr.t
++          and type ('a : any) t := 'a t
++     end)
++    (Ext : sig
++       type ('a : any) t =
++         #{ ptr : 'a Ptr.Ext.t
++          ; len : Isize.t
++          }
++     end)
++    (Slice0 : sig
++       type ('a : any) t =
++         #{ ptr : 'a Ptr.t
++          ; len : Isize.t
++          }
++
++       include
++         With_i(Isize).S
++         [@kind value_or_null & bits64] [@mode v]
++         with type ('a : any) ptr := 'a Ptr.t
++          and type ('a : any) addr := 'a Addr.t
++          and type ('a : any) t := 'a t
++     end) : sig
++  type ('a : any) t =
++    #{ ptr : 'a Ptr.t
++     ; len : Isize.t
++     }
++
++  include
++    With_i(Isize).Generic
++    [@mode v]
++    with type ('a : any) ptr := 'a Ptr.t
++     and type ('a : any) addr := 'a Addr.t
++     and type ('a : any) ext := 'a Ext.t
++     and type ('a : any) t := 'a t
++end = struct
++  include Slice0
++
++  let[@inline] empty () = #{ ptr = (Ptr.null [@inlined]) (); len = #0n }
++
++  [%%template
++  [@@@mode.default l = (global, local), v = (read_write, read, write, v)]
++
++  let[@inline] of_ext #{ Ext.ptr; len } =
++    #{ ptr = (Ptr.of_ext [@mode l v] [@inlined]) ptr; len }
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] to_ext (type a : any) n (#{ ptr; len } : a t) =
++    match[@exclave_if_local l ~reasons:[ May_return_regional ]]
++      (Ptr.to_ext [@mode l v] [@inlined]) n ptr
++    with
++    | T #(None, _) -> (Option_u.none [@kind bits64 & word] [@inlined]) ()
++    | T #(Some, ptr) ->
++      (Option_u.some [@kind bits64 & word] [@mode l v] [@inlined])
++        (#{ ptr; len } : a Ext.t)
++  ;;]
++end
++
++module%template
++  [@mode v = (read_write, immutable)]
++  Make_external
++    (Idx : sig
++       type ('a : value_or_null, 'b : any) t : bits64
++     end)
++    (Ptr : sig
++       include
++         Ptr.Isize.External
++         [@mode v]
++         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
++     end)
++    (Addr : sig
++       type ('a : any) t : bits64
++
++       include
++         Addr.External
++         [@mode v]
++         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
++          and type ('a : any) ptr := 'a Ptr.t
++          and type ('a : any) t := 'a t
++     end)
++    (Slice0 : sig
++       type ('a : any) t =
++         #{ ptr : 'a Ptr.t
++          ; len : Isize.t
++          }
++
++       include
++         With_i(Isize).S
++         [@kind bits64] [@mode v]
++         with type ('a : any) ptr := 'a Ptr.t
++          and type ('a : any) addr := 'a Addr.t
++          and type ('a : any) t := 'a t
++     end) : sig
++  type ('a : any) t =
++    #{ ptr : 'a Ptr.t
++     ; len : Isize.t
++     }
++
++  include
++    With_i(Isize).External
++    [@mode v]
++    with type ('a : any) ptr := 'a Ptr.t
++     and type ('a : any) addr := 'a Addr.t
++     and type ('a : any) t := 'a t
++end = struct
++  include Slice0
++
++  let[@inline] empty n () = #{ ptr = (Ptr.null [@inlined]) n; len = #0n }
++end
++
++module%template
++  [@kind ptr_kind = (value_or_null & bits64, bits64)]
++  Make_mut
++    (Ptr : sig
++       module Imm : sig
++         type ('a : any) t : ptr_kind
++       end
++
++       type ('a : any) t : ptr_kind
++
++       include Ptr.Mut with type ('a : any) imm := 'a Imm.t and type ('a : any) t := 'a t
++
++       [%%template:
++       [@@@kind.default k = s_kinds]
++
++       val unsafe_set
++         : ('a : k mod external64).
++         'a t @ local write -> 'a -> unit
++         @@ portable
++       [@@zero_alloc]]
++     end)
++    (Addr : Addr.S
++            [@kind ptr_kind] [@mode read_write]
++            with type ('a : any) ptr := 'a Ptr.t
++             and type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t)
++    (M : sig
++       module Imm : sig
++         type ('a : any) t =
++           #{ ptr : 'a Ptr.Imm.t
++            ; len : Isize.t
++            }
++       end
++
++       type ('a : any) t =
++         #{ ptr : 'a Ptr.t
++          ; len : Isize.t
++          }
++
++       include
++         With_i(Isize).S
++         [@kind ptr_kind] [@mode read_write]
++         with type ('a : any) ptr := 'a Ptr.t
++          and type ('a : any) addr := 'a Addr.t
++          and type ('a : any) t := 'a t
++     end) :
++  With_i(Isize).Mut with type ('a : any) imm := 'a M.Imm.t and type ('a : any) t := 'a M.t =
++struct
++  open M
++
++  [%%template
++  [@@@kind.default k = s_kinds]
++
++  let[@inline] unsafe_set t i x =
++    (Ptr.unsafe_set [@kind k] [@inlined])
++      ((ptr_at [@kind k] [@mode local write] [@inlined]) t i)
++      x [@nontail]
++  ;;
++
++  let[@inline] set t i x =
++    (Ptr.unsafe_set [@kind k] [@inlined])
++      ((Addr.to_ptr [@mode write])
++         ((addr_at [@kind k] [@mode local write] [@inlined]) t i))
++      x [@nontail]
++  ;;
++
++  [@@@mode.default v = (read_write, read, write)]
++  [@@@mode.default o = (many, once), u = (aliased, unique)]
++
++  let[@inline] with_bigarray1
++    (type (a : any) (b : any) (c : k))
++    n
++    (_ : (a, b) Bigarray_kind.t)
++    (arr : (_, b, _) Bigarray.Array1.t)
++    ~(f : (a t @ local v -> c @ o u) @ local once)
++    : c @ o u
++    =
++    (Ptr.magic_with_bigarray1 [@kind k] [@mode v o u] [@inlined]) n arr ~f:(fun ptr ->
++      f #{ ptr; len = Isize.of_int (Bigarray.Array1.dim arr) })
++    [@nontail]
++  ;;]
++
++  (*_ [with_bigstring] is not defined here because its signature differs between the
++      generic and external slices: see the [Isize] and [Isize.Ext] modules below. *)
++
++  [%%template
++  [@@@mode.default l = (global, local)]
++
++  let[@inline] of_imm #{ Imm.ptr; len } =
++    #{ ptr = (Ptr.of_imm [@mode l] [@inlined]) ptr; len }
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;]
++end
++
++module Slice_ext =
++  Make_external [@mode read_write] (Idx.Isize) (Ptr.Isize.Ext) (Addr.Ext) (Slice_ext0)
++
++module Slice_ext_imm =
++  Make_external [@mode immutable] (Idx.Isize.Imm) (Ptr.Isize.Ext.Imm) (Addr.Ext.Imm)
++    (Slice_ext_imm0)
++
++module Slice_ext_mut =
++  Make_mut [@kind bits64]
++    (struct
++      include Ptr.Isize.Ext
++
++      [%%template
++      [@@@kind.default k = s_kinds]
++
++      let[@inline] unsafe_set (type a : k mod external64) (t : a t @ local write) x =
++        Ptr.Isize.Ext.unsafe_set t x
++      ;;]
++    end)
++    (Addr.Ext)
++    (struct
++      include Slice_ext
++      module Imm = Slice_ext_imm
++    end)
++
++module Slice_generic =
++  Make_generic [@mode read_write] (Idx.Isize) (Ptr.Isize) (Addr) (Slice_ext) (Slice)
++
++module Slice_generic_imm =
++  Make_generic [@mode immutable]
++    (Idx.Isize.Imm)
++    (struct
++      module Ext = Ptr.Isize.Ext.Imm
++      include Ptr.Isize.Imm
++    end)
++    (Addr.Imm)
++    (Slice_ext_imm)
++    (Slice_imm)
++
++module Slice_mut =
++  Make_mut [@kind value_or_null & bits64]
++    (struct
++      include Ptr.Isize
++
++      [%%template
++      [@@@kind.default k = s_kinds]
++
++      let[@inline] unsafe_set (type a : k mod external64) (t : a t @ local write) x =
++        Ptr.Isize.unsafe_set t x
++      ;;]
++    end)
++    (Addr)
++    (struct
++      include Slice_generic
++      module Imm = Slice_generic_imm
++    end)]]
+--- /dev/null
++++ b/kernel/src/slice_make_slice_imm.ml
+@@ -0,0 +1,628 @@
++open! Base
++open! Unboxed_datatypes
++open Slice_intf.Definitions
++
++[%%template
++[@@@kind_set.define
++  s_kinds_non_void_non_value
++  = ( base_non_value
++    , bits8
++    , bits16
++    , bits64 & bits64
++    , value_or_null & value_or_null
++    , value_or_null & bits64
++    , (_ : (_ : (value_or_null & bits64) & (value_or_null & bits64))) )]
++
++[@@@kind_set.define
++  s_kinds_non_void = (s_kinds_non_void_non_value, value_or_null, word & value_or_null)]
++
++[@@@kind_set.define s_kinds = (s_kinds_non_void, void)]
++
++[%%inline_functor
++module%template
++  [@kind ptr_kind = (value_or_null & bits64)]
++  [@mode v = immutable, v' = write]
++  Make
++    (Idx : Idx_intf.Definitions.Shared_i with type i := Isize.t)
++    (Ptr : sig
++       include
++         Ptr.Isize.S
++         [@kind ptr_kind] [@mode v]
++         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
++
++       [%%template:
++       [@@@kind.default k = s_kinds]
++       [@@@mode.default l = (global, local), v = (read_write, read, v, v')]
++
++       val unsafe_get : ('a : k). 'a t @ l v -> 'a @ l v @@ portable [@@zero_alloc]]
++     end)
++    (Addr : sig
++       type ('a : any) t : ptr_kind
++
++       include
++         Addr.S
++         [@kind ptr_kind] [@mode v]
++         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
++          and type ('a : any) ptr := 'a Ptr.t
++          and type ('a : any) t := 'a t
++     end) : sig
++  type ('a : any) t =
++    #{ ptr : 'a Ptr.t
++     ; len : Isize.t
++     }
++
++  include
++    With_i(Isize).S
++    [@kind ptr_kind] [@mode v]
++    with type ('a : any) ptr := 'a Ptr.t
++     and type ('a : any) addr := 'a Addr.t
++     and type ('a : any) t := 'a t
++end = struct
++  type ('a : any) t =
++    #{ ptr : 'a Ptr.t
++     ; len : Isize.t
++     }
++
++  open Isize.O
++
++  type ('a : k) t = 'a t [@@kind k = (s_kinds_non_void_non_value, void)]
++
++  let[@inline] check_pos_exn t ~pos = assert (pos >= #0n && pos < t.#len)
++
++  let[@inline] check_pos_len_exn t ~pos ~len =
++    (check_pos_exn [@inlined]) t ~pos;
++    assert (len >= #0n && len <= t.#len - pos)
++  ;;
++
++  let[@inline] length t = t.#len
++  let[@inline] is_empty t = length t = #0n
++
++  [%%template
++  [@@@mode.default l = (global, local), v = (read_write, read, write, v)]
++
++  let[@inline] of_addr addr =
++    #{ ptr = (Addr.to_ptr [@mode v]) addr; len = #1n }
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] ptr t = t.#ptr
++  let[@inline] unsafe_of_ptr ptr ~len = #{ ptr; len }
++
++  [@@@kind.default k = s_kinds_non_void]
++
++  let[@inline] unsafe_sub t ~pos ~len =
++    #{ ptr = (Ptr.advance [@kind k] [@mode l v] [@inlined]) t.#ptr ~by:pos; len }
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] unsafe_slice t ~start ~end_excl =
++    let len = end_excl - start in
++    (unsafe_sub [@kind k] [@mode l v] [@inlined]) t ~pos:start ~len [@exclave_if_local l]
++  ;;
++
++  let[@inline] sub t ~pos ~len =
++    (check_pos_len_exn [@inlined]) t ~pos ~len;
++    (unsafe_sub [@kind k] [@mode l v] [@inlined]) t ~pos ~len [@exclave_if_local l]
++  ;;
++
++  let[@inline] slice t ~start ~end_excl =
++    let len = end_excl - start in
++    (sub [@kind k] [@mode l v] [@inlined]) t ~pos:start ~len [@exclave_if_local l]
++  ;;
++
++  let[@inline] split_at (type a : k) (#{ ptr; len = t_len } : a t @ l v) i =
++    (let take = Isize.min t_len i in
++     let take = Isize.max #0n take in
++     let drop = t_len - take in
++     let drop_ptr = (Ptr.advance [@kind k] [@mode l v]) ptr ~by:take in
++     #(#{ ptr; len = take }, #{ ptr = drop_ptr; len = drop }))
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] prefix t ~len =
++    (let #(take, _) = (split_at [@kind k] [@mode l v] [@inlined]) t len in
++     take)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] drop_prefix t ~len =
++    (let #(_, drop) = (split_at [@kind k] [@mode l v] [@inlined]) t len in
++     drop)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] suffix (type a : k) (#{ ptr; len = t_len } : a t @ l v) ~len =
++    (let take = (Bool.select [@kind word]) (len > t_len) t_len len in
++     let pos = t_len - take in
++     #{ ptr = (Ptr.advance [@kind k] [@mode l v]) ptr ~by:pos; len = take })
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] drop_suffix (type a : k) (t : a t @ l v) ~len =
++    (let i = t.#len - len in
++     let #(keep, _) = (split_at [@kind k] [@mode l v] [@inlined]) t i in
++     keep)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let split_while
++    (type a : k)
++    (#{ ptr; len } as t : a t @ l v)
++    ~(f : a Addr.t @ l v -> bool)
++    =
++    if len <= #0n
++    then #(t, t)
++    else (
++      (let (T stop) =
++         (Ptr.advance [@kind k] [@mode l v]) ptr ~by:len |> Ptr.Destruct.idx
++       in
++       let rec split_while_loop p =
++         (if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) p)) true
++          then (
++            let p = (Ptr.advance [@kind k] [@mode l v]) p ~by:#1n in
++            let (T idx) = Ptr.Destruct.idx p in
++            if Idx.Raw_compare.(idx < stop) then split_while_loop p else p)
++          else p)
++         [@exclave_if_local l ~reasons:[ May_return_regional ]]
++       in
++       let end_ptr = (split_while_loop [@inlined]) ptr in
++       let (T start_idx) = Ptr.Destruct.idx ptr in
++       let (T end_idx) = Ptr.Destruct.idx end_ptr in
++       let taken = (Idx.raw_array_distance [@kind k]) ~from:start_idx ~to_:end_idx in
++       let rest = (Idx.raw_array_distance [@kind k]) ~from:end_idx ~to_:stop in
++       #(#{ ptr; len = taken }, #{ ptr = end_ptr; len = rest }))
++      [@exclave_if_local l ~reasons:[ May_return_regional ]])
++  ;;
++
++  let[@inline] take_while t ~f =
++    (let #(take, _) = (split_while [@kind k] [@mode l v] [@inlined]) t ~f in
++     take)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] drop_while t ~f =
++    (let #(_, drop) = (split_while [@kind k] [@mode l v] [@inlined]) t ~f in
++     drop)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds]
++  [@@@mode.default l = (global, local), v = (read_write, read, write, v)]
++
++  let[@inline] ptr_at t i =
++    (Ptr.advance [@kind k] [@mode l v] [@inlined]) t.#ptr ~by:i [@exclave_if_local l]
++  ;;
++
++  let[@inline] addr_at t i =
++    (check_pos_exn [@inlined]) t ~pos:i;
++    (Addr.unsafe_of_ptr [@mode v])
++      ((ptr_at [@kind k] [@mode l v] [@inlined]) t i)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds]
++  [@@@mode.default l = (global, local), v = (read_write, read, v, v')]
++
++  let[@inline] unsafe_get t i =
++    (Ptr.unsafe_get [@kind k] [@mode l v] [@inlined])
++      ((ptr_at [@kind k] [@mode l v] [@inlined]) t i)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] get t i =
++    ((addr_at [@kind k] [@mode l v] [@inlined]) t i
++     |> (Addr.to_ptr [@mode v])
++     |> (Ptr.unsafe_get [@kind k] [@mode l v] [@inlined]))
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds_non_void]
++  [@@@mode.default l = (global, local), v = (read_write, read, v, v')]
++
++  let split_first t =
++    if (is_empty [@inlined]) t
++    then
++      (Option_u.none [@kind (_ : (_ : ptr_kind & (ptr_kind & word)))] [@inlined hint]) ()
++    else (
++      (let x = (Addr.unsafe_of_ptr [@mode v]) t.#ptr in
++       let xs =
++         (unsafe_sub [@kind k] [@mode l v] [@inlined]) t ~pos:#1n ~len:(t.#len - #1n)
++       in
++       T #(Some, #(x, xs)))
++      [@exclave_if_local l ~reasons:[ May_return_regional ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds]
++  [@@@mode.default l = (global, local), v = (read_write, read)]
++
++  let[@inline available] compare compare_a x y =
++    let res = Isize.compare x.#len y.#len in
++    if Int.O.(res <> 0)
++    then res
++    else (
++      let rec loop i =
++        if i >= x.#len
++        then 0
++        else (
++          let res =
++            compare_a
++              ((unsafe_get [@kind k] [@mode l v] [@inlined]) x i)
++              ((unsafe_get [@kind k] [@mode l v] [@inlined]) y i)
++          in
++          if Int.O.(res <> 0) then res else loop (i + #1n))
++      in
++      loop #0n [@nontail])
++  ;;
++
++  let[@inline available] equal equal_a x y =
++    x.#len = y.#len
++    &&
++    let rec loop i =
++      i >= x.#len
++      || (equal_a
++            ((unsafe_get [@kind k] [@mode l v] [@inlined]) x i)
++            ((unsafe_get [@kind k] [@mode l v] [@inlined]) y i)
++          && loop (i + #1n))
++    in
++    loop #0n [@nontail]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds_non_void]
++  [@@@mode.default v = (read_write, read)]
++  [@@@alloc.default a @ l = (heap @ global, stack @ local)]
++
++  let[@inline available] sexp_of_t sexp_of_a t =
++    (let rec loop i acc =
++       if i > #0n
++       then (
++         let i = i - #1n in
++         loop
++           i
++           (sexp_of_a ((unsafe_get [@kind k] [@mode l v] [@inlined]) t i) :: acc)
++         [@exclave_if_stack a])
++       else acc
++     in
++     Sexp.List (loop t.#len []))
++    [@exclave_if_stack a]
++  ;;]
++
++  [%%template
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  type ('a : ptr_kind) v = { v : 'a @@ v } [@@unboxed]
++
++  [@@@mode.default la = (global, local), lb = (global, local)]
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@kind.default kb = (ka, value_or_null, word, bits64)]
++
++  let fold
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(init : b @ lb)
++    ~(f : (b @ lb -> a Addr.t @ la v -> b @ lb) @ local)
++    =
++    if len <= #0n
++    then init
++    else (
++      let (T stop) =
++        (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:len |> Ptr.Destruct.idx
++      in
++      (let mutable ptr = { v = ptr } in
++       let mutable acc = init in
++       while
++         let (T idx) = Ptr.Destruct.idx ptr.v in
++         Idx.Raw_compare.(idx < stop)
++       do
++         exclave_
++         acc <- f acc ((Addr.unsafe_of_ptr [@mode v]) ptr.v);
++         ptr <- { v = (Ptr.advance [@kind ka] [@mode la v]) ptr.v ~by:#1n }
++       done;
++       acc)
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;
++
++  let foldi
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(init : b @ lb)
++    ~(f : (Isize.t -> b @ lb -> a Addr.t @ la v -> b @ lb) @ local)
++    =
++    if len <= #0n
++    then init
++    else (
++      (let mutable i = #0n in
++       let mutable acc = init in
++       while i < len do
++         exclave_
++         let ptr = (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:i in
++         acc <- f i acc ((Addr.unsafe_of_ptr [@mode v]) ptr);
++         i <- i + #1n
++       done;
++       acc)
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@kind.default kb = (ka, value_or_null)]
++  [@@@mode.default la = (global, local), lb = (global, local)]
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  let find_map
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (a Addr.t @ la v -> (b Option_u.t[@kind kb]) @ lb v) @ local)
++    =
++    let open struct
++      external globalize_ptr_because_regional
++        : ('a : any).
++        'a Ptr.t @ local v -> 'a Ptr.t @ v
++        @@ stateless
++        = "%identity"
++    end in
++    if len <= #0n
++    then (Option_u.none [@kind kb] [@inlined]) ()
++    else (
++      (let (T stop) =
++         (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:len |> Ptr.Destruct.idx
++       in
++       let rec find_map_loop ptr =
++         (let b = f ((Addr.unsafe_of_ptr [@mode v]) ptr) in
++          if Bool.equal ((Option_u.is_some [@kind kb] [@inlined]) b) false
++          then (
++            let ptr = (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:#1n in
++            let (T idx) = Ptr.Destruct.idx ptr in
++            if Idx.Raw_compare.(idx < stop)
++            then (
++              let ptr =
++                (* Safe because [ptr] enters the loop [@ regional] but we have to demote
++                   it to [@ local] after [advance]; really, [advance] should still return
++                   it [@ regional]. *)
++                globalize_ptr_because_regional ptr
++              in
++              find_map_loop ptr)
++            else (Option_u.none [@kind kb] [@inlined]) ())
++          else b)
++         [@exclave_if_local lb ~reasons:[ May_return_local ]]
++       in
++       (find_map_loop [@inlined]) ptr [@nontail])
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@kind.default kb = (ka, value_or_null)]
++  [@@@mode.default la = (global, local), lb = (global, local)]
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  let find_mapi
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (Isize.t -> a Addr.t @ la v -> (b Option_u.t[@kind kb]) @ lb v) @ local)
++    =
++    if len <= #0n
++    then (Option_u.none [@kind kb] [@inlined]) ()
++    else (
++      (let rec find_mapi_loop i =
++         (let b =
++            f
++              i
++              ((Addr.unsafe_of_ptr [@mode v])
++                 ((Ptr.advance [@kind ka] [@mode la v]) ptr ~by:i))
++          in
++          if Bool.equal ((Option_u.is_some [@kind kb] [@inlined]) b) false
++          then (
++            let i = i + #1n in
++            if i < len then find_mapi_loop i else (Option_u.none [@kind kb] [@inlined]) ())
++          else b)
++         [@exclave_if_local lb ~reasons:[ May_return_local ]]
++       in
++       (find_mapi_loop [@inlined]) #0n [@nontail])
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@mode.default la = (global, local), v = (read_write, read, v, v')]
++
++  let find
++    (type a : ka)
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (a Addr.t @ la v -> bool) @ local)
++    =
++    if len <= #0n
++    then (Option_u.none [@kind ptr_kind] [@inlined hint]) ()
++    else (
++      (let (T stop) =
++         (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:len |> Ptr.Destruct.idx
++       in
++       let rec find_loop ptr =
++         (if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) ptr)) false
++          then (
++            let ptr = (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:#1n in
++            let (T idx) = Ptr.Destruct.idx ptr in
++            if Idx.Raw_compare.(idx < stop)
++            then find_loop ptr
++            else (Option_u.none [@kind ptr_kind] [@inlined hint]) ())
++          else T #(Some, (Addr.unsafe_of_ptr [@mode v]) ptr))
++         [@exclave_if_local la ~reasons:[ May_return_regional ]]
++       in
++       (find_loop [@inlined]) ptr [@nontail])
++      [@exclave_if_local la ~reasons:[ May_return_regional ]])
++  ;;
++
++  let findi
++    (type a : ka)
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (Isize.t -> a Addr.t @ la v -> bool) @ local)
++    =
++    if len <= #0n
++    then (Option_u.none [@kind ptr_kind] [@inlined hint]) ()
++    else (
++      (let rec findi_loop i =
++         (let a =
++            (Addr.unsafe_of_ptr [@mode v])
++              ((Ptr.advance [@kind ka] [@mode la v]) ptr ~by:i)
++          in
++          if Bool.equal (f i a) false
++          then (
++            let i = i + #1n in
++            if i < len
++            then findi_loop i
++            else (Option_u.none [@kind ptr_kind] [@inlined hint]) ())
++          else T #(Some, a))
++         [@exclave_if_local la ~reasons:[ May_return_regional ]]
++       in
++       (findi_loop [@inlined]) #0n [@nontail])
++      [@exclave_if_local la ~reasons:[ May_return_regional ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds_non_void]
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  let exists
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then false
++    else (
++      let (T stop) =
++        (Ptr.advance [@kind k] [@mode local v]) ptr ~by:len |> Ptr.Destruct.idx
++      in
++      let rec exists_loop ptr = exclave_
++        if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) ptr)) false
++        then (
++          let ptr = (Ptr.advance [@kind k] [@mode local v]) ptr ~by:#1n in
++          let (T idx) = Ptr.Destruct.idx ptr in
++          if Idx.Raw_compare.(idx < stop) then exists_loop ptr else false)
++        else true
++      in
++      (exists_loop [@inlined]) ptr [@nontail])
++  ;;
++
++  let existsi
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (Isize.t -> a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then false
++    else (
++      let rec existsi_loop i = exclave_
++        if Bool.equal
++             (f
++                i
++                ((Addr.unsafe_of_ptr [@mode v])
++                   ((Ptr.advance [@kind k] [@mode local v]) ptr ~by:i)))
++             false
++        then (
++          let i = i + #1n in
++          if i < len then existsi_loop i else false)
++        else true
++      in
++      (existsi_loop [@inlined]) #0n [@nontail])
++  ;;
++
++  let for_all
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then true
++    else (
++      let (T stop) =
++        (Ptr.advance [@kind k] [@mode local v]) ptr ~by:len |> Ptr.Destruct.idx
++      in
++      let rec for_all_loop ptr = exclave_
++        if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) ptr)) true
++        then (
++          let ptr = (Ptr.advance [@kind k] [@mode local v]) ptr ~by:#1n in
++          let (T idx) = Ptr.Destruct.idx ptr in
++          if Idx.Raw_compare.(idx < stop) then for_all_loop ptr else true)
++        else false
++      in
++      (for_all_loop [@inlined]) ptr [@nontail])
++  ;;
++
++  let for_alli
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (Isize.t -> a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then true
++    else (
++      let rec for_alli_loop i = exclave_
++        if Bool.equal
++             (f
++                i
++                ((Addr.unsafe_of_ptr [@mode v])
++                   ((Ptr.advance [@kind k] [@mode local v]) ptr ~by:i)))
++             true
++        then (
++          let i = i + #1n in
++          if i < len then for_alli_loop i else true)
++        else false
++      in
++      (for_alli_loop [@inlined]) #0n [@nontail])
++  ;;
++
++  let count t ~f =
++    (fold [@kind k word] [@mode local local v] [@inlined])
++      t
++      ~init:#0n
++      ~f:(fun [@inline] count a -> count + Isize.of_bool (f a))
++    [@nontail]
++  ;;
++
++  let counti t ~f =
++    (foldi [@kind k word] [@mode local local v] [@inlined])
++      t
++      ~init:#0n
++      ~f:(fun [@inline] i count a -> count + Isize.of_bool (f i a))
++    [@nontail]
++  ;;
++
++  [@@@mode.default l = (global, local)]
++
++  let iter t ~f =
++    (fold [@kind k value_or_null] [@mode l global v] [@inlined])
++      t
++      ~init:()
++      ~f:(fun [@inline] () a -> f a)
++    [@nontail]
++  ;;
++
++  let iteri t ~f =
++    (foldi [@kind k value_or_null] [@mode l global v] [@inlined])
++      t
++      ~init:()
++      ~f:(fun [@inline] i () a -> f i a)
++    [@nontail]
++  ;;]
++end
++
++module Slice_imm =
++  Make [@kind value_or_null & bits64] [@mode immutable write]
++    (Idx.Isize.Imm)
++    (struct
++      include Ptr.Isize.Imm
++
++      [%%template
++      [@@@kind.default k = s_kinds]
++      [@@@mode.default l = (global, local), v = (read_write, read, write, immutable)]
++
++      let[@inline] unsafe_get (type a : k) (t : a t @ l v) =
++        (Ptr.Isize.Imm.unsafe_get [@mode v]) t [@exclave_if_local l]
++      ;;]
++    end)
++    (Addr.Imm)]]
+--- /dev/null
++++ b/kernel/src/slice_make_slice.ml
+@@ -0,0 +1,628 @@
++open! Base
++open! Unboxed_datatypes
++open Slice_intf.Definitions
++
++[%%template
++[@@@kind_set.define
++  s_kinds_non_void_non_value
++  = ( base_non_value
++    , bits8
++    , bits16
++    , bits64 & bits64
++    , value_or_null & value_or_null
++    , value_or_null & bits64
++    , (_ : (_ : (value_or_null & bits64) & (value_or_null & bits64))) )]
++
++[@@@kind_set.define
++  s_kinds_non_void = (s_kinds_non_void_non_value, value_or_null, word & value_or_null)]
++
++[@@@kind_set.define s_kinds = (s_kinds_non_void, void)]
++
++[%%inline_functor
++module%template
++  [@kind ptr_kind = (value_or_null & bits64)]
++  [@mode v = read_write, v' = read]
++  Make
++    (Idx : Idx_intf.Definitions.Shared_i with type i := Isize.t)
++    (Ptr : sig
++       include
++         Ptr.Isize.S
++         [@kind ptr_kind] [@mode v]
++         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
++
++       [%%template:
++       [@@@kind.default k = s_kinds]
++       [@@@mode.default l = (global, local), v = (read_write, read, v, v')]
++
++       val unsafe_get : ('a : k). 'a t @ l v -> 'a @ l v @@ portable [@@zero_alloc]]
++     end)
++    (Addr : sig
++       type ('a : any) t : ptr_kind
++
++       include
++         Addr.S
++         [@kind ptr_kind] [@mode v]
++         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
++          and type ('a : any) ptr := 'a Ptr.t
++          and type ('a : any) t := 'a t
++     end) : sig
++  type ('a : any) t =
++    #{ ptr : 'a Ptr.t
++     ; len : Isize.t
++     }
++
++  include
++    With_i(Isize).S
++    [@kind ptr_kind] [@mode v]
++    with type ('a : any) ptr := 'a Ptr.t
++     and type ('a : any) addr := 'a Addr.t
++     and type ('a : any) t := 'a t
++end = struct
++  type ('a : any) t =
++    #{ ptr : 'a Ptr.t
++     ; len : Isize.t
++     }
++
++  open Isize.O
++
++  type ('a : k) t = 'a t [@@kind k = (s_kinds_non_void_non_value, void)]
++
++  let[@inline] check_pos_exn t ~pos = assert (pos >= #0n && pos < t.#len)
++
++  let[@inline] check_pos_len_exn t ~pos ~len =
++    (check_pos_exn [@inlined]) t ~pos;
++    assert (len >= #0n && len <= t.#len - pos)
++  ;;
++
++  let[@inline] length t = t.#len
++  let[@inline] is_empty t = length t = #0n
++
++  [%%template
++  [@@@mode.default l = (global, local), v = (read_write, read, write, v)]
++
++  let[@inline] of_addr addr =
++    #{ ptr = (Addr.to_ptr [@mode v]) addr; len = #1n }
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] ptr t = t.#ptr
++  let[@inline] unsafe_of_ptr ptr ~len = #{ ptr; len }
++
++  [@@@kind.default k = s_kinds_non_void]
++
++  let[@inline] unsafe_sub t ~pos ~len =
++    #{ ptr = (Ptr.advance [@kind k] [@mode l v] [@inlined]) t.#ptr ~by:pos; len }
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] unsafe_slice t ~start ~end_excl =
++    let len = end_excl - start in
++    (unsafe_sub [@kind k] [@mode l v] [@inlined]) t ~pos:start ~len [@exclave_if_local l]
++  ;;
++
++  let[@inline] sub t ~pos ~len =
++    (check_pos_len_exn [@inlined]) t ~pos ~len;
++    (unsafe_sub [@kind k] [@mode l v] [@inlined]) t ~pos ~len [@exclave_if_local l]
++  ;;
++
++  let[@inline] slice t ~start ~end_excl =
++    let len = end_excl - start in
++    (sub [@kind k] [@mode l v] [@inlined]) t ~pos:start ~len [@exclave_if_local l]
++  ;;
++
++  let[@inline] split_at (type a : k) (#{ ptr; len = t_len } : a t @ l v) i =
++    (let take = Isize.min t_len i in
++     let take = Isize.max #0n take in
++     let drop = t_len - take in
++     let drop_ptr = (Ptr.advance [@kind k] [@mode l v]) ptr ~by:take in
++     #(#{ ptr; len = take }, #{ ptr = drop_ptr; len = drop }))
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] prefix t ~len =
++    (let #(take, _) = (split_at [@kind k] [@mode l v] [@inlined]) t len in
++     take)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] drop_prefix t ~len =
++    (let #(_, drop) = (split_at [@kind k] [@mode l v] [@inlined]) t len in
++     drop)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] suffix (type a : k) (#{ ptr; len = t_len } : a t @ l v) ~len =
++    (let take = (Bool.select [@kind word]) (len > t_len) t_len len in
++     let pos = t_len - take in
++     #{ ptr = (Ptr.advance [@kind k] [@mode l v]) ptr ~by:pos; len = take })
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] drop_suffix (type a : k) (t : a t @ l v) ~len =
++    (let i = t.#len - len in
++     let #(keep, _) = (split_at [@kind k] [@mode l v] [@inlined]) t i in
++     keep)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let split_while
++    (type a : k)
++    (#{ ptr; len } as t : a t @ l v)
++    ~(f : a Addr.t @ l v -> bool)
++    =
++    if len <= #0n
++    then #(t, t)
++    else (
++      (let (T stop) =
++         (Ptr.advance [@kind k] [@mode l v]) ptr ~by:len |> Ptr.Destruct.idx
++       in
++       let rec split_while_loop p =
++         (if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) p)) true
++          then (
++            let p = (Ptr.advance [@kind k] [@mode l v]) p ~by:#1n in
++            let (T idx) = Ptr.Destruct.idx p in
++            if Idx.Raw_compare.(idx < stop) then split_while_loop p else p)
++          else p)
++         [@exclave_if_local l ~reasons:[ May_return_regional ]]
++       in
++       let end_ptr = (split_while_loop [@inlined]) ptr in
++       let (T start_idx) = Ptr.Destruct.idx ptr in
++       let (T end_idx) = Ptr.Destruct.idx end_ptr in
++       let taken = (Idx.raw_array_distance [@kind k]) ~from:start_idx ~to_:end_idx in
++       let rest = (Idx.raw_array_distance [@kind k]) ~from:end_idx ~to_:stop in
++       #(#{ ptr; len = taken }, #{ ptr = end_ptr; len = rest }))
++      [@exclave_if_local l ~reasons:[ May_return_regional ]])
++  ;;
++
++  let[@inline] take_while t ~f =
++    (let #(take, _) = (split_while [@kind k] [@mode l v] [@inlined]) t ~f in
++     take)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] drop_while t ~f =
++    (let #(_, drop) = (split_while [@kind k] [@mode l v] [@inlined]) t ~f in
++     drop)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds]
++  [@@@mode.default l = (global, local), v = (read_write, read, write, v)]
++
++  let[@inline] ptr_at t i =
++    (Ptr.advance [@kind k] [@mode l v] [@inlined]) t.#ptr ~by:i [@exclave_if_local l]
++  ;;
++
++  let[@inline] addr_at t i =
++    (check_pos_exn [@inlined]) t ~pos:i;
++    (Addr.unsafe_of_ptr [@mode v])
++      ((ptr_at [@kind k] [@mode l v] [@inlined]) t i)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds]
++  [@@@mode.default l = (global, local), v = (read_write, read, v, v')]
++
++  let[@inline] unsafe_get t i =
++    (Ptr.unsafe_get [@kind k] [@mode l v] [@inlined])
++      ((ptr_at [@kind k] [@mode l v] [@inlined]) t i)
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;
++
++  let[@inline] get t i =
++    ((addr_at [@kind k] [@mode l v] [@inlined]) t i
++     |> (Addr.to_ptr [@mode v])
++     |> (Ptr.unsafe_get [@kind k] [@mode l v] [@inlined]))
++    [@exclave_if_local l ~reasons:[ May_return_regional ]]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds_non_void]
++  [@@@mode.default l = (global, local), v = (read_write, read, v, v')]
++
++  let split_first t =
++    if (is_empty [@inlined]) t
++    then
++      (Option_u.none [@kind (_ : (_ : ptr_kind & (ptr_kind & word)))] [@inlined hint]) ()
++    else (
++      (let x = (Addr.unsafe_of_ptr [@mode v]) t.#ptr in
++       let xs =
++         (unsafe_sub [@kind k] [@mode l v] [@inlined]) t ~pos:#1n ~len:(t.#len - #1n)
++       in
++       T #(Some, #(x, xs)))
++      [@exclave_if_local l ~reasons:[ May_return_regional ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds]
++  [@@@mode.default l = (global, local), v = (read_write, read)]
++
++  let[@inline available] compare compare_a x y =
++    let res = Isize.compare x.#len y.#len in
++    if Int.O.(res <> 0)
++    then res
++    else (
++      let rec loop i =
++        if i >= x.#len
++        then 0
++        else (
++          let res =
++            compare_a
++              ((unsafe_get [@kind k] [@mode l v] [@inlined]) x i)
++              ((unsafe_get [@kind k] [@mode l v] [@inlined]) y i)
++          in
++          if Int.O.(res <> 0) then res else loop (i + #1n))
++      in
++      loop #0n [@nontail])
++  ;;
++
++  let[@inline available] equal equal_a x y =
++    x.#len = y.#len
++    &&
++    let rec loop i =
++      i >= x.#len
++      || (equal_a
++            ((unsafe_get [@kind k] [@mode l v] [@inlined]) x i)
++            ((unsafe_get [@kind k] [@mode l v] [@inlined]) y i)
++          && loop (i + #1n))
++    in
++    loop #0n [@nontail]
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds_non_void]
++  [@@@mode.default v = (read_write, read)]
++  [@@@alloc.default a @ l = (heap @ global, stack @ local)]
++
++  let[@inline available] sexp_of_t sexp_of_a t =
++    (let rec loop i acc =
++       if i > #0n
++       then (
++         let i = i - #1n in
++         loop
++           i
++           (sexp_of_a ((unsafe_get [@kind k] [@mode l v] [@inlined]) t i) :: acc)
++         [@exclave_if_stack a])
++       else acc
++     in
++     Sexp.List (loop t.#len []))
++    [@exclave_if_stack a]
++  ;;]
++
++  [%%template
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  type ('a : ptr_kind) v = { v : 'a @@ v } [@@unboxed]
++
++  [@@@mode.default la = (global, local), lb = (global, local)]
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@kind.default kb = (ka, value_or_null, word, bits64)]
++
++  let fold
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(init : b @ lb)
++    ~(f : (b @ lb -> a Addr.t @ la v -> b @ lb) @ local)
++    =
++    if len <= #0n
++    then init
++    else (
++      let (T stop) =
++        (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:len |> Ptr.Destruct.idx
++      in
++      (let mutable ptr = { v = ptr } in
++       let mutable acc = init in
++       while
++         let (T idx) = Ptr.Destruct.idx ptr.v in
++         Idx.Raw_compare.(idx < stop)
++       do
++         exclave_
++         acc <- f acc ((Addr.unsafe_of_ptr [@mode v]) ptr.v);
++         ptr <- { v = (Ptr.advance [@kind ka] [@mode la v]) ptr.v ~by:#1n }
++       done;
++       acc)
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;
++
++  let foldi
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(init : b @ lb)
++    ~(f : (Isize.t -> b @ lb -> a Addr.t @ la v -> b @ lb) @ local)
++    =
++    if len <= #0n
++    then init
++    else (
++      (let mutable i = #0n in
++       let mutable acc = init in
++       while i < len do
++         exclave_
++         let ptr = (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:i in
++         acc <- f i acc ((Addr.unsafe_of_ptr [@mode v]) ptr);
++         i <- i + #1n
++       done;
++       acc)
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@kind.default kb = (ka, value_or_null)]
++  [@@@mode.default la = (global, local), lb = (global, local)]
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  let find_map
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (a Addr.t @ la v -> (b Option_u.t[@kind kb]) @ lb v) @ local)
++    =
++    let open struct
++      external globalize_ptr_because_regional
++        : ('a : any).
++        'a Ptr.t @ local v -> 'a Ptr.t @ v
++        @@ stateless
++        = "%identity"
++    end in
++    if len <= #0n
++    then (Option_u.none [@kind kb] [@inlined]) ()
++    else (
++      (let (T stop) =
++         (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:len |> Ptr.Destruct.idx
++       in
++       let rec find_map_loop ptr =
++         (let b = f ((Addr.unsafe_of_ptr [@mode v]) ptr) in
++          if Bool.equal ((Option_u.is_some [@kind kb] [@inlined]) b) false
++          then (
++            let ptr = (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:#1n in
++            let (T idx) = Ptr.Destruct.idx ptr in
++            if Idx.Raw_compare.(idx < stop)
++            then (
++              let ptr =
++                (* Safe because [ptr] enters the loop [@ regional] but we have to demote
++                   it to [@ local] after [advance]; really, [advance] should still return
++                   it [@ regional]. *)
++                globalize_ptr_because_regional ptr
++              in
++              find_map_loop ptr)
++            else (Option_u.none [@kind kb] [@inlined]) ())
++          else b)
++         [@exclave_if_local lb ~reasons:[ May_return_local ]]
++       in
++       (find_map_loop [@inlined]) ptr [@nontail])
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@kind.default kb = (ka, value_or_null)]
++  [@@@mode.default la = (global, local), lb = (global, local)]
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  let find_mapi
++    (type (a : ka) (b : kb))
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (Isize.t -> a Addr.t @ la v -> (b Option_u.t[@kind kb]) @ lb v) @ local)
++    =
++    if len <= #0n
++    then (Option_u.none [@kind kb] [@inlined]) ()
++    else (
++      (let rec find_mapi_loop i =
++         (let b =
++            f
++              i
++              ((Addr.unsafe_of_ptr [@mode v])
++                 ((Ptr.advance [@kind ka] [@mode la v]) ptr ~by:i))
++          in
++          if Bool.equal ((Option_u.is_some [@kind kb] [@inlined]) b) false
++          then (
++            let i = i + #1n in
++            if i < len then find_mapi_loop i else (Option_u.none [@kind kb] [@inlined]) ())
++          else b)
++         [@exclave_if_local lb ~reasons:[ May_return_local ]]
++       in
++       (find_mapi_loop [@inlined]) #0n [@nontail])
++      [@exclave_if_local lb ~reasons:[ May_return_local ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default ka = s_kinds_non_void]
++  [@@@mode.default la = (global, local), v = (read_write, read, v, v')]
++
++  let find
++    (type a : ka)
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (a Addr.t @ la v -> bool) @ local)
++    =
++    if len <= #0n
++    then (Option_u.none [@kind ptr_kind] [@inlined hint]) ()
++    else (
++      (let (T stop) =
++         (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:len |> Ptr.Destruct.idx
++       in
++       let rec find_loop ptr =
++         (if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) ptr)) false
++          then (
++            let ptr = (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:#1n in
++            let (T idx) = Ptr.Destruct.idx ptr in
++            if Idx.Raw_compare.(idx < stop)
++            then find_loop ptr
++            else (Option_u.none [@kind ptr_kind] [@inlined hint]) ())
++          else T #(Some, (Addr.unsafe_of_ptr [@mode v]) ptr))
++         [@exclave_if_local la ~reasons:[ May_return_regional ]]
++       in
++       (find_loop [@inlined]) ptr [@nontail])
++      [@exclave_if_local la ~reasons:[ May_return_regional ]])
++  ;;
++
++  let findi
++    (type a : ka)
++    (#{ ptr; len } : a t @ la v)
++    ~(f : (Isize.t -> a Addr.t @ la v -> bool) @ local)
++    =
++    if len <= #0n
++    then (Option_u.none [@kind ptr_kind] [@inlined hint]) ()
++    else (
++      (let rec findi_loop i =
++         (let a =
++            (Addr.unsafe_of_ptr [@mode v])
++              ((Ptr.advance [@kind ka] [@mode la v]) ptr ~by:i)
++          in
++          if Bool.equal (f i a) false
++          then (
++            let i = i + #1n in
++            if i < len
++            then findi_loop i
++            else (Option_u.none [@kind ptr_kind] [@inlined hint]) ())
++          else T #(Some, a))
++         [@exclave_if_local la ~reasons:[ May_return_regional ]]
++       in
++       (findi_loop [@inlined]) #0n [@nontail])
++      [@exclave_if_local la ~reasons:[ May_return_regional ]])
++  ;;]
++
++  [%%template
++  [@@@kind.default k = s_kinds_non_void]
++  [@@@mode.default v = (read_write, read, v, v')]
++
++  let exists
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then false
++    else (
++      let (T stop) =
++        (Ptr.advance [@kind k] [@mode local v]) ptr ~by:len |> Ptr.Destruct.idx
++      in
++      let rec exists_loop ptr = exclave_
++        if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) ptr)) false
++        then (
++          let ptr = (Ptr.advance [@kind k] [@mode local v]) ptr ~by:#1n in
++          let (T idx) = Ptr.Destruct.idx ptr in
++          if Idx.Raw_compare.(idx < stop) then exists_loop ptr else false)
++        else true
++      in
++      (exists_loop [@inlined]) ptr [@nontail])
++  ;;
++
++  let existsi
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (Isize.t -> a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then false
++    else (
++      let rec existsi_loop i = exclave_
++        if Bool.equal
++             (f
++                i
++                ((Addr.unsafe_of_ptr [@mode v])
++                   ((Ptr.advance [@kind k] [@mode local v]) ptr ~by:i)))
++             false
++        then (
++          let i = i + #1n in
++          if i < len then existsi_loop i else false)
++        else true
++      in
++      (existsi_loop [@inlined]) #0n [@nontail])
++  ;;
++
++  let for_all
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then true
++    else (
++      let (T stop) =
++        (Ptr.advance [@kind k] [@mode local v]) ptr ~by:len |> Ptr.Destruct.idx
++      in
++      let rec for_all_loop ptr = exclave_
++        if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) ptr)) true
++        then (
++          let ptr = (Ptr.advance [@kind k] [@mode local v]) ptr ~by:#1n in
++          let (T idx) = Ptr.Destruct.idx ptr in
++          if Idx.Raw_compare.(idx < stop) then for_all_loop ptr else true)
++        else false
++      in
++      (for_all_loop [@inlined]) ptr [@nontail])
++  ;;
++
++  let for_alli
++    (type a : k)
++    (#{ ptr; len } : a t @ local v)
++    ~(f : (Isize.t -> a Addr.t @ local v -> bool) @ local)
++    =
++    if len <= #0n
++    then true
++    else (
++      let rec for_alli_loop i = exclave_
++        if Bool.equal
++             (f
++                i
++                ((Addr.unsafe_of_ptr [@mode v])
++                   ((Ptr.advance [@kind k] [@mode local v]) ptr ~by:i)))
++             true
++        then (
++          let i = i + #1n in
++          if i < len then for_alli_loop i else true)
++        else false
++      in
++      (for_alli_loop [@inlined]) #0n [@nontail])
++  ;;
++
++  let count t ~f =
++    (fold [@kind k word] [@mode local local v] [@inlined])
++      t
++      ~init:#0n
++      ~f:(fun [@inline] count a -> count + Isize.of_bool (f a))
++    [@nontail]
++  ;;
++
++  let counti t ~f =
++    (foldi [@kind k word] [@mode local local v] [@inlined])
++      t
++      ~init:#0n
++      ~f:(fun [@inline] i count a -> count + Isize.of_bool (f i a))
++    [@nontail]
++  ;;
++
++  [@@@mode.default l = (global, local)]
++
++  let iter t ~f =
++    (fold [@kind k value_or_null] [@mode l global v] [@inlined])
++      t
++      ~init:()
++      ~f:(fun [@inline] () a -> f a)
++    [@nontail]
++  ;;
++
++  let iteri t ~f =
++    (foldi [@kind k value_or_null] [@mode l global v] [@inlined])
++      t
++      ~init:()
++      ~f:(fun [@inline] i () a -> f i a)
++    [@nontail]
++  ;;]
++end
++
++module Slice =
++  Make [@kind value_or_null & bits64] [@mode read_write read]
++    (Idx.Isize)
++    (struct
++      include Ptr.Isize
++
++      [%%template
++      [@@@kind.default k = s_kinds]
++      [@@@mode.default l = (global, local), v = (read_write, read)]
++
++      let[@inline] unsafe_get (type a : k) (t : a t @ l v) =
++        (Ptr.Isize.unsafe_get [@mode v]) t [@exclave_if_local l]
++      ;;]
++    end)
++    (Addr)]]
+--- a/kernel/src/slice.ml
++++ b/kernel/src/slice.ml
+@@ -18,946 +18,12 @@
+ 
+ [@@@kind_set.define s_kinds = (s_kinds_non_void, void)]
+ 
+-[%%inline_functor
+-module%template
+-  [@kind ptr_kind = (value_or_null & bits64, bits64)]
+-  [@mode (v, v') = ((read_write, read), (immutable, write))]
+-  Make
+-    (Idx : Idx_intf.Definitions.Shared_i with type i := Isize.t)
+-    (Ptr : sig
+-       include
+-         Ptr.Isize.S
+-         [@kind ptr_kind] [@mode v]
+-         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
+-
+-       [%%template:
+-       [@@@kind.default k = s_kinds]
+-       [@@@mode.default l = (global, local), v = (read_write, read, v, v')]
+-
+-       val unsafe_get : ('a : k). 'a t @ l v -> 'a @ l v @@ portable [@@zero_alloc]]
+-     end)
+-    (Addr : sig
+-       type ('a : any) t : ptr_kind
+-
+-       include
+-         Addr.S
+-         [@kind ptr_kind] [@mode v]
+-         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
+-          and type ('a : any) ptr := 'a Ptr.t
+-          and type ('a : any) t := 'a t
+-     end) : sig
+-  type ('a : any) t =
+-    #{ ptr : 'a Ptr.t
+-     ; len : Isize.t
+-     }
+-
+-  include
+-    With_i(Isize).S
+-    [@kind ptr_kind] [@mode v]
+-    with type ('a : any) ptr := 'a Ptr.t
+-     and type ('a : any) addr := 'a Addr.t
+-     and type ('a : any) t := 'a t
+-end = struct
+-  type ('a : any) t =
+-    #{ ptr : 'a Ptr.t
+-     ; len : Isize.t
+-     }
+-
+-  open Isize.O
+-
+-  type ('a : k) t = 'a t [@@kind k = (s_kinds_non_void_non_value, void)]
+-
+-  let[@inline] check_pos_exn t ~pos = assert (pos >= #0n && pos < t.#len)
+-
+-  let[@inline] check_pos_len_exn t ~pos ~len =
+-    (check_pos_exn [@inlined]) t ~pos;
+-    assert (len >= #0n && len <= t.#len - pos)
+-  ;;
+-
+-  let[@inline] length t = t.#len
+-  let[@inline] is_empty t = length t = #0n
+-
+-  [%%template
+-  [@@@mode.default l = (global, local), v = (read_write, read, write, v)]
+-
+-  let[@inline] of_addr addr =
+-    #{ ptr = (Addr.to_ptr [@mode v]) addr; len = #1n }
+-    [@exclave_if_local l ~reasons:[ May_return_regional ]]
+-  ;;
+-
+-  let[@inline] ptr t = t.#ptr
+-  let[@inline] unsafe_of_ptr ptr ~len = #{ ptr; len }
+-
+-  [@@@kind.default k = s_kinds_non_void]
+-
+-  let[@inline] unsafe_sub t ~pos ~len =
+-    #{ ptr = (Ptr.advance [@kind k] [@mode l v] [@inlined]) t.#ptr ~by:pos; len }
+-    [@exclave_if_local l ~reasons:[ May_return_regional ]]
+-  ;;
+-
+-  let[@inline] unsafe_slice t ~start ~end_excl =
+-    let len = end_excl - start in
+-    (unsafe_sub [@kind k] [@mode l v] [@inlined]) t ~pos:start ~len [@exclave_if_local l]
+-  ;;
+-
+-  let[@inline] sub t ~pos ~len =
+-    (check_pos_len_exn [@inlined]) t ~pos ~len;
+-    (unsafe_sub [@kind k] [@mode l v] [@inlined]) t ~pos ~len [@exclave_if_local l]
+-  ;;
+-
+-  let[@inline] slice t ~start ~end_excl =
+-    let len = end_excl - start in
+-    (sub [@kind k] [@mode l v] [@inlined]) t ~pos:start ~len [@exclave_if_local l]
+-  ;;
+-
+-  let[@inline] split_at (type a : k) (#{ ptr; len = t_len } : a t @ l v) i =
+-    (let take = Isize.min t_len i in
+-     let take = Isize.max #0n take in
+-     let drop = t_len - take in
+-     let drop_ptr = (Ptr.advance [@kind k] [@mode l v]) ptr ~by:take in
+-     #(#{ ptr; len = take }, #{ ptr = drop_ptr; len = drop }))
+-    [@exclave_if_local l ~reasons:[ May_return_regional ]]
+-  ;;
+-
+-  let[@inline] prefix t ~len =
+-    (let #(take, _) = (split_at [@kind k] [@mode l v] [@inlined]) t len in
+-     take)
+-    [@exclave_if_local l ~reasons:[ May_return_regional ]]
+-  ;;
+-
+-  let[@inline] drop_prefix t ~len =
+-    (let #(_, drop) = (split_at [@kind k] [@mode l v] [@inlined]) t len in
+-     drop)
+-    [@exclave_if_local l ~reasons:[ May_return_regional ]]
+-  ;;
+-
+-  let[@inline] suffix (type a : k) (#{ ptr; len = t_len } : a t @ l v) ~len =
+-    (let take = (Bool.select [@kind word]) (len > t_len) t_len len in
+-     let pos = t_len - take in
+-     #{ ptr = (Ptr.advance [@kind k] [@mode l v]) ptr ~by:pos; len = take })
+-    [@exclave_if_local l ~reasons:[ May_return_regional ]]
+-  ;;
+-
+-  let[@inline] drop_suffix (type a : k) (t : a t @ l v) ~len =
+-    (let i = t.#len - len in
+-     let #(keep, _) = (split_at [@kind k] [@mode l v] [@inlined]) t i in
+-     keep)
+-    [@exclave_if_local l ~reasons:[ May_return_regional ]]
+-  ;;
+-
+-  let split_while
+-    (type a : k)
+-    (#{ ptr; len } as t : a t @ l v)
+-    ~(f : a Addr.t @ l v -> bool)
+-    =
+-    if len <= #0n
+-    then #(t, t)
+-    else (
+-      (let (T stop) =
+-         (Ptr.advance [@kind k] [@mode l v]) ptr ~by:len |> Ptr.Destruct.idx
+-       in
+-       let rec split_while_loop p =
+-         (if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) p)) true
+-          then (
+-            let p = (Ptr.advance [@kind k] [@mode l v]) p ~by:#1n in
+-            let (T idx) = Ptr.Destruct.idx p in
+-            if Idx.Raw_compare.(idx < stop) then split_while_loop p else p)
+-          else p)
+-         [@exclave_if_local l ~reasons:[ May_return_regional ]]
+-       in
+-       let end_ptr = (split_while_loop [@inlined]) ptr in
+-       let (T start_idx) = Ptr.Destruct.idx ptr in
+-       let (T end_idx) = Ptr.Destruct.idx end_ptr in
+-       let taken = (Idx.raw_array_distance [@kind k]) ~from:start_idx ~to_:end_idx in
+-       let rest = (Idx.raw_array_distance [@kind k]) ~from:end_idx ~to_:stop in
+-       #(#{ ptr; len = taken }, #{ ptr = end_ptr; len = rest }))
+-      [@exclave_if_local l ~reasons:[ May_return_regional ]])
+-  ;;
+-
+-  let[@inline] take_while t ~f =
+-    (let #(take, _) = (split_while [@kind k] [@mode l v] [@inlined]) t ~f in
+-     take)
+-    [@exclave_if_local l ~reasons:[ May_return_regional ]]
+-  ;;
+-
+-  let[@inline] drop_while t ~f =
+-    (let #(_, drop) = (split_while [@kind k] [@mode l v] [@inlined]) t ~f in
+-     drop)
+-    [@exclave_if_local l ~reasons:[ May_return_regional ]]
+-  ;;]
+-
+-  [%%template
+-  [@@@kind.default k = s_kinds]
+-  [@@@mode.default l = (global, local), v = (read_write, read, write, v)]
+-
+-  let[@inline] ptr_at t i =
+-    (Ptr.advance [@kind k] [@mode l v] [@inlined]) t.#ptr ~by:i [@exclave_if_local l]
+-  ;;
+-
+-  let[@inline] addr_at t i =
+-    (check_pos_exn [@inlined]) t ~pos:i;
+-    (Addr.unsafe_of_ptr [@mode v])
+-      ((ptr_at [@kind k] [@mode l v] [@inlined]) t i)
+-    [@exclave_if_local l ~reasons:[ May_return_regional ]]
+-  ;;]
+-
+-  [%%template
+-  [@@@kind.default k = s_kinds]
+-  [@@@mode.default l = (global, local), v = (read_write, read, v, v')]
+-
+-  let[@inline] unsafe_get t i =
+-    (Ptr.unsafe_get [@kind k] [@mode l v] [@inlined])
+-      ((ptr_at [@kind k] [@mode l v] [@inlined]) t i)
+-    [@exclave_if_local l ~reasons:[ May_return_regional ]]
+-  ;;
+-
+-  let[@inline] get t i =
+-    ((addr_at [@kind k] [@mode l v] [@inlined]) t i
+-     |> (Addr.to_ptr [@mode v])
+-     |> (Ptr.unsafe_get [@kind k] [@mode l v] [@inlined]))
+-    [@exclave_if_local l ~reasons:[ May_return_regional ]]
+-  ;;]
+-
+-  [%%template
+-  [@@@kind.default k = s_kinds_non_void]
+-  [@@@mode.default l = (global, local), v = (read_write, read, v, v')]
+-
+-  let split_first t =
+-    if (is_empty [@inlined]) t
+-    then
+-      (Option_u.none [@kind (_ : (_ : ptr_kind & (ptr_kind & word)))] [@inlined hint]) ()
+-    else (
+-      (let x = (Addr.unsafe_of_ptr [@mode v]) t.#ptr in
+-       let xs =
+-         (unsafe_sub [@kind k] [@mode l v] [@inlined]) t ~pos:#1n ~len:(t.#len - #1n)
+-       in
+-       T #(Some, #(x, xs)))
+-      [@exclave_if_local l ~reasons:[ May_return_regional ]])
+-  ;;]
+-
+-  [%%template
+-  [@@@kind.default k = s_kinds]
+-  [@@@mode.default l = (global, local), v = (read_write, read)]
+-
+-  let[@inline available] compare compare_a x y =
+-    let res = Isize.compare x.#len y.#len in
+-    if Int.O.(res <> 0)
+-    then res
+-    else (
+-      let rec loop i =
+-        if i >= x.#len
+-        then 0
+-        else (
+-          let res =
+-            compare_a
+-              ((unsafe_get [@kind k] [@mode l v] [@inlined]) x i)
+-              ((unsafe_get [@kind k] [@mode l v] [@inlined]) y i)
+-          in
+-          if Int.O.(res <> 0) then res else loop (i + #1n))
+-      in
+-      loop #0n [@nontail])
+-  ;;
+-
+-  let[@inline available] equal equal_a x y =
+-    x.#len = y.#len
+-    &&
+-    let rec loop i =
+-      i >= x.#len
+-      || (equal_a
+-            ((unsafe_get [@kind k] [@mode l v] [@inlined]) x i)
+-            ((unsafe_get [@kind k] [@mode l v] [@inlined]) y i)
+-          && loop (i + #1n))
+-    in
+-    loop #0n [@nontail]
+-  ;;]
+-
+-  [%%template
+-  [@@@kind.default k = s_kinds_non_void]
+-  [@@@mode.default v = (read_write, read)]
+-  [@@@alloc.default a @ l = (heap @ global, stack @ local)]
+-
+-  let[@inline available] sexp_of_t sexp_of_a t =
+-    (let rec loop i acc =
+-       if i > #0n
+-       then (
+-         let i = i - #1n in
+-         loop
+-           i
+-           (sexp_of_a ((unsafe_get [@kind k] [@mode l v] [@inlined]) t i) :: acc)
+-         [@exclave_if_stack a])
+-       else acc
+-     in
+-     Sexp.List (loop t.#len []))
+-    [@exclave_if_stack a]
+-  ;;]
+-
+-  [%%template
+-  [@@@mode.default v = (read_write, read, v, v')]
+-
+-  type ('a : ptr_kind) v = { v : 'a @@ v } [@@unboxed]
+-
+-  [@@@mode.default la = (global, local), lb = (global, local)]
+-  [@@@kind.default ka = s_kinds_non_void]
+-  [@@@kind.default kb = (ka, value_or_null, word, bits64)]
+-
+-  let fold
+-    (type (a : ka) (b : kb))
+-    (#{ ptr; len } : a t @ la v)
+-    ~(init : b @ lb)
+-    ~(f : (b @ lb -> a Addr.t @ la v -> b @ lb) @ local)
+-    =
+-    if len <= #0n
+-    then init
+-    else (
+-      let (T stop) =
+-        (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:len |> Ptr.Destruct.idx
+-      in
+-      (let mutable ptr = { v = ptr } in
+-       let mutable acc = init in
+-       while
+-         let (T idx) = Ptr.Destruct.idx ptr.v in
+-         Idx.Raw_compare.(idx < stop)
+-       do
+-         exclave_
+-         acc <- f acc ((Addr.unsafe_of_ptr [@mode v]) ptr.v);
+-         ptr <- { v = (Ptr.advance [@kind ka] [@mode la v]) ptr.v ~by:#1n }
+-       done;
+-       acc)
+-      [@exclave_if_local lb ~reasons:[ May_return_local ]])
+-  ;;
+-
+-  let foldi
+-    (type (a : ka) (b : kb))
+-    (#{ ptr; len } : a t @ la v)
+-    ~(init : b @ lb)
+-    ~(f : (Isize.t -> b @ lb -> a Addr.t @ la v -> b @ lb) @ local)
+-    =
+-    if len <= #0n
+-    then init
+-    else (
+-      (let mutable i = #0n in
+-       let mutable acc = init in
+-       while i < len do
+-         exclave_
+-         let ptr = (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:i in
+-         acc <- f i acc ((Addr.unsafe_of_ptr [@mode v]) ptr);
+-         i <- i + #1n
+-       done;
+-       acc)
+-      [@exclave_if_local lb ~reasons:[ May_return_local ]])
+-  ;;]
+-
+-  [%%template
+-  [@@@kind.default ka = s_kinds_non_void]
+-  [@@@kind.default kb = (ka, value_or_null)]
+-  [@@@mode.default la = (global, local), lb = (global, local)]
+-  [@@@mode.default v = (read_write, read, v, v')]
+-
+-  let find_map
+-    (type (a : ka) (b : kb))
+-    (#{ ptr; len } : a t @ la v)
+-    ~(f : (a Addr.t @ la v -> (b Option_u.t[@kind kb]) @ lb v) @ local)
+-    =
+-    let open struct
+-      external globalize_ptr_because_regional
+-        : ('a : any).
+-        'a Ptr.t @ local v -> 'a Ptr.t @ v
+-        @@ stateless
+-        = "%identity"
+-    end in
+-    if len <= #0n
+-    then (Option_u.none [@kind kb] [@inlined]) ()
+-    else (
+-      (let (T stop) =
+-         (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:len |> Ptr.Destruct.idx
+-       in
+-       let rec find_map_loop ptr =
+-         (let b = f ((Addr.unsafe_of_ptr [@mode v]) ptr) in
+-          if Bool.equal ((Option_u.is_some [@kind kb] [@inlined]) b) false
+-          then (
+-            let ptr = (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:#1n in
+-            let (T idx) = Ptr.Destruct.idx ptr in
+-            if Idx.Raw_compare.(idx < stop)
+-            then (
+-              let ptr =
+-                (* Safe because [ptr] enters the loop [@ regional] but we have to demote
+-                   it to [@ local] after [advance]; really, [advance] should still return
+-                   it [@ regional]. *)
+-                globalize_ptr_because_regional ptr
+-              in
+-              find_map_loop ptr)
+-            else (Option_u.none [@kind kb] [@inlined]) ())
+-          else b)
+-         [@exclave_if_local lb ~reasons:[ May_return_local ]]
+-       in
+-       (find_map_loop [@inlined]) ptr [@nontail])
+-      [@exclave_if_local lb ~reasons:[ May_return_local ]])
+-  ;;]
+-
+-  [%%template
+-  [@@@kind.default ka = s_kinds_non_void]
+-  [@@@kind.default kb = (ka, value_or_null)]
+-  [@@@mode.default la = (global, local), lb = (global, local)]
+-  [@@@mode.default v = (read_write, read, v, v')]
+-
+-  let find_mapi
+-    (type (a : ka) (b : kb))
+-    (#{ ptr; len } : a t @ la v)
+-    ~(f : (Isize.t -> a Addr.t @ la v -> (b Option_u.t[@kind kb]) @ lb v) @ local)
+-    =
+-    if len <= #0n
+-    then (Option_u.none [@kind kb] [@inlined]) ()
+-    else (
+-      (let rec find_mapi_loop i =
+-         (let b =
+-            f
+-              i
+-              ((Addr.unsafe_of_ptr [@mode v])
+-                 ((Ptr.advance [@kind ka] [@mode la v]) ptr ~by:i))
+-          in
+-          if Bool.equal ((Option_u.is_some [@kind kb] [@inlined]) b) false
+-          then (
+-            let i = i + #1n in
+-            if i < len then find_mapi_loop i else (Option_u.none [@kind kb] [@inlined]) ())
+-          else b)
+-         [@exclave_if_local lb ~reasons:[ May_return_local ]]
+-       in
+-       (find_mapi_loop [@inlined]) #0n [@nontail])
+-      [@exclave_if_local lb ~reasons:[ May_return_local ]])
+-  ;;]
+-
+-  [%%template
+-  [@@@kind.default ka = s_kinds_non_void]
+-  [@@@mode.default la = (global, local), v = (read_write, read, v, v')]
+-
+-  let find
+-    (type a : ka)
+-    (#{ ptr; len } : a t @ la v)
+-    ~(f : (a Addr.t @ la v -> bool) @ local)
+-    =
+-    if len <= #0n
+-    then (Option_u.none [@kind ptr_kind] [@inlined hint]) ()
+-    else (
+-      (let (T stop) =
+-         (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:len |> Ptr.Destruct.idx
+-       in
+-       let rec find_loop ptr =
+-         (if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) ptr)) false
+-          then (
+-            let ptr = (Ptr.advance [@kind ka] [@mode la v]) ptr ~by:#1n in
+-            let (T idx) = Ptr.Destruct.idx ptr in
+-            if Idx.Raw_compare.(idx < stop)
+-            then find_loop ptr
+-            else (Option_u.none [@kind ptr_kind] [@inlined hint]) ())
+-          else T #(Some, (Addr.unsafe_of_ptr [@mode v]) ptr))
+-         [@exclave_if_local la ~reasons:[ May_return_regional ]]
+-       in
+-       (find_loop [@inlined]) ptr [@nontail])
+-      [@exclave_if_local la ~reasons:[ May_return_regional ]])
+-  ;;
+-
+-  let findi
+-    (type a : ka)
+-    (#{ ptr; len } : a t @ la v)
+-    ~(f : (Isize.t -> a Addr.t @ la v -> bool) @ local)
+-    =
+-    if len <= #0n
+-    then (Option_u.none [@kind ptr_kind] [@inlined hint]) ()
+-    else (
+-      (let rec findi_loop i =
+-         (let a =
+-            (Addr.unsafe_of_ptr [@mode v])
+-              ((Ptr.advance [@kind ka] [@mode la v]) ptr ~by:i)
+-          in
+-          if Bool.equal (f i a) false
+-          then (
+-            let i = i + #1n in
+-            if i < len
+-            then findi_loop i
+-            else (Option_u.none [@kind ptr_kind] [@inlined hint]) ())
+-          else T #(Some, a))
+-         [@exclave_if_local la ~reasons:[ May_return_regional ]]
+-       in
+-       (findi_loop [@inlined]) #0n [@nontail])
+-      [@exclave_if_local la ~reasons:[ May_return_regional ]])
+-  ;;]
+-
+-  [%%template
+-  [@@@kind.default k = s_kinds_non_void]
+-  [@@@mode.default v = (read_write, read, v, v')]
+-
+-  let exists
+-    (type a : k)
+-    (#{ ptr; len } : a t @ local v)
+-    ~(f : (a Addr.t @ local v -> bool) @ local)
+-    =
+-    if len <= #0n
+-    then false
+-    else (
+-      let (T stop) =
+-        (Ptr.advance [@kind k] [@mode local v]) ptr ~by:len |> Ptr.Destruct.idx
+-      in
+-      let rec exists_loop ptr = exclave_
+-        if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) ptr)) false
+-        then (
+-          let ptr = (Ptr.advance [@kind k] [@mode local v]) ptr ~by:#1n in
+-          let (T idx) = Ptr.Destruct.idx ptr in
+-          if Idx.Raw_compare.(idx < stop) then exists_loop ptr else false)
+-        else true
+-      in
+-      (exists_loop [@inlined]) ptr [@nontail])
+-  ;;
+-
+-  let existsi
+-    (type a : k)
+-    (#{ ptr; len } : a t @ local v)
+-    ~(f : (Isize.t -> a Addr.t @ local v -> bool) @ local)
+-    =
+-    if len <= #0n
+-    then false
+-    else (
+-      let rec existsi_loop i = exclave_
+-        if Bool.equal
+-             (f
+-                i
+-                ((Addr.unsafe_of_ptr [@mode v])
+-                   ((Ptr.advance [@kind k] [@mode local v]) ptr ~by:i)))
+-             false
+-        then (
+-          let i = i + #1n in
+-          if i < len then existsi_loop i else false)
+-        else true
+-      in
+-      (existsi_loop [@inlined]) #0n [@nontail])
+-  ;;
+-
+-  let for_all
+-    (type a : k)
+-    (#{ ptr; len } : a t @ local v)
+-    ~(f : (a Addr.t @ local v -> bool) @ local)
+-    =
+-    if len <= #0n
+-    then true
+-    else (
+-      let (T stop) =
+-        (Ptr.advance [@kind k] [@mode local v]) ptr ~by:len |> Ptr.Destruct.idx
+-      in
+-      let rec for_all_loop ptr = exclave_
+-        if Bool.equal (f ((Addr.unsafe_of_ptr [@mode v]) ptr)) true
+-        then (
+-          let ptr = (Ptr.advance [@kind k] [@mode local v]) ptr ~by:#1n in
+-          let (T idx) = Ptr.Destruct.idx ptr in
+-          if Idx.Raw_compare.(idx < stop) then for_all_loop ptr else true)
+-        else false
+-      in
+-      (for_all_loop [@inlined]) ptr [@nontail])
+-  ;;
+-
+-  let for_alli
+-    (type a : k)
+-    (#{ ptr; len } : a t @ local v)
+-    ~(f : (Isize.t -> a Addr.t @ local v -> bool) @ local)
+-    =
+-    if len <= #0n
+-    then true
+-    else (
+-      let rec for_alli_loop i = exclave_
+-        if Bool.equal
+-             (f
+-                i
+-                ((Addr.unsafe_of_ptr [@mode v])
+-                   ((Ptr.advance [@kind k] [@mode local v]) ptr ~by:i)))
+-             true
+-        then (
+-          let i = i + #1n in
+-          if i < len then for_alli_loop i else true)
+-        else false
+-      in
+-      (for_alli_loop [@inlined]) #0n [@nontail])
+-  ;;
+-
+-  let count t ~f =
+-    (fold [@kind k word] [@mode local local v] [@inlined])
+-      t
+-      ~init:#0n
+-      ~f:(fun [@inline] count a -> count + Isize.of_bool (f a))
+-    [@nontail]
+-  ;;
+-
+-  let counti t ~f =
+-    (foldi [@kind k word] [@mode local local v] [@inlined])
+-      t
+-      ~init:#0n
+-      ~f:(fun [@inline] i count a -> count + Isize.of_bool (f i a))
+-    [@nontail]
+-  ;;
+-
+-  [@@@mode.default l = (global, local)]
+-
+-  let iter t ~f =
+-    (fold [@kind k value_or_null] [@mode l global v] [@inlined])
+-      t
+-      ~init:()
+-      ~f:(fun [@inline] () a -> f a)
+-    [@nontail]
+-  ;;
+-
+-  let iteri t ~f =
+-    (foldi [@kind k value_or_null] [@mode l global v] [@inlined])
+-      t
+-      ~init:()
+-      ~f:(fun [@inline] i () a -> f i a)
+-    [@nontail]
+-  ;;]
+-end
+-
+-module%template
+-  [@mode v = (read_write, immutable)]
+-  Make_generic
+-    (Idx : sig
+-       type ('a : value_or_null, 'b : any) t : bits64
+-     end)
+-    (Ptr : sig
+-       module Ext : sig
+-         type ('a : any) t : bits64
+-       end
+-
+-       include
+-         Ptr.Isize.Generic
+-         [@mode v]
+-         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
+-          and type ('a : any) ext := 'a Ext.t
+-     end)
+-    (Addr : sig
+-       type ('a : any) t : value_or_null & bits64
+-
+-       include
+-         Addr.S
+-         [@kind value_or_null & bits64] [@mode v]
+-         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
+-          and type ('a : any) ptr := 'a Ptr.t
+-          and type ('a : any) t := 'a t
+-     end)
+-    (Ext : sig
+-       type ('a : any) t =
+-         #{ ptr : 'a Ptr.Ext.t
+-          ; len : Isize.t
+-          }
+-     end)
+-    (Slice0 : sig
+-       type ('a : any) t =
+-         #{ ptr : 'a Ptr.t
+-          ; len : Isize.t
+-          }
+-
+-       include
+-         With_i(Isize).S
+-         [@kind value_or_null & bits64] [@mode v]
+-         with type ('a : any) ptr := 'a Ptr.t
+-          and type ('a : any) addr := 'a Addr.t
+-          and type ('a : any) t := 'a t
+-     end) : sig
+-  type ('a : any) t =
+-    #{ ptr : 'a Ptr.t
+-     ; len : Isize.t
+-     }
+-
+-  include
+-    With_i(Isize).Generic
+-    [@mode v]
+-    with type ('a : any) ptr := 'a Ptr.t
+-     and type ('a : any) addr := 'a Addr.t
+-     and type ('a : any) ext := 'a Ext.t
+-     and type ('a : any) t := 'a t
+-end = struct
+-  include Slice0
+-
+-  let[@inline] empty () = #{ ptr = (Ptr.null [@inlined]) (); len = #0n }
+-
+-  [%%template
+-  [@@@mode.default l = (global, local), v = (read_write, read, write, v)]
+-
+-  let[@inline] of_ext #{ Ext.ptr; len } =
+-    #{ ptr = (Ptr.of_ext [@mode l v] [@inlined]) ptr; len }
+-    [@exclave_if_local l ~reasons:[ May_return_regional ]]
+-  ;;
+-
+-  let[@inline] to_ext (type a : any) n (#{ ptr; len } : a t) =
+-    match[@exclave_if_local l ~reasons:[ May_return_regional ]]
+-      (Ptr.to_ext [@mode l v] [@inlined]) n ptr
+-    with
+-    | T #(None, _) -> (Option_u.none [@kind bits64 & word] [@inlined]) ()
+-    | T #(Some, ptr) ->
+-      (Option_u.some [@kind bits64 & word] [@mode l v] [@inlined])
+-        (#{ ptr; len } : a Ext.t)
+-  ;;]
+-end
+-
+-module%template
+-  [@mode v = (read_write, immutable)]
+-  Make_external
+-    (Idx : sig
+-       type ('a : value_or_null, 'b : any) t : bits64
+-     end)
+-    (Ptr : sig
+-       include
+-         Ptr.Isize.External
+-         [@mode v]
+-         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
+-     end)
+-    (Addr : sig
+-       type ('a : any) t : bits64
+-
+-       include
+-         Addr.External
+-         [@mode v]
+-         with type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t
+-          and type ('a : any) ptr := 'a Ptr.t
+-          and type ('a : any) t := 'a t
+-     end)
+-    (Slice0 : sig
+-       type ('a : any) t =
+-         #{ ptr : 'a Ptr.t
+-          ; len : Isize.t
+-          }
+-
+-       include
+-         With_i(Isize).S
+-         [@kind bits64] [@mode v]
+-         with type ('a : any) ptr := 'a Ptr.t
+-          and type ('a : any) addr := 'a Addr.t
+-          and type ('a : any) t := 'a t
+-     end) : sig
+-  type ('a : any) t =
+-    #{ ptr : 'a Ptr.t
+-     ; len : Isize.t
+-     }
+-
+-  include
+-    With_i(Isize).External
+-    [@mode v]
+-    with type ('a : any) ptr := 'a Ptr.t
+-     and type ('a : any) addr := 'a Addr.t
+-     and type ('a : any) t := 'a t
+-end = struct
+-  include Slice0
+-
+-  let[@inline] empty n () = #{ ptr = (Ptr.null [@inlined]) n; len = #0n }
+-end
+-
+-module%template
+-  [@kind ptr_kind = (value_or_null & bits64, bits64)]
+-  Make_mut
+-    (Ptr : sig
+-       module Imm : sig
+-         type ('a : any) t : ptr_kind
+-       end
+-
+-       type ('a : any) t : ptr_kind
+-
+-       include Ptr.Mut with type ('a : any) imm := 'a Imm.t and type ('a : any) t := 'a t
+-
+-       [%%template:
+-       [@@@kind.default k = s_kinds]
+-
+-       val unsafe_set
+-         : ('a : k mod external64).
+-         'a t @ local write -> 'a -> unit
+-         @@ portable
+-       [@@zero_alloc]]
+-     end)
+-    (Addr : Addr.S
+-            [@kind ptr_kind] [@mode read_write]
+-            with type ('a : any) ptr := 'a Ptr.t
+-             and type ('a : value_or_null, 'b : any) idx := ('a, 'b) Idx.t)
+-    (M : sig
+-       module Imm : sig
+-         type ('a : any) t =
+-           #{ ptr : 'a Ptr.Imm.t
+-            ; len : Isize.t
+-            }
+-       end
+-
+-       type ('a : any) t =
+-         #{ ptr : 'a Ptr.t
+-          ; len : Isize.t
+-          }
+-
+-       include
+-         With_i(Isize).S
+-         [@kind ptr_kind] [@mode read_write]
+-         with type ('a : any) ptr := 'a Ptr.t
+-          and type ('a : any) addr := 'a Addr.t
+-          and type ('a : any) t := 'a t
+-     end) :
+-  With_i(Isize).Mut with type ('a : any) imm := 'a M.Imm.t and type ('a : any) t := 'a M.t =
+-struct
+-  open M
+-
+-  [%%template
+-  [@@@kind.default k = s_kinds]
+-
+-  let[@inline] unsafe_set t i x =
+-    (Ptr.unsafe_set [@kind k] [@inlined])
+-      ((ptr_at [@kind k] [@mode local write] [@inlined]) t i)
+-      x [@nontail]
+-  ;;
+-
+-  let[@inline] set t i x =
+-    (Ptr.unsafe_set [@kind k] [@inlined])
+-      ((Addr.to_ptr [@mode write])
+-         ((addr_at [@kind k] [@mode local write] [@inlined]) t i))
+-      x [@nontail]
+-  ;;
+-
+-  [@@@mode.default v = (read_write, read, write)]
+-  [@@@mode.default o = (many, once), u = (aliased, unique)]
+-
+-  let[@inline] with_bigarray1
+-    (type (a : any) (b : any) (c : k))
+-    n
+-    (_ : (a, b) Bigarray_kind.t)
+-    (arr : (_, b, _) Bigarray.Array1.t)
+-    ~(f : (a t @ local v -> c @ o u) @ local once)
+-    : c @ o u
+-    =
+-    (Ptr.magic_with_bigarray1 [@kind k] [@mode v o u] [@inlined]) n arr ~f:(fun ptr ->
+-      f #{ ptr; len = Isize.of_int (Bigarray.Array1.dim arr) })
+-    [@nontail]
+-  ;;]
+-
+-  (*_ [with_bigstring] is not defined here because its signature differs between the
+-      generic and external slices: see the [Isize] and [Isize.Ext] modules below. *)
+-
+-  [%%template
+-  [@@@mode.default l = (global, local)]
+-
+-  let[@inline] of_imm #{ Imm.ptr; len } =
+-    #{ ptr = (Ptr.of_imm [@mode l] [@inlined]) ptr; len }
+-    [@exclave_if_local l ~reasons:[ May_return_regional ]]
+-  ;;]
+-end
+-
+-module Slice_ext0 =
+-  Make [@kind bits64] [@mode read_write]
+-    (Idx.Isize)
+-    (struct
+-      include Ptr.Isize.Ext
+-
+-      [%%template
+-      [@@@kind.default k = s_kinds]
+-      [@@@mode.default l = (global, local), v = (read_write, read)]
+-
+-      let[@inline] unsafe_get (type a : k) (t : a t @ l v) =
+-        (Ptr.Isize.Ext.unsafe_get [@mode v]) t [@exclave_if_local l]
+-      ;;]
+-    end)
+-    (Addr.Ext)
+-
+-module Slice_ext_imm0 =
+-  Make [@kind bits64] [@mode immutable]
+-    (Idx.Isize.Imm)
+-    (struct
+-      include Ptr.Isize.Ext.Imm
+-
+-      [%%template
+-      [@@@kind.default k = s_kinds]
+-      [@@@mode.default l = (global, local), v = (read_write, read, write, immutable)]
+-
+-      let[@inline] unsafe_get (type a : k) (t : a t @ l v) =
+-        (Ptr.Isize.Ext.Imm.unsafe_get [@mode v]) t [@exclave_if_local l]
+-      ;;]
+-    end)
+-    (Addr.Ext.Imm)
+-
+-module Slice_ext =
+-  Make_external [@mode read_write] (Idx.Isize) (Ptr.Isize.Ext) (Addr.Ext) (Slice_ext0)
+-
+-module Slice_ext_imm =
+-  Make_external [@mode immutable] (Idx.Isize.Imm) (Ptr.Isize.Ext.Imm) (Addr.Ext.Imm)
+-    (Slice_ext_imm0)
+-
+-module Slice_ext_mut =
+-  Make_mut [@kind bits64]
+-    (struct
+-      include Ptr.Isize.Ext
+-
+-      [%%template
+-      [@@@kind.default k = s_kinds]
+-
+-      let[@inline] unsafe_set (type a : k mod external64) (t : a t @ local write) x =
+-        Ptr.Isize.Ext.unsafe_set t x
+-      ;;]
+-    end)
+-    (Addr.Ext)
+-    (struct
+-      include Slice_ext
+-      module Imm = Slice_ext_imm
+-    end)
+-
+-module Slice =
+-  Make [@kind value_or_null & bits64] [@mode read_write]
+-    (Idx.Isize)
+-    (struct
+-      include Ptr.Isize
+-
+-      [%%template
+-      [@@@kind.default k = s_kinds]
+-      [@@@mode.default l = (global, local), v = (read_write, read)]
+-
+-      let[@inline] unsafe_get (type a : k) (t : a t @ l v) =
+-        (Ptr.Isize.unsafe_get [@mode v]) t [@exclave_if_local l]
+-      ;;]
+-    end)
+-    (Addr)
+-
+-module Slice_imm =
+-  Make [@kind value_or_null & bits64] [@mode immutable]
+-    (Idx.Isize.Imm)
+-    (struct
+-      include Ptr.Isize.Imm
+-
+-      [%%template
+-      [@@@kind.default k = s_kinds]
+-      [@@@mode.default l = (global, local), v = (read_write, read, write, immutable)]
+-
+-      let[@inline] unsafe_get (type a : k) (t : a t @ l v) =
+-        (Ptr.Isize.Imm.unsafe_get [@mode v]) t [@exclave_if_local l]
+-      ;;]
+-    end)
+-    (Addr.Imm)
+-
+-module Slice_generic =
+-  Make_generic [@mode read_write] (Idx.Isize) (Ptr.Isize) (Addr) (Slice_ext) (Slice)
+-
+-module Slice_generic_imm =
+-  Make_generic [@mode immutable]
+-    (Idx.Isize.Imm)
+-    (struct
+-      module Ext = Ptr.Isize.Ext.Imm
+-      include Ptr.Isize.Imm
+-    end)
+-    (Addr.Imm)
+-    (Slice_ext_imm)
+-    (Slice_imm)
+-
+-module Slice_mut =
+-  Make_mut [@kind value_or_null & bits64]
+-    (struct
+-      include Ptr.Isize
+-
+-      [%%template
+-      [@@@kind.default k = s_kinds]
+-
+-      let[@inline] unsafe_set (type a : k mod external64) (t : a t @ local write) x =
+-        Ptr.Isize.unsafe_set t x
+-      ;;]
+-    end)
+-    (Addr)
+-    (struct
+-      include Slice_generic
+-      module Imm = Slice_generic_imm
+-    end)]
++module Slice_ext = Slice_make_generic_external_mut.Slice_ext
++module Slice_ext_imm = Slice_make_generic_external_mut.Slice_ext_imm
++module Slice_ext_mut = Slice_make_generic_external_mut.Slice_ext_mut
++module Slice_generic = Slice_make_generic_external_mut.Slice_generic
++module Slice_generic_imm = Slice_make_generic_external_mut.Slice_generic_imm
++module Slice_mut = Slice_make_generic_external_mut.Slice_mut
+ 
+ module Isize = struct
+   module Bigarray_kind = Bigarray_kind
