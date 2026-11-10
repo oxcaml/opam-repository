@@ -8,6 +8,7 @@ doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/ox/index.html"
 license: "MIT"
 x-maintenance-intent: ["(latest)"]
 build: [
+  ["sh" "./split-slice.sh"]
   ["dune" "build" "-p" name "-j" jobs]
 ]
 depends: [
@@ -62,17 +63,9 @@ url {
   checksum:
     "sha256=eb2eb1630c52e5d6e624b01abe82434970d5abefc3fcd63b92565b8930297828"
 }
-patches: [
-  "split-kernel-slice.patch"
-  "split-inlining-test-slice.patch"
-]
 extra-files: [
   [
-    "split-kernel-slice.patch"
-    "sha256=2084c55077c5a246082d3556246f84db79c1c2d7cc2f15c0711105d6412d4751"
-  ]
-  [
-    "split-inlining-test-slice.patch"
-    "sha256=3b1a0f3906c9388ef145f9d3f6b43b8a96c45e6cf4373bc81abea2226e45a516"
+    "split-slice.sh"
+    "sha256=8e97842637e87a8939b3c30b1e7f7eab4e6d9faedc1e1b30cc9f9f1f16d78843"
   ]
 ]
