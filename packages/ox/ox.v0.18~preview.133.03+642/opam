@@ -66,6 +66,6 @@ url {
 extra-files: [
   [
     "split-slice.sh"
-    "sha256=8e97842637e87a8939b3c30b1e7f7eab4e6d9faedc1e1b30cc9f9f1f16d78843"
+    "sha256=3223a46c1930f1d1893074fe3b6e6b35761f7fa29fc818f5f65b49fc8a1cd85e"
   ]
 ]
