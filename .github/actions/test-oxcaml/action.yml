@@ -28,7 +28,7 @@ runs:
                     build-essential curl git rsync sudo unzip nano
                 ;;
               arch)
-                pacman -Sy --noconfirm make gcc patch tar ca-certificates git \
+                pacman -Syu --noconfirm make gcc patch tar ca-certificates git \
                     rsync curl sudo bash nano coreutils xz ncurses diffutils \
                     unzip
                 ;;
