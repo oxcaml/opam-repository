@@ -10,6 +10,7 @@ dev-repo: "git+https://github.com/oxcaml/oxcaml.git#main"
 depends: [
   "conf-autoconf"         {build}
   "conf-which"            {build}
+  "conf-rsync"            {build}
   "ocaml-variants"        {= "5.4.0+ox" & post}
   "oxcaml"                {post}
   "base-unix"             {post}
